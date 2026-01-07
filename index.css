@@ -425,21 +425,22 @@ ul {
 }
 
 .logo-img {
-    height: 45px;
+    height: 60px;
     width: auto;
 }
 
 .preloader-logo-img {
-    height: 80px;
+    height: 100px;
     width: auto;
     filter: brightness(0) invert(1);
 }
 
 .footer-logo-img {
-    height: 50px;
+    height: 60px;
     width: auto;
     filter: brightness(0) invert(1);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
+    display: block;
 }
 
 .logo-text {
