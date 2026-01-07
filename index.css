@@ -420,8 +420,26 @@ ul {
 /* Logo */
 .logo {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 5px;
+}
+
+.logo-img {
+    height: 45px;
+    width: auto;
+}
+
+.preloader-logo-img {
+    height: 80px;
+    width: auto;
+    filter: brightness(0) invert(1);
+}
+
+.footer-logo-img {
+    height: 50px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    margin-bottom: 15px;
 }
 
 .logo-text {
