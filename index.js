@@ -505,4 +505,81 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // === Interactive Map with Mapbox GL ===
+    const mapContainer = document.getElementById('map');
+
+    if (mapContainer && typeof mapboxgl !== 'undefined') {
+        // Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoidHNha2FuaW1zZW5naSIsImEiOiJjbWo5eDBxOWswMTBwM2ZzOXRkNTNzNm5yIn0.sGUZfX9eJHmhoFIJFn_0kw';
+
+        // Sandton, Johannesburg coordinates (demo location)
+        const salonLocation = [28.0567, -26.1076]; // [lng, lat] for Mapbox
+
+        // Initialize the map
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12', // Colorful streets style
+            center: salonLocation,
+            zoom: 15,
+            scrollZoom: false // Disable scroll zoom for better UX
+        });
+
+        // Add navigation controls
+        map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+        // Create custom marker element
+        const markerEl = document.createElement('div');
+        markerEl.innerHTML = `
+            <div style="
+                width: 50px;
+                height: 50px;
+                background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+                border-radius: 50% 50% 50% 0;
+                transform: rotate(-45deg);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                cursor: pointer;
+            ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2" style="transform: rotate(45deg);">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+            </div>
+        `;
+
+        // Create popup
+        const popup = new mapboxgl.Popup({ offset: 25, closeButton: false })
+            .setHTML(`
+                <div style="font-family: 'Montserrat', sans-serif; padding: 5px;">
+                    <h4 style="font-family: 'Cormorant Garamond', serif; margin: 0 0 8px 0; font-size: 18px; font-weight: 500; color: #0a0a0a;">Galeo Beauty Salon</h4>
+                    <p style="margin: 0; font-size: 13px; color: #666; line-height: 1.6;">
+                        123 Beauty Lane, Sandton<br>
+                        Johannesburg, 2196<br>
+                        <strong>Tel:</strong> +27 12 345 6789
+                    </p>
+                </div>
+            `);
+
+        // Add marker with popup
+        new mapboxgl.Marker(markerEl)
+            .setLngLat(salonLocation)
+            .setPopup(popup)
+            .addTo(map);
+
+        // Open popup by default
+        popup.addTo(map);
+        popup.setLngLat(salonLocation);
+
+        // Enable scroll zoom when map is clicked
+        map.on('click', function () {
+            map.scrollZoom.enable();
+        });
+
+        // Disable scroll zoom when mouse leaves
+        mapContainer.addEventListener('mouseleave', function () {
+            map.scrollZoom.disable();
+        });
+    }
+
 });
