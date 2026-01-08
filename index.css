@@ -1780,10 +1780,11 @@ ul {
         max-width: 350px;
         height: 100vh;
         background: var(--white);
-        padding: 100px 40px;
+        padding: 100px 40px 40px;
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
         transition: var(--transition);
         z-index: 1001;
+        overflow-y: auto;
     }
 
     .nav.active {
