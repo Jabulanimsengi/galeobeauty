@@ -20,14 +20,14 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet" />
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body>
     <div class="preloader" id="preloader">
         <div class="preloader-inner">
             <div class="preloader-logo">
-                <img src="logo.png" alt="Galeo Beauty" class="preloader-logo-img">
+                <img src="assets/images/logo.png" alt="Galeo Beauty" class="preloader-logo-img">
             </div>
             <div class="preloader-spinner"></div>
         </div>
@@ -71,20 +71,19 @@
     <!-- Header -->
     <header class="header" id="header">
         <div class="container header-content">
-            <a href="#" class="logo">
-                <img src="logo.png" alt="Galeo Beauty" class="logo-img">
+            <a href="index.html" class="logo">
+                <img src="assets/images/logo.png" alt="Galeo Beauty" class="logo-img">
             </a>
 
             <nav class="nav" id="nav">
                 <ul class="nav-list">
-                    <li><a href="#home" class="nav-link active">Home</a></li>
-                    <li><a href="#services" class="nav-link">Services</a></li>
-                    <li><a href="#gallery" class="nav-link">Gallery</a></li>
-                    <li><a href="#team" class="nav-link">Team</a></li>
-                    <li><a href="#testimonials" class="nav-link">Reviews</a></li>
-                    <li><a href="#faq" class="nav-link">FAQ</a></li>
-                    <li><a href="#careers" class="nav-link">Careers</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="services.html" class="nav-link">Services</a></li>
+                    <li><a href="prices.html" class="nav-link">Prices</a></li>
+                    <li><a href="specials.html" class="nav-link">Specials</a></li>
+                    <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                    <li><a href="about.html" class="nav-link">About</a></li>
+                    <li><a href="contact.html" class="nav-link">Contact</a></li>
                 </ul>
             </nav>
 
@@ -164,7 +163,7 @@
             <div class="services-grid">
                 <a href="#" class="service-card glass-card reveal-up">
                     <div class="service-image">
-                        <img src="image_01.png" alt="Face Care" loading="lazy">
+                        <img src="assets/images/services/face-care-01.png" alt="Face Care" loading="lazy">
                         <div class="service-overlay"></div>
                     </div>
                     <div class="service-content">
@@ -175,7 +174,7 @@
 
                 <a href="#" class="service-card glass-card reveal-up" style="--delay: 0.1s">
                     <div class="service-image">
-                        <img src="image_02.png" alt="Face Treatments" loading="lazy">
+                        <img src="assets/images/services/face-care-02.png" alt="Face Treatments" loading="lazy">
                         <div class="service-overlay"></div>
                     </div>
                     <div class="service-content">
@@ -186,7 +185,7 @@
 
                 <a href="#" class="service-card glass-card reveal-up" style="--delay: 0.2s">
                     <div class="service-image">
-                        <img src="image_03.png" alt="Eye Care" loading="lazy">
+                        <img src="assets/images/services/eye-care-01.png" alt="Eye Care" loading="lazy">
                         <div class="service-overlay"></div>
                     </div>
                     <div class="service-content">
@@ -197,7 +196,7 @@
 
                 <a href="#" class="service-card glass-card reveal-up" style="--delay: 0.3s">
                     <div class="service-image">
-                        <img src="image_04.png" alt="Eye Enhancements" loading="lazy">
+                        <img src="assets/images/services/eye-care-02.png" alt="Eye Enhancements" loading="lazy">
                         <div class="service-overlay"></div>
                     </div>
                     <div class="service-content">
@@ -208,7 +207,7 @@
 
                 <a href="#" class="service-card glass-card reveal-up" style="--delay: 0.4s">
                     <div class="service-image">
-                        <img src="image_05.png" alt="Lashes" loading="lazy">
+                        <img src="assets/images/services/lashes.png" alt="Lashes" loading="lazy">
                         <div class="service-overlay"></div>
                     </div>
                     <div class="service-content">
@@ -232,6 +231,122 @@
 
             <div class="services-cta reveal-up">
                 <a href="#" class="btn btn-gold btn-lg">View All Treatments</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hair & Lashes Specials Section -->
+    <section class="pricing-section" id="hair-specials">
+        <div class="container">
+            <div class="section-header reveal-up">
+                <span class="section-label">Limited Time Offers</span>
+                <h2 class="section-title">Summer <span class="gold-text">Hair Specials</span></h2>
+                <p class="section-desc">Exclusive deals on our most popular hair treatments</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- Hair Specials -->
+                <div class="price-card glass-card reveal-up">
+                    <div class="price-card-header">
+                        <h3 class="price-card-title">Hair Treatments</h3>
+                    </div>
+                    <div class="price-table">
+                        <div class="price-row has-booking"><span class="price-service">Root Tint & Blow Wave</span><span
+                                class="price-amount">R400</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Hi-Lights & OSMO
+                                Treatment</span><span class="price-amount">R900</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Hollywood Curls</span><span
+                                class="price-amount special-free">FREE</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Hair Extensions
+                                (Mayne)</span><span class="price-amount">POR</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Gents Cut</span><span
+                                class="price-amount">R180</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Boys Cut</span><span
+                                class="price-amount">R80</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                    </div>
+                </div>
+                <!-- Lash Specials -->
+                <div class="price-card glass-card reveal-up">
+                    <div class="price-card-header">
+                        <h3 class="price-card-title">Lash Specials</h3>
+                    </div>
+                    <div class="price-table">
+                        <div class="price-row has-booking"><span class="price-service">Full Set Hybrid
+                                Lashes</span><span class="price-amount">R500</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Classic Lashes</span><span
+                                class="price-amount">R400</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Lash Fill</span><span
+                                class="price-amount">R250</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Brow Lamination & Lash Lift
+                                Combo</span><span class="price-amount">R400</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                    </div>
+                    <p class="price-note">Permanent Makeup less 50% - Only for September!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nail & Beauty Specials Section -->
+    <section class="pricing-section" id="nail-specials">
+        <div class="container">
+            <div class="section-header reveal-up">
+                <span class="section-label">Beauty Deals</span>
+                <h2 class="section-title">Nail & <span class="gold-text">Beauty Specials</span></h2>
+                <p class="section-desc">Pamper yourself with our exclusive beauty treatments</p>
+            </div>
+            <div class="pricing-grid">
+                <!-- Facial & Skin Specials -->
+                <div class="price-card glass-card reveal-up">
+                    <div class="price-card-header">
+                        <h3 class="price-card-title">Facial & Skin</h3>
+                    </div>
+                    <div class="price-table">
+                        <div class="price-row has-booking"><span class="price-service">Dermalogica Facial</span><span
+                                class="price-amount">R850</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Microneedling with
+                                Collagen</span><span class="price-amount">R500</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Skin Tightening RF</span><span
+                                class="price-amount">R1500</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">IPL Hair Removal</span><span
+                                class="price-amount special-discount">50% OFF</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                    </div>
+                </div>
+                <!-- Nail & Body Specials -->
+                <div class="price-card glass-card reveal-up">
+                    <div class="price-card-header">
+                        <h3 class="price-card-title">Nails & Body</h3>
+                    </div>
+                    <div class="price-table">
+                        <div class="price-row has-booking"><span class="price-service">Gel Toes</span><span
+                                class="price-amount">R150</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Pedicure and Gel</span><span
+                                class="price-amount">R350</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Fat Freeze (per
+                                session)</span><span class="price-amount">R800</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">Sunbed Package (10
+                                sessions)</span><span class="price-amount">R350</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                        <div class="price-row has-booking"><span class="price-service">All Waxes with Maria</span><span
+                                class="price-amount special-discount">25% OFF</span><a href="contact.html#booking"
+                                class="price-row-book">Book</a></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -866,6 +981,30 @@
         </div>
     </section>
 
+    <!-- Our Partners Section -->
+    <section class="trusted-brands">
+        <div class="container">
+            <span class="trusted-label">Our Partners</span>
+            <div class="brands-grid">
+                <div class="brand-logo">
+                    <img src="assets/images/brands/dermalogica.png" alt="Dermalogica" loading="lazy">
+                </div>
+                <div class="brand-logo">
+                    <img src="assets/images/brands/milkshake.png" alt="Milk Shake" loading="lazy">
+                </div>
+                <div class="brand-logo">
+                    <img src="assets/images/brands/moroccanoil.png" alt="Moroccanoil" loading="lazy">
+                </div>
+                <div class="brand-logo">
+                    <img src="assets/images/brands/lola-lee.png" alt="Lola Lee" loading="lazy">
+                </div>
+                <div class="brand-logo">
+                    <img src="assets/images/brands/qms.png" alt="QMS" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="container contact-grid">
@@ -980,8 +1119,8 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <a href="#" class="logo footer-logo">
-                        <img src="logo.png" alt="Galeo Beauty" class="footer-logo-img">
+                    <a href="index.html" class="logo footer-logo">
+                        <img src="assets/images/logo.png" alt="Galeo Beauty" class="footer-logo-img">
                     </a>
                     <p>Your destination for premium skincare and beauty treatments. Experience luxury that transforms.
                     </p>
@@ -1014,23 +1153,23 @@
                 <div class="footer-links">
                     <h4>Quick Links</h4>
                     <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#gallery">Gallery</a></li>
-                        <li><a href="#team">Our Team</a></li>
-                        <li><a href="#careers">Careers</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="specials.html">Specials</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-links">
                     <h4>Services</h4>
                     <ul>
-                        <li><a href="#">Face Care</a></li>
-                        <li><a href="#">Body Care</a></li>
-                        <li><a href="#">Nail Care</a></li>
-                        <li><a href="#">Hair Care</a></li>
-                        <li><a href="#">Massage & Spa</a></li>
+                        <li><a href="services.html">Face Care</a></li>
+                        <li><a href="services.html">Body Care</a></li>
+                        <li><a href="services.html">Nail Care</a></li>
+                        <li><a href="services.html">Hair Care</a></li>
+                        <li><a href="services.html">Massage & Spa</a></li>
                     </ul>
                 </div>
 
@@ -1096,7 +1235,7 @@
     <!-- Mapbox GL JS -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
 
-    <script src="index.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 
 </html>

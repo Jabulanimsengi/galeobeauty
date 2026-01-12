@@ -90,6 +90,18 @@ ul {
     transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
+/* Transparent preloader for subpages */
+.preloader.preloader-transparent {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+.preloader.preloader-transparent .preloader-spinner {
+    border: 3px solid rgba(212, 175, 55, 0.3);
+    border-top-color: var(--gold);
+}
+
 .preloader.hidden {
     opacity: 0;
     visibility: hidden;
@@ -2611,5 +2623,267 @@ ul {
 
     .special-card-vertical {
         padding: 30px 25px;
+    }
+}
+
+/* === Page Hero (for subpages) === */
+.page-hero {
+    background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 100%);
+    padding: 100px 0 80px;
+    text-align: center;
+    margin-top: 0;
+}
+
+.page-hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 15px;
+}
+
+.page-hero-subtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .page-hero {
+        padding: 80px 0 60px;
+    }
+
+    .page-hero-title {
+        font-size: clamp(28px, 5vw, 40px);
+    }
+}
+
+/* === Pricing Page Styles === */
+.pricing-section {
+    padding: 80px 0;
+    background: var(--white);
+}
+
+.pricing-section:nth-child(even) {
+    background: var(--off-white);
+}
+
+.pricing-categories {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 60px;
+}
+
+.pricing-category-btn {
+    padding: 12px 28px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent;
+    border: 2px solid var(--gold);
+    color: var(--charcoal);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pricing-category-btn:hover,
+.pricing-category-btn.active {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.price-card {
+    background: var(--white);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    padding: 30px;
+    transition: var(--transition);
+}
+
+.price-card:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border-color: var(--gold);
+}
+
+.price-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--gold);
+}
+
+.price-card-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gold);
+    color: var(--black);
+}
+
+.price-card-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--black);
+}
+
+.price-table {
+    width: 100%;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.price-row:last-child {
+    border-bottom: none;
+}
+
+.price-service {
+    font-size: 14px;
+    color: var(--charcoal);
+    flex: 1;
+}
+
+.price-duration {
+    font-size: 12px;
+    color: var(--gray);
+    margin: 0 15px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.price-amount {
+    font-weight: 600;
+    color: var(--gold-dark);
+    font-size: 15px;
+    min-width: 70px;
+    text-align: right;
+}
+
+.price-subcategory {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 20px 0 10px;
+    padding-top: 15px;
+    border-top: 1px dashed rgba(212, 175, 55, 0.3);
+}
+
+.price-note {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--gray);
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(212, 175, 55, 0.1);
+}
+
+@media (max-width: 768px) {
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .price-card {
+        padding: 25px 20px;
+    }
+
+    .pricing-categories {
+        gap: 10px;
+    }
+
+    .pricing-category-btn {
+        padding: 10px 20px;
+        font-size: 11px;
+    }
+}
+
+/* Special price highlights */
+.price-amount.special-free {
+    color: #22c55e;
+    font-weight: 700;
+}
+
+.price-amount.special-discount {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+/* Specials page - Hover booking button */
+.price-row.has-booking {
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.price-row.has-booking:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.price-row-book {
+    padding: 4px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--black);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    margin-left: 10px;
+}
+
+.price-row.has-booking:hover .price-row-book {
+    opacity: 1;
+    visibility: visible;
+}
+
+.price-row.has-booking:hover .price-amount {
+    color: var(--gold);
+}
+
+/* Mobile - always show booking button */
+@media (max-width: 768px) {
+    .price-row.has-booking {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 15px 0;
+    }
+
+    .price-row-book {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+        margin-top: 10px;
+        margin-left: 0;
+    }
+
+    .price-row.has-booking .price-amount {
+        color: inherit !important;
     }
 }
