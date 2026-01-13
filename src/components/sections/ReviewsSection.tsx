@@ -46,26 +46,26 @@ export function ReviewsSection() {
     };
 
     return (
-        <section className="py-24 bg-background">
-            <div className="container mx-auto px-4">
+        <section className="py-16 md:py-24 bg-background">
+            <div className="container mx-auto px-4 sm:px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
+                    className="text-center mb-10 md:mb-16"
                 >
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                        <Star className="w-5 h-5 text-gold fill-gold" />
-                        <Star className="w-5 h-5 text-gold fill-gold" />
-                        <Star className="w-5 h-5 text-gold fill-gold" />
-                        <Star className="w-5 h-5 text-gold fill-gold" />
-                        <Star className="w-5 h-5 text-gold fill-gold" />
+                    <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-4">
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
                     </div>
-                    <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
+                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
                         Client <span className="text-gold">Love</span>
                     </h2>
-                    <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                        Don't just take our word for it. See what our clients are saying about their Galeo Beauty experience.
+                    <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
+                        Don&apos;t just take our word for it. See what our clients are saying about their Galeo Beauty experience.
                     </p>
                 </motion.div>
 
@@ -83,7 +83,7 @@ export function ReviewsSection() {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1 }}
-                                className="flex-shrink-0 w-[75vw] md:w-[400px] snap-center md:snap-start"
+                                className="flex-shrink-0 w-[70vw] sm:w-[55vw] md:w-[400px] snap-center md:snap-start"
                             >
                                 <div className="relative rounded-2xl overflow-hidden shadow-xl border border-border/50 bg-white">
                                     {/* Use img tag to allow natural height and eliminate whitespace */}

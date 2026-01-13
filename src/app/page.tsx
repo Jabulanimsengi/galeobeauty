@@ -4,6 +4,8 @@ import {
   StatsSection,
   ServicesSection,
   AboutSection,
+  ReviewsSection,
+  BrandsSection,
 } from "@/components/sections";
 
 export default function HomePage() {
@@ -13,7 +15,9 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <AboutSection />
+        <BrandsSection />
         <ServicesSection />
+        <ReviewsSection />
         <StatsSection />
 
       </main>

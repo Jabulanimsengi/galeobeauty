@@ -42,27 +42,24 @@ function StatItem({ value, suffix, label, description, delay = 0, icon: Icon }: 
     return (
         <motion.div
             ref={ref}
-            className="text-center p-6 rounded-xl bg-white/50 dark:bg-white/5 border border-border/50 backdrop-blur-sm"
+            className="text-center p-4 sm:p-6 rounded-xl bg-white/50 dark:bg-white/5 border border-border/50 backdrop-blur-sm"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay }}
         >
-            <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-4">
-                <Icon className="w-6 h-6 text-gold" />
-            </div>
             <div className="flex items-baseline justify-center gap-1 mb-1">
-                <span className="font-serif text-4xl md:text-5xl font-semibold text-foreground">
+                <span className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground">
                     {count}
                 </span>
-                <span className="font-serif text-2xl text-gold">
+                <span className="font-serif text-xl sm:text-2xl text-gold">
                     {suffix}
                 </span>
             </div>
-            <span className="text-base font-medium text-foreground block mb-1">
+            <span className="text-sm sm:text-base font-medium text-foreground block mb-1">
                 {label}
             </span>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs sm:text-sm text-muted-foreground">
                 {description}
             </span>
         </motion.div>
@@ -102,11 +99,11 @@ export function StatsSection() {
     ];
 
     return (
-        <section className="py-20 md:py-28 bg-gradient-to-b from-background via-muted/30 to-background">
-            <div className="container mx-auto px-4">
+        <section className="py-16 md:py-24 lg:py-28 bg-gold/10">
+            <div className="container mx-auto px-4 sm:px-6">
                 {/* Section Header */}
                 <motion.div
-                    className="text-center mb-12"
+                    className="text-center mb-10 md:mb-12"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -115,12 +112,12 @@ export function StatsSection() {
                     <span className="text-gold text-xs uppercase tracking-[0.3em] mb-3 block font-sans font-semibold">
                         Why Choose Us
                     </span>
-                    <h2 className="font-serif text-3xl md:text-4xl font-semibold">
+                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold">
                         The Numbers Speak
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     {stats.map((stat, index) => (
                         <StatItem
                             key={stat.label}

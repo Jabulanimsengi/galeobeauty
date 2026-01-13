@@ -80,5 +80,7 @@ export interface BusinessInfo {
     facebook?: string;
     instagram?: string;
     whatsapp: string;
+    tiktok?: string;
+    fresha?: string;
   };
 }

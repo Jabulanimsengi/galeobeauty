@@ -15,8 +15,8 @@ export const businessInfo: BusinessInfo = {
     phone: "+27121111730",
     email: "info@galeobeauty.co.za",
     address: {
-        street: "Shop 6, Landsmeer Estate",
-        area: "Jan Smuts Ave, Hartbeespoort Dam",
+        street: "Shop 6, Landsmeer",
+        area: "Jan Smuts Rd, Hartbeespoort, 0216",
         city: "North West, South Africa",
     },
     hours: {
@@ -25,8 +25,10 @@ export const businessInfo: BusinessInfo = {
         publicHoliday: "Public Holiday: 8:00am - 2:00pm",
     },
     socials: {
-        facebook: "#",
-        instagram: "#",
+        facebook: "https://facebook.com/galeobeauty",
+        instagram: "https://instagram.com/galeobeauty",
         whatsapp: "27121111730",
+        tiktok: "https://tiktok.com/@galeobeauty",
+        fresha: "https://www.fresha.com/a/galeo-beauty",
     },
 };

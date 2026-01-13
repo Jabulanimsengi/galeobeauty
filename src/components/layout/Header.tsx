@@ -91,33 +91,30 @@ export function Header() {
                             size="sm"
                             className="bg-gold hover:bg-gold-dark text-foreground font-medium"
                         >
-                            <Link href="/contact#booking">Book Now</Link>
+                            <Link href="/booking">Book Now</Link>
                         </Button>
                     </div>
                 </div>
             </div>
 
             {/* Main Header */}
-            <motion.header
+            <header
                 className={cn(
                     "sticky top-0 z-50 transition-all duration-300",
                     isScrolled
                         ? "bg-background/95 backdrop-blur-md shadow-lg py-2"
                         : "bg-transparent py-4"
                 )}
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.5 }}
             >
                 <div className="container mx-auto flex justify-between items-center px-4">
-                    {/* Logo */}
+                    {/* Logo - Responsive sizing */}
                     <Link href="/" className="relative z-10">
                         <Image
                             src="/images/logo.png"
                             alt="Galeo Beauty"
                             width={200}
                             height={80}
-                            className="h-24 w-auto"
+                            className="h-16 sm:h-20 md:h-24 w-auto transition-all duration-300"
                             priority
                         />
                     </Link>
@@ -147,7 +144,7 @@ export function Header() {
                             asChild
                             className="bg-gold hover:bg-gold-dark text-foreground font-medium"
                         >
-                            <Link href="/contact#booking">Make a Booking</Link>
+                            <Link href="/booking">Make a Booking</Link>
                         </Button>
                     </div>
 
@@ -224,7 +221,7 @@ export function Header() {
                                         className="w-full bg-gold hover:bg-gold-dark text-foreground font-semibold text-lg py-6"
                                     >
                                         <Link
-                                            href="/contact#booking"
+                                            href="/booking"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Book Now
@@ -246,7 +243,7 @@ export function Header() {
                         </SheetContent>
                     </Sheet>
                 </div>
-            </motion.header>
+            </header>
         </>
     );
 }

@@ -3,10 +3,11 @@
 import { Header, Footer } from "@/components/layout";
 import { TrustBadge } from "@/components/ui/trust-badge";
 import { Button } from "@/components/ui/button";
+import { Countdown } from "@/components/ui/countdown";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Scissors, Eye, Heart, Zap, Tag, Clock, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Scissors, Eye, Heart, Star, Tag } from "lucide-react";
 
 interface SpecialItem {
     service: string;
@@ -17,308 +18,225 @@ interface SpecialItem {
 interface Special {
     id: string;
     title: string;
+    subtitle: string;
     image: string;
     icon: React.ElementType;
+    description: string;
     items: SpecialItem[];
     note?: string;
 }
 
-// Special offers with images
+// Special offers data
 const specials: Special[] = [
     {
         id: "hair",
-        title: "Hair Treatments",
-        image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=400&fit=crop",
+        title: "The Hair Edit",
+        subtitle: "Luxe Locks",
+        image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&h=1200&fit=crop", // Portrait
         icon: Scissors,
+        description: "Transform your look with our seasonal hair collection. Featuring premium styling and treatments for vitality and shine.",
         items: [
             { service: "Root Tint & Blow Wave", price: "R400" },
             { service: "Hi-Lights & OSMO Treatment", price: "R900" },
             { service: "Hollywood Curls", price: "FREE", highlight: true },
-            { service: "Hair Extensions (Mayne)", price: "POR" },
-            { service: "Gents Cut", price: "R180" },
-            { service: "Boys Cut", price: "R80" },
         ],
     },
     {
-        id: "lashes",
-        title: "Lash Specials",
-        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=600&h=400&fit=crop",
+        id: "lash-focus",
+        title: "Lash & Brow Artistry",
+        subtitle: "Frame Your Face",
+        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&h=1200&fit=crop",
         icon: Eye,
+        description: "Wake up effortlessly beautiful. Our lash and brow technicians sculpt and define to enhance your natural features.",
+        note: "Permanent Makeup 50% OFF - Limited Time",
         items: [
             { service: "Full Set Hybrid Lashes", price: "R500" },
-            { service: "Classic Lashes", price: "R400" },
-            { service: "Lash Fill", price: "R250" },
             { service: "Brow Lamination & Lash Lift", price: "R400" },
+            { service: "Classic Lashes", price: "R400" },
         ],
-        note: "Permanent Makeup 50% OFF - January Only!",
     },
     {
-        id: "skin",
-        title: "Facial & Skin",
-        image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&h=400&fit=crop",
+        id: "glow",
+        title: "The Skin Glow",
+        subtitle: "Radiance Revealed",
+        image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&h=1200&fit=crop",
         icon: Sparkles,
+        description: "Scientific skincare meets luxurious relaxation. Reveal your most radiant complexion with our curated facial menu.",
         items: [
             { service: "Dermalogica Facial", price: "R850" },
-            { service: "Microneedling + Collagen", price: "R500" },
-            { service: "Skin Tightening RF", price: "R1500" },
+            { service: "Sky Tightening RF", price: "R1,500" },
             { service: "IPL Hair Removal", price: "50% OFF", highlight: true },
         ],
     },
     {
-        id: "body",
-        title: "Nails & Body",
-        image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&h=400&fit=crop",
+        id: "body-sculpt",
+        title: "Body Sculpting",
+        subtitle: "Silhouette Refined",
+        image: "https://images.unsplash.com/photo-1519823551278-64ac927ac280?w=800&h=1200&fit=crop",
         icon: Heart,
+        description: "Advanced non-invasive treatments to contour, tighten, and smooth. Achieve your body goals with our medical-grade technologies.",
         items: [
-            { service: "Gel Toes", price: "R150" },
-            { service: "Pedicure and Gel", price: "R350" },
-            { service: "Fat Freeze (per session)", price: "R800" },
-            { service: "Sunbed Package (10 sessions)", price: "R350" },
-            { service: "All Waxes with Maria", price: "25% OFF", highlight: true },
+            { service: "Fat Freeze (Per Session)", price: "R800" },
+            { service: "Sunbed Package (10)", price: "R350" },
+            { service: "All Waxing (Maria)", price: "25% OFF", highlight: true },
         ],
     },
 ];
 
-// Featured special - the hero offer
-const featuredSpecial = {
-    title: "January Mega Deal",
-    subtitle: "Permanent Makeup",
-    description: "Get 50% off all permanent makeup treatments including microblading, powder brows, and lip contour. Limited time only!",
-    price: "50% OFF",
-    originalPrice: "From R2200",
-    image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&h=600&fit=crop",
-    badge: "Limited Time",
-};
-
 export default function SpecialsPage() {
+    // Target date for countdown (end of current month)
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + 7); // 7 days from now for urgency
+
     return (
         <>
             <Header />
-            <main>
-                {/* Hero Section */}
-                <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
-                    <Image
-                        src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1920&h=1080&fit=crop"
-                        alt="Galeo Beauty Special Offers"
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
+            <main className="bg-background">
+                {/* Editorial Hero */}
+                <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 overflow-hidden">
+                    <div className="absolute top-0 right-0 w-1/3 h-full bg-secondary/20 -z-10" />
 
-                    <div className="absolute inset-0 flex items-center justify-center text-center">
-                        <div className="container mx-auto px-4">
+                    <div className="container mx-auto">
+                        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.6 }}
+                                initial={{ opacity: 0, x: -50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.8 }}
+                                className="lg:w-1/2"
                             >
-                                <div className="inline-flex items-center gap-2 bg-gold/90 text-foreground rounded-full px-4 py-2 mb-4">
-                                    <Tag className="w-4 h-4" />
-                                    <span className="text-sm font-semibold uppercase tracking-wider">
-                                        Limited Time Offers
-                                    </span>
-                                </div>
-                                <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-semibold text-white mb-4">
-                                    Special <span className="text-gold">Deals</span>
+                                <span className="text-gold font-bold tracking-[0.2em] uppercase text-sm mb-6 block">
+                                    Curated Offers
+                                </span>
+                                <h1 className="font-serif text-6xl sm:text-7xl lg:text-9xl text-foreground leading-[0.9] mb-8">
+                                    THE <br /><span className="italic text-gold">EDIT</span>
                                 </h1>
-                                <p className="text-white/80 max-w-xl mx-auto text-lg">
-                                    Don't miss our exclusive promotions on premium treatments
+                                <p className="text-xl text-muted-foreground font-light max-w-md border-l-2 border-gold pl-6 ml-2">
+                                    A monthly collection of exclusive beauty experiences, hand-picked by our specialists for you.
                                 </p>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.8, delay: 0.2 }}
+                                className="lg:w-1/2 relative"
+                            >
+                                <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
+                                    <Image
+                                        src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=1000&fit=crop"
+                                        alt="Feature Special"
+                                        fill
+                                        className="object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out"
+                                    />
+                                    <div className="absolute -bottom-6 -left-6 bg-white p-6 shadow-xl max-w-xs z-10 hidden sm:block">
+                                        <p className="font-serif text-2xl italic mb-1">"Must Have"</p>
+                                        <p className="text-sm text-muted-foreground">The January Permanent Makeup Collection.</p>
+                                    </div>
+                                </div>
                             </motion.div>
                         </div>
                     </div>
                 </section>
 
-                {/* Featured Special - Large Hero Card */}
-                <section className="py-16 md:py-20 bg-gradient-to-b from-muted/30 to-background">
-                    <div className="container mx-auto px-4">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5 }}
-                            className="relative rounded-2xl overflow-hidden shadow-2xl"
-                        >
-                            <div className="grid grid-cols-1 lg:grid-cols-2">
-                                {/* Image Side */}
-                                <div className="relative h-[300px] lg:h-[400px]">
-                                    <Image
-                                        src={featuredSpecial.image}
-                                        alt={featuredSpecial.title}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent lg:hidden" />
-                                </div>
+                {/* Countdown Section */}
+                <section className="py-12 bg-foreground text-background">
+                    <div className="container mx-auto px-4 text-center">
+                        <p className="uppercase tracking-widest text-xs font-semibold mb-2 text-gold">Offers Expire In</p>
+                        <Countdown targetDate={targetDate} />
+                        <Button variant="outline" className="text-gold border-gold hover:bg-gold hover:text-white mt-4 border-2">
+                            <Link href="/booking">Book Before It's Too Late</Link>
+                        </Button>
+                    </div>
+                </section>
 
-                                {/* Content Side */}
-                                <div className="bg-foreground text-background p-8 lg:p-12 flex flex-col justify-center">
-                                    <TrustBadge variant="premium" icon="star" className="mb-4 w-fit">
-                                        {featuredSpecial.badge}
-                                    </TrustBadge>
-                                    <span className="text-gold text-sm uppercase tracking-wider mb-2">
-                                        {featuredSpecial.subtitle}
-                                    </span>
-                                    <h2 className="font-serif text-3xl md:text-4xl font-semibold mb-4">
-                                        {featuredSpecial.title}
-                                    </h2>
-                                    <p className="text-background/70 mb-6">
-                                        {featuredSpecial.description}
-                                    </p>
-                                    <div className="flex items-baseline gap-3 mb-6">
-                                        <span className="text-4xl font-bold text-gold">
-                                            {featuredSpecial.price}
-                                        </span>
-                                        <span className="text-background/50 line-through">
-                                            {featuredSpecial.originalPrice}
-                                        </span>
+                {/* Editorial Magazine Layout */}
+                <div className="py-20 lg:py-32 space-y-20 lg:space-y-32">
+                    {specials.map((special, idx) => (
+                        <section key={special.id} className="container mx-auto px-4 sm:px-6">
+                            <div className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-24 items-center`}>
+
+                                {/* Image Half */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.7 }}
+                                    className="lg:w-1/2 w-full"
+                                >
+                                    <div className="relative aspect-[4/5] sm:aspect-[3.5/4] md:aspect-[3/4] w-full">
+                                        <Image
+                                            src={special.image}
+                                            alt={special.title}
+                                            fill
+                                            className="object-cover shadow-2xl"
+                                        />
+                                        <div className="absolute inset-0 border border-white/20 m-4" />
                                     </div>
-                                    <Button
-                                        asChild
-                                        size="lg"
-                                        className="bg-gold hover:bg-gold-dark text-foreground font-semibold w-fit"
-                                    >
-                                        <Link href="/contact#booking">
-                                            Claim This Offer
-                                            <ArrowRight className="w-4 h-4 ml-2" />
-                                        </Link>
-                                    </Button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                </section>
+                                </motion.div>
 
-                {/* Special Offer Cards Grid */}
-                <section className="py-16 md:py-20">
-                    <div className="container mx-auto px-4">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-center mb-12"
-                        >
-                            <span className="text-gold text-xs uppercase tracking-[0.3em] mb-3 block font-sans font-semibold">
-                                More Deals
-                            </span>
-                            <h2 className="font-serif text-3xl md:text-4xl font-semibold">
-                                This Month's <span className="text-gold">Specials</span>
-                            </h2>
-                        </motion.div>
+                                {/* Content Half */}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.7, delay: 0.2 }}
+                                    className="lg:w-1/2 w-full"
+                                >
+                                    <div className="flex flex-col h-full justify-center">
+                                        <span className="text-gold font-serif italic text-2xl mb-2">0{idx + 1}.</span>
+                                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">
+                                            {special.title}
+                                            <span className="block text-xl md:text-2xl font-sans font-light text-muted-foreground mt-2 tracking-wide">
+                                                {special.subtitle}
+                                            </span>
+                                        </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {specials.map((special, idx) => {
-                                const Icon = special.icon;
-                                return (
-                                    <motion.div
-                                        key={special.id}
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.4, delay: idx * 0.1 }}
-                                        className="group clinical-card overflow-hidden"
-                                    >
-                                        {/* Card Image Header */}
-                                        <div className="relative h-[200px]">
-                                            <Image
-                                                src={special.image}
-                                                alt={special.title}
-                                                fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                                        <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                                            {special.description}
+                                        </p>
 
-                                            {/* Title on image */}
-                                            <div className="absolute bottom-0 left-0 right-0 p-6">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-12 h-12 rounded-full bg-gold/20 backdrop-blur-sm flex items-center justify-center">
-                                                        <Icon className="w-6 h-6 text-gold" />
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="font-serif text-2xl text-white font-semibold">
-                                                            {special.title}
-                                                        </h3>
-                                                    </div>
-                                                </div>
+                                        {special.note && (
+                                            <div className="bg-gold/10 p-4 border-l-4 border-gold mb-8">
+                                                <p className="text-gold-dark font-semibold font-serif italic">{special.note}</p>
                                             </div>
+                                        )}
+
+                                        <div className="space-y-6 mb-10">
+                                            {special.items.map((item, i) => (
+                                                <div key={i} className="flex items-center justify-between border-b border-border/40 pb-4 group cursor-default">
+                                                    <span className={`text-lg transition-colors ${item.highlight ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
+                                                        {item.service}
+                                                    </span>
+                                                    <span className={`font-serif text-xl ${item.highlight ? 'text-gold font-bold' : 'text-foreground'}`}>
+                                                        {item.price}
+                                                    </span>
+                                                </div>
+                                            ))}
                                         </div>
 
-                                        {/* Card Content */}
-                                        <div className="p-6">
-                                            {/* Note/Badge */}
-                                            {special.note && (
-                                                <div className="bg-gold/10 border border-gold/30 rounded-lg p-3 mb-4">
-                                                    <p className="text-sm text-gold font-medium flex items-center gap-2">
-                                                        <Star className="w-4 h-4" />
-                                                        {special.note}
-                                                    </p>
-                                                </div>
-                                            )}
-
-                                            {/* Items List */}
-                                            <div className="space-y-3">
-                                                {special.items.map((item) => (
-                                                    <div
-                                                        key={item.service}
-                                                        className={`flex justify-between items-center pb-3 border-b border-border last:border-0 last:pb-0 ${item.highlight ? "bg-gold/5 -mx-2 px-2 py-2 rounded-lg border-0" : ""
-                                                            }`}
-                                                    >
-                                                        <span className={`font-medium ${item.highlight ? "text-gold" : ""}`}>
-                                                            {item.service}
-                                                        </span>
-                                                        <span className={`font-bold ${item.highlight ? "text-gold text-lg" : "text-gold"}`}>
-                                                            {item.price}
-                                                        </span>
-                                                    </div>
-                                                ))}
-                                            </div>
-
-                                            {/* Book Button */}
-                                            <Link
-                                                href="/contact#booking"
-                                                className="flex items-center justify-center gap-2 w-full mt-6 py-3 rounded-lg bg-foreground text-background text-sm font-medium hover:bg-foreground/90 transition-colors"
-                                            >
-                                                Book These Specials
-                                                <ArrowRight className="w-4 h-4" />
+                                        <Button asChild className="bg-foreground text-background hover:bg-gold hover:text-white w-fit px-8 py-6 text-lg rounded-none transition-all duration-300">
+                                            <Link href="/booking">
+                                                Book Appointment
+                                                <ArrowRight className="ml-2 w-5 h-5" />
                                             </Link>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Urgency CTA */}
-                <section className="py-20 bg-gold text-foreground text-center">
-                    <div className="container mx-auto px-4">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                        >
-                            <div className="flex justify-center mb-4">
-                                <Clock className="w-12 h-12" />
+                                        </Button>
+                                    </div>
+                                </motion.div>
                             </div>
-                            <h2 className="font-serif text-3xl md:text-4xl font-semibold mb-4">
-                                Don't Miss Out!
-                            </h2>
-                            <p className="text-foreground/80 mb-8 max-w-xl mx-auto">
-                                These special offers are available for a limited time only.
-                                Book your appointment today and save!
-                            </p>
-                            <Button
-                                asChild
-                                size="lg"
-                                className="bg-foreground hover:bg-foreground/90 text-background font-semibold px-8"
-                            >
-                                <Link href="/contact#booking">
-                                    Book Now & Save
-                                    <ArrowRight className="w-4 h-4 ml-2" />
-                                </Link>
-                            </Button>
-                        </motion.div>
+                        </section>
+                    ))}
+                </div>
+
+                {/* Final CTA */}
+                <section className="py-24 bg-secondary/30 text-center">
+                    <div className="container mx-auto">
+                        <h2 className="font-serif text-4xl mb-6">Need Advice?</h2>
+                        <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+                            Unsure which offer is best for you? Our concierge is available to guide your selection.
+                        </p>
+                        <Button variant="ghost" className="text-foreground hover:text-gold hover:bg-transparent underline underline-offset-4 text-lg">
+                            <Link href="/contact">Contact Concierge</Link>
+                        </Button>
                     </div>
                 </section>
             </main>
@@ -326,3 +244,4 @@ export default function SpecialsPage() {
         </>
     );
 }
+

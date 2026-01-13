@@ -3,66 +3,94 @@
 import { useState } from "react";
 import { Header, Footer } from "@/components/layout";
 import { Lightbox } from "@/components/ui/lightbox";
+import { BeforeAfterSlider } from "@/components/ui/before-after";
 import Image from "next/image";
-import { ZoomIn } from "lucide-react";
+import { ZoomIn, Camera } from "lucide-react";
+import { motion } from "framer-motion";
 
+// Enhanced gallery data with aspect ratio hints for masonry goodness
 const galleryItems = [
     {
         id: "1",
-        src: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&h=800&fit=crop",
-        alt: "Luxury facial treatment at Galeo Beauty",
-        title: "Luxury Facial",
-        category: "facial",
+        src: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&h=1200&fit=crop",
+        alt: "Luxury facial treatment",
+        title: "Medical Facial",
+        category: "Skin",
+        aspect: "portrait", // Vertical
     },
     {
         id: "2",
-        src: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&h=800&fit=crop",
-        alt: "Professional nail art design",
-        title: "Nail Art",
-        category: "nails",
+        src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1200&h=800&fit=crop",
+        alt: "Spa Massage Room",
+        title: "Serenity Suite",
+        category: "Ambiance",
+        aspect: "landscape", // Horizontal
     },
     {
         id: "3",
-        src: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=800&fit=crop",
-        alt: "Relaxing hot stone massage",
-        title: "Hot Stone Massage",
-        category: "massage",
+        src: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=1000&fit=crop",
+        alt: "Professional Makeup",
+        title: "Bridal Glow",
+        category: "Makeup",
+        aspect: "portrait",
     },
     {
         id: "4",
-        src: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=800&fit=crop",
-        alt: "Galeo Beauty salon interior",
-        title: "Our Salon",
-        category: "salon",
+        src: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&h=800&fit=crop",
+        alt: "Hair Styling",
+        title: "Volume & Shine",
+        category: "Hair",
+        aspect: "square",
     },
     {
         id: "5",
-        src: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&h=800&fit=crop",
-        alt: "Professional hair styling",
-        title: "Hair Styling",
-        category: "hair",
+        src: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&h=1200&fit=crop",
+        alt: "Advanced Skin Treatment",
+        title: "IPL Therapy",
+        category: "Medical",
+        aspect: "portrait",
     },
     {
         id: "6",
-        src: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&h=800&fit=crop",
-        alt: "Premium skincare products",
-        title: "Premium Products",
-        category: "skincare",
+        src: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&h=800&fit=crop",
+        alt: "Nail Art",
+        title: "Designer Nails",
+        category: "Nails",
+        aspect: "square",
     },
     {
         id: "7",
-        src: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&h=800&fit=crop",
-        alt: "Advanced skin treatment",
-        title: "Skin Treatment",
-        category: "facial",
+        src: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&h=1000&fit=crop",
+        alt: "Skincare Products",
+        title: "Babor Collection",
+        category: "Products",
+        aspect: "portrait",
     },
     {
         id: "8",
-        src: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&h=800&fit=crop",
-        alt: "Gel manicure service",
-        title: "Gel Manicure",
-        category: "nails",
+        src: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200&h=800&fit=crop",
+        alt: "Manicure Station",
+        title: "Nail Bar",
+        category: "Ambiance",
+        aspect: "landscape",
     },
+];
+
+const transformations = [
+    {
+        id: "t1",
+        before: "https://images.unsplash.com/photo-1506543730-f35c065f3a1d?w=800&fit=crop", // placeholder
+        after: "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=800&fit=crop", // placeholder
+        title: "Skin Rejuvenation",
+        desc: "After 3 sessions of Microneedling"
+    },
+    {
+        id: "t2",
+        before: "https://images.unsplash.com/photo-1485290334039-a3c69043e517?w=800&fit=crop", // placeholder
+        after: "https://images.unsplash.com/photo-1544435253-f0ead49638fa?w=800&fit=crop", // placeholder
+        title: "Lash Lift",
+        desc: "Natural lash enhancement"
+    }
 ];
 
 export default function GalleryPage() {
@@ -82,57 +110,114 @@ export default function GalleryPage() {
     return (
         <>
             <Header />
-            <main>
-                {/* Page Hero */}
-                <section className="bg-gradient-to-b from-muted/50 to-background py-20 md:py-28">
-                    <div className="container mx-auto px-4 text-center">
-                        <span className="text-gold text-xs uppercase tracking-[0.3em] mb-3 block font-sans font-semibold">
-                            Our Work
-                        </span>
-                        <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-semibold mb-4">
-                            Beauty <span className="text-gold">Gallery</span>
-                        </h1>
-                        <p className="text-muted-foreground max-w-xl mx-auto">
-                            Browse our portfolio of treatments, transformations, and salon ambiance.
-                            Click any image to view in full screen.
-                        </p>
+            <main className="bg-background min-h-screen">
+                {/* Hero Section */}
+                <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 px-6 overflow-hidden">
+                    <div className="absolute top-0 right-0 w-2/3 h-full bg-secondary/10 -z-10 skew-x-12" />
+                    <div className="container mx-auto text-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <span className="text-gold font-bold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4 block">
+                                Portfolio
+                            </span>
+                            <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl text-foreground mb-6">
+                                Visual <span className="italic text-gold">Artistry</span>
+                            </h1>
+                            <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto leading-relaxed">
+                                A curated glimpse into our world of beauty, precision, and transformative care.
+                            </p>
+                        </motion.div>
                     </div>
                 </section>
 
-                {/* Gallery Grid */}
-                <section className="py-16 md:py-24">
-                    <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                            {galleryItems.map((item, index) => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => openLightbox(index)}
-                                    className="group relative aspect-square overflow-hidden rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2"
+                {/* Real Results - Before/After */}
+                <section className="py-12 lg:py-20">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        <div className="text-center mb-12">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-4">
+                                <Camera className="w-4 h-4" />
+                                <span className="text-xs font-bold uppercase tracking-wider">Scientific Results</span>
+                            </div>
+                            <h2 className="font-serif text-3xl md:text-4xl text-foreground">Transformations</h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                            {transformations.map((t, i) => (
+                                <motion.div
+                                    key={t.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: i * 0.2 }}
+                                    className="space-y-4"
                                 >
-                                    <Image
-                                        src={item.src}
-                                        alt={item.alt}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                    />
-                                    {/* Hover Overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                            <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
+                                        <BeforeAfterSlider
+                                            beforeImage={t.before}
+                                            afterImage={t.after}
+                                            alt={t.title}
+                                        />
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="font-serif text-xl text-foreground">{t.title}</h3>
+                                        <p className="text-sm text-gold-dark italic">{t.desc}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Masonry Gallery Grid */}
+                <section className="py-16 md:py-24 bg-white/50">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-12 text-center">Galeo Life</h2>
+
+                        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
+                            {galleryItems.map((item, index) => (
+                                <motion.div
+                                    key={item.id}
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.4 }}
+                                    className="break-inside-avoid"
+                                >
+                                    <button
+                                        onClick={() => openLightbox(index)}
+                                        className="group relative w-full overflow-hidden rounded-lg cursor-zoom-in"
+                                    >
+                                        <div className={`relative w-full ${item.aspect === 'portrait' ? 'aspect-[3/4]' :
+                                            item.aspect === 'landscape' ? 'aspect-[4/3]' : 'aspect-square'
+                                            }`}>
+                                            <Image
+                                                src={item.src}
+                                                alt={item.alt}
+                                                fill
+                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            />
+                                            {/* Hover Overlay */}
+                                            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300" />
+
+                                            <div className="absolute inset-0 flex flex-col justify-end p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                <span className="text-gold text-xs font-bold uppercase tracking-wider mb-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                                    {item.category}
+                                                </span>
+                                                <h3 className="text-white font-serif text-2xl translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                                                    {item.title}
+                                                </h3>
+                                            </div>
+
+                                            <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                                                 <ZoomIn className="w-5 h-5 text-white" />
                                             </div>
                                         </div>
-                                        <div className="text-white">
-                                            <h3 className="font-serif text-lg font-semibold">
-                                                {item.title}
-                                            </h3>
-                                            <span className="text-sm text-white/70 capitalize">
-                                                {item.category}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </button>
+                                    </button>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
@@ -140,7 +225,6 @@ export default function GalleryPage() {
             </main>
             <Footer />
 
-            {/* Lightbox */}
             <Lightbox
                 images={lightboxImages}
                 initialIndex={currentIndex}
