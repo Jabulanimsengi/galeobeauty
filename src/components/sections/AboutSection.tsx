@@ -21,10 +21,10 @@ export function AboutSection() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
                     {/* Sticky Image Column */}
-                    <div className="order-2 lg:order-1 relative lg:sticky lg:top-32 self-start">
+                    <div className="relative lg:sticky lg:top-32 self-start">
                         <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
                             {/* Main Image */}
-                            <div className="relative aspect-[4/5] w-full">
+                            <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full">
                                 <Image
                                     src="/images/founder.jpg"
                                     alt="Dandi Meyer - Founder of Galeo Beauty"
@@ -56,7 +56,7 @@ export function AboutSection() {
                     </div>
 
                     {/* Text Content Column - Scrolls naturally */}
-                    <div className="order-1 lg:order-2 space-y-12">
+                    <div className="space-y-12">
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             whileInView={{ opacity: 1, x: 0 }}
