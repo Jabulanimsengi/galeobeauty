@@ -29,14 +29,14 @@ export function AboutSection() {
                                     src="/images/founder.jpg"
                                     alt="Dandi Meyer - Founder of Galeo Beauty"
                                     fill
-                                    className="object-cover transition-transform duration-700 hover:scale-105"
+                                    className="object-cover object-top transition-transform duration-700 hover:scale-105"
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                             </div>
 
                             {/* Floating Badge */}
-                            <div className="absolute bottom-8 left-8 right-8">
+                            <div className="absolute bottom-4 left-4 right-4 sm:bottom-8 sm:left-8 sm:right-8">
                                 <div className="bg-white/95 backdrop-blur-md rounded-xl p-6 shadow-lg border border-white/40">
                                     <div className="flex items-center gap-4 mb-3">
                                         <div className="p-3 bg-gold/10 rounded-full">
