@@ -86,11 +86,13 @@ export function ReviewsSection() {
                                 className="flex-shrink-0 w-[70vw] sm:w-[55vw] md:w-[400px] snap-center md:snap-start"
                             >
                                 <div className="relative rounded-2xl overflow-hidden shadow-xl border border-border/50 bg-white">
-                                    {/* Use img tag to allow natural height and eliminate whitespace */}
-                                    <img
+                                    <Image
                                         src={src}
                                         alt={`Galeo Beauty Review ${index + 1}`}
-                                        className="w-full h-auto object-contain block"
+                                        width={400}
+                                        height={500}
+                                        className="w-full h-auto object-contain"
+                                        sizes="(max-width: 640px) 70vw, (max-width: 768px) 55vw, 400px"
                                     />
                                 </div>
                             </motion.div>

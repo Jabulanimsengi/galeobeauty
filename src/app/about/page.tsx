@@ -133,7 +133,7 @@ export default function AboutPage() {
                                 </div>
                                 <div className="mt-10">
                                     <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-white rounded-full px-8">
-                                        <Link href="/services">Explore Our Treatments</Link>
+                                        <Link href="/prices">Explore Our Treatments</Link>
                                     </Button>
                                 </div>
                             </motion.div>

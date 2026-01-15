@@ -308,4 +308,207 @@
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
+  /* ============================================
+     PREMIUM GLASSMORPHISM CARDS
+     ============================================ */
+  .glass-premium {
+    @apply relative bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(255, 255, 255, 0.7) 50%,
+        rgba(255, 255, 255, 0.85) 100%);
+  }
+
+  .glass-premium::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.8) 0%,
+        var(--gold-light) 25%,
+        rgba(255, 255, 255, 0.6) 50%,
+        var(--gold-light) 75%,
+        rgba(255, 255, 255, 0.8) 100%);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .glass-premium:hover {
+    @apply shadow-2xl shadow-gold/15;
+    transform: translateY(-2px);
+  }
+
+  /* ============================================
+     BUTTON SHEEN EFFECT
+     ============================================ */
+  .btn-sheen {
+    @apply relative overflow-hidden;
+  }
+
+  .btn-sheen::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%);
+    transition: left 0.5s ease-out;
+  }
+
+  .btn-sheen:hover::after {
+    left: 100%;
+  }
+
+  /* ============================================
+     SKELETON LOADER WITH GOLD SHIMMER
+     ============================================ */
+  .skeleton {
+    @apply relative overflow-hidden bg-secondary/50 rounded-lg;
+  }
+
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--gold-light) 25%,
+        var(--gold) 50%,
+        var(--gold-light) 75%,
+        transparent 100%);
+    opacity: 0.3;
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 2s infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* ============================================
+     ANIMATED GOLD DIVIDER
+     ============================================ */
+  .gold-divider {
+    @apply relative h-[2px] w-full overflow-hidden;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--gold-light) 20%,
+        var(--gold) 50%,
+        var(--gold-light) 80%,
+        transparent 100%);
+  }
+
+  .gold-divider-animated {
+    @apply relative h-[2px] w-full overflow-hidden;
+  }
+
+  .gold-divider-animated::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--gold-dark) 25%,
+        var(--gold-light) 50%,
+        var(--gold-dark) 75%,
+        transparent 100%);
+    animation: divider-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes divider-pulse {
+
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* ============================================
+     URGENCY/SCARCITY BADGES
+     ============================================ */
+  .badge-urgency {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    animation: urgency-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes urgency-pulse {
+
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+
+    50% {
+      box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+  }
+
+  .badge-booking-fast {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+    color: white;
+  }
+
+  .badge-booking-fast::before {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    animation: booking-dot 1s ease-in-out infinite;
+  }
+
+  @keyframes booking-dot {
+
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.5;
+      transform: scale(0.8);
+    }
+  }
+
+  /* ============================================
+     ENHANCED ACCESSIBILITY FOCUS STATES
+     ============================================ */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Apply to all interactive elements */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-background;
+  }
 }

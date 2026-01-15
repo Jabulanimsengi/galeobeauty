@@ -1,32 +1,109 @@
 "use client";
 
+import { useState } from "react";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, ArrowRight, CheckCircle, Clock, Sparkles, Eye, Hand, Flame, Brush, Zap, HelpCircle } from "lucide-react";
+import { Phone, Calendar, ArrowRight, CheckCircle, Clock, Sparkles, ChevronDown, Send } from "lucide-react";
 import { businessInfo } from "@/lib/constants";
+import { serviceCategories, getSubcategoriesForCategory, getItemsForSubcategory } from "@/lib/services-data";
+import type { ServiceItem, ServiceSubcategory } from "@/lib/services-data";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
-
-interface Service {
-    id: string;
-    name: string;
-    Icon: LucideIcon;
-}
-
-const services: Service[] = [
-    { id: "facials", name: "Facial Skincare", Icon: Sparkles },
-    { id: "nails", name: "Nails & Pedicures", Icon: Hand },
-    { id: "lashes", name: "Lashes & Brows", Icon: Eye },
-    { id: "massage", name: "Massage Therapy", Icon: Hand },
-    { id: "body", name: "Body Contouring", Icon: Flame },
-    { id: "makeup", name: "Make-up & PMU", Icon: Brush },
-    { id: "ipl", name: "IPL Hair Removal", Icon: Zap },
-    { id: "other", name: "Other / Not Sure", Icon: HelpCircle },
-];
 
 export default function BookingPage() {
+    // Form state
+    const [selectedCategoryId, setSelectedCategoryId] = useState("");
+    const [selectedSubcategoryId, setSelectedSubcategoryId] = useState("");
+    const [selectedItemId, setSelectedItemId] = useState("");
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [date, setDate] = useState("");
+    const [time, setTime] = useState("");
+    const [notes, setNotes] = useState("");
+
+    // Derived data for cascading dropdowns
+    const subcategories: ServiceSubcategory[] = selectedCategoryId
+        ? getSubcategoriesForCategory(selectedCategoryId)
+        : [];
+
+    const items: ServiceItem[] = selectedCategoryId && selectedSubcategoryId
+        ? getItemsForSubcategory(selectedCategoryId, selectedSubcategoryId)
+        : [];
+
+    // Get selected names for display
+    const selectedCategory = serviceCategories.find(c => c.id === selectedCategoryId);
+    const selectedSubcategory = subcategories.find(s => s.id === selectedSubcategoryId);
+    const selectedItem = items.find(i => i.id === selectedItemId);
+
+    // Reset dependent selections when parent changes
+    const handleCategoryChange = (categoryId: string) => {
+        setSelectedCategoryId(categoryId);
+        setSelectedSubcategoryId("");
+        setSelectedItemId("");
+    };
+
+    const handleSubcategoryChange = (subcategoryId: string) => {
+        setSelectedSubcategoryId(subcategoryId);
+        setSelectedItemId("");
+    };
+
+    // Format date for display
+    const formatDate = (dateStr: string) => {
+        if (!dateStr) return "";
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-ZA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    // Generate WhatsApp message and open link
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Build the message
+        const serviceLine = selectedCategory
+            ? `*Category:* ${selectedCategory.title}`
+            : "";
+        const subcategoryLine = selectedSubcategory
+            ? `*Treatment Type:* ${selectedSubcategory.title}`
+            : "";
+        const itemLine = selectedItem
+            ? `*Service:* ${selectedItem.name}${selectedItem.duration ? ` (${selectedItem.duration})` : ""}\n*Price:* ${selectedItem.price}`
+            : "";
+
+        const message = `🌟 *New Booking Request - Galeo Beauty*
+━━━━━━━━━━━━━━━━━
+
+📋 *Service Details*
+${serviceLine}
+${subcategoryLine}
+${itemLine}
+
+👤 *Client Information*
+*Name:* ${name}
+*Phone:* ${phone}${email ? `\n*Email:* ${email}` : ""}
+
+📅 *Preferred Appointment*
+*Date:* ${formatDate(date) || "Not specified"}
+*Time:* ${time || "Not specified"}
+
+📝 *Additional Notes:*
+${notes || "None"}
+
+━━━━━━━━━━━━━━━━━
+Sent via Galeo Beauty Website`;
+
+        // Encode message for URL
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/${businessInfo.socials.whatsapp}?text=${encodedMessage}`;
+
+        // Open WhatsApp in new tab
+        window.open(whatsappUrl, "_blank");
+    };
+
+    // Check if form is valid
+    const isFormValid = name && phone && selectedCategoryId;
+
     return (
         <>
             <Header />
@@ -123,23 +200,99 @@ export default function BookingPage() {
                                 className="lg:col-span-3"
                             >
                                 <div className="bg-white rounded-3xl shadow-xl shadow-gold/5 border border-border/40 p-8 lg:p-10">
-                                    <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
-                                        {/* Step 1: Service Selection */}
+                                    <form className="space-y-8" onSubmit={handleSubmit}>
+                                        {/* Step 1: Cascading Service Selection */}
                                         <div>
                                             <label className="block text-sm font-semibold text-foreground mb-4">
                                                 1. Select Your Treatment
                                             </label>
-                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                                {services.map((service) => (
-                                                    <label
-                                                        key={service.id}
-                                                        className="flex flex-col items-center p-4 rounded-xl border border-border/60 cursor-pointer hover:border-gold/50 hover:bg-gold/5 transition-all peer-checked:border-gold peer-checked:bg-gold/10 text-center"
+
+                                            {/* Category Selection */}
+                                            <div className="space-y-4">
+                                                <div className="relative">
+                                                    <select
+                                                        value={selectedCategoryId}
+                                                        onChange={(e) => handleCategoryChange(e.target.value)}
+                                                        className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-foreground appearance-none cursor-pointer"
                                                     >
-                                                        <input type="radio" name="service" value={service.id} className="sr-only peer" />
-                                                        <service.Icon className="w-6 h-6 text-gold mb-2" />
-                                                        <span className="text-xs text-foreground font-medium">{service.name}</span>
-                                                    </label>
-                                                ))}
+                                                        <option value="">Select Treatment Category...</option>
+                                                        {serviceCategories.map((category) => (
+                                                            <option key={category.id} value={category.id}>
+                                                                {category.title}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                                                </div>
+
+                                                {/* Subcategory Selection - Shows when category selected */}
+                                                {selectedCategoryId && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, height: 0 }}
+                                                        animate={{ opacity: 1, height: "auto" }}
+                                                        className="relative"
+                                                    >
+                                                        <select
+                                                            value={selectedSubcategoryId}
+                                                            onChange={(e) => handleSubcategoryChange(e.target.value)}
+                                                            className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-foreground appearance-none cursor-pointer"
+                                                        >
+                                                            <option value="">Select Treatment Type...</option>
+                                                            {subcategories.map((sub) => (
+                                                                <option key={sub.id} value={sub.id}>
+                                                                    {sub.title}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                                                    </motion.div>
+                                                )}
+
+                                                {/* Item Selection - Shows when subcategory selected */}
+                                                {selectedSubcategoryId && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, height: 0 }}
+                                                        animate={{ opacity: 1, height: "auto" }}
+                                                        className="relative"
+                                                    >
+                                                        <select
+                                                            value={selectedItemId}
+                                                            onChange={(e) => setSelectedItemId(e.target.value)}
+                                                            className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-foreground appearance-none cursor-pointer"
+                                                        >
+                                                            <option value="">Select Specific Service...</option>
+                                                            {items.map((item) => (
+                                                                <option key={item.id} value={item.id}>
+                                                                    {item.name} - {item.price}{item.duration ? ` (${item.duration})` : ""}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                                                    </motion.div>
+                                                )}
+
+                                                {/* Selected Service Summary */}
+                                                {selectedItem && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        className="bg-gold/10 border border-gold/30 rounded-xl p-4 flex items-center justify-between"
+                                                    >
+                                                        <div>
+                                                            <p className="text-sm text-muted-foreground">Selected Treatment</p>
+                                                            <p className="font-semibold text-foreground">{selectedItem.name}</p>
+                                                            {selectedItem.duration && (
+                                                                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                                                                    <Clock className="w-3 h-3" />
+                                                                    {selectedItem.duration}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <p className="text-2xl font-bold text-gold">{selectedItem.price}</p>
+                                                        </div>
+                                                    </motion.div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -152,18 +305,24 @@ export default function BookingPage() {
                                                 <input
                                                     type="text"
                                                     placeholder="Full Name *"
+                                                    value={name}
+                                                    onChange={(e) => setName(e.target.value)}
                                                     className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all placeholder:text-muted-foreground/50"
                                                     required
                                                 />
                                                 <input
                                                     type="tel"
                                                     placeholder="Phone Number *"
+                                                    value={phone}
+                                                    onChange={(e) => setPhone(e.target.value)}
                                                     className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all placeholder:text-muted-foreground/50"
                                                     required
                                                 />
                                                 <input
                                                     type="email"
                                                     placeholder="Email Address"
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
                                                     className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all placeholder:text-muted-foreground/50 sm:col-span-2"
                                                 />
                                             </div>
@@ -178,17 +337,25 @@ export default function BookingPage() {
                                                 <div className="relative">
                                                     <input
                                                         type="date"
-                                                        className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-muted-foreground"
+                                                        value={date}
+                                                        onChange={(e) => setDate(e.target.value)}
+                                                        min={new Date().toISOString().split('T')[0]}
+                                                        className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-foreground"
                                                     />
                                                 </div>
-                                                <select
-                                                    className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-muted-foreground"
-                                                >
-                                                    <option>Preferred Time...</option>
-                                                    <option>Morning (8am - 12pm)</option>
-                                                    <option>Afternoon (12pm - 4pm)</option>
-                                                    <option>Late Afternoon (4pm - 6pm)</option>
-                                                </select>
+                                                <div className="relative">
+                                                    <select
+                                                        value={time}
+                                                        onChange={(e) => setTime(e.target.value)}
+                                                        className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all text-foreground appearance-none cursor-pointer"
+                                                    >
+                                                        <option value="">Preferred Time...</option>
+                                                        <option value="Morning (8am - 12pm)">Morning (8am - 12pm)</option>
+                                                        <option value="Afternoon (12pm - 4pm)">Afternoon (12pm - 4pm)</option>
+                                                        <option value="Late Afternoon (4pm - 6pm)">Late Afternoon (4pm - 6pm)</option>
+                                                    </select>
+                                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                                                </div>
                                             </div>
                                         </div>
 
@@ -200,19 +367,25 @@ export default function BookingPage() {
                                             <textarea
                                                 rows={3}
                                                 placeholder="Any specific requests or information we should know..."
+                                                value={notes}
+                                                onChange={(e) => setNotes(e.target.value)}
                                                 className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all placeholder:text-muted-foreground/50 resize-none"
                                             />
                                         </div>
 
                                         {/* Submit */}
-                                        <Button className="w-full py-6 text-lg bg-gold text-white hover:bg-gold-dark transition-all duration-300 shadow-lg hover:shadow-gold/30 rounded-xl">
-                                            <Sparkles className="w-5 h-5 mr-2" />
-                                            Request Booking
+                                        <Button
+                                            type="submit"
+                                            disabled={!isFormValid}
+                                            className="w-full py-6 text-lg bg-gold text-white hover:bg-gold-dark transition-all duration-300 shadow-lg hover:shadow-gold/30 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        >
+                                            <Send className="w-5 h-5" />
+                                            Book via WhatsApp
                                         </Button>
 
                                         <p className="text-center text-xs text-muted-foreground">
                                             By submitting, you agree to our 24-hour cancellation policy.
-                                            <br />We'll confirm your appointment via WhatsApp or phone call.
+                                            <br />You'll be redirected to WhatsApp to confirm your booking.
                                         </p>
                                     </form>
                                 </div>

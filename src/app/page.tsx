@@ -3,7 +3,6 @@ import {
   HeroSection,
   StatsSection,
   ServicesSection,
-  AboutSection,
   ReviewsSection,
   BrandsSection,
 } from "@/components/sections";
@@ -14,7 +13,6 @@ export default function HomePage() {
       <Header />
       <main>
         <HeroSection />
-        <AboutSection />
         <BrandsSection />
         <ServicesSection />
         <ReviewsSection />

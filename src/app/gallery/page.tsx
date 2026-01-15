@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Header, Footer } from "@/components/layout";
 import { Lightbox } from "@/components/ui/lightbox";
-import { BeforeAfterSlider } from "@/components/ui/before-after";
+
 import Image from "next/image";
-import { ZoomIn, Camera } from "lucide-react";
+import { ZoomIn } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Enhanced gallery data with aspect ratio hints for masonry goodness
@@ -76,22 +76,7 @@ const galleryItems = [
     },
 ];
 
-const transformations = [
-    {
-        id: "t1",
-        before: "https://images.unsplash.com/photo-1506543730-f35c065f3a1d?w=800&fit=crop", // placeholder
-        after: "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=800&fit=crop", // placeholder
-        title: "Skin Rejuvenation",
-        desc: "After 3 sessions of Microneedling"
-    },
-    {
-        id: "t2",
-        before: "https://images.unsplash.com/photo-1485290334039-a3c69043e517?w=800&fit=crop", // placeholder
-        after: "https://images.unsplash.com/photo-1544435253-f0ead49638fa?w=800&fit=crop", // placeholder
-        title: "Lash Lift",
-        desc: "Natural lash enhancement"
-    }
-];
+
 
 export default function GalleryPage() {
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -133,43 +118,7 @@ export default function GalleryPage() {
                     </div>
                 </section>
 
-                {/* Real Results - Before/After */}
-                <section className="py-12 lg:py-20">
-                    <div className="container mx-auto px-4 sm:px-6">
-                        <div className="text-center mb-12">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold/10 text-gold mb-4">
-                                <Camera className="w-4 h-4" />
-                                <span className="text-xs font-bold uppercase tracking-wider">Scientific Results</span>
-                            </div>
-                            <h2 className="font-serif text-3xl md:text-4xl text-foreground">Transformations</h2>
-                        </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-                            {transformations.map((t, i) => (
-                                <motion.div
-                                    key={t.id}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: i * 0.2 }}
-                                    className="space-y-4"
-                                >
-                                    <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white">
-                                        <BeforeAfterSlider
-                                            beforeImage={t.before}
-                                            afterImage={t.after}
-                                            alt={t.title}
-                                        />
-                                    </div>
-                                    <div className="text-center">
-                                        <h3 className="font-serif text-xl text-foreground">{t.title}</h3>
-                                        <p className="text-sm text-gold-dark italic">{t.desc}</p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
 
                 {/* Masonry Gallery Grid */}
                 <section className="py-16 md:py-24 bg-white/50">

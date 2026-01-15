@@ -38,7 +38,7 @@ export function Map({
         // Initialize map - STATIC view (no animation, no tilt)
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: "mapbox://styles/mapbox/streets-v12",
+            style: "mapbox://styles/mapbox/outdoors-v12",
             center: [longitude, latitude],
             zoom: zoom,
             pitch: 0, // Flat view

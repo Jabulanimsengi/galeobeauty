@@ -1,16 +1,16 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
-import { TrustBadge } from "@/components/ui/trust-badge";
 import { Button } from "@/components/ui/button";
 import { Countdown } from "@/components/ui/countdown";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Scissors, Eye, Heart, Star, Tag } from "lucide-react";
+import { ArrowRight, Sparkles, Clock, Percent, Gift, Star, Zap, Heart, Tag, Check } from "lucide-react";
 
 interface SpecialItem {
     service: string;
+    originalPrice?: string;
     price: string;
     highlight?: boolean;
 }
@@ -20,223 +20,335 @@ interface Special {
     title: string;
     subtitle: string;
     image: string;
-    icon: React.ElementType;
+    discount?: string;
     description: string;
     items: SpecialItem[];
     note?: string;
+    featured?: boolean;
 }
 
-// Special offers data
+// Special offers data with local images
 const specials: Special[] = [
     {
-        id: "hair",
-        title: "The Hair Edit",
-        subtitle: "Luxe Locks",
-        image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&h=1200&fit=crop", // Portrait
-        icon: Scissors,
-        description: "Transform your look with our seasonal hair collection. Featuring premium styling and treatments for vitality and shine.",
+        id: "facials",
+        title: "Facial Glow Package",
+        subtitle: "Premium Babor Treatments",
+        image: "/images/services/facials/Image_facial_03.jpeg",
+        discount: "30% OFF",
+        description: "Experience our signature Babor facials at special prices. Perfect for achieving that radiant, healthy glow you deserve.",
+        featured: true,
         items: [
-            { service: "Root Tint & Blow Wave", price: "R400" },
-            { service: "Hi-Lights & OSMO Treatment", price: "R900" },
-            { service: "Hollywood Curls", price: "FREE", highlight: true },
+            { service: "Skinovage Moisturising Facial", originalPrice: "R575", price: "R400" },
+            { service: "HSR Anti-Ageing Facial", originalPrice: "R1,430", price: "R1,000" },
+            { service: "Skin Renewal Peel", originalPrice: "R930", price: "R650", highlight: true },
         ],
     },
     {
-        id: "lash-focus",
-        title: "Lash & Brow Artistry",
-        subtitle: "Frame Your Face",
-        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&h=1200&fit=crop",
-        icon: Eye,
-        description: "Wake up effortlessly beautiful. Our lash and brow technicians sculpt and define to enhance your natural features.",
-        note: "Permanent Makeup 50% OFF - Limited Time",
+        id: "lashes",
+        title: "Lash & Brow Special",
+        subtitle: "Frame Your Beauty",
+        image: "/images/services/lashes.png",
+        discount: "25% OFF",
+        description: "Wake up beautiful with our lash extensions and brow enhancement services. Perfect for busy professionals.",
         items: [
-            { service: "Full Set Hybrid Lashes", price: "R500" },
-            { service: "Brow Lamination & Lash Lift", price: "R400" },
-            { service: "Classic Lashes", price: "R400" },
+            { service: "Full Set Hybrid Lashes", originalPrice: "R667", price: "R500" },
+            { service: "Russian Volume Lashes", originalPrice: "R1,200", price: "R899" },
+            { service: "Brow Lamination + Tint", originalPrice: "R533", price: "R400", highlight: true },
         ],
     },
     {
-        id: "glow",
-        title: "The Skin Glow",
-        subtitle: "Radiance Revealed",
-        image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&h=1200&fit=crop",
-        icon: Sparkles,
-        description: "Scientific skincare meets luxurious relaxation. Reveal your most radiant complexion with our curated facial menu.",
+        id: "massage",
+        title: "Relaxation Escape",
+        subtitle: "Therapeutic Wellness",
+        image: "/images/services/massages/Massage_07.jpeg",
+        discount: "20% OFF",
+        description: "Melt away stress with our therapeutic massage treatments using premium Lillian Terry aromatherapy oils.",
         items: [
-            { service: "Dermalogica Facial", price: "R850" },
-            { service: "Sky Tightening RF", price: "R1,500" },
-            { service: "IPL Hair Removal", price: "50% OFF", highlight: true },
+            { service: "Swedish Full Body Massage", originalPrice: "R650", price: "R520" },
+            { service: "Deep Tissue Therapy", originalPrice: "R738", price: "R590" },
+            { service: "Couples Massage Package", originalPrice: "R1,200", price: "R960", highlight: true },
         ],
     },
     {
-        id: "body-sculpt",
-        title: "Body Sculpting",
-        subtitle: "Silhouette Refined",
-        image: "https://images.unsplash.com/photo-1519823551278-64ac927ac280?w=800&h=1200&fit=crop",
-        icon: Heart,
-        description: "Advanced non-invasive treatments to contour, tighten, and smooth. Achieve your body goals with our medical-grade technologies.",
+        id: "makeup",
+        title: "Bridal Season Special",
+        subtitle: "Your Perfect Day",
+        image: "/images/services/makeup/makeup_01.jpeg",
+        discount: "FREE Trial",
+        description: "Book your bridal makeup with us and receive a complimentary trial session. Kryolan professional products included.",
+        featured: true,
         items: [
-            { service: "Fat Freeze (Per Session)", price: "R800" },
-            { service: "Sunbed Package (10)", price: "R350" },
-            { service: "All Waxing (Maria)", price: "25% OFF", highlight: true },
+            { service: "Bridal Makeup + Trial", originalPrice: "R1,900", price: "R1,500" },
+            { service: "Bridal Party (per person)", originalPrice: "R500", price: "R400" },
+            { service: "Permanent Brows Touch-up", price: "50% OFF", highlight: true },
         ],
     },
 ];
 
 export default function SpecialsPage() {
-    // Target date for countdown (end of current month)
     const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 7); // 7 days from now for urgency
+    targetDate.setDate(targetDate.getDate() + 7);
 
     return (
         <>
             <Header />
-            <main className="bg-background">
-                {/* Editorial Hero */}
-                <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 px-6 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-1/3 h-full bg-secondary/20 -z-10" />
+            <main className="bg-background min-h-screen">
+                {/* Hero Section */}
+                <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden">
+                    {/* Background decorations */}
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold/5 to-transparent -z-10" />
+                    <div className="absolute top-20 left-10 w-64 h-64 bg-gold/10 rounded-full blur-3xl -z-10" />
 
-                    <div className="container mx-auto">
-                        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        <div className="max-w-4xl mx-auto text-center">
                             <motion.div
-                                initial={{ opacity: 0, x: -50 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.8 }}
-                                className="lg:w-1/2"
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6 }}
                             >
-                                <span className="text-gold font-bold tracking-[0.2em] uppercase text-sm mb-6 block">
-                                    Curated Offers
-                                </span>
-                                <h1 className="font-serif text-6xl sm:text-7xl lg:text-9xl text-foreground leading-[0.9] mb-8">
-                                    THE <br /><span className="italic text-gold">EDIT</span>
+                                {/* Badge */}
+                                <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/30 px-4 py-2 rounded-full mb-6">
+                                    <Sparkles className="w-4 h-4 text-gold" />
+                                    <span className="text-gold text-sm font-semibold uppercase tracking-wider">Limited Time Offers</span>
+                                </div>
+
+                                <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl text-foreground mb-6">
+                                    Specials & <span className="text-gold italic">Promotions</span>
                                 </h1>
-                                <p className="text-xl text-muted-foreground font-light max-w-md border-l-2 border-gold pl-6 ml-2">
-                                    A monthly collection of exclusive beauty experiences, hand-picked by our specialists for you.
-                                </p>
-                            </motion.div>
 
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                                className="lg:w-1/2 relative"
-                            >
-                                <div className="relative aspect-[4/5] w-full max-w-md mx-auto">
-                                    <Image
-                                        src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=1000&fit=crop"
-                                        alt="Feature Special"
-                                        fill
-                                        className="object-cover grayscale hover:grayscale-0 transition-all duration-700 ease-in-out"
-                                    />
-                                    <div className="absolute -bottom-6 -left-6 bg-white p-6 shadow-xl max-w-xs z-10 hidden sm:block">
-                                        <p className="font-serif text-2xl italic mb-1">"Must Have"</p>
-                                        <p className="text-sm text-muted-foreground">The January Permanent Makeup Collection.</p>
-                                    </div>
+                                <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+                                    Exclusive beauty deals curated just for you. Book now and save on our most popular treatments.
+                                </p>
+
+                                {/* Quick stats */}
+                                <div className="flex flex-wrap justify-center gap-6 sm:gap-10">
+                                    {[
+                                        { icon: Percent, label: "Up to 50% Off" },
+                                        { icon: Gift, label: "Free Trials" },
+                                        { icon: Clock, label: "Limited Time" },
+                                    ].map((stat) => (
+                                        <div key={stat.label} className="flex items-center gap-2 text-foreground/70">
+                                            <stat.icon className="w-5 h-5 text-gold" />
+                                            <span className="text-sm font-medium">{stat.label}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </motion.div>
                         </div>
                     </div>
                 </section>
 
-                {/* Countdown Section */}
-                <section className="py-12 bg-foreground text-background">
-                    <div className="container mx-auto px-4 text-center">
-                        <p className="uppercase tracking-widest text-xs font-semibold mb-2 text-gold">Offers Expire In</p>
-                        <Countdown targetDate={targetDate} />
-                        <Button variant="outline" className="text-gold border-gold hover:bg-gold hover:text-white mt-4 border-2">
-                            <Link href="/booking">Book Before It's Too Late</Link>
-                        </Button>
+                {/* Countdown Banner - Minimal Design */}
+                <section className="py-6 bg-foreground text-background">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+                            <p className="text-gold text-sm font-medium tracking-wide">
+                                Offers end in
+                            </p>
+                            <Countdown targetDate={targetDate} variant="dark" />
+                            <Button
+                                asChild
+                                size="sm"
+                                className="bg-gold hover:bg-gold-dark text-foreground font-medium px-6"
+                            >
+                                <Link href="/booking">
+                                    Book Now
+                                    <ArrowRight className="w-4 h-4 ml-1" />
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                 </section>
 
-                {/* Editorial Magazine Layout */}
-                <div className="py-20 lg:py-32 space-y-20 lg:space-y-32">
-                    {specials.map((special, idx) => (
-                        <section key={special.id} className="container mx-auto px-4 sm:px-6">
-                            <div className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-24 items-center`}>
-
-                                {/* Image Half */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 50 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-100px" }}
-                                    transition={{ duration: 0.7 }}
-                                    className="lg:w-1/2 w-full"
-                                >
-                                    <div className="relative aspect-[4/5] sm:aspect-[3.5/4] md:aspect-[3/4] w-full">
+                {/* Featured Special - Large Card */}
+                <section className="py-16 lg:py-24">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        {specials.filter(s => s.featured).slice(0, 1).map((special) => (
+                            <motion.div
+                                key={special.id}
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6 }}
+                                className="relative bg-gradient-to-br from-foreground to-foreground/90 rounded-3xl overflow-hidden"
+                            >
+                                <div className="flex flex-col lg:flex-row">
+                                    {/* Image */}
+                                    <div className="lg:w-1/2 relative aspect-[4/3] lg:aspect-auto lg:min-h-[500px]">
                                         <Image
                                             src={special.image}
                                             alt={special.title}
                                             fill
-                                            className="object-cover shadow-2xl"
+                                            className="object-cover"
                                         />
-                                        <div className="absolute inset-0 border border-white/20 m-4" />
+                                        {/* Discount Badge */}
+                                        <div className="absolute top-6 left-6 bg-gold text-foreground px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+                                            {special.discount}
+                                        </div>
                                     </div>
-                                </motion.div>
 
-                                {/* Content Half */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-100px" }}
-                                    transition={{ duration: 0.7, delay: 0.2 }}
-                                    className="lg:w-1/2 w-full"
-                                >
-                                    <div className="flex flex-col h-full justify-center">
-                                        <span className="text-gold font-serif italic text-2xl mb-2">0{idx + 1}.</span>
-                                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground mb-6">
+                                    {/* Content */}
+                                    <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+                                        <span className="text-gold text-sm font-bold uppercase tracking-wider mb-2">Featured Deal</span>
+                                        <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-background mb-4">
                                             {special.title}
-                                            <span className="block text-xl md:text-2xl font-sans font-light text-muted-foreground mt-2 tracking-wide">
-                                                {special.subtitle}
-                                            </span>
                                         </h2>
-
-                                        <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                                        <p className="text-background/70 text-lg mb-8 leading-relaxed">
                                             {special.description}
                                         </p>
 
-                                        {special.note && (
-                                            <div className="bg-gold/10 p-4 border-l-4 border-gold mb-8">
-                                                <p className="text-gold-dark font-semibold font-serif italic">{special.note}</p>
-                                            </div>
-                                        )}
-
-                                        <div className="space-y-6 mb-10">
+                                        {/* Items */}
+                                        <div className="space-y-4 mb-8">
                                             {special.items.map((item, i) => (
-                                                <div key={i} className="flex items-center justify-between border-b border-border/40 pb-4 group cursor-default">
-                                                    <span className={`text-lg transition-colors ${item.highlight ? 'font-medium text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
-                                                        {item.service}
-                                                    </span>
-                                                    <span className={`font-serif text-xl ${item.highlight ? 'text-gold font-bold' : 'text-foreground'}`}>
-                                                        {item.price}
-                                                    </span>
+                                                <div key={i} className="flex items-center justify-between pb-3 border-b border-background/20">
+                                                    <div className="flex items-center gap-3">
+                                                        <Check className="w-5 h-5 text-gold" />
+                                                        <span className="text-background">{item.service}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        {item.originalPrice && (
+                                                            <span className="text-background/50 line-through text-sm">{item.originalPrice}</span>
+                                                        )}
+                                                        <span className={`font-bold ${item.highlight ? 'text-gold' : 'text-background'}`}>
+                                                            {item.price}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
 
-                                        <Button asChild className="bg-foreground text-background hover:bg-gold hover:text-white w-fit px-8 py-6 text-lg rounded-none transition-all duration-300">
+                                        <Button
+                                            asChild
+                                            size="lg"
+                                            className="bg-gold hover:bg-gold-light text-foreground font-semibold w-fit px-10"
+                                        >
                                             <Link href="/booking">
-                                                Book Appointment
-                                                <ArrowRight className="ml-2 w-5 h-5" />
+                                                Claim This Offer
+                                                <ArrowRight className="w-5 h-5 ml-2" />
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </section>
+
+                {/* Other Specials Grid */}
+                <section className="py-16 lg:py-24 bg-secondary/20">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        <div className="text-center mb-12">
+                            <h2 className="font-serif text-3xl sm:text-4xl text-foreground mb-4">
+                                More <span className="text-gold italic">Offers</span>
+                            </h2>
+                            <p className="text-muted-foreground max-w-lg mx-auto">
+                                Explore all our current promotions and find the perfect treatment for you.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {specials.filter(s => !s.featured || specials.indexOf(s) > 0).map((special, idx) => (
+                                <motion.div
+                                    key={special.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 group"
+                                >
+                                    {/* Image */}
+                                    <div className="relative aspect-[4/3] overflow-hidden">
+                                        <Image
+                                            src={special.image}
+                                            alt={special.title}
+                                            fill
+                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        {/* Discount Badge */}
+                                        {special.discount && (
+                                            <div className="absolute top-4 left-4 bg-gold text-foreground px-3 py-1.5 rounded-full font-bold text-sm shadow-md">
+                                                {special.discount}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="p-6">
+                                        <span className="text-gold text-xs font-bold uppercase tracking-wider">{special.subtitle}</span>
+                                        <h3 className="font-serif text-2xl text-foreground mt-1 mb-3">{special.title}</h3>
+                                        <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{special.description}</p>
+
+                                        {/* Top item preview */}
+                                        <div className="flex items-center justify-between py-3 border-t border-border/50 mb-4">
+                                            <span className="text-sm text-foreground">{special.items[0].service}</span>
+                                            <div className="flex items-center gap-2">
+                                                {special.items[0].originalPrice && (
+                                                    <span className="text-muted-foreground line-through text-xs">{special.items[0].originalPrice}</span>
+                                                )}
+                                                <span className="font-bold text-gold">{special.items[0].price}</span>
+                                            </div>
+                                        </div>
+
+                                        <Button
+                                            asChild
+                                            className="w-full bg-foreground hover:bg-gold text-background hover:text-white transition-colors"
+                                        >
+                                            <Link href="/booking">
+                                                Book Now
+                                                <ArrowRight className="w-4 h-4 ml-2" />
                                             </Link>
                                         </Button>
                                     </div>
                                 </motion.div>
-                            </div>
-                        </section>
-                    ))}
-                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
 
-                {/* Final CTA */}
-                <section className="py-24 bg-secondary/30 text-center">
-                    <div className="container mx-auto">
-                        <h2 className="font-serif text-4xl mb-6">Need Advice?</h2>
-                        <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                            Unsure which offer is best for you? Our concierge is available to guide your selection.
-                        </p>
-                        <Button variant="ghost" className="text-foreground hover:text-gold hover:bg-transparent underline underline-offset-4 text-lg">
-                            <Link href="/contact">Contact Concierge</Link>
-                        </Button>
+                {/* Bottom CTA */}
+                <section className="py-20 lg:py-28 bg-gradient-to-br from-foreground to-foreground/95 text-background">
+                    <div className="container mx-auto px-4 sm:px-6 text-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <div className="inline-flex items-center gap-2 bg-gold/20 border border-gold/30 px-4 py-2 rounded-full mb-6">
+                                <Heart className="w-4 h-4 text-gold" />
+                                <span className="text-gold text-sm font-semibold">Personalized Recommendations</span>
+                            </div>
+
+                            <h2 className="font-serif text-4xl sm:text-5xl text-background mb-6">
+                                Not Sure Which <span className="text-gold italic">Offer</span> Is Right?
+                            </h2>
+                            <p className="text-background/70 text-lg max-w-2xl mx-auto mb-10">
+                                Our beauty specialists are here to help you choose the perfect treatment package tailored to your needs.
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    className="bg-gold hover:bg-gold-light text-foreground font-semibold px-10"
+                                >
+                                    <Link href="/booking">
+                                        Book Consultation
+                                        <ArrowRight className="w-5 h-5 ml-2" />
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    variant="outline"
+                                    className="border-2 border-background/30 text-background hover:bg-background hover:text-foreground px-10"
+                                >
+                                    <Link href="/contact">
+                                        Contact Us
+                                    </Link>
+                                </Button>
+                            </div>
+                        </motion.div>
                     </div>
                 </section>
             </main>
@@ -244,4 +356,3 @@ export default function SpecialsPage() {
         </>
     );
 }
-

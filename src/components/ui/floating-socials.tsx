@@ -92,14 +92,14 @@ export function FloatingSocials() {
                                     href={social.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    initial={{ opacity: 0, scale: 0, y: 20 }}
+                                    initial={{ opacity: 0, scale: 0.8, y: 10 }}
                                     animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0, y: 20 }}
+                                    exit={{ opacity: 0, scale: 0.8, y: 10 }}
                                     transition={{
-                                        duration: 0.2,
-                                        delay: index * 0.05,
+                                        duration: 0.15,
                                         type: "spring",
-                                        stiffness: 300,
+                                        stiffness: 400,
+                                        damping: 25,
                                     }}
                                     className={`group flex items-center gap-3 ${social.color} text-white rounded-full shadow-lg transition-all duration-300`}
                                     aria-label={social.name}
@@ -121,11 +121,10 @@ export function FloatingSocials() {
             {/* Toggle Button */}
             <motion.button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-300 ${
-                    isExpanded
+                className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-300 ${isExpanded
                         ? "bg-foreground text-background rotate-0"
                         : "bg-gold text-white hover:scale-110"
-                }`}
+                    }`}
                 whileTap={{ scale: 0.95 }}
                 aria-label={isExpanded ? "Close social menu" : "Open social menu"}
             >

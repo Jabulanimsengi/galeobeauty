@@ -2,11 +2,10 @@ import type { NavItem, BusinessInfo } from "@/types";
 
 export const navItems: NavItem[] = [
     { label: "Home", href: "/" },
-    { label: "Services", href: "/services" },
+    { label: "About", href: "/about" },
     { label: "Prices", href: "/prices" },
     { label: "Specials", href: "/specials" },
     { label: "Gallery", href: "/gallery" },
-    { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
 ];
 

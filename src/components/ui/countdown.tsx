@@ -2,7 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 
-export function Countdown({ targetDate }: { targetDate: Date }) {
+interface CountdownProps {
+    targetDate: Date;
+    variant?: "light" | "dark";
+}
+
+export function Countdown({ targetDate, variant = "light" }: CountdownProps) {
     const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     function calculateTimeLeft() {
@@ -30,6 +35,9 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
 
     const timerComponents: React.JSX.Element[] = [];
 
+    const numberColor = variant === "dark" ? "text-white" : "text-foreground";
+    const labelColor = variant === "dark" ? "text-white/70" : "text-muted-foreground";
+
     Object.keys(timeLeft).forEach((interval) => {
         if (!timeLeft[interval as keyof typeof timeLeft]) {
             return;
@@ -37,10 +45,10 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
 
         timerComponents.push(
             <div key={interval} className="flex flex-col items-center mx-2 sm:mx-4">
-                <span className="text-2xl sm:text-4xl font-serif font-bold text-foreground">
+                <span className={`text-2xl sm:text-4xl font-serif font-bold ${numberColor}`}>
                     {timeLeft[interval as keyof typeof timeLeft]}
                 </span>
-                <span className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground mt-1">
+                <span className={`text-[10px] sm:text-xs uppercase tracking-widest mt-1 ${labelColor}`}>
                     {interval}
                 </span>
             </div>
@@ -48,8 +56,9 @@ export function Countdown({ targetDate }: { targetDate: Date }) {
     });
 
     return (
-        <div className="flex justify-center items-center py-6 border-y border-gold/30 my-8">
-            {timerComponents.length ? timerComponents : <span className="text-xl font-serif">Offer Expired</span>}
+        <div className="flex items-center">
+            {timerComponents.length ? timerComponents : <span className={`text-xl font-serif ${numberColor}`}>Offer Expired</span>}
         </div>
     );
 }
+

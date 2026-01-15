@@ -89,7 +89,7 @@ export function Header() {
                         <Button
                             asChild
                             size="sm"
-                            className="bg-gold hover:bg-gold-dark text-foreground font-medium"
+                            className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
                         >
                             <Link href="/booking">Book Now</Link>
                         </Button>
@@ -128,7 +128,7 @@ export function Header() {
                                 className="group relative overflow-hidden"
                             >
                                 {/* Text layer */}
-                                <span className="relative z-10 block px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 text-foreground/70 group-hover:text-foreground">
+                                <span className="relative z-10 block px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 text-foreground/70 group-hover:text-white">
                                     {item.label}
                                 </span>
 
@@ -142,7 +142,7 @@ export function Header() {
                     <div className="hidden lg:block">
                         <Button
                             asChild
-                            className="bg-gold hover:bg-gold-dark text-foreground font-medium"
+                            className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
                         >
                             <Link href="/booking">Make a Booking</Link>
                         </Button>
@@ -202,13 +202,13 @@ export function Header() {
                                                 initial={{ x: -20, opacity: 0 }}
                                                 animate={{ x: 0, opacity: 1 }}
                                                 transition={{ delay: index * 0.1, duration: 0.3 }}
-                                                className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-300 group-hover:text-gold"
+                                                className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-300 group-hover:text-white"
                                             >
                                                 {item.label}
                                             </motion.span>
 
                                             {/* Hover slide effect */}
-                                            <span className="absolute inset-0 bg-gold/20 -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
+                                            <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
                                         </Link>
                                     ))}
                                 </nav>
@@ -218,7 +218,7 @@ export function Header() {
                                     <Button
                                         asChild
                                         size="lg"
-                                        className="w-full bg-gold hover:bg-gold-dark text-foreground font-semibold text-lg py-6"
+                                        className="w-full bg-gold hover:bg-gold hover:text-white text-foreground font-semibold text-lg py-6"
                                     >
                                         <Link
                                             href="/booking"

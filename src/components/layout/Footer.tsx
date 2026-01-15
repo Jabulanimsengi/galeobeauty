@@ -1,16 +1,40 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Facebook, Instagram } from "lucide-react";
 
 import { navItems, businessInfo } from "@/lib/constants";
+import { NewsletterSignup } from "@/components/ui/newsletter-signup";
+
+import { FeaturedInLocal } from "@/components/ui/featured-in";
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
         <footer className="bg-foreground text-background">
+            {/* Newsletter Section - Above main footer */}
+            <div className="border-b border-background/10">
+                <div className="container mx-auto px-4 sm:px-6 py-12 md:py-16">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+                        <div>
+                            <h3 className="font-serif text-2xl sm:text-3xl text-background mb-3">
+                                Join the <span className="text-gold">Beauty Circle</span>
+                            </h3>
+                            <p className="text-background/70 text-sm sm:text-base max-w-md">
+                                Subscribe for exclusive offers, beauty tips, and be the first to know about our new treatments.
+                            </p>
+                        </div>
+                        <NewsletterSignup variant="minimal" />
+                    </div>
+                </div>
+            </div>
+
+
+
+            {/* Main Footer Content */}
             <div className="container mx-auto px-4 sm:px-6 py-12 md:py-16">
-                {/* Better tablet responsiveness: 2 columns on sm/md, 4 on lg */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
                     {/* Brand Column */}
                     <div className="space-y-4 sm:col-span-2 lg:col-span-1">
@@ -67,7 +91,7 @@ export function Footer() {
                         </ul>
                     </div>
 
-                    {/* Contact Info - Gold accent border on lg */}
+                    {/* Contact Info */}
                     <div className="lg:border-l lg:border-background/10 lg:pl-8">
                         <h4 className="font-serif text-base sm:text-lg font-semibold mb-4 text-gold">
                             Contact
@@ -110,13 +134,20 @@ export function Footer() {
                         <ul className="space-y-2.5 text-sm text-background/70">
                             <li>{businessInfo.hours.weekday}</li>
                             <li>{businessInfo.hours.saturday}</li>
-                            <li>{businessInfo.hours.publicHoliday}</li>
+                            <li className="text-gold text-xs">{businessInfo.hours.publicHoliday}</li>
                         </ul>
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="border-t border-background/10 mt-10 md:mt-12 pt-6 md:pt-8 text-center">
+                {/* Trusted Brands Section */}
+                <div className="mt-12 pt-8 border-t border-background/10">
+                    <FeaturedInLocal />
+                </div>
+            </div>
+
+            {/* Bottom Bar */}
+            <div className="border-t border-background/10">
+                <div className="container mx-auto px-4 sm:px-6 py-6 md:py-8 text-center">
                     <p className="text-background/50 text-xs sm:text-sm">
                         &copy; {currentYear} Galeo Beauty. All rights reserved.
                     </p>

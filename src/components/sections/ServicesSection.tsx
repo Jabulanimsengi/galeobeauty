@@ -1,63 +1,104 @@
 "use client";
 
+import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TrustBadge } from "@/components/ui/trust-badge";
+import { UrgencyBadge } from "@/components/ui/urgency-badge";
 import { ArrowRight, Sparkles, Heart, Eye, Scissors, Zap, ChevronRight } from "lucide-react";
-import { useRef, useState } from "react";
 
 const services = [
     {
-        id: "face-care",
-        title: "Advanced Facials",
-        subtitle: "Medical-Grade Skincare",
-        description: "Experience transformative results with our medical-grade facials. Using premium Babor products and advanced techniques, our certified specialists address aging, acne, pigmentation, and dehydration for visibly radiant skin.",
-        image: "/images/services/face-care-01.png",
-        badge: "Medical Grade",
-        badgeVariant: "medical" as const,
-        icon: Sparkles,
-        features: ["Chemical Peels", "Hydrafacials", "LED Therapy", "Microdermabrasion"],
-        color: "from-amber-500/20 to-orange-500/20",
-    },
-    {
-        id: "skin-treatments",
-        title: "Skin Treatments",
-        subtitle: "Advanced Technology",
-        description: "Harness the power of CE-approved technology for lasting skin transformation. Our RF skin tightening, microneedling, and IPL therapy treatments deliver professional results with minimal downtime.",
-        image: "/images/services/face-care-02.png",
-        badge: "CE Approved",
-        badgeVariant: "safe" as const,
-        icon: Zap,
-        features: ["RF Tightening", "Microneedling", "IPL Therapy", "Collagen Induction"],
-        color: "from-emerald-500/20 to-teal-500/20",
-    },
-    {
-        id: "lashes",
-        title: "Lash Extensions",
-        subtitle: "Premium Silk & Volume",
-        description: "Wake up beautiful every day with our luxurious lash extensions. Our certified technicians craft custom looks from natural enhancement to dramatic volume using premium silk and mink lashes.",
-        image: "/images/services/lashes.png",
+        id: "facials",
+        title: "Facials",
+        subtitle: "Babor Skincare",
+        description: "Indulge in our premium Babor facial treatments. From moisturising and anti-ageing facials to advanced skin renewal peels, our certified specialists deliver visible results using medical-grade products.",
+        images: ["/images/services/facials/Image_facial_03.jpeg", "/images/services/facials/Image_facial_07.jpeg"],
         badge: "Premium",
         badgeVariant: "premium" as const,
-        icon: Eye,
-        features: ["Classic Lashes", "Volume Sets", "Hybrid Styles", "Lash Lifts"],
+        icon: Sparkles,
+        features: ["Skinovage Facials", "Anti-Ageing", "Skin Renewal Peels", "Ampoule Crash"],
+        color: "from-amber-500/20 to-orange-500/20",
+        bookingFast: true,
+    },
+    {
+        id: "makeup",
+        title: "Make-up",
+        subtitle: "Kryolan Professional",
+        description: "Look stunning for any occasion with our professional make-up services. From bridal looks to permanent make-up, Phi-Brows, and Phi-Contour, we create flawless beauty that lasts.",
+        images: ["/images/services/makeup/makeup_01.jpeg", "/images/services/makeup/makeup_03.jpeg"],
+        badge: "Professional",
+        badgeVariant: "premium" as const,
+        icon: Heart,
+        features: ["Bridal Make-up", "Permanent Make-up", "Phi-Brows", "Phi-Contour"],
         color: "from-rose-500/20 to-pink-500/20",
     },
     {
-        id: "body-contouring",
-        title: "Body Contouring",
-        subtitle: "Non-Invasive Sculpting",
-        description: "Achieve your body goals with our advanced non-invasive treatments. Cryolipolysis fat freeze technology targets stubborn fat areas while our slimming treatments help you look and feel your best.",
-        image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&h=1000&fit=crop",
+        id: "ipl-hair-removal",
+        title: "IPL Hair Removal",
+        subtitle: "Ladies & Gents",
+        description: "Achieve silky smooth skin with our advanced IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
+        images: ["/images/services/IPL_Hair_removal/IPL_image_06.jpeg", "/images/services/IPL_Hair_removal/IPL_image_08.jpeg"],
         badge: "CE Approved",
         badgeVariant: "safe" as const,
-        icon: Heart,
-        features: ["Fat Freeze", "Cavitation", "Body Wraps", "Lymphatic Drainage"],
-        color: "from-violet-500/20 to-purple-500/20",
+        icon: Zap,
+        features: ["Full Face", "Full Body", "Bikini & Brazilian", "Gents Treatments"],
+        color: "from-teal-500/20 to-cyan-500/20",
+        bookingFast: true,
     },
+    {
+        id: "massages",
+        title: "Massages",
+        subtitle: "Therapeutic & Relaxing",
+        description: "Unwind with our therapeutic massage treatments using Lillian Terry aromatherapy oils. From Swedish relaxation to deep tissue therapy, our expert therapists melt away tension and stress.",
+        images: ["/images/services/massages/Massage_07.jpeg", "/images/services/massages/Massage_01.jpeg"],
+        badge: "Wellness",
+        badgeVariant: "premium" as const,
+        icon: Heart,
+        features: ["Swedish Massage", "Deep Tissue", "Aromatherapy", "Indian Head Massage"],
+        color: "from-emerald-500/20 to-green-500/20",
+    },
+    {
+        id: "lashes",
+        title: "Lashes & Brows",
+        subtitle: "Eye Enhancement",
+        description: "Enhance your natural beauty with our lash extensions and brow tinting services. From Russian volume lashes to precision brow shaping, we perfect every detail.",
+        images: ["/images/services/face/lashes_01.jpeg", "/images/services/face/lashes_04.jpeg"],
+        badge: "Premium",
+        badgeVariant: "premium" as const,
+        icon: Eye,
+        features: ["Lash Extensions", "Brow Tinting", "Volume Lashes", "Lash Lift"],
+        color: "from-purple-500/20 to-violet-500/20",
+    },
+    {
+        id: "waxing",
+        title: "Waxing",
+        subtitle: "Smooth Skin",
+        description: "Achieve silky smooth skin with our professional waxing services. We offer full body waxing, including Hollywood and Brazilian, using gentle techniques for minimal discomfort.",
+        images: ["/images/services/waxing/waxing_04.jpeg", "/images/services/waxing/waxing_03.jpeg"],
+        badge: "Hygienic",
+        badgeVariant: "medical" as const,
+        icon: Sparkles,
+        features: ["Full Face", "brazilian", "Hollywood", "Full Body"],
+        color: "from-pink-500/20 to-rose-500/20",
+    },
+    {
+        id: "slimming",
+        title: "Slimming & Weightloss",
+        subtitle: "Cryolipolysis Fat Freeze",
+        description: "Transform your body with our CE-approved Cryolipolysis treatments. This non-invasive fat freeze technology targets stubborn fat areas with no anaesthesia, no cutting, and visible results in weeks.",
+        images: ["/images/services/slimming_weightloss/Slimming_image_02.jpeg", "/images/services/slimming_weightloss/Slimming_image_07.jpeg"],
+        badge: "CE Approved",
+        badgeVariant: "safe" as const,
+        icon: Zap,
+        features: ["Fat Freeze", "Chin & Arms", "Stomach & Back", "Love Handles"],
+        color: "from-blue-500/20 to-indigo-500/20",
+    },
+
 ];
+
 
 interface ServiceCardProps {
     service: typeof services[0];
@@ -67,7 +108,34 @@ interface ServiceCardProps {
 
 function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
     const [isHovered, setIsHovered] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
+
+    // Detect mobile on mount
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Auto-rotate images on mobile every 3 seconds
+    useEffect(() => {
+        if (!isMobile) return;
+
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prev) => (prev + 1) % service.images.length);
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [isMobile, service.images.length]);
+
+    // Swap image on hover (desktop only)
+    useEffect(() => {
+        if (isMobile) return;
+        setCurrentImageIndex(isHovered ? 1 : 0);
+    }, [isHovered, isMobile]);
 
     // Mouse parallax effect
     const x = useMotionValue(0);
@@ -121,28 +189,38 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    <Link href={`/services#${service.id}`} className="block group">
+                    <Link href={`/prices#${service.id}`} className="block group">
                         <div className="relative aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
                             {/* Background gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
 
-                            {/* Main Image */}
-                            <Image
-                                src={service.image}
-                                alt={service.title}
-                                fill
-                                className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
-                                sizes="(max-width: 1024px) 100vw, 50vw"
-                            />
+                            {/* Main Image - Crossfade between two images */}
+                            {service.images.map((imgSrc, imgIndex) => (
+                                <Image
+                                    key={imgSrc}
+                                    src={imgSrc}
+                                    alt={`${service.title} - ${imgIndex + 1}`}
+                                    fill
+                                    className={`object-cover transition-all duration-700 ease-out ${currentImageIndex === imgIndex
+                                        ? 'opacity-100 scale-100'
+                                        : 'opacity-0 scale-105'
+                                        }`}
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                    priority={imgIndex === 0}
+                                />
+                            ))}
 
                             {/* Overlay gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 transition-opacity duration-500 group-hover:opacity-70" />
 
                             {/* Badge */}
-                            <div className="absolute top-6 right-6 z-20">
+                            <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-2">
                                 <TrustBadge variant={service.badgeVariant} icon="shield">
                                     {service.badge}
                                 </TrustBadge>
+                                {service.bookingFast && (
+                                    <UrgencyBadge variant="booking-fast" />
+                                )}
                             </div>
 
                             {/* Floating number */}
@@ -243,7 +321,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                             size="lg"
                             className="bg-foreground hover:bg-gold text-background hover:text-white font-medium px-8 transition-all duration-300 group"
                         >
-                            <Link href={`/services#${service.id}`}>
+                            <Link href={`/prices#${service.id}`}>
                                 View Treatments
                                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                             </Link>
@@ -257,49 +335,76 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
 
 export function ServicesSection() {
     return (
-        <section className="py-20 md:py-28 lg:py-36 bg-background overflow-hidden" id="services">
+        <section className="py-20 md:py-28 lg:py-36 bg-background overflow-hidden relative" id="services">
+            {/* Subtle decorative background elements */}
+            <div className="absolute top-20 left-0 w-72 h-72 bg-gold/5 rounded-full blur-3xl -z-10" />
+            <div className="absolute bottom-40 right-0 w-96 h-96 bg-gold/3 rounded-full blur-3xl -z-10" />
+
             <div className="container mx-auto px-4 sm:px-6">
                 {/* Section Header */}
                 <motion.div
-                    className="text-center mb-20 md:mb-28"
+                    className="text-center mb-20 md:mb-28 relative"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
                 >
-                    <span className="text-gold text-xs font-bold uppercase tracking-[0.25em] mb-4 block font-sans">
-                        Treatment Menu
-                    </span>
+                    {/* Decorative line */}
+                    <div className="flex items-center justify-center gap-4 mb-6">
+                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/50" />
+                        <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] font-sans">
+                            Treatment Menu
+                        </span>
+                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/50" />
+                    </div>
 
                     <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 text-foreground">
                         Science-Backed <span className="text-gold italic">Beauty</span>
                     </h2>
 
-                    <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-base sm:text-lg font-light leading-relaxed mb-10">
+                    <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-base sm:text-lg font-light leading-relaxed mb-12">
                         Where advanced skincare technology meets luxury spa treatments.
                         Our certified specialists use medical-grade equipment and premium products.
                     </p>
 
-                    {/* Trust Indicators */}
-                    <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mt-8">
-                        <div className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 00-1.032 0 11.209 11.209 0 01-7.877 3.08.75.75 0 00-.722.515A12.74 12.74 0 002.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 00.374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.352-.272-2.636-.775-3.801a.75.75 0 00-.616-.443 11.209 11.209 0 01-7.843-3.336zM12 3.96c2.316.4 4.502 1.323 6.425 2.668.21.147.416.3.62.456C19.682 11.762 16.516 16.29 12 16.29c-4.516 0-7.682-4.528-7.045-9.206.204-.156.41-.309.62-.456A10.709 10.709 0 0012 3.96z" clipRule="evenodd" />
-                            </svg>
-                            CE Certified
-                        </div>
-                        <div className="flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                                <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
-                            </svg>
-                            Sterile Environment
-                        </div>
-                        <div className="flex items-center gap-2 border border-gold text-gold bg-transparent px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                            </svg>
-                            15+ Years
-                        </div>
+                    {/* Trust Indicators - Unified Gold Theme */}
+                    <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+                        {[
+                            { icon: "shield", label: "CE Certified" },
+                            { icon: "check", label: "Sterile Environment" },
+                            { icon: "star", label: "15+ Years" },
+                        ].map((badge, index) => (
+                            <motion.div
+                                key={badge.label}
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.4, delay: index * 0.1 }}
+                                className="flex items-center gap-2.5 bg-white border border-gold/20 px-5 py-3 rounded-full shadow-sm hover:shadow-md hover:border-gold/40 transition-all duration-300 group"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                                    {badge.icon === "shield" && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-gold">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                        </svg>
+                                    )}
+                                    {badge.icon === "check" && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-gold">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                            <polyline points="22 4 12 14.01 9 11.01" />
+                                        </svg>
+                                    )}
+                                    {badge.icon === "star" && (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gold">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                        </svg>
+                                    )}
+                                </div>
+                                <span className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
+                                    {badge.label}
+                                </span>
+                            </motion.div>
+                        ))}
                     </div>
                 </motion.div>
 
@@ -335,7 +440,7 @@ export function ServicesSection() {
                         variant="outline"
                         className="border-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-medium px-10"
                     >
-                        <Link href="/services">
+                        <Link href="/prices">
                             View All Services
                             <ArrowRight className="w-4 h-4 ml-2" />
                         </Link>
