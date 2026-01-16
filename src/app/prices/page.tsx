@@ -12,6 +12,22 @@ import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
 import { ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 
+// Helper function to format titles with proper capitalization
+// Converts to Title Case and keeps acronyms uppercase
+const formatTitle = (title: string): string => {
+    const acronyms = ['ipl', 'qms', 'ce'];
+    return title
+        .split(' ')
+        .map(word => {
+            const lowerWord = word.toLowerCase();
+            if (acronyms.includes(lowerWord)) {
+                return word.toUpperCase();
+            }
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        })
+        .join(' ');
+};
+
 export default function PricesPage() {
     const [activeCategory, setActiveCategory] = useState(serviceCategories[0]?.id || "");
     const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -212,7 +228,7 @@ export default function PricesPage() {
                                             : "text-foreground/70 hover:text-foreground"
                                             }`}
                                     >
-                                        {category.title}
+                                        {formatTitle(category.title)}
                                     </button>
                                 ))}
                             </div>
@@ -271,7 +287,7 @@ export default function PricesPage() {
                                                 </div>
                                                 <div>
                                                     <h2 className="font-serif text-2xl sm:text-3xl text-foreground">
-                                                        {category.title.toLowerCase().replace("qms", "QMS")}
+                                                        {formatTitle(category.title)}
                                                     </h2>
                                                     <p className="text-sm text-muted-foreground">{category.subtitle}</p>
                                                 </div>

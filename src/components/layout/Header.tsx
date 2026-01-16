@@ -91,7 +91,7 @@ export function Header() {
                             size="sm"
                             className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
                         >
-                            <Link href="/booking">Book Now</Link>
+                            <Link href="/prices">Book Now</Link>
                         </Button>
                     </div>
                 </div>
@@ -144,7 +144,7 @@ export function Header() {
                             asChild
                             className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
                         >
-                            <Link href="/booking">Make a Booking</Link>
+                            <Link href="/prices">Make a Booking</Link>
                         </Button>
                     </div>
 
@@ -221,7 +221,7 @@ export function Header() {
                                         className="w-full bg-gold hover:bg-gold hover:text-white text-foreground font-semibold text-lg py-6"
                                     >
                                         <Link
-                                            href="/booking"
+                                            href="/prices"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Book Now
