@@ -1,4 +1,4 @@
-import { Sparkles, Scissors, Eye, Star, Zap, Heart } from "lucide-react";
+import { Sparkles, Scissors, Eye, Star, Zap, Heart, Syringe, Sun, Palette } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 // ============================================
@@ -6,6 +6,7 @@ import type { LucideIcon } from "lucide-react";
 // ============================================
 // This file is the single source of truth for all services.
 // Update prices here and they reflect on both Prices and Booking pages.
+// Prices sourced from Fresha booking system.
 // ============================================
 
 export interface ServiceItem {
@@ -13,6 +14,7 @@ export interface ServiceItem {
     name: string;
     price: string;
     duration?: string;
+    note?: string;
 }
 
 export interface ServiceSubcategory {
@@ -38,62 +40,556 @@ export interface ServiceCategory {
 // ============================================
 
 export const serviceCategories: ServiceCategory[] = [
+    // ========================================
+    // HART AESTHETICS (Injectables)
+    // ========================================
     {
-        id: "facials",
-        title: "Facials",
-        subtitle: "Medical-Grade Skincare",
-        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1200",
-        Icon: Sparkles,
+        id: "hart-aesthetics",
+        title: "Hart Aesthetics",
+        subtitle: "Advanced Injectables",
+        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200",
+        Icon: Syringe,
         badge: "Medical Grade",
         badgeVariant: "medical",
         subcategories: [
             {
-                id: "babor-skinovage",
-                title: "Babor Skinovage Facials",
+                id: "face-lifts",
+                title: "Face Lifts & Rejuvenation",
                 items: [
-                    { id: "moisturising-facial", name: "Moisturising Facial", duration: "60min", price: "R400" },
-                    { id: "vitalising-facial", name: "Vitalising Facial", duration: "60min", price: "R450" },
-                    { id: "purifying-facial", name: "Purifying Facial", duration: "60min", price: "R430" },
-                    { id: "balancing-facial", name: "Balancing Facial", duration: "60min", price: "R420" },
+                    { id: "nefertiti-lift", name: "Nefertiti Lift", duration: "1hr", price: "R7,950" },
+                    { id: "liquid-facelift", name: "Non Surgical Liquid Face Lift", duration: "1hr", price: "R10,000" },
+                    { id: "collagen-biostimulator", name: "Collagen Biostimulator Injections 10ml", duration: "1hr", price: "R5,000" },
                 ],
             },
             {
-                id: "babor-anti-ageing",
-                title: "Babor Anti-ageing Facials",
+                id: "tox-treatment",
+                title: "Tox Treatment",
                 items: [
-                    { id: "grand-cru-facial", name: "Grand CRU Facial", duration: "90min", price: "R1,200" },
-                    { id: "hsr-lifting", name: "HSR Lifting Extra-Firming", duration: "90min", price: "R1,000" },
-                    { id: "reversive-anti-ageing", name: "Reversive Anti-ageing", duration: "90min", price: "R1,900" },
-                    { id: "sea-creation", name: "Sea Creation", duration: "120min", price: "R4,900" },
+                    { id: "tox-per-unit", name: "Tox Per Unit", duration: "1hr", price: "R59.60" },
                 ],
             },
             {
-                id: "dr-babor",
-                title: "Dr. Babor Facials",
+                id: "skin-boosters",
+                title: "Under Eye Skin Boosters",
                 items: [
-                    { id: "skin-renewal-peels", name: "Skin Renewal Peels", duration: "60min", price: "R650" },
-                    { id: "microneedling", name: "Microneedling + Babor Ampoule", duration: "90min", price: "R1,400" },
-                    { id: "ultimate-face-lifting", name: "Ultimate Face Lifting", duration: "90min", price: "R1,800" },
-                    { id: "ultimate-a16-detox", name: "Ultimate A16 Detox", duration: "75min", price: "R550" },
-                    { id: "neuro-sensitive", name: "Neuro Sensitive Treatment", duration: "60min", price: "R850" },
+                    { id: "undereye-2-treatments", name: "Under Eye Skin Booster (2 Treatments)", duration: "1hr", price: "R4,000" },
+                    { id: "undereye-1-treatment", name: "Under Eye Skin Booster (1 Treatment)", duration: "1hr", price: "R2,800" },
                 ],
             },
             {
-                id: "facial-addons",
-                title: "Facial Add-ons",
+                id: "dermal-fillers",
+                title: "Dermal Fillers",
                 items: [
-                    { id: "collagen-fleece", name: "Collagen Fleece Mask", price: "R500" },
-                    { id: "hsr-faceline", name: "HSR Faceline Mask", price: "R450" },
-                    { id: "firming-algae", name: "Firming Algae Peel-off", price: "R1,800" },
-                    { id: "1-ampoule", name: "1 Ampoule", price: "R80" },
-                    { id: "5-ampoules", name: "5 Ampoules", price: "R400" },
+                    { id: "cheek-fillers-2ml", name: "Dermal Cheek Fillers 2ml", duration: "1hr", price: "R6,000" },
+                    { id: "cheek-fillers-1ml", name: "Dermal Cheek Fillers 1ml", duration: "1hr", price: "R3,500" },
+                    { id: "russian-lip-1ml", name: "Dermal Russian Lip Fillers 1ml", duration: "1hr", price: "R3,000" },
+                    { id: "dermal-filler-1ml", name: "Dermal Filler 1ml", duration: "1hr", price: "R2,800" },
                 ],
             },
         ],
     },
+    // ========================================
+    // FAT FREEZING
+    // ========================================
+    {
+        id: "fat-freezing",
+        title: "Fat Freezing",
+        subtitle: "Body Contouring",
+        image: "/images/services/slimming_weightloss/Slimming_image_02.jpeg",
+        Icon: Heart,
+        badge: "CE Approved",
+        badgeVariant: "safe",
+        subcategories: [
+            {
+                id: "fat-freezing-sessions",
+                title: "Fat Freezing Sessions",
+                items: [
+                    { id: "fat-freezing-session", name: "Fat Freezing Per Session", duration: "1hr", price: "R799.20" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // DERMALOGICA TREATMENTS
+    // ========================================
+    {
+        id: "dermalogica",
+        title: "Dermalogica Treatments",
+        subtitle: "Professional Skincare",
+        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1200",
+        Icon: Sparkles,
+        badge: "Premium",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "pro-treatments",
+                title: "Pro Treatments",
+                items: [
+                    { id: "multivitamin-skin", name: "Multivitamin Skin Treatment", duration: "45 mins", price: "R690" },
+                    { id: "pro-dermaplaning-30", name: "Pro Dermaplaning 30 min", duration: "30 mins", price: "R490" },
+                    { id: "neurosculpt-30", name: "Neurosculpt 30 min", duration: "30 mins", price: "R650" },
+                    { id: "pro-skin-treatment", name: "Pro Skin Treatment", duration: "55 mins", price: "R950" },
+                    { id: "pro-calm-skin", name: "Pro Calm Skin Treatment", duration: "55 mins", price: "R1,100" },
+                    { id: "pro-firm-treatment", name: "Pro Firm Treatment", duration: "55 mins", price: "R1,100" },
+                    { id: "pro-power-peel", name: "Pro Power Peel", duration: "55 mins", price: "R1,100" },
+                    { id: "pro-dermaplaning-55", name: "Pro Dermaplaning Skin Treatment", duration: "55 mins", price: "R890" },
+                    { id: "neurosculpt-55", name: "Neurosculpt", duration: "55 mins", price: "R1,250" },
+                    { id: "infusion-undereye-peel", name: "Infusion and Under Eye Peel", duration: "55 mins", price: "R1,350" },
+                    { id: "luminfusion", name: "Luminfusion", duration: "55 mins", price: "R1,100" },
+                    { id: "melanopro-peel", name: "Melanopro Peel", duration: "55 mins", price: "R6,999" },
+                    { id: "hydraderm", name: "Hydraderm", duration: "55 mins", price: "R1,400" },
+                    { id: "pro-microneedling", name: "Pro Microneedling", duration: "55 mins", price: "R1,950" },
+                    { id: "nanoinfusion", name: "Nanoinfusion", duration: "55 mins", price: "R1,400" },
+                ],
+            },
+            {
+                id: "facial-treatments",
+                title: "Facial Treatments",
+                note: "Save up to 10%",
+                items: [
+                    { id: "ultra-calming-facial", name: "Ultra Calming Facial", duration: "1hr", price: "R810" },
+                    { id: "skin-clearing-facial", name: "Skin Clearing Facial", duration: "1hr", price: "R810" },
+                    { id: "skin-brightening-facial", name: "Skin Brightening Facial", duration: "1hr", price: "R810" },
+                    { id: "age-smart-facial", name: "Age Smart Facial", duration: "1hr", price: "R810" },
+                    { id: "power-peel-30", name: "Power Peel 30 min", duration: "1hr", price: "R720" },
+                    { id: "power-peel-60", name: "Power Peel 60 min", duration: "1hr", price: "R990" },
+                    { id: "facial-30", name: "Facial 30 min", duration: "1hr", price: "R450" },
+                    { id: "facial-60", name: "Facial 60 min", duration: "1hr", price: "R810" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // IPL HAIR REMOVAL
+    // ========================================
+    {
+        id: "ipl",
+        title: "IPL Hair Removal",
+        subtitle: "Permanent Results",
+        image: "/images/services/IPL_Hair_removal/IPL_image_06.jpeg",
+        Icon: Zap,
+        badge: "CE Approved",
+        badgeVariant: "safe",
+        subcategories: [
+            {
+                id: "ipl-face-neck",
+                title: "Face & Neck",
+                note: "Save up to 10%",
+                items: [
+                    { id: "moustache-ipl", name: "Moustache IPL", duration: "1hr", price: "R270" },
+                    { id: "beardline-ipl", name: "Beardline IPL", duration: "1hr", price: "R495" },
+                    { id: "neck-ipl-men", name: "Neck IPL Men", duration: "1hr", price: "R585" },
+                    { id: "neck-ipl", name: "Neck IPL", duration: "1hr", price: "R495" },
+                    { id: "full-face-ipl", name: "Full Face IPL", duration: "1hr", price: "R882" },
+                    { id: "full-face-neck-ipl", name: "Full Face and Neck", duration: "1hr", price: "R945" },
+                ],
+            },
+            {
+                id: "ipl-body",
+                title: "Body IPL",
+                note: "Save up to 10%",
+                items: [
+                    { id: "under-arm-ipl", name: "Under Arm IPL", duration: "1hr", price: "R495" },
+                    { id: "belly-button-ipl", name: "Belly Button IPL", duration: "1hr", price: "R450" },
+                    { id: "stomach-ipl", name: "Stomach IPL", duration: "1hr", price: "R765" },
+                    { id: "toes-feet-ipl", name: "Toes and Feet IPL", duration: "1hr", price: "R450" },
+                    { id: "full-buttocks-ipl", name: "Full Buttocks IPL", duration: "1hr", price: "R1,170" },
+                ],
+            },
+            {
+                id: "ipl-bikini",
+                title: "Bikini IPL",
+                note: "Save up to 10%",
+                items: [
+                    { id: "bikini-sides-ipl", name: "Bikini Sides IPL", duration: "1hr", price: "R540" },
+                    { id: "brazillian-ipl", name: "Brazilian IPL", duration: "1hr", price: "R765" },
+                    { id: "hollywood-ipl", name: "Hollywood IPL", duration: "1hr", price: "R990" },
+                ],
+            },
+            {
+                id: "ipl-legs",
+                title: "Legs IPL",
+                note: "Save up to 10%",
+                items: [
+                    { id: "half-leg-ipl", name: "Half Leg IPL", duration: "1hr", price: "R1,305" },
+                    { id: "full-leg-ipl", name: "Full Leg IPL", duration: "1hr", price: "R2,070" },
+                    { id: "full-leg-ipl-premium", name: "Full Leg IPL Premium", duration: "1hr", price: "R2,565" },
+                ],
+            },
+            {
+                id: "ipl-arms",
+                title: "Arms IPL",
+                note: "Save up to 10%",
+                items: [
+                    { id: "half-arm-ipl", name: "Half Arm IPL", duration: "1hr", price: "R765" },
+                    { id: "full-arm-ipl", name: "Full Arm IPL", duration: "1hr", price: "R1,350" },
+                    { id: "full-arm-ipl-premium", name: "Full Arm IPL Premium", duration: "1hr", price: "R1,440" },
+                ],
+            },
+            {
+                id: "ipl-other",
+                title: "Other IPL Services",
+                note: "Save up to 10%",
+                items: [
+                    { id: "tattoo-removal", name: "Tattoo Removal", duration: "1hr", price: "R450" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // MAKE UP
+    // ========================================
+    {
+        id: "makeup",
+        title: "Make Up",
+        subtitle: "Professional Artistry",
+        image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200",
+        Icon: Palette,
+        badge: "Premium",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "makeup-services",
+                title: "Make Up Services",
+                note: "Save up to 10%",
+                items: [
+                    { id: "day-makeup", name: "Day Makeup", duration: "1hr", price: "R486" },
+                    { id: "evening-makeup", name: "Evening Makeup", duration: "1hr", price: "R594" },
+                    { id: "bridal-makeup", name: "Bridal Makeup", duration: "1hr", price: "R1,620" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // MEDICAL TREATMENTS
+    // ========================================
+    {
+        id: "medical",
+        title: "Medical",
+        subtitle: "Clinical Treatments",
+        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=1200",
+        Icon: Syringe,
+        badge: "Medical Grade",
+        badgeVariant: "medical",
+        subcategories: [
+            {
+                id: "medical-treatments",
+                title: "Medical Treatments",
+                note: "Save up to 10%",
+                items: [
+                    { id: "vaginal-tightening", name: "Vaginal Tightening", duration: "1hr", price: "R4,950" },
+                    { id: "fractional-laser", name: "Fractional Laser Full Face", duration: "1hr", price: "R2,430" },
+                    { id: "plasmage", name: "Plasmage", duration: "1hr", price: "R899.10" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // PERMANENT MAKE UP
+    // ========================================
+    {
+        id: "permanent-makeup",
+        title: "Permanent Make Up",
+        subtitle: "Semi-Permanent Beauty",
+        image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200",
+        Icon: Palette,
+        badge: "Certified",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "brows-pmu",
+                title: "Brows",
+                note: "Save up to 10%",
+                items: [
+                    { id: "powderpixel-brows", name: "Powder Pixel Brows", duration: "1hr", price: "R1,710" },
+                    { id: "microblading", name: "Microblading", duration: "1hr", price: "R1,350" },
+                    { id: "hybrid-brows", name: "Hybrid Brows", duration: "1hr", price: "R1,710" },
+                ],
+            },
+            {
+                id: "eyes-pmu",
+                title: "Eyes",
+                note: "Save up to 10%",
+                items: [
+                    { id: "eyeliner-top", name: "Eyeliner Top", duration: "1hr", price: "R720" },
+                    { id: "eyeliner-bottom", name: "Eyeliner Bottom", duration: "1hr", price: "R720" },
+                ],
+            },
+            {
+                id: "lips-pmu",
+                title: "Lips",
+                note: "Save up to 10%",
+                items: [
+                    { id: "full-lips-contour", name: "Full Lips Contour", duration: "1hr", price: "R2,430" },
+                    { id: "lip-liner", name: "Lip Liner", duration: "1hr", price: "R1,710" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // PRO SKIN
+    // ========================================
+    {
+        id: "pro-skin",
+        title: "Pro Skin",
+        subtitle: "Advanced Skin Treatments",
+        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1200",
+        Icon: Sparkles,
+        badge: "Professional",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "pro-skin-treatments",
+                title: "Pro Skin Treatments",
+                note: "Save up to 10%",
+                items: [
+                    { id: "dermaplaning-pro", name: "Dermaplaning", duration: "1hr", price: "R1,080" },
+                    { id: "dermaplaning-maintenance", name: "Dermaplaning Maintenance", duration: "1hr", price: "R315" },
+                    { id: "microneedling-hands", name: "Micro Needling Hands", duration: "1hr", price: "R648" },
+                    { id: "microneedling-pro", name: "Microneedling", duration: "1hr", price: "R1,620" },
+                    { id: "high-frequency-facial", name: "High Frequency Facial", duration: "1hr", price: "R720" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // QMS FACIAL
+    // ========================================
+    {
+        id: "qms-facial",
+        title: "QMS Facial",
+        subtitle: "Medical Skincare",
+        image: "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=1200",
+        Icon: Sparkles,
+        badge: "Premium",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "qms-facials",
+                title: "QMS Facials",
+                note: "Save up to 10%",
+                items: [
+                    { id: "basic-facial-qms", name: "Basic Facial", duration: "1hr", price: "R657" },
+                    { id: "sensitive-skin-facial", name: "Sensitive Skin Facial", duration: "1hr", price: "R540" },
+                    { id: "activator-treatment", name: "Activator Treatment", duration: "1hr", price: "R648" },
+                    { id: "deep-pore-cleansing", name: "Deep Pore Cleansing Facial", duration: "1hr", price: "R675" },
+                    { id: "rejuvenating-facial", name: "Rejuvenating Facial", duration: "1hr", price: "R765" },
+                    { id: "collagen-facial", name: "Collagen Facial", duration: "1hr", price: "R799.20" },
+                    { id: "chemical-peel", name: "Chemical Peel", duration: "1hr", price: "R809.10" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // SUNBED
+    // ========================================
+    {
+        id: "sunbed",
+        title: "Sunbed",
+        subtitle: "Tanning Services",
+        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200",
+        Icon: Sun,
+        badge: "Safe",
+        badgeVariant: "safe",
+        subcategories: [
+            {
+                id: "sunbed-services",
+                title: "Sunbed & Spray Tan",
+                note: "Save up to 10%",
+                items: [
+                    { id: "sunbed-session", name: "Sunbed Per Session", duration: "1hr", price: "R54" },
+                    { id: "sunbed-10-sessions", name: "Sunbed 10 Sessions", duration: "1hr", price: "R315" },
+                    { id: "sunbed-20-sessions", name: "Sunbed 20 Sessions", duration: "1hr", price: "R630" },
+                    { id: "spraytan", name: "Spray Tan", duration: "1hr", price: "R486" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // WAXING
+    // ========================================
+    {
+        id: "waxing",
+        title: "Waxing",
+        subtitle: "Smooth & Silky",
+        image: "/images/services/waxing/waxing_04.jpeg",
+        Icon: Sparkles,
+        badge: "Hygienic",
+        badgeVariant: "medical",
+        subcategories: [
+            {
+                id: "face-wax",
+                title: "Face Waxing",
+                note: "Save up to 10%",
+                items: [
+                    { id: "lip-wax", name: "Lip Wax", duration: "1hr", price: "R90" },
+                    { id: "cheek-wax", name: "Cheek Wax", duration: "1hr", price: "R157.50" },
+                    { id: "nose-wax", name: "Nose Wax", duration: "1hr", price: "R81" },
+                    { id: "ear-wax", name: "Ear Wax", duration: "1hr", price: "R108" },
+                ],
+            },
+            {
+                id: "body-wax",
+                title: "Body Waxing",
+                note: "Save up to 10%",
+                items: [
+                    { id: "under-arm-wax", name: "Under Arm Wax", duration: "1hr", price: "R157.50" },
+                    { id: "full-tummy-wax", name: "Full Tummy Wax", duration: "1hr", price: "R180" },
+                    { id: "chest-wax", name: "Chest Wax", duration: "1hr", price: "R216" },
+                    { id: "half-back-wax", name: "Half Back Wax", duration: "1hr", price: "R225" },
+                    { id: "full-back-wax", name: "Full Back Wax", duration: "1hr", price: "R261" },
+                    { id: "men-back-wax", name: "Men Back Wax", duration: "1hr", price: "R522" },
+                    { id: "butt-wax", name: "Butt Wax", duration: "1hr", price: "R180" },
+                ],
+            },
+            {
+                id: "leg-arm-wax",
+                title: "Leg & Arm Waxing",
+                note: "Save up to 10%",
+                items: [
+                    { id: "half-arm-wax", name: "Half Arm Wax", duration: "1hr", price: "R130.50" },
+                    { id: "full-arm-wax", name: "Full Arm Wax", duration: "1hr", price: "R234" },
+                    { id: "half-leg-wax", name: "Half Leg Wax", duration: "1hr", price: "R261" },
+                    { id: "full-leg-wax", name: "Full Leg Wax", duration: "1hr", price: "R486" },
+                ],
+            },
+            {
+                id: "bikini-wax",
+                title: "Bikini Waxing",
+                note: "Save up to 10%",
+                items: [
+                    { id: "brazillian-wax", name: "Brazilian Wax", duration: "1hr", price: "R387" },
+                    { id: "hollywood-wax", name: "Hollywood Wax", duration: "1hr", price: "R450" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // HAIR & STYLING
+    // ========================================
+    {
+        id: "hair",
+        title: "Hair & Styling",
+        subtitle: "Salon Excellence",
+        image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200",
+        Icon: Scissors,
+        badge: "Professional",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "haircuts",
+                title: "Haircuts",
+                note: "Save up to 10%",
+                items: [
+                    { id: "cut-0-5-years", name: "Cut 0-5 Years", duration: "30 mins", price: "R99" },
+                    { id: "haircut-short", name: "Haircut Short", duration: "1hr", price: "R288" },
+                    { id: "haircut-medium", name: "Haircut Medium", duration: "1hr", price: "R378" },
+                    { id: "haircut-long", name: "Haircut Long", duration: "1hr", price: "R351" },
+                    { id: "pensioner-cut-blow", name: "Pensioner Cut and Blow", duration: "1hr", price: "R252" },
+                ],
+            },
+            {
+                id: "blow-dry",
+                title: "Blow Dry",
+                note: "Save up to 10%",
+                items: [
+                    { id: "medium-blow", name: "Medium Blow", duration: "1hr", price: "R297" },
+                    { id: "extra-long-blow", name: "Extra Long Blow", duration: "1hr", price: "R378" },
+                    { id: "long-blow", name: "Long Blow", duration: "1hr", price: "R468" },
+                ],
+            },
+            {
+                id: "blow-packages",
+                title: "Blow Packages (10x)",
+                note: "Save up to 10%",
+                items: [
+                    { id: "short-blow-10x", name: "Short Blow Package 10x", duration: "1hr", price: "R1,080" },
+                    { id: "medium-blow-10x", name: "Medium Blow Package 10x", duration: "1hr", price: "R1,350" },
+                    { id: "long-blow-10x", name: "Long Blow Package 10x", duration: "1hr", price: "R1,620" },
+                    { id: "extra-long-blow-10x", name: "Extra Long Blow Package 10x", duration: "1hr", price: "R1,890" },
+                ],
+            },
+            {
+                id: "color",
+                title: "Hair Color",
+                note: "Save up to 10%",
+                items: [
+                    { id: "roots", name: "Roots", duration: "1hr 15 mins", price: "R675" },
+                    { id: "short-color", name: "Short Color", duration: "1hr", price: "R810" },
+                    { id: "medium-color", name: "Medium Color", duration: "1hr", price: "R990" },
+                    { id: "long-color", name: "Long Color", duration: "1hr", price: "R1,215" },
+                    { id: "extra-long-color", name: "Extra Long Color", duration: "1hr", price: "R1,350" },
+                    { id: "balayage", name: "Balayage", duration: "2hr 30 mins", price: "R135" },
+                ],
+            },
+            {
+                id: "foils",
+                title: "Foils",
+                note: "Save up to 10%",
+                items: [
+                    { id: "cap-highlights", name: "Cap Highlights", duration: "1hr", price: "R540" },
+                    { id: "short-half-head-foils", name: "Short Half Head Foils", duration: "1hr", price: "R765" },
+                    { id: "medium-half-head-foils", name: "Medium Half Head Foils", duration: "1hr", price: "R855" },
+                    { id: "long-half-head-foils", name: "Long Half Head Foils", duration: "1hr", price: "R1,035" },
+                    { id: "extra-long-half-head-foils", name: "Extra Long Half Head Foils", duration: "1hr", price: "R1,125" },
+                    { id: "short-full-head-foils", name: "Short Full Head Foils", duration: "1hr", price: "R810" },
+                    { id: "medium-full-head-foils", name: "Medium Full Head Foils", duration: "1hr", price: "R1,035" },
+                    { id: "long-full-head-foils", name: "Long Full Head Foils", duration: "1hr", price: "R1,170" },
+                    { id: "extra-long-full-head-foils", name: "Extra Long Full Head Foils", duration: "1hr", price: "R1,305" },
+                ],
+            },
+            {
+                id: "toner",
+                title: "Hair Toner",
+                note: "Save up to 10%",
+                items: [
+                    { id: "short-toner", name: "Short Hair Toner", duration: "1hr", price: "R342" },
+                    { id: "medium-toner", name: "Medium Hair Toner", duration: "1hr", price: "R378" },
+                    { id: "long-toner", name: "Long Hair Toner", duration: "1hr", price: "R450" },
+                ],
+            },
+            {
+                id: "treatments-hair",
+                title: "Hair Treatments",
+                note: "Save up to 10%",
+                items: [
+                    { id: "osmo-intensive-mask", name: "Osmo Intensive Mask", duration: "1hr", price: "R288" },
+                    { id: "osmo-silver-mask", name: "Osmo Silver Mask", duration: "1hr", price: "R315" },
+                    { id: "care-vital-mask", name: "Care Vital Mask", duration: "1hr", price: "R495" },
+                    { id: "care-keratin-mask", name: "Care Keratin Mask", duration: "1hr", price: "R495" },
+                    { id: "botox-short", name: "Botox Treat Short", duration: "1hr", price: "R810" },
+                    { id: "botox-medium", name: "Botox Treat Medium Hair", duration: "1hr", price: "R720" },
+                    { id: "botox-long", name: "Botox Long Hair Treat", duration: "1hr", price: "R810" },
+                ],
+            },
+            {
+                id: "brazilian-blow",
+                title: "Brazilian Blow",
+                note: "Save up to 10%",
+                items: [
+                    { id: "brazilian-blow-short", name: "Brazilian Blow Short", duration: "1hr", price: "R1,035" },
+                    { id: "brazilian-blow-long", name: "Brazilian Blow Long", duration: "1hr", price: "R1,548" },
+                    { id: "brazilian-blow-extra-long", name: "Brazilian Blow Extra Long", duration: "1hr", price: "R1,683" },
+                ],
+            },
+            {
+                id: "upstyle",
+                title: "Upstyle",
+                note: "Save up to 10%",
+                items: [
+                    { id: "short-upstyle", name: "Short Hair Upstyle", duration: "1hr", price: "R540" },
+                    { id: "medium-upstyle", name: "Medium Upstyle", duration: "1hr", price: "R720" },
+                    { id: "long-upstyle", name: "Long Hair Upstyle", duration: "1hr", price: "R900" },
+                ],
+            },
+        ],
+    },
+    // ========================================
+    // NAILS
+    // ========================================
     {
         id: "nails",
-        title: "Nails & Pedicures",
+        title: "Nails",
         subtitle: "Nail Artistry",
         image: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200",
         Icon: Scissors,
@@ -101,35 +597,60 @@ export const serviceCategories: ServiceCategory[] = [
         badgeVariant: "medical",
         subcategories: [
             {
+                id: "manicure",
+                title: "Manicure",
+                note: "Save up to 10%",
+                items: [
+                    { id: "manicure-basic", name: "Manicure", duration: "45 mins", price: "R234" },
+                ],
+            },
+            {
                 id: "acrylic-nails",
                 title: "Acrylic Nails",
+                note: "Save up to 10%",
                 items: [
-                    { id: "full-set-designer", name: "Full Set Designer Acrylic", price: "R450" },
-                    { id: "acrylic-fill", name: "Acrylic Fill", price: "R300" },
-                    { id: "acrylic-gel-tips", name: "Acrylic Gel and Tips", price: "R480" },
-                    { id: "acrylic-gel-overlay", name: "Acrylic Gel Overlay", price: "R350" },
-                    { id: "soak-off-acrylic", name: "Soak Off Acrylic", price: "R70" },
+                    { id: "acrylic-fill", name: "Acrylic Fill", duration: "1hr", price: "R378" },
+                    { id: "acrylic-overlay", name: "Acrylic Overlay", duration: "1hr", price: "R414" },
+                    { id: "full-set-acrylic-tips", name: "Full Set Acrylic with Tips", duration: "1hr", price: "R540" },
+                    { id: "sculpted-acrylic", name: "Sculpted Acrylic with Forms", duration: "1hr", price: "R594" },
+                    { id: "full-set-designer", name: "Full Set Designer Nails", duration: "1hr", price: "R648" },
+                    { id: "acrylic-soak-off", name: "Acrylic Soak Off", duration: "1hr", price: "R108" },
                 ],
             },
             {
                 id: "gel-nails",
                 title: "Gel Nails",
+                note: "Save up to 10%",
                 items: [
-                    { id: "gel-toes", name: "Gel Toes", price: "R180" },
-                    { id: "gel-overlay", name: "Gel Overlay Hands", price: "R250" },
-                    { id: "soak-off-gel", name: "Soak Off Gel", price: "R50" },
+                    { id: "gel-toes", name: "Gel Toes", duration: "1hr", price: "R252" },
+                    { id: "gel-overlay", name: "Gel Overlay", duration: "1hr", price: "R378" },
+                    { id: "gel-fill", name: "Gel Fill", duration: "1hr", price: "R378" },
+                    { id: "rubber-base-fill", name: "Rubber Base Fill", duration: "1hr", price: "R162" },
+                    { id: "gel-soak-off", name: "Gel Soak Off", duration: "1hr", price: "R90" },
                 ],
             },
             {
-                id: "pedicures",
-                title: "Pedicures",
+                id: "pedicure",
+                title: "Pedicure",
+                note: "Save up to 10%",
                 items: [
-                    { id: "medical-pedicure", name: "Medical Pedicure + Gel", price: "R399" },
-                    { id: "standard-pedicure", name: "Standard Pedicure + Gel", price: "R299" },
+                    { id: "pedicure-gel", name: "Pedicure with Gel", duration: "1hr", price: "R540" },
+                ],
+            },
+            {
+                id: "nail-extras",
+                title: "Extras",
+                note: "Save up to 10%",
+                items: [
+                    { id: "nail-repair", name: "Nail Repair", duration: "1hr", price: "R54" },
+                    { id: "buff-only", name: "Buff Only", duration: "1hr", price: "R63" },
                 ],
             },
         ],
     },
+    // ========================================
+    // EYEBROWS & EYELASHES
+    // ========================================
     {
         id: "lashes",
         title: "Lashes & Brows",
@@ -142,136 +663,35 @@ export const serviceCategories: ServiceCategory[] = [
             {
                 id: "lash-extensions",
                 title: "Lash Extensions",
+                note: "Save up to 10%",
                 items: [
-                    { id: "full-set-silk", name: "Full Set Silk Individual", price: "R699" },
-                    { id: "full-set-2d-3d", name: "Full Set 2D/3D Volume", price: "R599" },
-                    { id: "full-set-4d-5d", name: "Full Set 4D/5D Lashes", price: "R799" },
-                    { id: "russian-volume", name: "Russian Volume", price: "R899" },
-                    { id: "half-fill", name: "½ Fill", price: "R350" },
-                    { id: "three-quarter-fill", name: "¾ Fill", price: "R280" },
-                    { id: "lash-brow-tint", name: "Lash & Brow Tint", price: "R100" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "waxing",
-        title: "Waxing",
-        subtitle: "Smooth & Silky",
-        image: "/images/services/waxing/waxing_04.jpeg",
-        Icon: Sparkles,
-        badge: "Hygienic",
-        badgeVariant: "medical",
-        subcategories: [
-            {
-                id: "waxing",
-                title: "Waxing",
-                items: [
-                    { id: "full-face-wax", name: "Full Face", price: "R150" },
-                    { id: "lip-chin-brows", name: "Lip, Chin, Brows", price: "R140" },
-                    { id: "brazilian", name: "Brazilian", price: "R200" },
-                    { id: "hollywood", name: "Hollywood", price: "R240" },
-                    { id: "full-legs", name: "Full Legs", price: "R200" },
-                    { id: "underarm", name: "Underarm", price: "R90" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "makeup",
-        title: "Make-up & Massages",
-        subtitle: "Beauty & Wellness",
-        image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200",
-        Icon: Star,
-        badge: "Premium",
-        badgeVariant: "premium",
-        subcategories: [
-            {
-                id: "kryolan-makeup",
-                title: "Kryolan Make-up",
-                items: [
-                    { id: "day-makeup", name: "Day Make-up", price: "R300" },
-                    { id: "evening-makeup", name: "Evening Make-up", price: "R400" },
-                    { id: "bridal-makeup", name: "Bridal Make-up", price: "R1,500" },
-                    { id: "bridal-trial", name: "Bridal Trial", price: "R400" },
-                    { id: "makeup-classes", name: "Make-up Classes", price: "R700" },
+                    { id: "full-set-silk", name: "Full Set Silk Lashes", duration: "1hr", price: "R450" },
+                    { id: "full-set-classic", name: "Full Set Classic Lashes", duration: "1hr", price: "R630" },
+                    { id: "full-set-volume", name: "Full Set Volume Lashes", duration: "1hr", price: "R720" },
+                    { id: "hybrid-lashes", name: "Hybrid Lashes", duration: "1hr", price: "R720" },
+                    { id: "glamour-lashes", name: "Glamour Lashes", duration: "1hr", price: "R900" },
+                    { id: "lash-fill", name: "Lash Fill", duration: "1hr", price: "R360" },
                 ],
             },
             {
-                id: "pmu",
-                title: "Permanent Make-up (PMU)",
+                id: "lash-treatments",
+                title: "Lash Treatments",
+                note: "Save up to 10%",
                 items: [
-                    { id: "powder-brows", name: "Powder Brows", price: "R2,800" },
-                    { id: "microbladed-phi", name: "Microbladed Phi-Brows", price: "R2,200" },
-                    { id: "full-lips-phi", name: "Full Lips Phi-Contour", price: "R3,588" },
-                    { id: "hybrid-brows", name: "Hybrid Brows", price: "R2,400" },
-                ],
-                note: "Touch ups are 50% less",
-            },
-            {
-                id: "massages",
-                title: "Massages",
-                items: [
-                    { id: "back-neck-shoulders", name: "Back, Neck, Shoulders", duration: "30min", price: "R330" },
-                    { id: "swedish-massage", name: "Swedish Massage", duration: "60min", price: "R520" },
-                    { id: "deep-tissue", name: "Deep Tissue", price: "R590" },
-                    { id: "full-body", name: "Full Body", duration: "60min", price: "R500" },
-                ],
-            },
-        ],
-    },
-    {
-        id: "ipl",
-        title: "IPL Hair Removal",
-        subtitle: "Permanent Results",
-        image: "/images/services/IPL_Hair_removal/IPL_image_06.jpeg",
-        Icon: Zap,
-        badge: "CE Approved",
-        badgeVariant: "safe",
-        subcategories: [
-            {
-                id: "ipl-ladies",
-                title: "IPL Ladies",
-                items: [
-                    { id: "ipl-full-face", name: "Full Face", price: "R650" },
-                    { id: "ipl-underarms", name: "Underarms", price: "R400" },
-                    { id: "ipl-full-bikini", name: "Full Bikini", price: "R650" },
-                    { id: "ipl-full-leg", name: "Full Leg", price: "R1,000" },
-                    { id: "ipl-bikini-underarms", name: "Full Bikini & Underarms", price: "R590" },
+                    { id: "lash-tint", name: "Lash Tint", duration: "1hr", price: "R108" },
+                    { id: "lash-lift", name: "Lash Lift", duration: "1hr", price: "R423" },
+                    { id: "lash-lamination", name: "Lash Lamination", duration: "1hr", price: "R495" },
                 ],
             },
             {
-                id: "ipl-gents",
-                title: "IPL Gents",
+                id: "brow-treatments",
+                title: "Brow Treatments",
+                note: "Save up to 10%",
                 items: [
-                    { id: "ipl-full-back", name: "Full Back", price: "R700" },
-                    { id: "ipl-chest", name: "Chest", price: "R1,200" },
-                    { id: "ipl-shoulders", name: "Shoulders", price: "R450" },
-                    { id: "ipl-full-arm", name: "Full Arm", price: "R600" },
+                    { id: "brow-tint", name: "Brow Tint", duration: "1hr", price: "R90" },
+                    { id: "brow-lamination", name: "Brow Lamination", duration: "1hr", price: "R423" },
+                    { id: "brow-henna", name: "Brow Henna", duration: "1hr", price: "R423" },
                 ],
-            },
-        ],
-    },
-    {
-        id: "slimming",
-        title: "Slimming & Body",
-        subtitle: "Body Contouring",
-        image: "/images/services/slimming_weightloss/Slimming_image_02.jpeg",
-        Icon: Heart,
-        badge: "CE Approved",
-        badgeVariant: "safe",
-        subcategories: [
-            {
-                id: "cryolipolysis",
-                title: "Cryolipolysis (Fat Freeze)",
-                items: [
-                    { id: "cryo-chin", name: "Chin", price: "R1,200" },
-                    { id: "cryo-arms", name: "Arms", price: "R1,700" },
-                    { id: "cryo-stomach", name: "Stomach", price: "R3,400" },
-                    { id: "cryo-buttocks", name: "Buttocks", price: "R3,900" },
-                    { id: "cryo-love-handles", name: "Love Handles", price: "R2,300" },
-                ],
-                note: "Visible results from 3 weeks",
             },
         ],
     },

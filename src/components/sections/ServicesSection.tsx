@@ -13,8 +13,8 @@ const services = [
     {
         id: "facials",
         title: "Facials",
-        subtitle: "Babor Skincare",
-        description: "Indulge in our premium Babor facial treatments. From moisturising and anti-ageing facials to advanced skin renewal peels, our certified specialists deliver visible results using medical-grade products.",
+        subtitle: "Premium Skincare",
+        description: "Indulge in our premium facial treatments. From moisturising and anti-ageing facials to advanced skin renewal peels, our certified specialists deliver visible results using medical-grade products.",
         images: ["/images/services/facials/Image_facial_03.jpeg", "/images/services/facials/Image_facial_07.jpeg"],
         badge: "Premium",
         badgeVariant: "premium" as const,
@@ -189,7 +189,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    <Link href={`/prices#${service.id}`} className="block group">
+                    <Link href="/prices" className="block group">
                         <div className="relative aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
                             {/* Background gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
@@ -214,21 +214,13 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 transition-opacity duration-500 group-hover:opacity-70" />
 
                             {/* Badge */}
-                            <div className="absolute top-6 right-6 z-20 flex flex-col items-end gap-2">
+                            <div className="absolute top-6 right-6 z-20">
                                 <TrustBadge variant={service.badgeVariant} icon="shield">
                                     {service.badge}
                                 </TrustBadge>
-                                {service.bookingFast && (
-                                    <UrgencyBadge variant="booking-fast" />
-                                )}
                             </div>
 
-                            {/* Floating number */}
-                            <div className="absolute top-6 left-6 z-20">
-                                <span className="font-serif text-7xl font-bold text-white/20 select-none">
-                                    0{index + 1}
-                                </span>
-                            </div>
+
 
                             {/* Bottom content overlay */}
                             <div className="absolute inset-x-0 bottom-0 p-6 z-20">
@@ -321,7 +313,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                             size="lg"
                             className="bg-foreground hover:bg-gold text-background hover:text-white font-medium px-8 transition-all duration-300 group"
                         >
-                            <Link href={`/prices#${service.id}`}>
+                            <Link href="/prices">
                                 View Treatments
                                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                             </Link>

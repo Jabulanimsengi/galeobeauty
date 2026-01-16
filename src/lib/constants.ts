@@ -24,10 +24,10 @@ export const businessInfo: BusinessInfo = {
         publicHoliday: "Public Holiday: 8:00am - 2:00pm",
     },
     socials: {
-        facebook: "https://facebook.com/galeobeauty",
-        instagram: "https://instagram.com/galeobeauty",
-        whatsapp: "27121111730",
-        tiktok: "https://tiktok.com/@galeobeauty",
-        fresha: "https://www.fresha.com/a/galeo-beauty",
+        facebook: "https://web.facebook.com/galeobeauty",
+        instagram: "https://www.instagram.com/galeo_beauty/",
+        whatsapp: "27824447389",
+        tiktok: "https://www.tiktok.com/@dandimeyer711",
+        fresha: "https://www.fresha.com/a/galeo-beauty-hartbeespoort-galeo-beauty-landsmeer-equestrian-estate-sb28s52l?pId=1023476",
     },
 };

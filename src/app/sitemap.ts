@@ -1,11 +1,13 @@
 import { MetadataRoute } from 'next';
+import { serviceCategories } from '@/lib/services-data';
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const baseUrl = 'https://galeobeauty.co.za';
 
-    return [
+    // Base pages
+    const staticPages: MetadataRoute.Sitemap = [
         {
             url: baseUrl,
             lastModified: new Date(),
@@ -43,4 +45,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
             priority: 0.8,
         },
     ];
+
+    // Dynamic service category pages
+    const categoryPages: MetadataRoute.Sitemap = serviceCategories.map((category) => ({
+        url: `${baseUrl}/prices/${category.id}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.85,
+    }));
+
+    return [...staticPages, ...categoryPages];
 }
+

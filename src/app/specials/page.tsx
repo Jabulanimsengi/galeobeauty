@@ -32,10 +32,10 @@ const specials: Special[] = [
     {
         id: "facials",
         title: "Facial Glow Package",
-        subtitle: "Premium Babor Treatments",
+        subtitle: "Premium Treatments",
         image: "/images/services/facials/Image_facial_03.jpeg",
         discount: "30% OFF",
-        description: "Experience our signature Babor facials at special prices. Perfect for achieving that radiant, healthy glow you deserve.",
+        description: "Experience our signature facials at special prices. Perfect for achieving that radiant, healthy glow you deserve.",
         featured: true,
         items: [
             { service: "Skinovage Moisturising Facial", originalPrice: "R575", price: "R400" },

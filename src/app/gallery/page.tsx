@@ -62,7 +62,7 @@ const galleryItems = [
         id: "7",
         src: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=800&h=1000&fit=crop",
         alt: "Skincare Products",
-        title: "Babor Collection",
+        title: "Skincare Collection",
         category: "Products",
         aspect: "portrait",
     },

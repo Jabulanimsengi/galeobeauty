@@ -90,6 +90,9 @@
   --border: oklch(0.90 0.005 280);
   --input: oklch(0.90 0.005 280);
   --ring: oklch(0.68 0.13 85);
+
+  /* Header height for sticky positioning */
+  --header-height: 96px;
 }
 
 .dark {

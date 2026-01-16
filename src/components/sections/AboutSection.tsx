@@ -9,7 +9,7 @@ import { CheckCircle2, ArrowRight, Trophy } from "lucide-react";
 
 const features = [
     "CE Certified medical equipment",
-    "Medical-grade Babor skincare products",
+    "Medical-grade skincare products",
     "Sterile, hygienic treatment rooms",
     "Certified beauty & wellness specialists",
 ];
