@@ -118,40 +118,38 @@ export function FloatingSocials() {
                 )}
             </AnimatePresence>
 
-            {/* Toggle Button */}
-            <motion.button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-300 ${isExpanded
-                    ? "bg-foreground text-background rotate-0"
-                    : "bg-[#25D366] text-white hover:bg-[#128C7E] hover:scale-110"
-                    }`}
-                whileTap={{ scale: 0.95 }}
-                aria-label={isExpanded ? "Close social menu" : "Open social menu"}
-            >
-                <AnimatePresence mode="wait">
-                    {isExpanded ? (
-                        <motion.div
-                            key="close"
-                            initial={{ rotate: -90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            exit={{ rotate: 90, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <X className="h-6 w-6 sm:h-7 sm:w-7" />
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="open"
-                            initial={{ rotate: 90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            exit={{ rotate: -90, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </motion.button>
+            {/* Toggle Button - Hidden when expanded, Close button appears at top of expanded menu */}
+            <AnimatePresence>
+                {isExpanded ? (
+                    <motion.button
+                        key="close-button"
+                        onClick={() => setIsExpanded(false)}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all duration-300 hover:bg-foreground/80"
+                        whileTap={{ scale: 0.95 }}
+                        aria-label="Close social menu"
+                    >
+                        <X className="h-6 w-6" />
+                    </motion.button>
+                ) : (
+                    <motion.button
+                        key="open-button"
+                        onClick={() => setIsExpanded(true)}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-all duration-300 hover:bg-[#128C7E] hover:scale-110"
+                        whileTap={{ scale: 0.95 }}
+                        aria-label="Open social menu"
+                    >
+                        <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
+                    </motion.button>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

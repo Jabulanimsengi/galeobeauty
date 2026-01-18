@@ -69,10 +69,10 @@ function StatItem({ value, suffix, label, description, delay = 0, icon: Icon }: 
 export function StatsSection() {
     const stats = [
         {
-            value: 5000,
+            value: 500,
             suffix: "+",
-            label: "Satisfied Clients",
-            description: "Trusted by thousands",
+            label: "Clients",
+            description: "Satisfied customers",
             icon: Users
         },
         {

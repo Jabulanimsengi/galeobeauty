@@ -144,7 +144,7 @@ export default function AboutPage() {
                             Your journey to your best self begins with a single appointment.
                         </p>
                         <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
-                            <NavLink href="/contact">Book Your Visit</NavLink>
+                            <NavLink href="/prices">Book Your Visit</NavLink>
                         </Button>
                     </div>
                 </section>

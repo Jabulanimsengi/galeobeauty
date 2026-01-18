@@ -64,6 +64,8 @@ export function FeaturedInLocal({ className }: { className?: string }) {
         { name: "Dermalogica", src: "/images/brands/dermalogica.png" },
         { name: "QMS", src: "/images/brands/qms.png" },
         { name: "Moroccanoil", src: "/images/brands/moroccanoil.png" },
+        { name: "Milkshake", src: "/images/brands/milkshake.png" },
+        { name: "Lola Lee", src: "/images/brands/lola-lee.png" },
     ];
 
     return (
@@ -75,13 +77,13 @@ export function FeaturedInLocal({ className }: { className?: string }) {
                 {localBrands.map((brand) => (
                     <div
                         key={brand.name}
-                        className={`relative h-10 sm:h-12 w-24 sm:w-32 opacity-50 hover:opacity-100 transition-opacity duration-300 ${brand.name === "QMS" ? "brightness-0" : "brightness-0 invert"}`}
+                        className="relative h-10 sm:h-12 w-24 sm:w-32 opacity-60 hover:opacity-100 transition-opacity duration-300"
                     >
                         <Image
                             src={brand.src}
                             alt={brand.name}
                             fill
-                            className="object-contain"
+                            className="object-contain brightness-0 invert"
                             sizes="128px"
                         />
                     </div>
