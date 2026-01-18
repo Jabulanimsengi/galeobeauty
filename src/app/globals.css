@@ -213,6 +213,21 @@
     }
   }
 
+  /* Navigation loading shimmer animation */
+  .animate-loading-shimmer {
+    animation: loading-shimmer 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loading-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(300%);
+    }
+  }
+
   /* ============================================
      STANDARDIZED SPACING & ANIMATION UTILITIES
      ============================================ */

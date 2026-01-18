@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import Link from "next/link";
+import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Shield, Star, Sparkles, Award } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
@@ -62,14 +63,14 @@ function FloatingShape({ className, delay = 0 }: { className?: string; delay?: n
     );
 }
 
-// Text animation variants
+// Text animation variants - Simplified for mobile performance
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.15,
-            delayChildren: 0.2
+            staggerChildren: 0.1,
+            delayChildren: 0.1
         }
     }
 };
@@ -77,26 +78,24 @@ const containerVariants = {
 const wordVariants = {
     hidden: {
         opacity: 0,
-        y: 40,
-        filter: "blur(10px)"
+        y: 20
     },
     visible: {
         opacity: 1,
         y: 0,
-        filter: "blur(0px)",
         transition: {
-            duration: 0.8,
+            duration: 0.4,
             ease: [0.25, 0.46, 0.45, 0.94] as const
         }
     }
 };
 
 const fadeUpVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 15 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] as const }
+        transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const }
     }
 };
 
@@ -106,17 +105,17 @@ export function HeroSection() {
     return (
         <section className="relative min-h-[90vh] lg:h-screen flex flex-col lg:flex-row overflow-hidden">
 
-            {/* Floating Decorative Elements */}
+            {/* Floating Decorative Elements - Hidden on mobile for performance */}
             <FloatingShape
-                className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 blur-2xl z-0 hidden lg:block"
+                className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 blur-2xl z-0 hidden xl:block"
                 delay={0}
             />
             <FloatingShape
-                className="absolute bottom-40 left-[30%] w-24 h-24 rounded-full bg-gradient-to-br from-gold/15 to-transparent blur-xl z-0 hidden lg:block"
+                className="absolute bottom-40 left-[30%] w-24 h-24 rounded-full bg-gradient-to-br from-gold/15 to-transparent blur-xl z-0 hidden xl:block"
                 delay={1.5}
             />
             <FloatingShape
-                className="absolute top-[40%] right-[45%] w-16 h-16 rounded-full bg-gradient-to-br from-gold/25 to-gold/10 blur-lg z-0 hidden lg:block"
+                className="absolute top-[40%] right-[45%] w-16 h-16 rounded-full bg-gradient-to-br from-gold/25 to-gold/10 blur-lg z-0 hidden xl:block"
                 delay={3}
             />
 
@@ -188,12 +187,12 @@ export function HeroSection() {
                                 size="lg"
                                 className="group bg-[#1A1A1A] hover:bg-black text-white transition-all duration-300 rounded-full px-10 h-14 font-medium text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden"
                             >
-                                <Link href="/prices">
+                                <NavLink href="/prices">
                                     <span className="relative z-10 group-hover:text-gold transition-colors duration-300">
                                         View Treatments
                                     </span>
                                     <span className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/10 to-gold/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                                </Link>
+                                </NavLink>
                             </Button>
                             <Button
                                 asChild
@@ -201,11 +200,11 @@ export function HeroSection() {
                                 variant="outline"
                                 className="group border-2 border-foreground/20 hover:border-gold bg-transparent hover:bg-gold/5 text-foreground transition-all duration-300 rounded-full px-8 h-14 font-medium text-base hover:-translate-y-1"
                             >
-                                <Link href="/specials">
+                                <NavLink href="/specials">
                                     <span className="group-hover:text-gold transition-colors duration-300">
                                         View Specials
                                     </span>
-                                </Link>
+                                </NavLink>
                             </Button>
                         </motion.div>
 
@@ -294,7 +293,7 @@ export function HeroSection() {
                         size="lg"
                         className="bg-white/95 hover:bg-white text-foreground hover:text-gold shadow-2xl rounded-full px-8 h-14 font-medium backdrop-blur-sm"
                     >
-                        <Link href="/booking">Book Now</Link>
+                        <Link href="/prices">Book Now</Link>
                     </Button>
                 </motion.div>
 

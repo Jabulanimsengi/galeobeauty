@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { TrustBadge } from "@/components/ui/trust-badge";
 import { UrgencyBadge } from "@/components/ui/urgency-badge";
@@ -167,10 +168,10 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 60 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, delay: index * 0.1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.4 }}
             className="relative"
         >
             <div
@@ -189,7 +190,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    <Link href="/prices" className="block group">
+                    <NavLink href="/prices" className="block group">
                         <div className="relative aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
                             {/* Background gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
@@ -243,52 +244,28 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 transition={{ duration: 0.4 }}
                             />
                         </div>
-                    </Link>
+                    </NavLink>
                 </motion.div>
 
                 {/* Content Side */}
                 <div className="lg:w-1/2 w-full space-y-6">
                     {/* Subtitle */}
-                    <motion.span
-                        className="text-gold font-medium uppercase tracking-widest text-sm block"
-                        initial={{ opacity: 0, x: isReversed ? 20 : -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
-                    >
+                    <span className="text-gold font-medium uppercase tracking-widest text-sm block">
                         {service.subtitle}
-                    </motion.span>
+                    </span>
 
                     {/* Title */}
-                    <motion.h3
-                        className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.3 }}
-                    >
+                    <h3 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight">
                         {service.title}
-                    </motion.h3>
+                    </h3>
 
                     {/* Description */}
-                    <motion.p
-                        className="text-muted-foreground text-lg leading-relaxed"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.4 }}
-                    >
+                    <p className="text-muted-foreground text-lg leading-relaxed">
                         {service.description}
-                    </motion.p>
+                    </p>
 
                     {/* Features list */}
-                    <motion.div
-                        className="grid grid-cols-2 gap-3 pt-4"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.5 }}
-                    >
+                    <div className="grid grid-cols-2 gap-3 pt-4">
                         {service.features.map((feature, i) => (
                             <div
                                 key={feature}
@@ -298,27 +275,21 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 <span>{feature}</span>
                             </div>
                         ))}
-                    </motion.div>
+                    </div>
 
                     {/* CTA Button */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: 0.6 }}
-                        className="pt-4"
-                    >
+                    <div className="pt-4">
                         <Button
                             asChild
                             size="lg"
                             className="bg-foreground hover:bg-gold text-background hover:text-white font-medium px-8 transition-all duration-300 group"
                         >
-                            <Link href="/prices">
+                            <NavLink href="/prices">
                                 View Treatments
                                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                            </Link>
+                            </NavLink>
                         </Button>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -432,10 +403,10 @@ export function ServicesSection() {
                         variant="outline"
                         className="border-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-medium px-10"
                     >
-                        <Link href="/prices">
+                        <NavLink href="/prices">
                             View All Services
                             <ArrowRight className="w-4 h-4 ml-2" />
-                        </Link>
+                        </NavLink>
                     </Button>
                 </motion.div>
             </div>

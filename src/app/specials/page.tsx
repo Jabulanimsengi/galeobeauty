@@ -3,6 +3,7 @@
 import { Header, Footer } from "@/components/layout";
 import Image from "next/image";
 import Link from "next/link";
+import { NavLink } from "@/components/ui/nav-link";
 import { motion } from "framer-motion";
 import { Tag, ArrowRight, Plus, Check } from "lucide-react";
 import { useState } from "react";
@@ -266,13 +267,13 @@ export default function SpecialsPage() {
                         <p className="text-background/70 max-w-lg mx-auto mb-6">
                             Our beauty specialists are here to help you choose the perfect treatment.
                         </p>
-                        <Link
+                        <NavLink
                             href="/contact"
                             className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-foreground px-8 py-3 rounded-full font-medium transition-colors"
                         >
                             Contact Us
                             <ArrowRight className="w-4 h-4" />
-                        </Link>
+                        </NavLink>
                     </div>
                 </section>
             </main>

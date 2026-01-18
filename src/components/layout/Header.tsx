@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, Phone, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Phone } from "lucide-react";
+import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
+import { NavLink } from "@/components/ui/nav-link";
 import {
     Sheet,
     SheetContent,
@@ -108,7 +109,7 @@ export function Header() {
             >
                 <div className="container mx-auto flex justify-between items-center px-4">
                     {/* Logo - Responsive sizing */}
-                    <Link href="/" className="relative z-10">
+                    <NavLink href="/" className="relative z-10">
                         <Image
                             src="/images/logo.png"
                             alt="Galeo Beauty"
@@ -117,12 +118,12 @@ export function Header() {
                             className="h-16 sm:h-20 md:h-24 w-auto transition-all duration-300"
                             priority
                         />
-                    </Link>
+                    </NavLink>
 
                     {/* Desktop Navigation - Nudo-style sliding block */}
                     <nav className="hidden lg:flex items-center gap-0 relative">
                         {navItems.map((item) => (
-                            <Link
+                            <NavLink
                                 key={item.href}
                                 href={item.href}
                                 className="group relative overflow-hidden"
@@ -134,7 +135,7 @@ export function Header() {
 
                                 {/* Sliding background block - only on hover */}
                                 <span className="absolute inset-0 bg-gold transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0" />
-                            </Link>
+                            </NavLink>
                         ))}
                     </nav>
 
@@ -144,29 +145,29 @@ export function Header() {
                             asChild
                             className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
                         >
-                            <Link href="/prices">Make a Booking</Link>
+                            <NavLink href="/prices">Make a Booking</NavLink>
                         </Button>
                     </div>
 
-                    {/* Mobile Menu Trigger - Modern Animated Hamburger */}
+                    {/* Mobile Menu Trigger - Simple Hamburger */}
                     <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                         <SheetTrigger asChild className="lg:hidden">
                             <button
                                 aria-label="Toggle menu"
                                 className="relative z-50 p-2 focus:outline-none"
                             >
-                                <div className="flex flex-col justify-center items-center w-8 h-8">
+                                <div className="flex flex-col justify-center items-center w-8 h-8 gap-1.5">
                                     <span className={cn(
-                                        "block h-0.5 w-7 bg-foreground transition-all duration-300 ease-out",
-                                        isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""
+                                        "block h-0.5 w-6 bg-foreground transition-transform duration-200",
+                                        isMobileMenuOpen && "rotate-45 translate-y-2"
                                     )} />
                                     <span className={cn(
-                                        "block h-0.5 w-7 bg-foreground my-1.5 transition-all duration-300",
-                                        isMobileMenuOpen ? "opacity-0" : ""
+                                        "block h-0.5 w-6 bg-foreground transition-opacity duration-200",
+                                        isMobileMenuOpen && "opacity-0"
                                     )} />
                                     <span className={cn(
-                                        "block h-0.5 w-7 bg-foreground transition-all duration-300 ease-out",
-                                        isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                                        "block h-0.5 w-6 bg-foreground transition-transform duration-200",
+                                        isMobileMenuOpen && "-rotate-45 -translate-y-2"
                                     )} />
                                 </div>
                             </button>
@@ -189,27 +190,22 @@ export function Header() {
 
                             {/* Scrollable content area */}
                             <div className="flex-1 overflow-y-auto">
-                                {/* Modern Nav Links */}
+                                {/* Nav Links - Simplified animations */}
                                 <nav className="flex flex-col mt-8 px-6">
-                                    {navItems.map((item, index) => (
-                                        <Link
+                                    {navItems.map((item) => (
+                                        <NavLink
                                             key={item.href}
                                             href={item.href}
                                             onClick={() => setIsMobileMenuOpen(false)}
                                             className="group relative overflow-hidden py-4 border-b border-background/10"
                                         >
-                                            <motion.span
-                                                initial={{ x: -20, opacity: 0 }}
-                                                animate={{ x: 0, opacity: 1 }}
-                                                transition={{ delay: index * 0.1, duration: 0.3 }}
-                                                className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-300 group-hover:text-white"
-                                            >
+                                            <span className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-200 group-hover:text-white">
                                                 {item.label}
-                                            </motion.span>
+                                            </span>
 
                                             {/* Hover slide effect */}
-                                            <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-                                        </Link>
+                                            <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
+                                        </NavLink>
                                     ))}
                                 </nav>
 
@@ -220,12 +216,12 @@ export function Header() {
                                         size="lg"
                                         className="w-full bg-gold hover:bg-gold hover:text-white text-foreground font-semibold text-lg py-6"
                                     >
-                                        <Link
+                                        <NavLink
                                             href="/prices"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             Book Now
-                                        </Link>
+                                        </NavLink>
                                     </Button>
                                 </div>
                             </div>

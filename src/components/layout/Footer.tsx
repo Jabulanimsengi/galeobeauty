@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { NavLink } from "@/components/ui/nav-link";
 import Image from "next/image";
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from "lucide-react";
 
@@ -17,7 +18,7 @@ export function Footer() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
                     {/* Brand Column */}
                     <div className="space-y-4 sm:col-span-2 lg:col-span-1">
-                        <Link href="/">
+                        <NavLink href="/">
                             <Image
                                 src="/images/logo.png"
                                 alt="Galeo Beauty"
@@ -25,7 +26,7 @@ export function Footer() {
                                 height={100}
                                 className="h-24 sm:h-28 md:h-32 w-auto brightness-0 invert"
                             />
-                        </Link>
+                        </NavLink>
                         <p className="text-background/70 text-sm leading-relaxed max-w-xs">
                             Your destination for premium skincare and beauty treatments at Hartbeespoort Dam.
                         </p>
@@ -81,21 +82,21 @@ export function Footer() {
                         <ul className="space-y-3">
                             {navItems.map((item) => (
                                 <li key={item.href}>
-                                    <Link
+                                    <NavLink
                                         href={item.href}
                                         className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
                                     >
                                         {item.label}
-                                    </Link>
+                                    </NavLink>
                                 </li>
                             ))}
                             <li>
-                                <Link
+                                <NavLink
                                     href="/careers"
                                     className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
                                 >
                                     Careers
-                                </Link>
+                                </NavLink>
                             </li>
                         </ul>
                     </div>

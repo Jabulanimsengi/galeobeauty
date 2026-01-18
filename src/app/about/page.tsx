@@ -3,6 +3,7 @@
 import { Header, Footer } from "@/components/layout";
 import Image from "next/image";
 import Link from "next/link";
+import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, Shield, Award } from "lucide-react";
@@ -133,7 +134,7 @@ export default function AboutPage() {
                                 </div>
                                 <div className="mt-10">
                                     <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-white rounded-full px-8">
-                                        <Link href="/prices">Explore Our Treatments</Link>
+                                        <NavLink href="/prices">Explore Our Treatments</NavLink>
                                     </Button>
                                 </div>
                             </motion.div>
@@ -215,7 +216,7 @@ export default function AboutPage() {
                             Your journey to your best self begins with a single appointment.
                         </p>
                         <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
-                            <Link href="/contact">Book Your Visit</Link>
+                            <NavLink href="/contact">Book Your Visit</NavLink>
                         </Button>
                     </div>
                 </section>

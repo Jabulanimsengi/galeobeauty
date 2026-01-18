@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cormorant, montserrat } from "@/lib/fonts";
 import { FloatingSocials } from "@/components/ui/floating-socials";
+import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -102,8 +103,10 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        {children}
-        <FloatingSocials />
+        <NavigationLoadingProvider>
+          {children}
+          <FloatingSocials />
+        </NavigationLoadingProvider>
       </body>
     </html>
   );
