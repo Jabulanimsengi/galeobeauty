@@ -5,23 +5,27 @@ import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight } from "lucide-react";
 import {
-    ALL_SEO_PARAMS,
     getLocationBySlug,
     getServiceBySlug,
     getCategoryForService,
+    getPriorityParams,
     type SEOLocation,
     type SEOService,
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 
 // ============================================
-// STATIC GENERATION
+// INCREMENTAL STATIC REGENERATION (ISR)
 // ============================================
+// Pre-build only high-priority pages at build time.
+// Remaining pages are generated on-demand when first visited.
 
-export const dynamic = "force-static";
+export const dynamicParams = true;
+export const revalidate = 86400; // Revalidate every 24 hours
 
 export function generateStaticParams() {
-    return ALL_SEO_PARAMS;
+    // Only pre-build priority location/service combinations
+    return getPriorityParams();
 }
 
 // ============================================

@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { serviceCategories } from '@/lib/services-data';
-import { TARGET_LOCATIONS, ALL_SEO_SERVICES } from '@/lib/seo-data';
+import { TARGET_LOCATIONS, PRIORITY_LOCATIONS, getCachedSEOServices } from '@/lib/seo-data';
 
 export const dynamic = "force-static";
 
@@ -17,6 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: `${baseUrl}/prices`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.9,
+        },
+        {
+            url: `${baseUrl}/booking`,
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.9,
@@ -45,12 +51,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.8,
         },
-        {
-            url: `${baseUrl}/careers`,
-            lastModified: new Date(),
-            changeFrequency: 'monthly',
-            priority: 0.5,
-        },
     ];
 
     // Dynamic service category pages
@@ -61,15 +61,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.85,
     }));
 
-    // SEO Location + Service pages
+    // SEO Location + Service pages - Include ALL combinations for Google to crawl
+    // Priority locations get higher priority score
     const seoPages: MetadataRoute.Sitemap = [];
+    const services = getCachedSEOServices();
+
     for (const location of TARGET_LOCATIONS) {
-        for (const service of ALL_SEO_SERVICES) {
+        const isPriority = PRIORITY_LOCATIONS.includes(location.slug);
+
+        for (const service of services) {
             seoPages.push({
                 url: `${baseUrl}/locations/${location.slug}/${service.slug}`,
                 lastModified: new Date(),
                 changeFrequency: 'monthly' as const,
-                priority: 0.7,
+                priority: isPriority ? 0.8 : 0.6,
             });
         }
     }

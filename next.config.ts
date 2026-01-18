@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactCompiler: true,
+  // Disable React Compiler for faster builds (can re-enable later)
+  // reactCompiler: true,
+
+  // Optimize build performance
+  experimental: {
+    // Reduce memory usage during build
+    webpackMemoryOptimizations: true,
+  },
+
   images: {
     remotePatterns: [
       {
@@ -15,6 +23,13 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+
+  // Reduce build output noise
+  logging: {
+    fetches: {
+      fullUrl: false,
+    },
   },
 };
 
