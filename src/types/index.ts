@@ -83,4 +83,14 @@ export interface BusinessInfo {
     tiktok?: string;
     fresha?: string;
   };
+  banking?: {
+    companyName: string;
+    regNumber: string;
+    bank: string;
+    accountType: string;
+    accountNumber: string;
+    branch: string;
+    branchCode: string;
+    swiftCode: string;
+  };
 }

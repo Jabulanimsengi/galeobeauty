@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Sheet,
   SheetContent,
@@ -18,6 +18,8 @@ import {
   Calendar,
   User,
   CreditCard,
+  Copy,
+  AlertTriangle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -39,6 +41,25 @@ export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps)
     ...initialBookingState,
     treatments,
   });
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  // Booking reference: Client's Name and Surname in uppercase
+  const bookingReference = useMemo(() => {
+    const name = state.userDetails.name.trim();
+    if (!name) return "";
+    return name.toUpperCase().replace(/\s+/g, " ");
+  }, [state.userDetails.name]);
+
+  // Copy to clipboard helper
+  const copyToClipboard = async (text: string, fieldName: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(fieldName);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   // Update treatments when prop changes
   useEffect(() => {
@@ -149,7 +170,16 @@ export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps)
       .join("\n");
 
     const total = calculateTotal();
+    const depositAmount = Math.round(total / 2);
     const totalDuration = calculateTotalDuration();
+
+    const bankingDetails = businessInfo.banking
+      ? `\n*Banking Details for Deposit:*
+Account: ${businessInfo.banking.companyName}
+Bank: ${businessInfo.banking.bank}
+Account No: ${businessInfo.banking.accountNumber}
+Branch: ${businessInfo.banking.branch} (${businessInfo.banking.branchCode})`
+      : "";
 
     const message = `*New Booking Request - Galeo Beauty*
 
@@ -166,7 +196,9 @@ Phone: ${state.userDetails.phone}${state.userDetails.email ? `\nEmail: ${state.u
 Date: ${formatDate(state.appointment.date)}
 Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 
-*Payment:* Pay at Salon
+*Payment:* 50% Deposit Required (R ${depositAmount.toLocaleString()})
+*Payment Reference:* ${bookingReference}
+${bankingDetails}
 
 Sent via Galeo Beauty Website`;
 
@@ -190,7 +222,7 @@ Sent via Galeo Beauty Website`;
     <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-md p-0 flex flex-col overflow-hidden"
+        className="w-full sm:max-w-md p-0 flex flex-col overflow-hidden h-auto max-h-[85vh] my-auto rounded-l-2xl sm:rounded-2xl sm:mr-4"
       >
         {/* Header */}
         <SheetHeader className="p-6 pb-4 border-b bg-foreground text-background">
@@ -225,22 +257,20 @@ Sent via Galeo Beauty Website`;
                     else if (step.number === 2 && isStep1Valid) goToStep(2);
                     else if (step.number === 3 && isStep1Valid && isStep2Valid) goToStep(3);
                   }}
-                  className={`flex items-center gap-2 transition-all ${
-                    state.currentStep === step.number
-                      ? "text-gold"
-                      : state.currentStep > step.number
+                  className={`flex items-center gap-2 transition-all ${state.currentStep === step.number
+                    ? "text-gold"
+                    : state.currentStep > step.number
                       ? "text-background/90"
                       : "text-background/40"
-                  }`}
+                    }`}
                 >
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
-                      state.currentStep === step.number
-                        ? "bg-gold text-foreground"
-                        : state.currentStep > step.number
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${state.currentStep === step.number
+                      ? "bg-gold text-foreground"
+                      : state.currentStep > step.number
                         ? "bg-background/20 text-background"
                         : "bg-background/10 text-background/40"
-                    }`}
+                      }`}
                   >
                     {state.currentStep > step.number ? (
                       <CheckCircle className="w-4 h-4" />
@@ -252,9 +282,8 @@ Sent via Galeo Beauty Website`;
                 </button>
                 {idx < steps.length - 1 && (
                   <div
-                    className={`w-8 h-0.5 mx-2 transition-all ${
-                      state.currentStep > step.number ? "bg-gold" : "bg-background/20"
-                    }`}
+                    className={`w-8 h-0.5 mx-2 transition-all ${state.currentStep > step.number ? "bg-gold" : "bg-background/20"
+                      }`}
                   />
                 )}
               </div>
@@ -343,11 +372,10 @@ Sent via Galeo Beauty Website`;
                       <button
                         key={slot.value}
                         onClick={() => updateAppointment("timeSlot", slot.value)}
-                        className={`w-full p-4 rounded-xl border text-left transition-all ${
-                          state.appointment.timeSlot === slot.value
-                            ? "border-gold bg-gold/10 text-foreground"
-                            : "border-border/40 bg-white hover:border-gold/50"
-                        }`}
+                        className={`w-full p-4 rounded-xl border text-left transition-all ${state.appointment.timeSlot === slot.value
+                          ? "border-gold bg-gold/10 text-foreground"
+                          : "border-border/40 bg-white hover:border-gold/50"
+                          }`}
                       >
                         <span className="font-medium block">{slot.label}</span>
                         <span className="text-sm text-muted-foreground">{slot.time}</span>
@@ -421,9 +449,78 @@ Sent via Galeo Beauty Website`;
                   </div>
                   <div className="flex justify-between py-2">
                     <span className="text-muted-foreground">Payment</span>
-                    <span className="font-medium text-green-600">Pay at Salon</span>
+                    <span className="font-medium text-amber-600">50% Deposit Required</span>
                   </div>
                 </div>
+
+                {/* 50% Deposit Notice */}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-amber-800 text-sm">50% Deposit Required</p>
+                    <p className="text-xs text-amber-700 mt-1">
+                      A 50% deposit of <span className="font-bold">R {Math.round(total / 2).toLocaleString()}</span> is required to secure your appointment.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Booking Reference */}
+                {bookingReference && (
+                  <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
+                    <p className="text-xs text-muted-foreground mb-1">Your Booking Reference</p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-xl font-mono font-bold text-gold tracking-wider">{bookingReference}</p>
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(bookingReference, "reference")}
+                        className="p-2 rounded-lg bg-gold/20 hover:bg-gold/30 transition-colors"
+                      >
+                        {copiedField === "reference" ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-gold" />
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-2">Use this as your payment reference</p>
+                  </div>
+                )}
+
+                {/* Banking Details */}
+                {businessInfo.banking && (
+                  <div className="bg-secondary/30 rounded-xl p-4 space-y-2">
+                    <div className="flex items-center gap-2 mb-2">
+                      <CreditCard className="w-4 h-4 text-foreground" />
+                      <p className="font-semibold text-foreground text-sm">Banking Details</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-1 text-xs">
+                      {[
+                        { label: "Account", value: businessInfo.banking.companyName },
+                        { label: "Bank", value: businessInfo.banking.bank },
+                        { label: "Acc No", value: businessInfo.banking.accountNumber },
+                        { label: "Branch", value: `${businessInfo.banking.branch} (${businessInfo.banking.branchCode})` },
+                      ].map((item) => (
+                        <div key={item.label} className="flex items-center justify-between py-1">
+                          <span className="text-muted-foreground">{item.label}</span>
+                          <div className="flex items-center gap-1">
+                            <span className="font-medium text-foreground">{item.value}</span>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(item.value, item.label)}
+                              className="p-0.5 rounded hover:bg-secondary transition-colors"
+                            >
+                              {copiedField === item.label ? (
+                                <CheckCircle className="w-3 h-3 text-green-600" />
+                              ) : (
+                                <Copy className="w-3 h-3 text-muted-foreground" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <p className="text-xs text-muted-foreground text-center">
                   By confirming, you agree to our 24-hour cancellation policy.

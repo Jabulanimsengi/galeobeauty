@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { Phone, Calendar, ArrowRight, CheckCircle, Clock, Sparkles, ChevronDown, Send } from "lucide-react";
+import { Phone, Calendar, ArrowRight, CheckCircle, Clock, Sparkles, ChevronDown, Send, Copy, CreditCard, AlertTriangle } from "lucide-react";
 import { businessInfo } from "@/lib/constants";
 import { serviceCategories, getSubcategoriesForCategory, getItemsForSubcategory } from "@/lib/services-data";
 import type { ServiceItem, ServiceSubcategory } from "@/lib/services-data";
@@ -22,6 +22,24 @@ export default function BookingPage() {
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
     const [notes, setNotes] = useState("");
+    const [copiedField, setCopiedField] = useState<string | null>(null);
+
+    // Booking reference: Client's Name and Surname in uppercase
+    const bookingReference = useMemo(() => {
+        if (!name.trim()) return "";
+        return name.trim().toUpperCase().replace(/\s+/g, " ");
+    }, [name]);
+
+    // Copy to clipboard helper
+    const copyToClipboard = async (text: string, fieldName: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopiedField(fieldName);
+            setTimeout(() => setCopiedField(null), 2000);
+        } catch (err) {
+            console.error("Failed to copy:", err);
+        }
+    };
 
     // Derived data for cascading dropdowns
     const subcategories: ServiceSubcategory[] = selectedCategoryId
@@ -372,6 +390,94 @@ Sent via Galeo Beauty Website`;
                                                 className="w-full px-4 py-4 rounded-xl bg-secondary/20 border border-transparent focus:bg-background focus:border-gold outline-none transition-all placeholder:text-muted-foreground/50 resize-none"
                                             />
                                         </div>
+
+                                        {/* Step 5: Payment Information */}
+                                        {selectedItem && name && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: "auto" }}
+                                                className="space-y-4"
+                                            >
+                                                <label className="block text-sm font-semibold text-foreground mb-4">
+                                                    5. Secure Your Booking
+                                                </label>
+
+                                                {/* Deposit Notice */}
+                                                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                                                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                                                    <div>
+                                                        <p className="font-semibold text-amber-800">50% Deposit Required</p>
+                                                        <p className="text-sm text-amber-700 mt-1">
+                                                            A 50% deposit of <span className="font-bold">{selectedItem.price.replace(/R/, 'R').replace(/,/g, '')}</span> is required to secure your appointment.
+                                                            Please use your unique reference below when making payment.
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Booking Reference */}
+                                                <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
+                                                    <p className="text-xs text-muted-foreground mb-1">Your Booking Reference</p>
+                                                    <div className="flex items-center justify-between">
+                                                        <p className="text-2xl font-mono font-bold text-gold tracking-wider">{bookingReference}</p>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => copyToClipboard(bookingReference, "reference")}
+                                                            className="p-2 rounded-lg bg-gold/20 hover:bg-gold/30 transition-colors"
+                                                        >
+                                                            {copiedField === "reference" ? (
+                                                                <CheckCircle className="w-5 h-5 text-green-600" />
+                                                            ) : (
+                                                                <Copy className="w-5 h-5 text-gold" />
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                    <p className="text-xs text-muted-foreground mt-2">Use this as your payment reference</p>
+                                                </div>
+
+                                                {/* Banking Details */}
+                                                {businessInfo.banking && (
+                                                    <div className="bg-secondary/30 rounded-xl p-4 space-y-3">
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <CreditCard className="w-5 h-5 text-foreground" />
+                                                            <p className="font-semibold text-foreground">Banking Details</p>
+                                                        </div>
+
+                                                        <div className="grid grid-cols-1 gap-2 text-sm">
+                                                            {[
+                                                                { label: "Account Name", value: businessInfo.banking.companyName },
+                                                                { label: "Bank", value: businessInfo.banking.bank },
+                                                                { label: "Account Type", value: businessInfo.banking.accountType },
+                                                                { label: "Account Number", value: businessInfo.banking.accountNumber },
+                                                                { label: "Branch", value: businessInfo.banking.branch },
+                                                                { label: "Branch Code", value: businessInfo.banking.branchCode },
+                                                            ].map((item) => (
+                                                                <div key={item.label} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                                                                    <span className="text-muted-foreground">{item.label}</span>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <span className="font-medium text-foreground">{item.value}</span>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => copyToClipboard(item.value, item.label)}
+                                                                            className="p-1 rounded hover:bg-secondary transition-colors"
+                                                                        >
+                                                                            {copiedField === item.label ? (
+                                                                                <CheckCircle className="w-4 h-4 text-green-600" />
+                                                                            ) : (
+                                                                                <Copy className="w-4 h-4 text-muted-foreground" />
+                                                                            )}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+
+                                                        <p className="text-xs text-muted-foreground pt-2">
+                                                            Reg: {businessInfo.banking.regNumber} • SWIFT: {businessInfo.banking.swiftCode}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </motion.div>
+                                        )}
 
                                         {/* Submit */}
                                         <Button

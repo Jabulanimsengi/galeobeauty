@@ -75,7 +75,7 @@ export function FeaturedInLocal({ className }: { className?: string }) {
                 {localBrands.map((brand) => (
                     <div
                         key={brand.name}
-                        className="relative h-10 sm:h-12 w-24 sm:w-32 brightness-0 invert opacity-50 hover:opacity-100 transition-opacity duration-300"
+                        className={`relative h-10 sm:h-12 w-24 sm:w-32 opacity-50 hover:opacity-100 transition-opacity duration-300 ${brand.name === "QMS" ? "brightness-0" : "brightness-0 invert"}`}
                     >
                         <Image
                             src={brand.src}

@@ -122,8 +122,8 @@ export function FloatingSocials() {
             <motion.button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className={`flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full shadow-2xl transition-all duration-300 ${isExpanded
-                        ? "bg-foreground text-background rotate-0"
-                        : "bg-gold text-white hover:scale-110"
+                    ? "bg-foreground text-background rotate-0"
+                    : "bg-[#25D366] text-white hover:bg-[#128C7E] hover:scale-110"
                     }`}
                 whileTap={{ scale: 0.95 }}
                 aria-label={isExpanded ? "Close social menu" : "Open social menu"}

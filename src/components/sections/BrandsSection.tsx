@@ -54,14 +54,14 @@ export const BrandsSection = () => {
                     {[...brands, ...brands, ...brands, ...brands].map((brand, index) => (
                         <div
                             key={`${brand.id}-${index}`}
-                            className="relative w-48 h-24 flex items-center justify-center opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0 cursor-pointer"
+                            className="relative w-48 h-24 flex items-center justify-center"
                         >
                             <Image
                                 src={brand.src}
                                 alt={brand.name}
                                 width={180}
                                 height={90}
-                                className="object-contain w-full h-full"
+                                className={`object-contain w-full h-full ${brand.name === "QMS Medicosmetics" ? "invert" : "grayscale"}`}
                             />
                         </div>
                     ))}

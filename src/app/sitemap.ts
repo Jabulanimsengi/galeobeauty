@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { serviceCategories } from '@/lib/services-data';
+import { TARGET_LOCATIONS, ALL_SEO_SERVICES } from '@/lib/seo-data';
 
 export const dynamic = "force-static";
 
@@ -44,6 +45,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.8,
         },
+        {
+            url: `${baseUrl}/careers`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.5,
+        },
     ];
 
     // Dynamic service category pages
@@ -54,6 +61,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.85,
     }));
 
-    return [...staticPages, ...categoryPages];
-}
+    // SEO Location + Service pages
+    const seoPages: MetadataRoute.Sitemap = [];
+    for (const location of TARGET_LOCATIONS) {
+        for (const service of ALL_SEO_SERVICES) {
+            seoPages.push({
+                url: `${baseUrl}/locations/${location.slug}/${service.slug}`,
+                lastModified: new Date(),
+                changeFrequency: 'monthly' as const,
+                priority: 0.7,
+            });
+        }
+    }
 
+    return [...staticPages, ...categoryPages, ...seoPages];
+}

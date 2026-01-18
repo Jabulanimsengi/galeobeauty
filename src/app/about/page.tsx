@@ -74,7 +74,7 @@ export default function AboutPage() {
                             <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 block">
                                 The Galeo Standard
                             </span>
-                            <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl text-foreground leading-[0.9] mb-8">
+                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
                                 Defined by <span className="text-gold italic">Science</span>.<br />
                                 Inspired by <span className="text-gold italic">Art</span>.
                             </h1>

@@ -29,4 +29,15 @@ export const businessInfo: BusinessInfo = {
         tiktok: "https://www.tiktok.com/@dandimeyer711",
         fresha: "https://www.fresha.com/a/galeo-beauty-hartbeespoort-galeo-beauty-landsmeer-equestrian-estate-sb28s52l?pId=1023476",
     },
+    banking: {
+        companyName: "GALEO BEAUTY PTY LTD",
+        regNumber: "2017/232885/07",
+        bank: "Standard Bank",
+        accountType: "CURRENT",
+        accountNumber: "41 134 058 1",
+        branch: "MENLYN PARK",
+        branchCode: "002345",
+        swiftCode: "SBZAZAJJ",
+    },
 };
+

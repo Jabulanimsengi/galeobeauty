@@ -89,6 +89,14 @@ export function Footer() {
                                     </Link>
                                 </li>
                             ))}
+                            <li>
+                                <Link
+                                    href="/careers"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Careers
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 
