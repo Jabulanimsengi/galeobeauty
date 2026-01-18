@@ -14,9 +14,9 @@ const brands = [
 
 export const BrandsSection = () => {
     return (
-        <section className="py-16 md:py-20 bg-gradient-to-b from-background to-secondary/30 overflow-hidden">
+        <section className="py-8 md:py-16 bg-gradient-to-b from-background to-secondary/30 overflow-hidden">
             {/* Header */}
-            <div className="container mx-auto px-6 mb-12 text-center">
+            <div className="container mx-auto px-6 mb-6 md:mb-12 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export const BrandsSection = () => {
                     {[...brands, ...brands, ...brands, ...brands].map((brand, index) => (
                         <div
                             key={`${brand.id}-${index}`}
-                            className="relative w-48 h-24 flex items-center justify-center"
+                            className="relative w-32 md:w-48 h-16 md:h-24 flex items-center justify-center"
                         >
                             <Image
                                 src={brand.src}

@@ -35,16 +35,16 @@ export function Map({
             return;
         }
 
-        // Initialize map - STATIC view (no animation, no tilt)
+        // Initialize map - simple flat view
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: "mapbox://styles/mapbox/streets-v12",
             center: [longitude, latitude],
             zoom: zoom,
-            pitch: 0, // Flat view
-            bearing: 0, // No rotation
+            pitch: 0,
+            bearing: 0,
             attributionControl: false,
-            interactive: true, // Allow pan/zoom but no auto-animation
+            interactive: true,
         });
 
         // Add navigation controls
@@ -56,31 +56,57 @@ export function Map({
         // Add fullscreen control
         map.current.addControl(new mapboxgl.FullscreenControl(), "top-right");
 
-        // Create simple static marker with gold styling
+        // Create pulsing red dot marker
         const markerEl = document.createElement("div");
         markerEl.innerHTML = `
-            <div style="
-                width: 48px;
-                height: 48px;
-                background: linear-gradient(145deg, #d4af61 0%, #b8964a 50%, #9a7a3a 100%);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 16px rgba(201, 165, 92, 0.5), 0 2px 8px rgba(0, 0, 0, 0.2);
-                border: 3px solid white;
-                cursor: pointer;
+            <div class="pulse-marker" style="
+                position: relative;
+                width: 20px;
+                height: 20px;
             ">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                </svg>
+                <div style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 16px;
+                    height: 16px;
+                    background: #e53e3e;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                    z-index: 2;
+                "></div>
+                <div style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 16px;
+                    height: 16px;
+                    background: #e53e3e;
+                    border-radius: 50%;
+                    animation: pulse-ring 1.5s ease-out infinite;
+                    z-index: 1;
+                "></div>
             </div>
+            <style>
+                @keyframes pulse-ring {
+                    0% {
+                        transform: translate(-50%, -50%) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(-50%, -50%) scale(3);
+                        opacity: 0;
+                    }
+                }
+            </style>
         `;
 
         // Create popup
         const popup = new mapboxgl.Popup({
-            offset: 30,
+            offset: 15,
             closeButton: true,
             closeOnClick: false,
         }).setHTML(`
@@ -105,10 +131,10 @@ export function Map({
             </div>
         `);
 
-        // Add marker at EXACT coordinates
+        // Add marker at coordinates
         new mapboxgl.Marker({
             element: markerEl,
-            anchor: "center" // Center of the marker element aligns with coordinates
+            anchor: "center"
         })
             .setLngLat([longitude, latitude])
             .setPopup(popup)

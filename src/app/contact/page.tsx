@@ -3,10 +3,9 @@
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Map } from "@/components/ui/map";
-import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowRight, Instagram, Facebook } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowRight, Instagram, Facebook, Smartphone } from "lucide-react";
 import { businessInfo } from "@/lib/constants";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function ContactPage() {
     return (
@@ -29,24 +28,43 @@ export default function ContactPage() {
                 </section>
 
                 {/* Quick Contact Cards */}
-                <section className="py-16 lg:py-20">
+                <section className="py-12 lg:py-20">
                     <div className="container mx-auto px-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                            {/* Call Card */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                            {/* Landline Card */}
                             <motion.a
                                 href={`tel:${businessInfo.phone}`}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.5 }}
-                                className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20 cursor-pointer"
+                                className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20 cursor-pointer"
                             >
-                                <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold transition-colors duration-300">
-                                    <Phone className="w-7 h-7 text-gold group-hover:text-white transition-colors" />
+                                <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold transition-colors duration-300">
+                                    <Phone className="w-6 h-6 text-gold group-hover:text-white transition-colors" />
                                 </div>
-                                <h3 className="font-serif text-2xl text-foreground mb-2">Call Us</h3>
-                                <p className="text-muted-foreground mb-4">Speak directly with our concierge</p>
-                                <p className="text-gold font-semibold text-lg group-hover:underline">{businessInfo.phone}</p>
+                                <h3 className="font-serif text-xl text-foreground mb-1">Landline</h3>
+                                <p className="text-muted-foreground text-sm mb-3">Office hours</p>
+                                <p className="text-gold font-semibold group-hover:underline">012 111 1730</p>
+                            </motion.a>
+
+                            {/* Cell/WhatsApp Card */}
+                            <motion.a
+                                href={`https://wa.me/${businessInfo.socials.whatsapp}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.1 }}
+                                className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20 cursor-pointer"
+                            >
+                                <div className="w-14 h-14 rounded-full bg-[#25D366]/10 flex items-center justify-center mb-4 group-hover:bg-[#25D366] transition-colors duration-300">
+                                    <MessageCircle className="w-6 h-6 text-[#25D366] group-hover:text-white transition-colors" />
+                                </div>
+                                <h3 className="font-serif text-xl text-foreground mb-1">WhatsApp</h3>
+                                <p className="text-muted-foreground text-sm mb-3">Quick response</p>
+                                <p className="text-[#25D366] font-semibold group-hover:underline">{businessInfo.cell}</p>
                             </motion.a>
 
                             {/* Email Card */}
@@ -55,15 +73,15 @@ export default function ContactPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.1 }}
-                                className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20 cursor-pointer"
+                                transition={{ duration: 0.5, delay: 0.2 }}
+                                className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20 cursor-pointer"
                             >
-                                <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold transition-colors duration-300">
-                                    <Mail className="w-7 h-7 text-gold group-hover:text-white transition-colors" />
+                                <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold transition-colors duration-300">
+                                    <Mail className="w-6 h-6 text-gold group-hover:text-white transition-colors" />
                                 </div>
-                                <h3 className="font-serif text-2xl text-foreground mb-2">Email Us</h3>
-                                <p className="text-muted-foreground mb-4">We respond within 24 hours</p>
-                                <p className="text-gold font-semibold text-lg group-hover:underline">{businessInfo.email}</p>
+                                <h3 className="font-serif text-xl text-foreground mb-1">Email Us</h3>
+                                <p className="text-muted-foreground text-sm mb-3">We respond within 24 hours</p>
+                                <p className="text-gold font-semibold group-hover:underline text-sm">{businessInfo.email}</p>
                             </motion.a>
 
                             {/* Hours Card */}
@@ -71,50 +89,54 @@ export default function ContactPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20"
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                                className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl hover:shadow-gold/10 transition-all duration-300 border border-transparent hover:border-gold/20"
                             >
-                                <div className="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold transition-colors duration-300">
-                                    <Clock className="w-7 h-7 text-gold group-hover:text-white transition-colors" />
+                                <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-4 group-hover:bg-gold transition-colors duration-300">
+                                    <Clock className="w-6 h-6 text-gold group-hover:text-white transition-colors" />
                                 </div>
-                                <h3 className="font-serif text-2xl text-foreground mb-2">Opening Hours</h3>
-                                <div className="text-muted-foreground space-y-1">
+                                <h3 className="font-serif text-xl text-foreground mb-1">Opening Hours</h3>
+                                <div className="text-muted-foreground text-sm space-y-0.5">
                                     <p>{businessInfo.hours.weekday}</p>
                                     <p>{businessInfo.hours.saturday}</p>
-                                    <p className="text-gold text-sm">{businessInfo.hours.publicHoliday}</p>
+                                    <p className="text-gold text-xs">{businessInfo.hours.publicHoliday}</p>
                                 </div>
                             </motion.div>
                         </div>
                     </div>
                 </section>
 
-                {/* Location Section - Interactive Mapbox Map */}
-                <section className="py-16 lg:py-20 bg-secondary/20">
+                {/* Location Section with Enhanced 3D Map */}
+                <section className="py-12 lg:py-20 bg-secondary/20">
                     <div className="container mx-auto px-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                             {/* Location Info Card */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6 }}
-                                className="bg-white p-8 rounded-2xl shadow-lg border border-gold/10"
+                                className="bg-white p-8 rounded-2xl shadow-lg border border-gold/10 flex flex-col"
                             >
                                 <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-6">
                                     <MapPin className="w-7 h-7 text-gold" />
                                 </div>
                                 <h3 className="font-serif text-2xl text-foreground mb-2">Visit Our Salon</h3>
                                 <p className="text-muted-foreground mb-1">{businessInfo.address.street}</p>
-                                <p className="text-muted-foreground mb-6">{businessInfo.address.area}</p>
-                                <Button asChild className="w-full bg-gold text-white hover:bg-gold-dark">
-                                    <a href="https://www.google.com/maps/search/?api=1&query=Galeo+Beauty+Hartbeespoort" target="_blank" rel="noopener noreferrer">
-                                        Get Directions
-                                        <ArrowRight className="w-4 h-4 ml-2" />
-                                    </a>
-                                </Button>
+                                <p className="text-muted-foreground mb-1">{businessInfo.address.area}</p>
+                                <p className="text-muted-foreground mb-6">{businessInfo.address.city}</p>
+
+                                <div className="mt-auto space-y-3">
+                                    <Button asChild className="w-full bg-gold text-white hover:bg-gold-dark">
+                                        <a href="https://maps.app.goo.gl/rheE1Ud1GurDRFzQ8" target="_blank" rel="noopener noreferrer">
+                                            Get Directions
+                                            <ArrowRight className="w-4 h-4 ml-2" />
+                                        </a>
+                                    </Button>
+                                </div>
                             </motion.div>
 
-                            {/* Map Container */}
+                            {/* 3D Map Container */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -123,9 +145,9 @@ export default function ContactPage() {
                                 className="lg:col-span-2 h-[350px] md:h-[400px] lg:h-[450px] rounded-2xl overflow-hidden shadow-lg border border-border/40"
                             >
                                 <Map
-                                    latitude={-25.754209}
-                                    longitude={27.909613}
-                                    zoom={14}
+                                    latitude={-25.753414}
+                                    longitude={27.909252}
+                                    zoom={18}
                                     className="w-full h-full"
                                 />
                             </motion.div>

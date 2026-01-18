@@ -65,6 +65,7 @@ export interface FAQItem {
 export interface BusinessInfo {
   name: string;
   phone: string;
+  cell?: string;
   email: string;
   address: {
     street: string;

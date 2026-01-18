@@ -18,7 +18,7 @@ const badgeVariants = cva(
                 medical:
                     "border-transparent bg-[var(--clinical-slate)] text-white hover:bg-[var(--clinical-slate)]/90",
                 premium:
-                    "border-gold text-gold bg-transparent hover:bg-gold/10",
+                    "border-gold text-white bg-gold/80 hover:bg-gold",
                 safe:
                     "border-transparent bg-[var(--medical-green)] text-white hover:bg-[var(--medical-green)]/90",
             },

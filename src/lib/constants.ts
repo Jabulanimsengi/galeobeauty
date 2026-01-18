@@ -6,11 +6,13 @@ export const navItems: NavItem[] = [
     { label: "Prices", href: "/prices" },
     { label: "Specials", href: "/specials" },
     { label: "Gallery", href: "/gallery" },
+    { label: "Contact", href: "/contact" },
 ];
 
 export const businessInfo: BusinessInfo = {
     name: "Galeo Beauty",
     phone: "+27121111730",
+    cell: "082 444 7389",
     email: "info@galeobeauty.co.za",
     address: {
         street: "Shop 6, Landsmeer",

@@ -8,33 +8,6 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, Shield, Award } from "lucide-react";
 
-const teamMembers = [
-    {
-        name: "Sarah Johnson",
-        role: "Lead Aesthetician",
-        bio: "Specializing in advanced dermal therapies and non-surgical rejuvenation.",
-        image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=600&h=800&fit=crop",
-    },
-    {
-        name: "Emily Chen",
-        role: "Master Nail Artist",
-        bio: "Award-winning technician creating wearable art for your fingertips.",
-        image: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=600&h=800&fit=crop",
-    },
-    {
-        name: "Maria Santos",
-        role: "Senior Therapist",
-        bio: "Expert in holistic massage therapies and body contouring.",
-        image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=600&h=800&fit=crop",
-    },
-    {
-        name: "Jessica Williams",
-        role: "Creative Director",
-        bio: "Color specialist with a passion for transformative hair artistry.",
-        image: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=600&h=800&fit=crop",
-    },
-];
-
 const values = [
     {
         icon: Shield,
@@ -157,51 +130,6 @@ export default function AboutPage() {
                                 >
                                     <h3 className="font-serif text-xl text-foreground mb-3">{value.title}</h3>
                                     <p className="text-muted-foreground text-sm leading-relaxed">{value.description}</p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Team - The Experts */}
-                <section className="py-20 lg:py-32">
-                    <div className="container mx-auto px-4 sm:px-6">
-                        <div className="text-center mb-16">
-                            <span className="text-gold font-bold tracking-[0.2em] uppercase text-xs mb-3 block">
-                                The Artisans
-                            </span>
-                            <h2 className="font-serif text-4xl lg:text-5xl text-foreground">
-                                Meet the <span className="text-gold">Experts</span>
-                            </h2>
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                            {teamMembers.map((member, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                                    className="group relative cursor-pointer"
-                                >
-                                    <div className="aspect-[3/4] overflow-hidden rounded-lg bg-muted relative">
-                                        <Image
-                                            src={member.image}
-                                            alt={member.name}
-                                            fill
-                                            className="object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
-
-                                        <div className="absolute inset-x-0 bottom-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <h3 className="font-serif text-2xl text-white mb-1">{member.name}</h3>
-                                            <p className="text-gold text-xs font-bold uppercase tracking-wider mb-3">{member.role}</p>
-                                            <p className="text-white/80 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                                                {member.bio}
-                                            </p>
-                                        </div>
-                                    </div>
                                 </motion.div>
                             ))}
                         </div>
