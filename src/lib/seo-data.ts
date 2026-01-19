@@ -348,3 +348,215 @@ export function getCachedSEOServices(): SEOService[] {
     return _cachedServices;
 }
 
+// ============================================
+// INTERNAL LINKING HELPERS
+// ============================================
+
+/**
+ * Get nearby locations in the same region (for internal linking)
+ * Returns up to 5 locations from the same region, excluding current
+ */
+export function getNearbyLocations(currentSlug: string, limit = 5): SEOLocation[] {
+    const current = getLocationBySlug(currentSlug);
+    if (!current) return [];
+
+    // Get locations from same region first
+    const sameRegion = TARGET_LOCATIONS.filter(
+        (loc) => loc.region === current.region && loc.slug !== currentSlug
+    );
+
+    // If not enough, add locations where current location's name is the region
+    const childLocations = TARGET_LOCATIONS.filter(
+        (loc) => loc.region === current.name && loc.slug !== currentSlug
+    );
+
+    // Combine and dedupe
+    const combined = [...sameRegion, ...childLocations];
+    const unique = combined.filter((loc, idx, arr) =>
+        arr.findIndex((l) => l.slug === loc.slug) === idx
+    );
+
+    return unique.slice(0, limit);
+}
+
+/**
+ * Get related services from the same category (for internal linking)
+ * Returns up to 4 services from same category, excluding current
+ */
+export function getRelatedServices(currentServiceSlug: string, limit = 4): SEOService[] {
+    const current = getServiceBySlug(currentServiceSlug);
+    if (!current) return [];
+
+    const services = getCachedSEOServices();
+    return services
+        .filter((svc) => svc.categoryId === current.categoryId && svc.slug !== currentServiceSlug)
+        .slice(0, limit);
+}
+
+/**
+ * Get popular services from other categories (for cross-category linking)
+ * Returns 1 service from each other category
+ */
+export function getPopularServicesFromOtherCategories(currentCategoryId: string, limit = 4): SEOService[] {
+    const services = getCachedSEOServices();
+    const otherCategories = serviceCategories.filter((cat) => cat.id !== currentCategoryId);
+
+    const popularServices: SEOService[] = [];
+    for (const cat of otherCategories) {
+        const catService = services.find((svc) => svc.categoryId === cat.id);
+        if (catService) {
+            popularServices.push(catService);
+        }
+        if (popularServices.length >= limit) break;
+    }
+
+    return popularServices;
+}
+
+// ============================================
+// UNIQUE CONTENT GENERATORS
+// ============================================
+
+/**
+ * Category-specific benefits for "Why Choose Us" section
+ * Returns unique benefits based on service category
+ */
+export function getCategoryBenefits(categoryId: string): string[] {
+    const benefitsByCategory: Record<string, string[]> = {
+        "hart-aesthetics": [
+            "Administered by qualified medical professionals",
+            "Premium FDA-approved injectable products",
+            "Natural-looking results tailored to your facial structure",
+            "Comprehensive consultation before every treatment",
+            "Safe, sterile clinical environment",
+            "Follow-up care and support included",
+        ],
+        "fat-freezing": [
+            "Non-invasive body contouring technology",
+            "CE-approved cryolipolysis equipment",
+            "No downtime - return to activities immediately",
+            "Permanent fat cell reduction in treated areas",
+            "Customized treatment plans for your body goals",
+            "Comfortable, relaxing treatment experience",
+        ],
+        "dermalogica": [
+            "Official Dermalogica Pro treatments",
+            "Skin analysis using Face Mapping technology",
+            "Products formulated without common irritants",
+            "Treatments customized to your skin concerns",
+            "Professional-grade active ingredients",
+            "Take-home skincare recommendations included",
+        ],
+        "qms": [
+            "Medical-grade QMS Medicosmetics products",
+            "Collagen-boosting advanced formulations",
+            "Anti-aging treatments backed by science",
+            "Luxury spa experience with clinical results",
+            "Suitable for sensitive and mature skin",
+            "German precision skincare technology",
+        ],
+        "skin-treatments": [
+            "Advanced skin rejuvenation technologies",
+            "Treatments for all skin types and concerns",
+            "Combined therapies for optimal results",
+            "Minimal discomfort with maximum efficacy",
+            "Visible improvement from first session",
+            "Expert skin therapists with specialized training",
+        ],
+        "hair-care": [
+            "Premium Moroccanoil and Milkshake products",
+            "Customized treatments for your hair type",
+            "Damage repair and prevention focus",
+            "Scalp health assessment included",
+            "Long-lasting color and styling results",
+            "Argan oil-infused luxury treatments",
+        ],
+        "nails": [
+            "Hygienic nail care with sterilized tools",
+            "Long-lasting gel and acrylic options",
+            "Trendy nail art by skilled technicians",
+            "Nourishing treatments for nail health",
+            "Relaxing manicure and pedicure experience",
+            "Wide selection of premium polish colors",
+        ],
+        "lashes-brows": [
+            "Precision shaping for your face shape",
+            "High-quality lash extension materials",
+            "Long-lasting tints and lifts",
+            "Patch testing available for sensitive clients",
+            "Natural-looking enhancement options",
+            "Quick touch-up appointments available",
+        ],
+        "waxing": [
+            "Premium wax for sensitive skin",
+            "Hygiene-first approach with disposable applicators",
+            "Quick and efficient hair removal",
+            "Long-lasting smooth results",
+            "Pre and post-wax skincare included",
+            "Experienced therapists for minimal discomfort",
+        ],
+        "tinting": [
+            "Salon-grade professional tints",
+            "Patch testing for safety",
+            "Natural-looking color enhancement",
+            "Lasts 4-6 weeks with proper care",
+            "Quick 15-30 minute appointments",
+            "Expert color matching for your features",
+        ],
+    };
+
+    // Default benefits if category not found
+    const defaultBenefits = [
+        "Premium products from world-renowned brands",
+        "Experienced and certified therapists",
+        "Luxurious, relaxing environment",
+        "Competitive pricing with exceptional results",
+        "Easy booking via WhatsApp or phone",
+        "Convenient location near Hartbeespoort Dam",
+    ];
+
+    return benefitsByCategory[categoryId] || defaultBenefits;
+}
+
+/**
+ * Generate unique intro paragraph based on service and location
+ */
+export function generateServiceIntro(service: SEOService, location: SEOLocation): string {
+    const category = serviceCategories.find((cat) => cat.id === service.categoryId);
+    const categoryName = category?.title || "beauty treatment";
+
+    const intros: Record<string, string> = {
+        "hart-aesthetics": `Experience the artistry of advanced aesthetic treatments at Galeo Beauty. Our ${service.keyword} service combines medical expertise with an eye for natural beauty, helping clients from ${location.name} achieve subtle, rejuvenating results.`,
+        "fat-freezing": `Transform your body contours with our professional ${service.keyword} treatment. Serving clients from ${location.name} and the ${location.region} area, we use advanced cryolipolysis technology to target stubborn fat without surgery or downtime.`,
+        "dermalogica": `Discover the power of professional skincare with our ${service.keyword} service. Using Dermalogica's renowned products and techniques, we help clients from ${location.name} achieve their healthiest, most radiant skin.`,
+        "qms": `Indulge in medical-grade skincare with our ${service.keyword} treatment. Clients from ${location.name} trust Galeo Beauty for QMS Medicosmetics' scientifically-formulated solutions that deliver visible anti-aging results.`,
+        "skin-treatments": `Revitalize your skin with our professional ${service.keyword} service. We welcome clients from ${location.name} to experience advanced skin treatments that address everything from fine lines to uneven texture.`,
+        "hair-care": `Give your hair the luxury treatment it deserves with our ${service.keyword} service. Clients from ${location.name} choose Galeo Beauty for our premium hair care using Moroccanoil and Milkshake products.`,
+        "nails": `Treat yourself to beautiful nails with our ${service.keyword} service. Whether you're from ${location.name} or anywhere in ${location.region}, our skilled nail technicians deliver stunning, long-lasting results.`,
+        "lashes-brows": `Frame your face perfectly with our ${service.keyword} treatment. Clients from ${location.name} love our attention to detail and ability to enhance natural beauty through expertly shaped brows and lashes.`,
+        "waxing": `Experience smooth, long-lasting hair removal with our ${service.keyword} service. We provide ${location.name} residents with comfortable, hygienic waxing treatments using premium products.`,
+        "tinting": `Enhance your natural features with our professional ${service.keyword} service. Clients from ${location.name} appreciate our precise color-matching and long-lasting tinting results.`,
+    };
+
+    return intros[service.categoryId] || `Looking for professional ${service.keyword} near ${location.name}? Galeo Beauty offers premium ${categoryName.toLowerCase()} treatments that deliver exceptional results. Clients from across ${location.region} trust us for quality and care.`;
+}
+
+/**
+ * Get driving context text based on location region
+ */
+export function getDrivingContext(location: SEOLocation): string {
+    const contexts: Record<string, string> = {
+        "Hartbeespoort": "Just minutes away from your doorstep",
+        "North West": "A quick, scenic drive through the countryside",
+        "Johannesburg": "An easy escape from the city to the tranquil Hartbeespoort area",
+        "Pretoria": "A relaxing 45-minute drive to our peaceful setting",
+        "Centurion": "Conveniently accessible via the N1 highway",
+        "Midrand": "Perfectly positioned between Johannesburg and Pretoria",
+        "East Rand": "Worth the drive for a day of pampering by the dam",
+        "Sedibeng": "A scenic journey to our lakeside location",
+        "West Rand": "An easy trip along the N14 for premium beauty services",
+    };
+
+    return contexts[location.region] || "A worthwhile trip for premium beauty treatments";
+}
+
