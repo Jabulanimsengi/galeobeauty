@@ -13,7 +13,7 @@ export const businessInfo: BusinessInfo = {
     name: "Galeo Beauty",
     phone: "+27121111730",
     cell: "082 444 7389",
-    email: "info@galeobeauty.co.za",
+    email: "info@galeobeauty.com",
     address: {
         street: "Shop 6, Landsmeer",
         area: "Jan Smuts Rd, Hartbeespoort, 0216",

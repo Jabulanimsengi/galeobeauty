@@ -5,7 +5,7 @@ import { TARGET_LOCATIONS, PRIORITY_LOCATIONS, getCachedSEOServices } from '@/li
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://galeobeauty.co.za';
+    const baseUrl = 'https://galeobeauty.com';
 
     // Base pages
     const staticPages: MetadataRoute.Sitemap = [

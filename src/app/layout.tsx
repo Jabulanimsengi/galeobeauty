@@ -5,7 +5,7 @@ import { NavigationLoadingProvider } from "@/components/providers/NavigationLoad
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://galeobeauty.co.za"),
+  metadataBase: new URL("https://galeobeauty.com"),
   title: {
     default: "Galeo Beauty | Premium Skincare & Beauty Salon",
     template: "%s | Galeo Beauty",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_ZA",
-    url: "https://galeobeauty.co.za",
+    url: "https://galeobeauty.com",
     siteName: "Galeo Beauty",
     title: "Galeo Beauty | Premium Skincare & Beauty Salon",
     description:
@@ -70,9 +70,9 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "BeautySalon",
               name: "Galeo Beauty",
-              image: "https://galeobeauty.co.za/images/logo.png",
-              "@id": "https://galeobeauty.co.za",
-              url: "https://galeobeauty.co.za",
+              image: "https://galeobeauty.com/images/logo.png",
+              "@id": "https://galeobeauty.com",
+              url: "https://galeobeauty.com",
               telephone: "+27121111730",
               address: {
                 "@type": "PostalAddress",

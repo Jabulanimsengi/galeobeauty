@@ -183,7 +183,7 @@ export default function CareersPage() {
                                             asChild
                                             className="bg-gold hover:bg-gold-dark text-white rounded-full px-6"
                                         >
-                                            <a href="mailto:careers@galeobeauty.co.za?subject=Application for ${job.title}">
+                                            <a href="mailto:careers@galeobeauty.com?subject=Application for ${job.title}">
                                                 Apply Now
                                             </a>
                                         </Button>
@@ -201,7 +201,7 @@ export default function CareersPage() {
                                     asChild
                                     className="bg-gold hover:bg-gold-dark text-white rounded-full px-6 mt-6"
                                 >
-                                    <a href="mailto:careers@galeobeauty.co.za?subject=General Application">
+                                    <a href="mailto:careers@galeobeauty.com?subject=General Application">
                                         Send Your CV
                                     </a>
                                 </Button>
@@ -218,7 +218,7 @@ export default function CareersPage() {
                             Take the first step towards an exciting career in beauty and wellness.
                         </p>
                         <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
-                            <a href="mailto:careers@galeobeauty.co.za?subject=Career Inquiry">
+                            <a href="mailto:careers@galeobeauty.com?subject=Career Inquiry">
                                 Get in Touch
                             </a>
                         </Button>
