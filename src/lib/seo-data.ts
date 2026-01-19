@@ -526,19 +526,19 @@ export function generateServiceIntro(service: SEOService, location: SEOLocation)
     const categoryName = category?.title || "beauty treatment";
 
     const intros: Record<string, string> = {
-        "hart-aesthetics": `Experience the artistry of advanced aesthetic treatments at Galeo Beauty. Our ${service.keyword} service combines medical expertise with an eye for natural beauty, helping clients from ${location.name} achieve subtle, rejuvenating results.`,
-        "fat-freezing": `Transform your body contours with our professional ${service.keyword} treatment. Serving clients from ${location.name} and the ${location.region} area, we use advanced cryolipolysis technology to target stubborn fat without surgery or downtime.`,
-        "dermalogica": `Discover the power of professional skincare with our ${service.keyword} service. Using Dermalogica's renowned products and techniques, we help clients from ${location.name} achieve their healthiest, most radiant skin.`,
-        "qms": `Indulge in medical-grade skincare with our ${service.keyword} treatment. Clients from ${location.name} trust Galeo Beauty for QMS Medicosmetics' scientifically-formulated solutions that deliver visible anti-aging results.`,
-        "skin-treatments": `Revitalize your skin with our professional ${service.keyword} service. We welcome clients from ${location.name} to experience advanced skin treatments that address everything from fine lines to uneven texture.`,
-        "hair-care": `Give your hair the luxury treatment it deserves with our ${service.keyword} service. Clients from ${location.name} choose Galeo Beauty for our premium hair care using Moroccanoil and Milkshake products.`,
-        "nails": `Treat yourself to beautiful nails with our ${service.keyword} service. Whether you're from ${location.name} or anywhere in ${location.region}, our skilled nail technicians deliver stunning, long-lasting results.`,
-        "lashes-brows": `Frame your face perfectly with our ${service.keyword} treatment. Clients from ${location.name} love our attention to detail and ability to enhance natural beauty through expertly shaped brows and lashes.`,
-        "waxing": `Experience smooth, long-lasting hair removal with our ${service.keyword} service. We provide ${location.name} residents with comfortable, hygienic waxing treatments using premium products.`,
-        "tinting": `Enhance your natural features with our professional ${service.keyword} service. Clients from ${location.name} appreciate our precise color-matching and long-lasting tinting results.`,
+        "hart-aesthetics": `Experience the artistry of advanced aesthetic treatments at Galeo Beauty Salon. Our ${service.keyword} service combines medical expertise with an eye for natural beauty, helping salon clients from ${location.name} achieve subtle, rejuvenating results.`,
+        "fat-freezing": `Transform your body contours with our professional ${service.keyword} treatment at Galeo Beauty Salon. Serving clients from ${location.name} and the ${location.region} area, our salon uses advanced cryolipolysis technology to target stubborn fat without surgery or downtime.`,
+        "dermalogica": `Discover the power of professional salon skincare with our ${service.keyword} service. Using Dermalogica's renowned products and techniques at our Hartbeespoort salon, we help clients from ${location.name} achieve their healthiest, most radiant skin.`,
+        "qms": `Indulge in medical-grade skincare with our ${service.keyword} treatment at Galeo Beauty Salon. Clients from ${location.name} trust our salon for QMS Medicosmetics' scientifically-formulated solutions that deliver visible anti-aging results.`,
+        "skin-treatments": `Revitalize your skin with our professional ${service.keyword} service at Galeo Beauty Salon. We welcome clients from ${location.name} to experience advanced salon skin treatments that address everything from fine lines to uneven texture.`,
+        "hair-care": `Give your hair the luxury salon treatment it deserves with our ${service.keyword} service. Clients from ${location.name} choose Galeo Beauty Salon for our premium hair care using Moroccanoil and Milkshake products.`,
+        "nails": `Treat yourself to beautiful nails at our beauty salon with our ${service.keyword} service. Whether you're from ${location.name} or anywhere in ${location.region}, our skilled salon nail technicians deliver stunning, long-lasting results.`,
+        "lashes-brows": `Frame your face perfectly with our ${service.keyword} treatment at Galeo Beauty Salon. Clients from ${location.name} love our salon's attention to detail and ability to enhance natural beauty through expertly shaped brows and lashes.`,
+        "waxing": `Experience smooth, long-lasting hair removal with our ${service.keyword} salon service. We provide ${location.name} residents with comfortable, hygienic waxing treatments at our beauty salon using premium products.`,
+        "tinting": `Enhance your natural features with our professional ${service.keyword} salon service. Clients from ${location.name} appreciate our salon's precise color-matching and long-lasting tinting results.`,
     };
 
-    return intros[service.categoryId] || `Looking for professional ${service.keyword} near ${location.name}? Galeo Beauty offers premium ${categoryName.toLowerCase()} treatments that deliver exceptional results. Clients from across ${location.region} trust us for quality and care.`;
+    return intros[service.categoryId] || `Looking for a professional ${service.keyword} salon near ${location.name}? Galeo Beauty Salon offers premium ${categoryName.toLowerCase()} treatments that deliver exceptional results. Clients from across ${location.region} trust our beauty salon for quality and care.`;
 }
 
 /**
@@ -546,17 +546,17 @@ export function generateServiceIntro(service: SEOService, location: SEOLocation)
  */
 export function getDrivingContext(location: SEOLocation): string {
     const contexts: Record<string, string> = {
-        "Hartbeespoort": "Just minutes away from your doorstep",
-        "North West": "A quick, scenic drive through the countryside",
-        "Johannesburg": "An easy escape from the city to the tranquil Hartbeespoort area",
-        "Pretoria": "A relaxing 45-minute drive to our peaceful setting",
-        "Centurion": "Conveniently accessible via the N1 highway",
-        "Midrand": "Perfectly positioned between Johannesburg and Pretoria",
-        "East Rand": "Worth the drive for a day of pampering by the dam",
-        "Sedibeng": "A scenic journey to our lakeside location",
-        "West Rand": "An easy trip along the N14 for premium beauty services",
+        "Hartbeespoort": "Our salon is just minutes away from your doorstep",
+        "North West": "A quick, scenic drive through the countryside to our salon",
+        "Johannesburg": "An easy escape from the city to our tranquil Hartbeespoort salon",
+        "Pretoria": "A relaxing 45-minute drive to our peaceful salon setting",
+        "Centurion": "Our salon is conveniently accessible via the N1 highway",
+        "Midrand": "Our salon is perfectly positioned between Johannesburg and Pretoria",
+        "East Rand": "Worth the drive to our salon for a day of pampering by the dam",
+        "Sedibeng": "A scenic journey to our lakeside salon location",
+        "West Rand": "An easy trip along the N14 to our premium beauty salon",
     };
 
-    return contexts[location.region] || "A worthwhile trip for premium beauty treatments";
+    return contexts[location.region] || "A worthwhile trip to our salon for premium beauty treatments";
 }
 

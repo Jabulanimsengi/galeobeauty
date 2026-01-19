@@ -54,21 +54,117 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "Service Not Found" };
     }
 
-    const title = `${service.keyword} in ${location.name} | Galeo Beauty`;
-    const description = `Professional ${service.keyword} near ${location.name}, ${location.region}. Premium beauty treatments at Galeo Beauty Hartbeespoort. Book now - prices from ${service.price}.`;
+    const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
+    const description = `Book ${service.keyword} at Galeo Beauty Salon near ${location.name}, ${location.region}. Professional beauty spa & day spa treatments in Hartbeespoort. Walk-in welcome, affordable prices from ${service.price}. Top-rated beauty parlour.`;
+
+    // Category-specific keywords
+    const categoryKeywords: Record<string, string[]> = {
+        "hart-aesthetics": ["aesthetic clinic", "anti-aging treatments", "injectable treatments", "botox alternative", "dermal fillers", "cosmetic treatments", "anti-wrinkle treatment", "rejuvenation clinic"],
+        "fat-freezing": ["body contouring", "fat reduction", "cryolipolysis", "non-surgical fat removal", "body sculpting", "weight loss treatment", "slimming treatment", "cellulite treatment", "body shaping", "inch loss"],
+        "dermalogica": ["skincare salon", "facial salon", "professional facial", "skin therapist", "skin analysis", "deep cleansing facial", "hydrating facial"],
+        "qms": ["anti-aging facial", "luxury facial", "medical skincare", "collagen treatment", "premium skincare", "wrinkle treatment", "skin tightening"],
+        "skin-treatments": ["skincare salon", "skin rejuvenation", "facial treatments", "skin clinic", "skin specialist", "microdermabrasion", "chemical peel", "LED therapy"],
+        "hair-care": ["hair salon", "hair treatment", "hair spa", "hair stylist", "hair care specialist", "hair conditioning", "hair repair", "scalp treatment"],
+        "nails": ["nail salon", "nail technician", "manicure pedicure", "gel nails", "nail art", "acrylic nails", "nail spa", "hand treatment", "foot treatment"],
+        "lashes-brows": ["lash salon", "brow salon", "lash technician", "brow specialist", "lash extensions", "lash lift", "brow lamination", "microblading"],
+        "waxing": ["waxing salon", "hair removal", "wax specialist", "body waxing", "smooth skin treatment", "brazilian wax", "full body wax", "leg wax"],
+        "tinting": ["brow tinting", "lash tinting", "tinting specialist", "semi-permanent color", "eyebrow dye", "lash dye", "brow shaping"],
+    };
+
+    const serviceCategoryKeywords = categoryKeywords[service.categoryId] || [];
 
     return {
         title,
         description,
         keywords: [
+            // Core service + location keywords
             service.keyword,
-            location.name,
+            `${service.keyword} salon`,
             `${service.keyword} ${location.name}`,
+            `${service.keyword} salon ${location.name}`,
             `${service.keyword} near me`,
-            `beauty salon ${location.name}`,
+            `${service.keyword} near ${location.name}`,
             `${service.keyword} ${location.region}`,
+
+            // Industry terms (spa, beauty parlour, etc.)
+            `beauty salon ${location.name}`,
+            `salon ${location.name}`,
+            `${location.name} beauty salon`,
+            `${location.name} spa`,
+            `day spa ${location.name}`,
+            `beauty spa ${location.name}`,
+            `beauty parlour ${location.name}`,
+            `beauty treatments ${location.name}`,
+            `beauty services ${location.name}`,
+
+            // Intent-based keywords
+            `book ${service.keyword} ${location.name}`,
+            `${service.keyword} appointment ${location.name}`,
+            `walk-in salon ${location.name}`,
+            `same day ${service.keyword}`,
+            `best salon ${location.name}`,
+            `top rated salon ${location.name}`,
+            `affordable ${service.keyword} ${location.name}`,
+            `cheap ${service.keyword} near me`,
+
+            // Category-specific keywords
+            ...serviceCategoryKeywords,
+
+            // Local SEO keywords
+            `${service.keyword} nearby`,
+            `${service.keyword} close to me`,
+            `${service.keyword} in my area`,
+            `salon near ${location.name}`,
+            `beauty salon near ${location.name}`,
+
+            // South African specific
+            `beauty salon SA`,
+            `salon South Africa`,
+            `beauty treatments Gauteng`,
+            `beauty treatments North West`,
+            `${location.name} beauty treatments SA`,
+
+            // Differentiators
+            `luxury salon ${location.name}`,
+            `premium salon ${location.name}`,
+            `professional salon ${location.name}`,
+            `boutique salon ${location.name}`,
+
+            // Action keywords
+            `get ${service.keyword} ${location.name}`,
+            `where to get ${service.keyword} ${location.name}`,
+            `${service.keyword} specialist`,
+            `${service.keyword} expert`,
+            `${service.keyword} professional`,
+
+            // Wellness & body treatment keywords
+            `massage ${location.name}`,
+            `body treatment ${location.name}`,
+            `pampering ${location.name}`,
+            `relaxation treatment ${location.name}`,
+            `wellness spa ${location.name}`,
+            `slimming ${location.name}`,
+            `weight loss treatment ${location.name}`,
+            `body contouring ${location.name}`,
+            `cellulite treatment ${location.name}`,
+            `pamper day ${location.name}`,
+            `spa day ${location.name}`,
+            `self care ${location.name}`,
+
+            // Brand keywords
+            "Galeo Beauty Salon",
+            "Galeo Beauty Spa",
             "Galeo Beauty",
             "Hartbeespoort beauty salon",
+            "Hartbeespoort salon",
+            "Hartbeespoort spa",
+            "Hartbeespoort day spa",
+            "beauty salon Hartbeespoort",
+            "salon Hartbeespoort Dam",
+            "spa Hartbeespoort Dam",
+            "Hartbeespoort massage",
+            "Hartbeespoort pampering",
+            "Hartbeespoort wellness",
         ],
         openGraph: {
             title,
@@ -115,11 +211,17 @@ export default async function LocationServicePage({ params }: PageProps) {
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "Service",
-        name: service.keyword,
+        name: `${service.keyword} at Galeo Beauty Salon & Spa`,
+        description: `Professional ${service.keyword} salon and spa service near ${location.name}. Premium beauty parlour and day spa treatments at affordable prices. Book your appointment today.`,
+        serviceType: [service.keyword, "Beauty Treatment", "Spa Treatment", "Salon Service"],
         provider: {
             "@type": "BeautySalon",
-            name: "Galeo Beauty",
+            name: "Galeo Beauty Salon & Spa",
+            alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
+            description: "Premium beauty salon, spa and day spa in Hartbeespoort offering skincare, facials, nails, hair care, lashes, waxing, body treatments and aesthetic treatments. Top-rated beauty parlour serving Gauteng and North West.",
+            additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
             image: "https://galeobeauty.com/images/logo.png",
+            priceRange: "$$",
             address: {
                 "@type": "PostalAddress",
                 streetAddress: businessInfo.address.street,
@@ -128,8 +230,27 @@ export default async function LocationServicePage({ params }: PageProps) {
                 postalCode: "0216",
                 addressCountry: "ZA",
             },
+            geo: {
+                "@type": "GeoCoordinates",
+                latitude: -25.753414,
+                longitude: 27.909252,
+            },
             telephone: businessInfo.phone,
             url: "https://galeobeauty.com",
+            openingHoursSpecification: [
+                {
+                    "@type": "OpeningHoursSpecification",
+                    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                    opens: "08:00",
+                    closes: "18:00",
+                },
+                {
+                    "@type": "OpeningHoursSpecification",
+                    dayOfWeek: "Saturday",
+                    opens: "08:00",
+                    closes: "16:00",
+                },
+            ],
         },
         areaServed: {
             "@type": "Place",
@@ -418,7 +539,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     Book Now via WhatsApp
                                 </a>
                             </Button>
-                            <Button asChild size="lg" variant="outline" className="h-14 px-10 text-lg rounded-full border-white/30 text-white hover:bg-white/10">
+                            <Button asChild size="lg" className="h-14 px-10 text-lg rounded-full border border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
                                 <Link href="/contact">
                                     Contact Us
                                 </Link>
