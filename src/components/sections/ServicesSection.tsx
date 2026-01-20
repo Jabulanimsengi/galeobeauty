@@ -248,10 +248,20 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 transition-opacity duration-500 group-hover:opacity-70" />
 
                             {/* Badge */}
-                            <div className="absolute top-6 right-6 z-20">
+                            <div className="absolute top-6 right-6 z-20 hidden lg:block">
                                 <TrustBadge variant={service.badgeVariant} icon="shield">
                                     {service.badge}
                                 </TrustBadge>
+                            </div>
+
+                            {/* Mobile Category Badge - Right side horizontal */}
+                            <div className="lg:hidden absolute top-6 right-4 z-20">
+                                <div className="bg-gold text-white text-xs font-bold uppercase tracking-wider py-2 px-4 rounded-full shadow-lg flex items-center gap-1.5">
+                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                    </svg>
+                                    {service.title}
+                                </div>
                             </div>
 
 

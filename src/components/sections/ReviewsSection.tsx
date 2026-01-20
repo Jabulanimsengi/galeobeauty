@@ -53,7 +53,8 @@ export function ReviewsSection() {
     const checkScroll = () => {
         if (scrollContainerRef.current) {
             const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-            setCanScrollLeft(scrollLeft > 0);
+            // Only show left arrow after scrolling past ~half a card width (50px threshold)
+            setCanScrollLeft(scrollLeft > 50);
             setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
         }
     };
@@ -160,7 +161,7 @@ export function ReviewsSection() {
                         ))}
                     </div>
 
-                    {/* Golden Scroll Arrows */}
+                    {/* Golden Scroll Arrows - Desktop */}
                     <button
                         onClick={scrollLeft}
                         className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gold text-background shadow-lg transition-all duration-300 hover:scale-110 hover:bg-gold-light ${canScrollLeft ? "opacity-0 translate-x-[-1rem] group-hover:opacity-100 group-hover:translate-x-[-50%]" : "opacity-0 pointer-events-none scale-0"}`}
@@ -178,6 +179,44 @@ export function ReviewsSection() {
                     >
                         <ChevronRight className="w-6 h-6" />
                     </button>
+
+                    {/* Mobile Scroll Indicator - Right (visible when can scroll right) */}
+                    {canScrollRight && (
+                        <div className="md:hidden absolute right-0 top-0 bottom-8 w-16 pointer-events-none flex items-center justify-end">
+                            {/* Gradient fade */}
+                            <div className="absolute inset-0 bg-gradient-to-l from-secondary/80 via-secondary/40 to-transparent" />
+                            {/* Animated arrow */}
+                            <motion.div
+                                initial={{ x: 0 }}
+                                animate={{ x: [0, 6, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                                className="relative z-10 mr-2"
+                            >
+                                <div className="bg-gold/90 rounded-full p-2 shadow-lg">
+                                    <ChevronRight className="w-4 h-4 text-white" />
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+
+                    {/* Mobile Scroll Indicator - Left (visible when can scroll left) */}
+                    {canScrollLeft && (
+                        <div className="md:hidden absolute left-0 top-0 bottom-8 w-16 pointer-events-none flex items-center justify-start">
+                            {/* Gradient fade */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/40 to-transparent" />
+                            {/* Animated arrow */}
+                            <motion.div
+                                initial={{ x: 0 }}
+                                animate={{ x: [0, -6, 0] }}
+                                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                                className="relative z-10 ml-2"
+                            >
+                                <div className="bg-gold/90 rounded-full p-2 shadow-lg">
+                                    <ChevronLeft className="w-4 h-4 text-white" />
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Google Reviews CTA */}
