@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { serviceCategories } from '@/lib/services-data';
 import { TARGET_LOCATIONS, PRIORITY_LOCATIONS, getCachedSEOServices } from '@/lib/seo-data';
+import { getAllBlogPosts } from '@/lib/blog-data';
 
 export const dynamic = "force-static";
 
@@ -45,7 +46,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'monthly',
             priority: 0.8,
         },
+        {
+            url: `${baseUrl}/blog`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.85,
+        },
     ];
+
+    // Blog article pages
+    const blogPosts = getAllBlogPosts();
+    const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+        url: `${baseUrl}/blog/${post.slug}`,
+        lastModified: new Date(post.date),
+        changeFrequency: 'monthly' as const,
+        priority: 0.8,
+    }));
 
     // Dynamic service category pages
     const categoryPages: MetadataRoute.Sitemap = serviceCategories.map((category) => ({
@@ -73,5 +89,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }
     }
 
-    return [...staticPages, ...categoryPages, ...seoPages];
+    return [...staticPages, ...blogPages, ...categoryPages, ...seoPages];
 }
+

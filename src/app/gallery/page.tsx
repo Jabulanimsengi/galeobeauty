@@ -1,4 +1,5 @@
 import { Header, Footer } from "@/components/layout";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { GalleryGrid } from "@/components/gallery";
 import { getGalleryImages } from "@/lib/gallery-utils";
 
@@ -54,6 +55,9 @@ export default function GalleryPage() {
                         )}
                     </div>
                 </section>
+
+                {/* Reviews Section */}
+                <ReviewsSection />
             </main>
             <Footer />
         </>

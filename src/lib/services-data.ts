@@ -94,9 +94,9 @@ export const serviceCategories: ServiceCategory[] = [
     {
         id: "fat-freezing",
         title: "Fat Freezing",
-        subtitle: "Body Contouring",
-        image: "/images/services/slimming_weightloss/Slimming_image_02.jpeg",
-        Icon: Heart,
+        subtitle: "Cryolipolysis",
+        image: "/images/services/fat_freezing/Gallery_image_01(32).png.jpeg",
+        Icon: Zap,
         badge: "CE Approved",
         badgeVariant: "safe",
         subcategories: [
@@ -105,6 +105,27 @@ export const serviceCategories: ServiceCategory[] = [
                 title: "Fat Freezing Sessions",
                 items: [
                     { id: "fat-freezing-session", name: "Fat Freezing Per Session", duration: "1hr", price: "R799.20" },
+                ],
+            },
+        ],
+    },
+    {
+        id: "slimming",
+        title: "Slimming & Weightloss",
+        subtitle: "Tesla EMS Body Contouring",
+        image: "/images/services/slimming_weightloss/EMS01.png",
+        Icon: Zap,
+        badge: "New Tech",
+        badgeVariant: "premium",
+        subcategories: [
+            {
+                id: "tesla-ems",
+                title: "Tesla EMS Slimming Machine",
+                note: "High-Intensity Focused Electromagnetic Technology",
+                items: [
+                    { id: "ems-single", name: "Single Session", duration: "30 mins", price: "R1,850" },
+                    { id: "ems-package-4", name: "Package (4 Sessions)", duration: "4 x 30 mins", price: "R6,290 - R9,000" },
+                    { id: "ems-package-6", name: "Large Package (6 Sessions)", duration: "6 x 30 mins", price: "R13,500+" },
                 ],
             },
         ],

@@ -13,6 +13,7 @@ import { ArrowRight, Sparkles, Heart, Eye, Scissors, Zap, ChevronRight } from "l
 const services = [
     {
         id: "facials",
+        slug: "dermalogica", // Links to /prices/dermalogica
         title: "Facials",
         subtitle: "Premium Skincare",
         description: "Indulge in our premium facial treatments. From moisturising and anti-ageing facials to advanced skin renewal peels, our certified specialists deliver visible results using medical-grade products.",
@@ -26,6 +27,7 @@ const services = [
     },
     {
         id: "makeup",
+        slug: "makeup", // Links to /prices/makeup
         title: "Make-up",
         subtitle: "Kryolan Professional",
         description: "Look stunning for any occasion with our professional make-up services. From bridal looks to permanent make-up, Phi-Brows, and Phi-Contour, we create flawless beauty that lasts.",
@@ -38,6 +40,7 @@ const services = [
     },
     {
         id: "ipl-hair-removal",
+        slug: "ipl", // Links to /prices/ipl
         title: "IPL Hair Removal",
         subtitle: "Ladies & Gents",
         description: "Achieve silky smooth skin with our advanced IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
@@ -51,6 +54,7 @@ const services = [
     },
     {
         id: "massages",
+        slug: "prices", // Links to /prices (no dedicated massage category yet)
         title: "Massages",
         subtitle: "Therapeutic & Relaxing",
         description: "Unwind with our therapeutic massage treatments using Lillian Terry aromatherapy oils. From Swedish relaxation to deep tissue therapy, our expert therapists melt away tension and stress.",
@@ -63,6 +67,7 @@ const services = [
     },
     {
         id: "lashes",
+        slug: "lashes", // Links to /prices/lashes
         title: "Lashes & Brows",
         subtitle: "Eye Enhancement",
         description: "Enhance your natural beauty with our lash extensions and brow tinting services. From Russian volume lashes to precision brow shaping, we perfect every detail.",
@@ -75,6 +80,7 @@ const services = [
     },
     {
         id: "waxing",
+        slug: "waxing", // Links to /prices/waxing
         title: "Waxing",
         subtitle: "Smooth Skin",
         description: "Achieve silky smooth skin with our professional waxing services. We offer full body waxing, including Hollywood and Brazilian, using gentle techniques for minimal discomfort.",
@@ -86,16 +92,43 @@ const services = [
         color: "from-pink-500/20 to-rose-500/20",
     },
     {
-        id: "slimming",
-        title: "Slimming & Weightloss",
-        subtitle: "Cryolipolysis Fat Freeze",
-        description: "Transform your body with our CE-approved Cryolipolysis treatments. This non-invasive fat freeze technology targets stubborn fat areas with no anaesthesia, no cutting, and visible results in weeks.",
-        images: ["/images/services/slimming_weightloss/Slimming_image_02.jpeg", "/images/services/slimming_weightloss/Slimming_image_07.jpeg"],
+        id: "fat-freezing",
+        slug: "fat-freezing", // Links to /prices/fat-freezing
+        title: "Fat Freezing",
+        subtitle: "Cryolipolysis",
+        description: "Fat freeze, or cryolipolysis, is a non-invasive cosmetic treatment that uses cold temperatures to reduce stubborn fat in targeted areas like the belly, love handles, arms, back, or thighs. Ideally for body contouring.",
+        images: ["/images/services/fat_freezing/Gallery_image_01(32).png.jpeg", "/images/services/fat_freezing/Gallery_image_01(33).png.jpeg"],
         badge: "CE Approved",
         badgeVariant: "safe" as const,
         icon: Zap,
-        features: ["Fat Freeze", "Chin & Arms", "Stomach & Back", "Love Handles"],
+        features: ["Non-Invasive", "No Downtime", "Permanent Results", "Safe & Effective"],
         color: "from-blue-500/20 to-indigo-500/20",
+    },
+    {
+        id: "slimming",
+        slug: "slimming", // Links to /prices/slimming
+        title: "Tesla EMS Slimming",
+        subtitle: "Max Muscle, Min Fat",
+        description: "Experience the revolutionary Tesla EMS Slimming Machine. Using High-Intensity Focused Electromagnetic technology, it induces powerful muscle contractions to build muscle and burn fat simultaneously. No gym required.",
+        images: ["/images/services/slimming_weightloss/EMS01.png", "/images/services/slimming_weightloss/EMS02.png"],
+        badge: "New Tech",
+        badgeVariant: "premium" as const,
+        icon: Zap,
+        features: ["Builds Muscle", "Burns Fat", "Non-Invasive", "30min Treatment"],
+        color: "from-cyan-500/20 to-teal-500/20",
+    },
+    {
+        id: "hair-extensions",
+        slug: "hair-extensions", // Links to /prices/hair-extensions
+        title: "Hair Extensions",
+        subtitle: "European Remy Human Hair",
+        description: "Add length, volume, and dimension with our premium European Remy human hair extensions. We offer tape-in, clip-in, keratin U-tip, micro loop, and halo hair extensions. Double drawn, premium quality for lasting beauty.",
+        images: ["/images/services/hair_extension/hair_extension04.jpeg", "/images/services/hair_extension/hair_extension01.jpeg"],
+        badge: "Premium Quality",
+        badgeVariant: "premium" as const,
+        icon: Scissors,
+        features: ["100% Remy Hair", "Tape-in & Clip-in", "Keratin Bonds", "Multiple Lengths"],
+        color: "from-amber-500/20 to-yellow-500/20",
     },
 
 ];
@@ -190,7 +223,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    <NavLink href="/prices" className="block group">
+                    <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`} className="block group">
                         <div className="relative aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
                             {/* Background gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
@@ -284,7 +317,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                             size="lg"
                             className="bg-foreground hover:bg-gold text-background hover:text-white font-medium px-8 transition-all duration-300 group"
                         >
-                            <NavLink href="/prices">
+                            <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`}>
                                 View Treatments
                                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                             </NavLink>

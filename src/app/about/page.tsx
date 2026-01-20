@@ -1,6 +1,7 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import Image from "next/image";
 import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
@@ -135,6 +136,9 @@ export default function AboutPage() {
                         </div>
                     </div>
                 </section>
+
+                {/* Reviews Section */}
+                <ReviewsSection />
 
                 {/* Final CTA */}
                 <section className="py-20 lg:py-32 text-center bg-foreground text-background">

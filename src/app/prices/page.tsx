@@ -1,15 +1,19 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { motion, AnimatePresence } from "framer-motion";
 import { serviceCategories } from "@/lib/services-data";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { TreatmentListItem } from "@/components/booking/TreatmentListItem";
 import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
 import { ChevronDown } from "lucide-react";
+
+import { useSearchParams } from "next/navigation";
+
 
 // Helper function to format titles with proper capitalization
 const formatTitle = (title: string): string => {
@@ -26,12 +30,29 @@ const formatTitle = (title: string): string => {
         .join(' ');
 };
 
-export default function PricesPage() {
+function PricesContent() {
+    const searchParams = useSearchParams();
+    const categoryParam = searchParams.get("category");
+
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
 
-    // Track which categories are expanded (first one open by default)
-    const [expandedCategories, setExpandedCategories] = useState<string[]>([serviceCategories[0]?.id || ""]);
+    // Track which categories are expanded (use param if available, otherwise default to first)
+    const [expandedCategories, setExpandedCategories] = useState<string[]>([
+        categoryParam || serviceCategories[0]?.id || ""
+    ]);
+
+    // Update expansion if param changes client-side
+    useEffect(() => {
+        if (categoryParam) {
+            setExpandedCategories([categoryParam]);
+            // Scroll to the category element smoothly
+            const element = document.getElementById(`category-${categoryParam}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }, [categoryParam]);
 
     // Toggle category expansion
     const toggleCategoryExpansion = (categoryId: string) => {
@@ -118,13 +139,13 @@ export default function PricesPage() {
                                     {serviceCategories.map((category) => {
                                         const isExpanded = isCategoryExpanded(category.id);
                                         return (
-                                            <div key={category.id} className="overflow-hidden">
+                                            <div key={category.id} id={`category-${category.id}`} className="overflow-hidden">
                                                 {/* Category Header - Compact Pill Button with Gold Hover */}
                                                 <button
                                                     onClick={() => toggleCategoryExpansion(category.id)}
                                                     className={`w-full flex items-center justify-between px-5 py-3 rounded-full transition-all duration-200 ${isExpanded
-                                                            ? "bg-gold text-white"
-                                                            : "bg-foreground text-white hover:bg-gold"
+                                                        ? "bg-gold text-white"
+                                                        : "bg-neutral-900 text-white hover:bg-gold"
                                                         }`}
                                                 >
                                                     <span className="font-medium text-sm lg:text-base">
@@ -190,6 +211,9 @@ export default function PricesPage() {
                     </div>
                 </section>
 
+                {/* Reviews Section */}
+                <ReviewsSection />
+
                 {/* CTA */}
                 <section className="py-20 bg-foreground text-background text-center">
                     <div className="container mx-auto px-4">
@@ -221,5 +245,21 @@ export default function PricesPage() {
                 treatments={selectedTreatments}
             />
         </>
+    );
+}
+
+export default function PricesPage() {
+    return (
+        <Suspense fallback={
+            <>
+                <Header />
+                <main className="min-h-screen pt-40 px-6 bg-background flex items-center justify-center">
+                    <div className="text-gold font-medium">Loading treatments...</div>
+                </main>
+                <Footer />
+            </>
+        }>
+            <PricesContent />
+        </Suspense>
     );
 }

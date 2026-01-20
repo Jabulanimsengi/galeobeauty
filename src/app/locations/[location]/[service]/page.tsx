@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import {
@@ -21,13 +22,14 @@ import {
 import { businessInfo } from "@/lib/constants";
 
 // ============================================
-// INCREMENTAL STATIC REGENERATION (ISR)
+// STATIC GENERATION - NO ISR
 // ============================================
-// Pre-build only high-priority pages at build time.
-// Remaining pages are generated on-demand when first visited.
+// All pages are pre-built at build time.
+// No on-demand regeneration to reduce Vercel ISR usage.
 
+export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = 86400; // Revalidate every 24 hours
+export const revalidate = false; // Fully static, no ISR
 
 export function generateStaticParams() {
     // Only pre-build priority location/service combinations
@@ -117,11 +119,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             `salon near ${location.name}`,
             `beauty salon near ${location.name}`,
 
+            // Pretoria, Gauteng & Regional
+            `${service.keyword} Pretoria`,
+            `${service.keyword} Gauteng`,
+            `${service.keyword} Tshwane`,
+            `${service.keyword} Centurion`,
+            `${service.keyword} North West`,
+            `beauty salon Pretoria`,
+            `beauty salon Gauteng`,
+            `salon near Pretoria`,
+            `spa near Pretoria`,
+            `beauty treatments Pretoria`,
+            `beauty treatments Gauteng`,
+            `best salon Pretoria`,
+            `best salon Gauteng`,
+
             // South African specific
             `beauty salon SA`,
             `salon South Africa`,
-            `beauty treatments Gauteng`,
-            `beauty treatments North West`,
+            `beauty treatments South Africa`,
             `${location.name} beauty treatments SA`,
 
             // Differentiators
@@ -155,6 +171,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             "Galeo Beauty Salon",
             "Galeo Beauty Spa",
             "Galeo Beauty",
+            "Galeo Beauty Hartbeespoort",
             "Hartbeespoort beauty salon",
             "Hartbeespoort salon",
             "Hartbeespoort spa",
@@ -165,6 +182,49 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             "Hartbeespoort massage",
             "Hartbeespoort pampering",
             "Hartbeespoort wellness",
+            "beauty salon near Pretoria",
+            "spa near Pretoria",
+
+            // Afrikaans Keywords (Local advantage)
+            "skoonheidsalon",
+            `skoonheidsalon ${location.name}`,
+            "naelsalon",
+            "gesigbehandeling",
+            "haarverwydering",
+            "permanente grimering",
+            "wimper verlengings",
+            "spa naby my",
+            "skoonheid",
+
+            // Long-tail Question Keywords
+            `where to get ${service.keyword} in ${location.name}`,
+            `best ${service.keyword} near ${location.name}`,
+            `how much does ${service.keyword} cost`,
+            `${service.keyword} price ${location.name}`,
+
+            // Seasonal & Event Keywords
+            "matric ball makeup",
+            "matric ball hair",
+            "matric farewell makeup",
+            "wedding season specials",
+            "bridal beauty packages",
+            "Mother's Day spa gift",
+            "Valentine's Day pamper",
+
+            // Problem-based Keywords
+            `acne treatment ${location.name}`,
+            `anti-aging ${location.name}`,
+            `wrinkle treatment ${location.name}`,
+            `skin pigmentation treatment ${location.name}`,
+            "stubborn fat removal",
+            "double chin treatment",
+            "damaged hair repair",
+
+            // Price-intent Keywords
+            `affordable ${service.keyword} ${location.name}`,
+            `cheap ${service.keyword} near me`,
+            `${service.keyword} specials ${location.name}`,
+            "budget-friendly spa",
         ],
         openGraph: {
             title,
@@ -522,6 +582,9 @@ export default async function LocationServicePage({ params }: PageProps) {
                         </div>
                     </section>
                 )}
+
+                {/* Reviews Section */}
+                <ReviewsSection />
 
                 {/* Final CTA */}
                 <section className="py-20 text-center bg-foreground text-background">

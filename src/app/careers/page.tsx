@@ -1,6 +1,7 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -20,7 +21,7 @@ const jobOpenings = [
             "Excellent client communication skills",
             "Passion for skincare and beauty"
         ],
-        isOpen: true
+        isOpen: false
     },
     {
         id: 2,
@@ -34,7 +35,7 @@ const jobOpenings = [
             "Strong attention to detail",
             "Creative and trend-aware"
         ],
-        isOpen: true
+        isOpen: false
     },
     {
         id: 3,
@@ -48,7 +49,7 @@ const jobOpenings = [
             "Proficient in booking systems",
             "Professional and friendly demeanor"
         ],
-        isOpen: false // Example of closed position
+        isOpen: false
     }
 ];
 
@@ -90,7 +91,7 @@ export default function CareersPage() {
                             <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 block">
                                 Join Our Team
                             </span>
-                            <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl text-foreground leading-[0.9] mb-8">
+                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
                                 Build Your <span className="text-gold italic">Career</span><br />
                                 With Us
                             </h1>
@@ -201,7 +202,11 @@ export default function CareersPage() {
                                     asChild
                                     className="bg-gold hover:bg-gold-dark text-white rounded-full px-6 mt-6"
                                 >
-                                    <a href="mailto:careers@galeobeauty.com?subject=General Application">
+                                    <a
+                                        href="https://wa.me/27824447389?text=Hi%20Galeo%20Beauty%2C%20I%20would%20like%20to%20send%20my%20CV%20for%20a%20potential%20career%20opportunity."
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
                                         Send Your CV
                                     </a>
                                 </Button>
@@ -209,6 +214,9 @@ export default function CareersPage() {
                         )}
                     </div>
                 </section>
+
+                {/* Reviews Section */}
+                <ReviewsSection />
 
                 {/* CTA Section */}
                 <section className="py-20 lg:py-32 text-center bg-foreground text-background">

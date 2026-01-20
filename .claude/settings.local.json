@@ -3,7 +3,9 @@
     "allow": [
       "Bash(dir /s \"c:\\\\Users\\\\ramos\\\\all_coding\\\\galeobeauty\\\\src\")",
       "Bash(npm run build:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(ls:*)",
+      "Bash(powershell -Command \"[Convert]::ToBase64String\\([IO.File]::ReadAllBytes\\(''public/images/favicon.png''\\)\\)\")"
     ]
   }
 }
