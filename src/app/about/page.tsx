@@ -73,8 +73,8 @@ export default function AboutPage() {
                             >
                                 <div className="aspect-[4/5] relative rounded-lg overflow-hidden">
                                     <Image
-                                        src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=800&h=1000&fit=crop"
-                                        alt="Galeo Beauty Philosophy"
+                                        src="/images/founder_dandi.jpeg"
+                                        alt="Dandi Meyer - Founder of Galeo Beauty Salon"
                                         fill
                                         className="object-cover"
                                     />
@@ -82,7 +82,8 @@ export default function AboutPage() {
                                 </div>
                                 {/* Floating text box */}
                                 <div className="absolute -bottom-10 -right-10 bg-background p-8 max-w-xs shadow-2xl border border-gold/20 hidden lg:block">
-                                    <p className="font-serif text-2xl italic text-gold">"Beauty is a discipline."</p>
+                                    <p className="font-serif text-xl italic text-gold">&quot;Beauty is about enhancing what you have.&quot;</p>
+                                    <p className="text-muted-foreground text-sm mt-2">— Dandi Meyer, Founder</p>
                                 </div>
                             </motion.div>
 

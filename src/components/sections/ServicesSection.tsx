@@ -249,7 +249,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                     }}
                 >
                     <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`} className="block group">
-                        <div className="relative aspect-[3/4] max-h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
+                        <div className="relative h-[280px] md:h-[400px] lg:h-auto lg:aspect-[3/4] lg:max-h-[500px] w-full overflow-hidden rounded-2xl shadow-2xl">
                             {/* Background gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
 

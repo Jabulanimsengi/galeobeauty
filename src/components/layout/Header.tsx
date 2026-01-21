@@ -115,7 +115,7 @@ export function Header() {
                         <Button
                             asChild
                             size="sm"
-                            className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
+                            className="bg-gold hover:bg-gold-dark text-white font-medium"
                         >
                             <Link href="/prices">Book Now</Link>
                         </Button>
@@ -168,7 +168,7 @@ export function Header() {
                     <div className="hidden lg:block">
                         <Button
                             asChild
-                            className="bg-gold hover:bg-gold hover:text-white text-foreground font-medium"
+                            className="bg-gold hover:bg-gold-dark text-white font-medium"
                         >
                             <NavLink href="/prices">Make a Booking</NavLink>
                         </Button>

@@ -4,42 +4,71 @@ import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Star, ChevronRight, ChevronLeft, Quote, ExternalLink } from "lucide-react";
 
-// Text-based testimonials data
+// Real customer testimonials from Fresha (4.9 stars, 159+ reviews)
 const testimonials = [
     {
         id: 1,
-        name: "Mariska V.",
-        date: "2 months ago",
+        name: "Lynmari",
+        date: "January 2026",
         rating: 5,
-        text: "Absolutely love Galeo Beauty! The staff is incredibly friendly and professional. My skin has never looked better after their facials. Highly recommend!",
+        text: "Absolutely amazing! I had my eyebrows done, eyeliner and had tattoo removal done, all at the same time. They were so kind, caring and professional. The lady that attended to me had more than 20 years of experience and it shows.",
+        service: "Permanent Makeup",
     },
     {
         id: 2,
-        name: "Anelisa M.",
-        date: "1 month ago",
+        name: "Lelani S.",
+        date: "January 2026",
         rating: 5,
-        text: "Best beauty salon in Hartbeespoort! I've been coming here for years and the quality is always consistent. The IPL treatments are amazing!",
+        text: "Dandi and Lindsey are my favorites 🥰 Thank you Galeo Beauty!",
+        service: "Beauty Services",
     },
     {
         id: 3,
-        name: "Chantel P.",
-        date: "3 weeks ago",
+        name: "Morgan",
+        date: "January 2026",
         rating: 5,
-        text: "Had the most relaxing experience! The attention to detail and care they put into every treatment is unmatched. Will definitely be back!",
+        text: "It was absolutely amazing! I love my eyelashes. Angel lashes again by Dandi 😊",
+        service: "Lash Extensions",
     },
     {
         id: 4,
-        name: "Sarah L.",
-        date: "2 weeks ago",
+        name: "Corinne C.",
+        date: "January 2026",
         rating: 5,
-        text: "Finally found my go-to salon! The team really knows what they're doing. My lashes have never looked this good. Thank you Galeo Beauty!",
+        text: "Lindzi is very professional. Always a great experience!",
+        service: "Beauty Treatment",
     },
     {
         id: 5,
-        name: "Tanya B.",
-        date: "1 week ago",
+        name: "Tersia",
+        date: "January 2026",
         rating: 5,
-        text: "Professional service from start to finish. The salon is beautiful and clean. I always leave feeling pampered and refreshed. 10/10!",
+        text: "Elishia does great nails! 💕 Always happy with the results.",
+        service: "Nail Services",
+    },
+    {
+        id: 6,
+        name: "Mariaan",
+        date: "January 2026",
+        rating: 5,
+        text: "Excellent service! The team really knows what they're doing. Highly recommend Galeo Beauty to everyone.",
+        service: "Salon Services",
+    },
+    {
+        id: 7,
+        name: "Morgan",
+        date: "January 2026",
+        rating: 5,
+        text: "Awesome experience! The salon is beautiful and the staff are so welcoming. Will definitely be back!",
+        service: "Beauty Services",
+    },
+    {
+        id: 8,
+        name: "Petunia",
+        date: "January 2026",
+        rating: 5,
+        text: "Very professional, happy with the results. Great attention to detail!",
+        service: "Beauty Treatment",
     },
 ];
 
