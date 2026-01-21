@@ -291,38 +291,27 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
 // All other location/service combinations are generated on-demand with ISR.
 
 export const PRIORITY_LOCATIONS = [
-    // Key SEO targets - Main cities (9)
-    'johannesburg',
-    'sandton',
-    'pretoria',
-    'midrand',
-    'centurion',
-    'kempton-park',
-    'boksburg',
-    'benoni',
-    'edenvale',
-
-    // Hartbeespoort Core (~21 locations = ~30 total for ~3K pages)
+    // Primary - Salon location (most important for local SEO)
     'hartbeespoort',
     'harties',
     'schoemansville',
+
+    // High-traffic Hartbeespoort suburbs
     'melodie',
-    'ifafi',
-    'meerhof',
-    'kosmos',
-    'kosmos-village',
     'pecanwood',
-    'xanadu',
-    'the-islands-estate',
-    'leloko',
-    'landsmeer',
-    'gateway-manor',
-    'caribbean-beach-club',
-    'broederstroom',
-    'skeerpoort',
-    'village-mall-hartbeespoort',
+    'kosmos',
+
+    // Key commuter cities (highest search volume)
+    'johannesburg',
+    'sandton',
+    'pretoria',
+    'centurion',
+    'midrand',
+
+    // Nearby towns
     'brits',
-    'magaliesburg',
+    'broederstroom',
+    // Total: 13 locations × ~262 services = ~3,406 pages (under 3,500 limit)
 ];
 
 // ============================================
