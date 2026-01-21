@@ -259,7 +259,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             description,
         },
         alternates: {
-            canonical: `https://galeobeauty.com/prices/${categoryId}`,
+            canonical: `https://www.galeobeauty.com/prices/${categoryId}`,
         },
     };
 }

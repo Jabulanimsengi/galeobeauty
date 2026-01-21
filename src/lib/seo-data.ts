@@ -22,17 +22,86 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     // ========================================
     // HARTBEESPOORT AREA (Primary - Salon Location)
     // ========================================
+    // Main Town
     { slug: "hartbeespoort", name: "Hartbeespoort", region: "North West" },
+    { slug: "harties", name: "Harties", region: "Hartbeespoort" },
+
+    // Big Five Residential Suburbs
     { slug: "schoemansville", name: "Schoemansville", region: "Hartbeespoort" },
-    { slug: "meerhof", name: "Meerhof", region: "Hartbeespoort" },
-    { slug: "ifafi", name: "Ifafi", region: "Hartbeespoort" },
-    { slug: "kosmos", name: "Kosmos", region: "Hartbeespoort" },
-    { slug: "pecanwood", name: "Pecanwood", region: "Hartbeespoort" },
     { slug: "melodie", name: "Melodie", region: "Hartbeespoort" },
+    { slug: "ifafi", name: "Ifafi", region: "Hartbeespoort" },
+    { slug: "meerhof", name: "Meerhof", region: "Hartbeespoort" },
+    { slug: "kosmos", name: "Kosmos", region: "Hartbeespoort" },
+    { slug: "kosmos-village", name: "Kosmos Village", region: "Hartbeespoort" },
+
+    // Waterfront & Canal Estates
+    { slug: "the-islands-estate", name: "The Islands Estate", region: "Hartbeespoort" },
+    { slug: "estate-dafrique", name: "Estate d'Afrique", region: "Hartbeespoort" },
+    { slug: "caribbean-beach-club", name: "Caribbean Beach Club", region: "Hartbeespoort" },
+    { slug: "key-west-estate", name: "Key West Estate", region: "Hartbeespoort" },
+    { slug: "eagles-landing", name: "Eagles Landing", region: "Hartbeespoort" },
+    { slug: "montego-bay", name: "Montego Bay", region: "Hartbeespoort" },
+
+    // Golf & Sport Estates
+    { slug: "pecanwood", name: "Pecanwood", region: "Hartbeespoort" },
+    { slug: "pecanwood-estate", name: "Pecanwood Golf Estate", region: "Hartbeespoort" },
+    { slug: "magalies-park", name: "Magalies Park", region: "Hartbeespoort" },
+    { slug: "seasons-lifestyle-estate", name: "Seasons Lifestyle Estate", region: "Hartbeespoort" },
+    { slug: "cove-ridge", name: "Cove Ridge", region: "Hartbeespoort" },
+    { slug: "magalies-golf-estate", name: "Magalies Golf Estate", region: "Hartbeespoort" },
+    { slug: "lakeland-estate", name: "Lakeland Estate", region: "Hartbeespoort" },
+
+    // Nature & Eco Estates
+    { slug: "xanadu", name: "Xanadu", region: "Hartbeespoort" },
+    { slug: "xanadu-nature-estate", name: "Xanadu Nature Estate", region: "Hartbeespoort" },
     { slug: "leloko", name: "Leloko", region: "Hartbeespoort" },
+    { slug: "leloko-lifestyle-estate", name: "Leloko Lifestyle Estate", region: "Hartbeespoort" },
+    { slug: "the-coves", name: "The Coves", region: "Hartbeespoort" },
+    { slug: "la-camargue", name: "La Camargue Private Estate", region: "Hartbeespoort" },
+    { slug: "redstone-estate", name: "Redstone Private Estate", region: "Hartbeespoort" },
+    { slug: "birdwood-estate", name: "Birdwood Estate", region: "Hartbeespoort" },
+
+    // Emerging & Boutique Estates
+    { slug: "gateway-manor", name: "Gateway Manor", region: "Hartbeespoort" },
+    { slug: "landsmeer", name: "Landsmeer", region: "Hartbeespoort" },
+    { slug: "landsmeer-estate", name: "Landsmeer Residential Estate", region: "Hartbeespoort" },
+    { slug: "kosmos-ridge", name: "Kosmos Ridge", region: "Hartbeespoort" },
+    { slug: "mount-kos", name: "Mount Kos", region: "Hartbeespoort" },
+    { slug: "ile-du-lac", name: "Ile du Lac", region: "Hartbeespoort" },
+    { slug: "kshane", name: "K'Shane Estate", region: "Hartbeespoort" },
+
+    // Surrounding Smallholdings
+    { slug: "broederstroom", name: "Broederstroom", region: "North West" },
+    { slug: "skeerpoort", name: "Skeerpoort", region: "Hartbeespoort" },
+    { slug: "rietfontein-ah", name: "Rietfontein AH", region: "Hartbeespoort" },
+    { slug: "melodie-ah", name: "Melodie AH", region: "Hartbeespoort" },
+    { slug: "remhoogte", name: "Remhoogte", region: "Hartbeespoort" },
+    { slug: "welgegund", name: "Welgegund", region: "Hartbeespoort" },
+
+    // Shopping Hub Areas (Near Keywords)
+    { slug: "village-mall-hartbeespoort", name: "Village Mall Hartbeespoort", region: "Hartbeespoort" },
+    { slug: "islands-shopping-mall", name: "Islands Shopping Mall", region: "Hartbeespoort" },
+    { slug: "damdoryn", name: "Damdoryn", region: "Hartbeespoort" },
+    { slug: "damdoryn-junction", name: "Damdoryn Junction", region: "Hartbeespoort" },
+    { slug: "mountain-lake-shopping-centre", name: "Mountain Lake Shopping Centre", region: "Hartbeespoort" },
+    { slug: "sediba-plaza", name: "Sediba Plaza", region: "Hartbeespoort" },
+    { slug: "jasmyn", name: "Jasmyn", region: "Hartbeespoort" },
+    { slug: "jasmyn-farm", name: "Jasmyn Farm Products", region: "Hartbeespoort" },
+
+    // Additional Hartbeespoort Areas
+    { slug: "hartbeespoort-dam", name: "Hartbeespoort Dam", region: "North West" },
+    { slug: "dam-wall", name: "Dam Wall", region: "Hartbeespoort" },
+    { slug: "oberon", name: "Oberon", region: "Hartbeespoort" },
+    { slug: "zilkaatsnek", name: "Zilkaatsnek", region: "Hartbeespoort" },
+    { slug: "buffelspoort", name: "Buffelspoort", region: "Hartbeespoort" },
+    { slug: "kommando-nek", name: "Kommando Nek", region: "Hartbeespoort" },
+    { slug: "safari-gardens", name: "Safari Gardens", region: "Hartbeespoort" },
+    { slug: "elandsfontein", name: "Elandsfontein", region: "Hartbeespoort" },
+    { slug: "hekpoort", name: "Hekpoort", region: "North West" },
+
+    // Other North West
     { slug: "magaliesburg", name: "Magaliesburg", region: "North West" },
     { slug: "brits", name: "Brits", region: "North West" },
-    { slug: "broederstroom", name: "Broederstroom", region: "North West" },
 
     // ========================================
     // CITY OF JOHANNESBURG (Metropolitan)
@@ -222,19 +291,47 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
 // All other location/service combinations are generated on-demand with ISR.
 
 export const PRIORITY_LOCATIONS = [
-    // Key SEO targets - Main cities
+    // Key SEO targets - Main cities (9)
     'johannesburg',
     'sandton',
     'pretoria',
     'midrand',
     'centurion',
-    // Key SEO targets - East Rand
     'kempton-park',
     'boksburg',
     'benoni',
     'edenvale',
-    // Primary salon location
+
+    // Hartbeespoort Core (~31 locations = ~40 total for ~4K pages)
     'hartbeespoort',
+    'harties',
+    'hartbeespoort-dam',
+    'schoemansville',
+    'melodie',
+    'ifafi',
+    'meerhof',
+    'kosmos',
+    'kosmos-village',
+    'pecanwood',
+    'pecanwood-estate',
+    'xanadu',
+    'xanadu-nature-estate',
+    'the-islands-estate',
+    'leloko',
+    'leloko-lifestyle-estate',
+    'landsmeer',
+    'landsmeer-estate',
+    'gateway-manor',
+    'caribbean-beach-club',
+    'broederstroom',
+    'skeerpoort',
+    'village-mall-hartbeespoort',
+    'magalies-park',
+    'the-coves',
+    'brits',
+    'magaliesburg',
+    'hekpoort',
+    'buffelspoort',
 ];
 
 // ============================================

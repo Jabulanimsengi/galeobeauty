@@ -230,10 +230,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             description,
             type: "website",
-            url: `https://galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         },
         alternates: {
-            canonical: `https://galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         },
     };
 }
@@ -280,7 +280,7 @@ export default async function LocationServicePage({ params }: PageProps) {
             alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
             description: "Premium beauty salon, spa and day spa in Hartbeespoort offering skincare, facials, nails, hair care, lashes, waxing, body treatments and aesthetic treatments. Top-rated beauty parlour serving Gauteng and North West.",
             additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
-            image: "https://galeobeauty.com/images/logo.png",
+            image: "https://www.galeobeauty.com/images/logo.png",
             priceRange: "$$",
             address: {
                 "@type": "PostalAddress",
@@ -296,7 +296,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 longitude: 27.909252,
             },
             telephone: businessInfo.phone,
-            url: "https://galeobeauty.com",
+            url: "https://www.galeobeauty.com",
             openingHoursSpecification: [
                 {
                     "@type": "OpeningHoursSpecification",

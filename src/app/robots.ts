@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/api/', '/_next/'],
         },
-        sitemap: 'https://galeobeauty.com/sitemap.xml',
+        sitemap: 'https://www.galeobeauty.com/sitemap.xml',
     };
 }

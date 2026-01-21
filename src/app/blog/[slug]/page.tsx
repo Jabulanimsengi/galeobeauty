@@ -103,13 +103,13 @@ export default async function BlogPostPage({ params }: PageProps) {
             name: "Galeo Beauty",
             logo: {
                 "@type": "ImageObject",
-                url: "https://galeobeauty.com/images/logo.png",
+                url: "https://www.galeobeauty.com/images/logo.png",
             },
         },
         datePublished: post.date,
         mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `https://galeobeauty.com/blog/${slug}`,
+            "@id": `https://www.galeobeauty.com/blog/${slug}`,
         },
     };
 

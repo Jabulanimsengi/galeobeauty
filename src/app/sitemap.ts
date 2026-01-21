@@ -6,7 +6,7 @@ import { getAllBlogPosts } from '@/lib/blog-data';
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://galeobeauty.com';
+    const baseUrl = 'https://www.galeobeauty.com';
 
     // Base pages
     const staticPages: MetadataRoute.Sitemap = [
@@ -71,6 +71,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.85,
     }));
 
+    // Individual service landing pages (SEO-optimized)
+    const serviceSlugPages = [
+        'microblading',
+        'fat-freezing-treatment',
+        'lash-extensions',
+        'lip-fillers',
+        'brazilian-wax',
+        'dermalogica-facial',
+        'nail-art',
+        'massage-therapy',
+    ];
+    const servicePages: MetadataRoute.Sitemap = serviceSlugPages.map((slug) => ({
+        url: `${baseUrl}/services/${slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'monthly' as const,
+        priority: 0.85,
+    }));
+
     // SEO Location + Service pages - Include ALL combinations for Google to crawl
     // Priority locations get higher priority score
     const seoPages: MetadataRoute.Sitemap = [];
@@ -89,6 +107,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }
     }
 
-    return [...staticPages, ...blogPages, ...categoryPages, ...seoPages];
+    return [...staticPages, ...blogPages, ...categoryPages, ...servicePages, ...seoPages];
 }
 

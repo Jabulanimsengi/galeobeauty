@@ -18,6 +18,7 @@ const services = [
         subtitle: "Premium Skincare",
         description: "Indulge in our premium facial treatments. From moisturising and anti-ageing facials to advanced skin renewal peels, our certified specialists deliver visible results using medical-grade products.",
         images: ["/images/services/facials/Image_facial_03.jpeg", "/images/services/facials/Image_facial_07.jpeg"],
+        imageAlts: ["Professional Dermalogica facial treatment at Galeo Beauty Hartbeespoort", "Anti-aging facial skincare treatment near Pretoria"],
         badge: "Premium",
         badgeVariant: "premium" as const,
         icon: Sparkles,
@@ -32,6 +33,7 @@ const services = [
         subtitle: "Kryolan Professional",
         description: "Look stunning for any occasion with our professional make-up services. From bridal looks to permanent make-up, Phi-Brows, and Phi-Contour, we create flawless beauty that lasts.",
         images: ["/images/services/makeup/makeup_01.jpeg", "/images/services/makeup/makeup_03.jpeg"],
+        imageAlts: ["Professional bridal makeup application at Galeo Beauty salon", "Kryolan makeup artist creating flawless look for special occasions"],
         badge: "Professional",
         badgeVariant: "premium" as const,
         icon: Heart,
@@ -45,6 +47,7 @@ const services = [
         subtitle: "Ladies & Gents",
         description: "Achieve silky smooth skin with our advanced IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
         images: ["/images/services/IPL_Hair_removal/IPL_image_06.jpeg", "/images/services/IPL_Hair_removal/IPL_image_08.jpeg"],
+        imageAlts: ["CE-approved IPL laser hair removal treatment in Hartbeespoort", "Permanent hair removal for ladies and gents near Pretoria"],
         badge: "CE Approved",
         badgeVariant: "safe" as const,
         icon: Zap,
@@ -59,6 +62,7 @@ const services = [
         subtitle: "Therapeutic & Relaxing",
         description: "Unwind with our therapeutic massage treatments using Lillian Terry aromatherapy oils. From Swedish relaxation to deep tissue therapy, our expert therapists melt away tension and stress.",
         images: ["/images/services/massages/Massage_07.jpeg", "/images/services/massages/Massage_01.jpeg"],
+        imageAlts: ["Relaxing Swedish massage at Galeo Beauty spa Hartbeespoort", "Deep tissue aromatherapy massage treatment near Pretoria"],
         badge: "Wellness",
         badgeVariant: "premium" as const,
         icon: Heart,
@@ -72,6 +76,7 @@ const services = [
         subtitle: "Eye Enhancement",
         description: "Enhance your natural beauty with our lash extensions and brow tinting services. From Russian volume lashes to precision brow shaping, we perfect every detail.",
         images: ["/images/services/face/lashes_01.jpeg", "/images/services/face/lashes_04.jpeg"],
+        imageAlts: ["Russian volume lash extensions at Galeo Beauty Hartbeespoort", "Professional brow lamination and lash lift treatment near Pretoria"],
         badge: "Premium",
         badgeVariant: "premium" as const,
         icon: Eye,
@@ -85,6 +90,7 @@ const services = [
         subtitle: "Smooth Skin",
         description: "Achieve silky smooth skin with our professional waxing services. We offer full body waxing, including Hollywood and Brazilian, using gentle techniques for minimal discomfort.",
         images: ["/images/services/waxing/waxing_04.jpeg", "/images/services/waxing/waxing_03.jpeg"],
+        imageAlts: ["Professional Brazilian and Hollywood waxing at Galeo Beauty", "Full body waxing services for smooth skin in Hartbeespoort"],
         badge: "Hygienic",
         badgeVariant: "medical" as const,
         icon: Sparkles,
@@ -98,6 +104,7 @@ const services = [
         subtitle: "Cryolipolysis",
         description: "Fat freeze, or cryolipolysis, is a non-invasive cosmetic treatment that uses cold temperatures to reduce stubborn fat in targeted areas like the belly, love handles, arms, back, or thighs. Ideally for body contouring.",
         images: ["/images/services/fat_freezing/Gallery_image_01(32).png.jpeg", "/images/services/fat_freezing/Gallery_image_01(33).png.jpeg"],
+        imageAlts: ["Fat freezing cryolipolysis body contouring treatment in Hartbeespoort", "Non-invasive fat reduction treatment near Pretoria South Africa"],
         badge: "CE Approved",
         badgeVariant: "safe" as const,
         icon: Zap,
@@ -111,6 +118,7 @@ const services = [
         subtitle: "Max Muscle, Min Fat",
         description: "Experience the revolutionary Tesla EMS Slimming Machine. Using High-Intensity Focused Electromagnetic technology, it induces powerful muscle contractions to build muscle and burn fat simultaneously. No gym required.",
         images: ["/images/services/slimming_weightloss/EMS01.png", "/images/services/slimming_weightloss/EMS02.png"],
+        imageAlts: ["Tesla EMS body sculpting machine at Galeo Beauty Hartbeespoort", "EMS slimming treatment for muscle toning and fat burning near Pretoria"],
         badge: "New Tech",
         badgeVariant: "premium" as const,
         icon: Zap,
@@ -124,6 +132,7 @@ const services = [
         subtitle: "European Remy Human Hair",
         description: "Add length, volume, and dimension with our premium European Remy human hair extensions. We offer tape-in, clip-in, keratin U-tip, micro loop, and halo hair extensions. Double drawn, premium quality for lasting beauty.",
         images: ["/images/services/hair_extension/hair_extension04.jpeg", "/images/services/hair_extension/hair_extension01.jpeg"],
+        imageAlts: ["Premium Remy human hair extensions at Galeo Beauty salon", "Tape-in and clip-in hair extensions near Pretoria Hartbeespoort"],
         badge: "Premium Quality",
         badgeVariant: "premium" as const,
         icon: Scissors,
@@ -134,8 +143,24 @@ const services = [
 ];
 
 
+interface Service {
+    id: string;
+    slug: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    images: string[];
+    imageAlts?: string[];
+    badge: string;
+    badgeVariant: "premium" | "safe" | "medical";
+    icon: typeof Sparkles;
+    features: string[];
+    color: string;
+    bookingFast?: boolean;
+}
+
 interface ServiceCardProps {
-    service: typeof services[0];
+    service: Service;
     index: number;
     isReversed: boolean;
 }
@@ -233,7 +258,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 <Image
                                     key={imgSrc}
                                     src={imgSrc}
-                                    alt={`${service.title} - ${imgIndex + 1}`}
+                                    alt={service.imageAlts?.[imgIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`}
                                     fill
                                     className={`object-cover transition-all duration-700 ease-out ${currentImageIndex === imgIndex
                                         ? 'opacity-100 scale-100'

@@ -15,7 +15,7 @@ export function Footer() {
         <footer className="bg-foreground text-background">
             {/* Main Footer Content */}
             <div className="container mx-auto px-4 sm:px-6 py-12 md:py-16">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 lg:gap-10">
                     {/* Brand Column */}
                     <div className="space-y-4 sm:col-span-2 lg:col-span-1">
                         <NavLink href="/">
@@ -96,6 +96,53 @@ export function Footer() {
                                     className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
                                 >
                                     Careers
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    href="/blog"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Blog
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Popular Services - Internal Linking for SEO */}
+                    <div className="lg:hidden xl:block">
+                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                            Popular Services
+                        </h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <NavLink href="/services/microblading" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Microblading
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="/services/lash-extensions" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Lash Extensions
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="/services/fat-freezing-treatment" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Fat Freezing
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="/services/lip-fillers" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Lip Fillers
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="/services/dermalogica-facial" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Dermalogica Facial
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="/prices" className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium">
+                                    View All Services →
                                 </NavLink>
                             </li>
                         </ul>
