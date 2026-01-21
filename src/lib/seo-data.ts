@@ -302,10 +302,9 @@ export const PRIORITY_LOCATIONS = [
     'benoni',
     'edenvale',
 
-    // Hartbeespoort Core (~31 locations = ~40 total for ~4K pages)
+    // Hartbeespoort Core (~21 locations = ~30 total for ~3K pages)
     'hartbeespoort',
     'harties',
-    'hartbeespoort-dam',
     'schoemansville',
     'melodie',
     'ifafi',
@@ -313,25 +312,17 @@ export const PRIORITY_LOCATIONS = [
     'kosmos',
     'kosmos-village',
     'pecanwood',
-    'pecanwood-estate',
     'xanadu',
-    'xanadu-nature-estate',
     'the-islands-estate',
     'leloko',
-    'leloko-lifestyle-estate',
     'landsmeer',
-    'landsmeer-estate',
     'gateway-manor',
     'caribbean-beach-club',
     'broederstroom',
     'skeerpoort',
     'village-mall-hartbeespoort',
-    'magalies-park',
-    'the-coves',
     'brits',
     'magaliesburg',
-    'hekpoort',
-    'buffelspoort',
 ];
 
 // ============================================
