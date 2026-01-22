@@ -3,25 +3,26 @@ import { NextResponse } from 'next/server';
 /**
  * Sitemap Index - Lists all sitemap files
  * Access at /sitemap.xml
- * 
- * This generates a sitemap index pointing to individual sitemaps.
- * Sitemap 0 contains static pages, Sitemap 1+ contain location/service combos.
  */
+
+const STATIC_PAGES_COUNT = 32;
+const LOCATIONS_COUNT = 185;
+const SERVICES_COUNT = 216;
+const TOTAL_URLS = STATIC_PAGES_COUNT + (LOCATIONS_COUNT * SERVICES_COUNT);
+const MAX_URLS_PER_SITEMAP = 50000;
+const NUM_SITEMAPS = Math.ceil(TOTAL_URLS / MAX_URLS_PER_SITEMAP);
+
 export async function GET() {
     const baseUrl = 'https://www.galeobeauty.com';
+    const lastmod = new Date().toISOString();
 
-    // We have 2 sitemaps: 
-    // - sitemap/0.xml: static pages, blog, categories, services
-    // - sitemap/1.xml: location/service pages (all 60K+ combinations)
-    const totalSitemaps = 2;
+    const sitemapUrls: string[] = [];
 
-    // Build sitemap index XML
-    const sitemapUrls = [];
-    for (let i = 0; i < totalSitemaps; i++) {
+    for (let i = 0; i < NUM_SITEMAPS; i++) {
         sitemapUrls.push(`
     <sitemap>
-        <loc>${baseUrl}/sitemap/${i}.xml</loc>
-        <lastmod>${new Date().toISOString()}</lastmod>
+        <loc>${baseUrl}/sitemap-seo/${i}</loc>
+        <lastmod>${lastmod}</lastmod>
     </sitemap>`);
     }
 
