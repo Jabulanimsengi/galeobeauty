@@ -6,16 +6,15 @@ import { getAllBlogPosts } from '@/lib/blog-data';
 // Maximum URLs per sitemap (Google's limit is 50,000, using 40K for safety)
 const MAX_URLS_PER_SITEMAP = 40000;
 
-// Pre-calculate total pages for sitemap chunking
-const services = getCachedSEOServices();
-const totalLocationPages = TARGET_LOCATIONS.length * services.length;
-const numLocationSitemaps = Math.ceil(totalLocationPages / MAX_URLS_PER_SITEMAP);
-
 /**
  * Generate sitemap IDs for Next.js sitemap index
  * Creates /sitemap/0.xml, /sitemap/1.xml, etc.
  */
 export async function generateSitemaps() {
+    const services = getCachedSEOServices();
+    const totalLocationPages = TARGET_LOCATIONS.length * services.length;
+    const numLocationSitemaps = Math.ceil(totalLocationPages / MAX_URLS_PER_SITEMAP);
+
     // Sitemap 0: Static pages, blog, categories, services
     // Sitemap 1+: Location/service pages in chunks
     const sitemaps: { id: number }[] = [];
@@ -120,6 +119,7 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
     }
 
     // Sitemap 1+: Location/service pages in chunks
+    const services = getCachedSEOServices();
     const allLocationPages: { location: string; service: string; isPriority: boolean }[] = [];
 
     for (const location of TARGET_LOCATIONS) {
