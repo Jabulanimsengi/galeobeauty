@@ -10,8 +10,11 @@ const MAX_URLS_PER_SITEMAP = 40000;
  * Generate sitemap IDs for Next.js sitemap index
  * Creates /sitemap/0.xml, /sitemap/1.xml, etc.
  */
+/*
 export async function generateSitemaps() {
+    console.log('Generating sitemaps...');
     const services = getCachedSEOServices();
+    console.log('Services count:', services.length);
     const totalLocationPages = TARGET_LOCATIONS.length * services.length;
     const numLocationSitemaps = Math.ceil(totalLocationPages / MAX_URLS_PER_SITEMAP);
 
@@ -25,15 +28,18 @@ export async function generateSitemaps() {
 
     return sitemaps;
 }
+*/
 
 /**
  * Generate sitemap entries for a specific sitemap ID
  */
-export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    console.log('Sitemap function called (single mode)');
+    const id = 0;
     const baseUrl = 'https://www.galeobeauty.com';
 
     // Sitemap 0: Static pages, blog, categories
-    if (id === 0) {
+    if (Number(id) === 0) {
         // Base pages
         const staticPages: MetadataRoute.Sitemap = [
             {
@@ -138,6 +144,7 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
     const startIndex = chunkIndex * MAX_URLS_PER_SITEMAP;
     const endIndex = Math.min(startIndex + MAX_URLS_PER_SITEMAP, allLocationPages.length);
 
+    console.log('Generating dynamic chunk for id:', id);
     // If chunk is out of range, return empty
     if (startIndex >= allLocationPages.length) {
         return [];
