@@ -35,15 +35,15 @@ export function Map({
             return;
         }
 
-        // Initialize map - simple flat view
+        // Initialize map - custom Galeo Beauty style
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: "mapbox://styles/mapbox/streets-v12",
+            style: "mapbox://styles/tsakanimsengi/cmkp36ijo001l01s54l2cgg4e",
             center: [longitude, latitude],
-            zoom: zoom,
+            zoom: 13,
             pitch: 0,
             bearing: 0,
-            attributionControl: false,
+            attributionControl: true,
             interactive: true,
         });
 
@@ -56,52 +56,22 @@ export function Map({
         // Add fullscreen control
         map.current.addControl(new mapboxgl.FullscreenControl(), "top-right");
 
-        // Create pulsing red dot marker
+        // Create teardrop pin marker with white dot
         const markerEl = document.createElement("div");
         markerEl.innerHTML = `
-            <div class="pulse-marker" style="
+            <div style="
                 position: relative;
-                width: 20px;
-                height: 20px;
+                width: 32px;
+                height: 44px;
+                cursor: pointer;
             ">
-                <div style="
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 16px;
-                    height: 16px;
-                    background: #e53e3e;
-                    border-radius: 50%;
-                    border: 3px solid white;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-                    z-index: 2;
-                "></div>
-                <div style="
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 16px;
-                    height: 16px;
-                    background: #e53e3e;
-                    border-radius: 50%;
-                    animation: pulse-ring 1.5s ease-out infinite;
-                    z-index: 1;
-                "></div>
+                <svg width="32" height="44" viewBox="0 0 32 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Teardrop pin shape -->
+                    <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 28 16 28s16-18 16-28c0-8.837-7.163-16-16-16z" fill="#2d3436"/>
+                    <!-- White inner dot -->
+                    <circle cx="16" cy="16" r="6" fill="white"/>
+                </svg>
             </div>
-            <style>
-                @keyframes pulse-ring {
-                    0% {
-                        transform: translate(-50%, -50%) scale(1);
-                        opacity: 1;
-                    }
-                    100% {
-                        transform: translate(-50%, -50%) scale(3);
-                        opacity: 0;
-                    }
-                }
-            </style>
         `;
 
         // Create popup
@@ -131,10 +101,10 @@ export function Map({
             </div>
         `);
 
-        // Add marker at coordinates
+        // Add marker at coordinates (anchor at bottom tip of pin)
         new mapboxgl.Marker({
             element: markerEl,
-            anchor: "center"
+            anchor: "bottom"
         })
             .setLngLat([longitude, latitude])
             .setPopup(popup)
