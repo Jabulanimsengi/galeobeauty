@@ -29,11 +29,8 @@ export async function generateSitemaps() {
 
 /**
  * Generate sitemap entries for a specific sitemap ID
- * Next.js 16 passes id as Promise<string>
  */
-export default async function sitemap(props: { id: Promise<string> }): Promise<MetadataRoute.Sitemap> {
-    const idStr = await props.id;
-    const id = parseInt(idStr, 10);
+export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://www.galeobeauty.com';
 
     // Sitemap 0: Static pages, blog, categories
