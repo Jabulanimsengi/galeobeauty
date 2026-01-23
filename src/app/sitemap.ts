@@ -1,49 +1,45 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { MetadataRoute } from 'next';
 
 /**
- * SEO Sitemap Route Handler
- * Handles /sitemap-seo/[id] requests (e.g., /sitemap-seo/0, /sitemap-seo/1)
- * 
- * Contains static pages + location/service URLs
- * Using Google's 50,000 URL limit per sitemap.
+ * Next.js native sitemap generation using generateSitemaps() for sitemap index.
+ * This automatically creates:
+ * - /sitemap.xml (sitemap index listing all sub-sitemaps)
+ * - /sitemap/0.xml, /sitemap/1.xml, etc. (individual sitemaps)
  */
 
-const MAX_URLS_PER_SITEMAP = 50000;
-
-// Static pages configuration
 const STATIC_PAGES = [
-    { path: '', priority: 1.0, changefreq: 'weekly' },
-    { path: '/prices', priority: 0.9, changefreq: 'weekly' },
-    { path: '/specials', priority: 0.8, changefreq: 'weekly' },
-    { path: '/gallery', priority: 0.7, changefreq: 'monthly' },
-    { path: '/about', priority: 0.6, changefreq: 'monthly' },
-    { path: '/contact', priority: 0.8, changefreq: 'monthly' },
-    { path: '/blog', priority: 0.85, changefreq: 'weekly' },
-    { path: '/careers', priority: 0.5, changefreq: 'monthly' },
-    { path: '/prices/hart-aesthetics', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/fat-freezing', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/slimming', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/dermalogica', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/ipl', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/makeup', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/medical', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/permanent-makeup', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/pro-skin', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/qms-facial', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/sunbed', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/waxing', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/hair', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/nails', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/lashes', priority: 0.85, changefreq: 'weekly' },
-    { path: '/prices/hair-extensions', priority: 0.85, changefreq: 'weekly' },
-    { path: '/services/microblading', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/fat-freezing-treatment', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/lash-extensions', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/lip-fillers', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/brazilian-wax', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/dermalogica-facial', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/nail-art', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/massage-therapy', priority: 0.85, changefreq: 'monthly' },
+    { path: '', priority: 1.0, changefreq: 'weekly' as const },
+    { path: '/prices', priority: 0.9, changefreq: 'weekly' as const },
+    { path: '/specials', priority: 0.8, changefreq: 'weekly' as const },
+    { path: '/gallery', priority: 0.7, changefreq: 'monthly' as const },
+    { path: '/about', priority: 0.6, changefreq: 'monthly' as const },
+    { path: '/contact', priority: 0.8, changefreq: 'monthly' as const },
+    { path: '/blog', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/careers', priority: 0.5, changefreq: 'monthly' as const },
+    { path: '/prices/hart-aesthetics', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/fat-freezing', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/slimming', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/dermalogica', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/ipl', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/makeup', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/medical', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/permanent-makeup', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/pro-skin', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/qms-facial', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/sunbed', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/waxing', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/hair', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/nails', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/lashes', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/prices/hair-extensions', priority: 0.85, changefreq: 'weekly' as const },
+    { path: '/services/microblading', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/fat-freezing-treatment', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/lash-extensions', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/lip-fillers', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/brazilian-wax', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/dermalogica-facial', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/nail-art', priority: 0.85, changefreq: 'monthly' as const },
+    { path: '/services/massage-therapy', priority: 0.85, changefreq: 'monthly' as const },
 ];
 
 const TARGET_LOCATIONS = [
@@ -118,66 +114,39 @@ const SERVICE_SLUGS = [
     "ponytail-50cm-dark", "ponytail-50cm-light", "ponytail-55cm-dark", "ponytail-55cm-light", "ponytail-60cm-dark", "ponytail-60cm-light"
 ];
 
-function getAllUrls(): { url: string; priority: number; changefreq: string }[] {
-    const urls: { url: string; priority: number; changefreq: string }[] = [];
+const MAX_URLS_PER_SITEMAP = 50000;
+const TOTAL_URLS = STATIC_PAGES.length + (TARGET_LOCATIONS.length * SERVICE_SLUGS.length);
+const NUM_SITEMAPS = Math.ceil(TOTAL_URLS / MAX_URLS_PER_SITEMAP);
+
+// generateSitemaps() tells Next.js to create a sitemap index at /sitemap.xml
+// and individual sitemaps at /sitemap/0.xml, /sitemap/1.xml, etc.
+export async function generateSitemaps() {
+    return Array.from({ length: NUM_SITEMAPS }, (_, i) => ({ id: i }));
+}
+
+export default function sitemap({ id }: { id: number }): MetadataRoute.Sitemap {
+    const baseUrl = 'https://www.galeobeauty.com';
+
+    const allUrls: { url: string; priority: number; changefreq: string }[] = [];
 
     for (const page of STATIC_PAGES) {
-        urls.push({ url: page.path, priority: page.priority, changefreq: page.changefreq });
+        allUrls.push({ url: page.path, priority: page.priority, changefreq: page.changefreq });
     }
 
     for (const location of TARGET_LOCATIONS) {
         for (const service of SERVICE_SLUGS) {
-            urls.push({ url: `/locations/${location}/${service}`, priority: 0.7, changefreq: 'monthly' });
+            allUrls.push({ url: `/locations/${location}/${service}`, priority: 0.7, changefreq: 'monthly' });
         }
     }
 
-    return urls;
-}
-
-export async function GET(
-    request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam, 10);
-
-    if (isNaN(id) || id < 0) {
-        return new NextResponse('Not Found', { status: 404 });
-    }
-
-    const baseUrl = 'https://www.galeobeauty.com';
-    const lastmod = new Date().toISOString();
-    const allUrls = getAllUrls();
-
     const startIndex = id * MAX_URLS_PER_SITEMAP;
     const endIndex = Math.min(startIndex + MAX_URLS_PER_SITEMAP, allUrls.length);
-
-    if (startIndex >= allUrls.length) {
-        return new NextResponse('Not Found', { status: 404 });
-    }
-
     const chunkUrls = allUrls.slice(startIndex, endIndex);
-    const xmlUrls: string[] = [];
 
-    for (const urlData of chunkUrls) {
-        xmlUrls.push(`
-    <url>
-        <loc>${baseUrl}${urlData.url}</loc>
-        <lastmod>${lastmod}</lastmod>
-        <changefreq>${urlData.changefreq}</changefreq>
-        <priority>${urlData.priority}</priority>
-    </url>`);
-    }
-
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${xmlUrls.join('')}
-</urlset>`;
-
-    return new NextResponse(xml, {
-        headers: {
-            'Content-Type': 'application/xml',
-            'Cache-Control': 'public, max-age=3600, s-maxage=3600',
-        },
-    });
+    return chunkUrls.map((urlData) => ({
+        url: `${baseUrl}${urlData.url}`,
+        lastModified: new Date(),
+        changeFrequency: urlData.changefreq as 'weekly' | 'monthly' | 'daily' | 'yearly' | 'always' | 'hourly' | 'never',
+        priority: urlData.priority,
+    }));
 }

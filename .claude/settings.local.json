@@ -5,7 +5,9 @@
       "Bash(npm run build:*)",
       "Bash(node -e:*)",
       "Bash(ls:*)",
-      "Bash(powershell -Command \"[Convert]::ToBase64String\\([IO.File]::ReadAllBytes\\(''public/images/favicon.png''\\)\\)\")"
+      "Bash(powershell -Command \"[Convert]::ToBase64String\\([IO.File]::ReadAllBytes\\(''public/images/favicon.png''\\)\\)\")",
+      "Bash(dir /b \"C:\\\\Users\\\\ramos\\\\all_coding\\\\galeobeauty\\\\src\\\\app\\\\sitemap.xml\")",
+      "Bash(npx next build:*)"
     ]
   }
 }
