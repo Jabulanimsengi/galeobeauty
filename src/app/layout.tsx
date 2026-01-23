@@ -645,6 +645,7 @@ export default function RootLayout({
               "@type": "BeautySalon",
               name: "Galeo Beauty",
               image: "https://www.galeobeauty.com/images/logo.png",
+              logo: "https://www.galeobeauty.com/images/logo.png",
               "@id": "https://www.galeobeauty.com",
               url: "https://www.galeobeauty.com",
               telephone: "+27121111730",

@@ -119,11 +119,44 @@ export function Map({
         };
     }, [latitude, longitude, zoom, markerTitle, markerDescription]);
 
+    // Google Maps directions URL
+    const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+
     return (
-        <div
-            ref={mapContainer}
-            className={`w-full h-full ${className}`}
-            style={{ minHeight: "400px" }}
-        />
+        <div className="relative w-full h-full">
+            <div
+                ref={mapContainer}
+                className={`w-full h-full ${className}`}
+                style={{ minHeight: "400px" }}
+            />
+            {/* Get Directions Badge */}
+            <a
+                href={directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-gold text-white px-5 py-3 rounded-lg shadow-xl hover:bg-gold/90 hover:scale-105 transition-all duration-300"
+            >
+                <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                </svg>
+                <span className="font-semibold text-sm">Get Directions</span>
+            </a>
+        </div>
     );
 }

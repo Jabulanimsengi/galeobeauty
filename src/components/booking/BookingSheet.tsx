@@ -200,7 +200,8 @@ Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 *Payment Reference:* ${bookingReference}
 ${bankingDetails}
 
-Sent via Galeo Beauty Website`;
+---
+📱 *Source:* Customer found this service on galeobeauty.com`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${businessInfo.socials.whatsapp}?text=${encodedMessage}`;

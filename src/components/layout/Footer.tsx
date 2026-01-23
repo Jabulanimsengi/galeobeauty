@@ -22,9 +22,9 @@ export function Footer() {
                             <Image
                                 src="/images/logo.png"
                                 alt="Galeo Beauty"
-                                width={240}
-                                height={100}
-                                className="h-24 sm:h-28 md:h-32 w-auto brightness-0 invert"
+                                width={180}
+                                height={60}
+                                className="h-16 sm:h-20 md:h-24 w-auto object-contain brightness-0 invert"
                             />
                         </NavLink>
                         <p className="text-background/70 text-sm leading-relaxed max-w-xs">
