@@ -7,7 +7,8 @@
       "Bash(ls:*)",
       "Bash(powershell -Command \"[Convert]::ToBase64String\\([IO.File]::ReadAllBytes\\(''public/images/favicon.png''\\)\\)\")",
       "Bash(dir /b \"C:\\\\Users\\\\ramos\\\\all_coding\\\\galeobeauty\\\\src\\\\app\\\\sitemap.xml\")",
-      "Bash(npx next build:*)"
+      "Bash(npx next build:*)",
+      "Bash(curl:*)"
     ]
   }
 }

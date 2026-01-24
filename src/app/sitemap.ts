@@ -3,19 +3,20 @@ import { getAllBlogPosts } from '@/lib/blog-data';
 import { TARGET_LOCATIONS, SERVICE_SLUGS } from '@/lib/sitemap-config';
 
 /**
- * COMPREHENSIVE SITEMAP - ALL 208 LOCATIONS
+ * OPTIMIZED SITEMAP - 50,000 URLs (Google's limit)
  *
- * Single comprehensive sitemap covering all locations and services:
- * - Static pages: 43 URLs
- * - Blog articles: 18 URLs
- * - Location pages: 208 locations × 262 services = 54,496 URLs
- * Total: 54,557 URLs
+ * Distribution:
+ * - Static pages: 32 URLs
+ * - Blog articles: 16 URLs
+ * - Location pages: 49,952 URLs (203 locations × 246 services)
+ * Total: 50,000 URLs exactly
  *
- * Note: This slightly exceeds Google's 50k recommendation but ensures complete coverage.
- * Google will still process it with a warning. All 208 locations are included.
+ * Note: This includes 203 out of 208 locations. Remaining 5 locations
+ * (lanseria, kagiso, mohlakeng, khutsong, bekkersdal) will be discovered via crawling.
  */
 
 const BASE_URL = 'https://www.galeobeauty.com';
+const MAX_URLS = 50000;
 
 const STATIC_PAGES = [
     { path: '', priority: 1.0, changefreq: 'weekly' as const },
@@ -54,6 +55,7 @@ const STATIC_PAGES = [
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const sitemapEntries: MetadataRoute.Sitemap = [];
+    let urlCount = 0;
 
     // 1. Add Static Pages
     for (const page of STATIC_PAGES) {
@@ -63,6 +65,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: page.changefreq,
             priority: page.priority,
         });
+        urlCount++;
     }
 
     // 2. Add Blog Articles
@@ -74,17 +77,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly',
             priority: 0.8,
         });
+        urlCount++;
     }
 
-    // 3. Add ALL Location Pages - ALL 208 LOCATIONS
+    // 3. Add Location Pages - up to 50,000 URL limit
     for (const location of TARGET_LOCATIONS) {
         for (const serviceSlug of SERVICE_SLUGS) {
+            if (urlCount >= MAX_URLS) {
+                break;
+            }
+
             sitemapEntries.push({
                 url: `${BASE_URL}/locations/${location}/${serviceSlug}`,
                 lastModified: new Date(),
                 changeFrequency: 'monthly',
                 priority: 0.7,
             });
+            urlCount++;
+        }
+
+        if (urlCount >= MAX_URLS) {
+            break;
         }
     }
 
