@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { getAllBlogPosts } from '@/lib/blog-data';
-import { TARGET_LOCATIONS, SERVICE_SLUGS } from '@/lib/sitemap-config';
+import { TARGET_LOCATIONS } from '@/lib/sitemap-config';
+import { getAllSEOServices } from '@/lib/seo-data';
 
 /**
  * OPTIMIZED SITEMAP - 50,000 URLs (Google's limit)
@@ -81,14 +82,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
 
     // 3. Add Location Pages - up to 50,000 URL limit
+    // Get actual services from services-data.ts to ensure valid URLs
+    const services = getAllSEOServices();
+
     for (const location of TARGET_LOCATIONS) {
-        for (const serviceSlug of SERVICE_SLUGS) {
+        for (const service of services) {
             if (urlCount >= MAX_URLS) {
                 break;
             }
 
             sitemapEntries.push({
-                url: `${BASE_URL}/locations/${location}/${serviceSlug}`,
+                url: `${BASE_URL}/locations/${location}/${service.slug}`,
                 lastModified: new Date(),
                 changeFrequency: 'monthly',
                 priority: 0.7,
