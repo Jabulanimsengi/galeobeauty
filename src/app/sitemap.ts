@@ -81,7 +81,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         urlCount++;
     }
 
-    // 3. Add Location Pages - up to 50,000 URL limit
+    // 3. Add Location Index & Hub Pages
+    // Location Index
+    sitemapEntries.push({
+        url: `${BASE_URL}/locations`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+    });
+    urlCount++;
+
+    // Location Hubs (e.g. /locations/pretoria)
+    for (const location of TARGET_LOCATIONS) {
+        if (urlCount >= MAX_URLS) break;
+
+        sitemapEntries.push({
+            url: `${BASE_URL}/locations/${location}`,
+            lastModified: new Date(),
+            changeFrequency: 'weekly',
+            priority: 0.8,
+        });
+        urlCount++;
+    }
+
+    // 4. Add Location Pages - up to 50,000 URL limit
     // Get actual services from services-data.ts to ensure valid URLs
     const services = getAllSEOServices();
 

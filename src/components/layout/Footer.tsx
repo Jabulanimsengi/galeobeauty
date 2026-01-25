@@ -74,6 +74,63 @@ export function Footer() {
                         </div>
                     </div>
 
+                    {/* Top Areas */}
+                    <div>
+                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                            Top Areas
+                        </h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <NavLink
+                                    href="/locations/hartbeespoort"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Hartbeespoort
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    href="/locations/pretoria"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Pretoria
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    href="/locations/johannesburg"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Johannesburg
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    href="/locations/centurion"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Centurion
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    href="/locations/sandton"
+                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
+                                >
+                                    Sandton
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    href="/locations"
+                                    className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium"
+                                >
+                                    View All Areas →
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </div>
+
                     {/* Quick Links */}
                     <div>
                         <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
@@ -96,14 +153,6 @@ export function Footer() {
                                     className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
                                 >
                                     Careers
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    href="/blog"
-                                    className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
-                                >
-                                    Blog
                                 </NavLink>
                             </li>
                         </ul>
