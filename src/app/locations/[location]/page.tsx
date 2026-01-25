@@ -39,6 +39,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: `Beauty Salon Services targeting ${location.name} | Galeo Beauty`,
         description: `Premium beauty salon services for clients in ${location.name}. Facials, nails, lashes, and aesthetic treatments just a drive away. Book your appointment today.`,
+        alternates: {
+            canonical: `https://www.galeobeauty.com/locations/${locationSlug}`,
+        },
     };
 }
 

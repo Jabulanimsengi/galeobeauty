@@ -7,13 +7,14 @@ import { getAllSEOServices } from '@/lib/seo-data';
  * OPTIMIZED SITEMAP - 50,000 URLs (Google's limit)
  *
  * Distribution:
- * - Static pages: 32 URLs
+ * - Static pages: 32 URLs (home, prices, services, etc.)
  * - Blog articles: 16 URLs
- * - Location pages: 49,952 URLs (203 locations × 246 services)
- * Total: 50,000 URLs exactly
+ * - Location index & hubs: ~209 URLs
+ * - Location service pages: ~49,743 URLs
+ * Total: ~50,000 URLs
  *
- * Note: This includes 203 out of 208 locations. Remaining 5 locations
- * (lanseria, kagiso, mohlakeng, khutsong, bekkersdal) will be discovered via crawling.
+ * Note: All service slugs are pulled from services-data.ts to ensure
+ * location/service URLs match actual routes.
  */
 
 const BASE_URL = 'https://www.galeobeauty.com';

@@ -7,6 +7,9 @@ import { MapPin, ArrowRight } from "lucide-react";
 export const metadata: Metadata = {
     title: "Areas We Serve | Galeo Beauty Salon Locations",
     description: "Find a Galeo Beauty salon service near you. We serve clients from Hartbeespoort, Pretoria, Johannesburg, Centurion, and surrounding areas.",
+    alternates: {
+        canonical: "https://www.galeobeauty.com/locations",
+    },
 };
 
 export default function LocationsIndexPage() {

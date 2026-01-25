@@ -18,6 +18,9 @@ export const metadata: Metadata = {
         "wedding makeup tips",
         "beauty trends South Africa",
     ],
+    alternates: {
+        canonical: "https://www.galeobeauty.com/blog",
+    },
 };
 
 // Fully static - no ISR

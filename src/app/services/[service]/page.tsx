@@ -349,6 +349,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: service.metaTitle,
         description: service.metaDescription,
         keywords: service.keywords,
+        alternates: {
+            canonical: `https://www.galeobeauty.com/services/${serviceSlug}`,
+        },
         openGraph: {
             title: service.metaTitle,
             description: service.metaDescription,

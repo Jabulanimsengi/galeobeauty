@@ -7,6 +7,9 @@ export const metadata = {
     title: "Gallery | Galeo Beauty Salon & Spa",
     description:
         "Browse our gallery of beauty treatments, nail art, skincare results, and salon ambiance at Galeo Beauty Salon in Hartbeespoort.",
+    alternates: {
+        canonical: "https://www.galeobeauty.com/gallery",
+    },
 };
 
 export default function GalleryPage() {

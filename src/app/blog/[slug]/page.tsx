@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: post.excerpt,
         keywords: post.keywords,
         authors: [{ name: post.author }],
+        alternates: {
+            canonical: `https://www.galeobeauty.com/blog/${slug}`,
+        },
         openGraph: {
             title: post.title,
             description: post.excerpt,
