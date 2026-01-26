@@ -590,13 +590,13 @@ export const metadata: Metadata = {
   creator: "Galeo Beauty",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.svg?v=2", type: "image/svg+xml" },
+      { url: "/favicon.png?v=2", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-icon.png", type: "image/png" },
+      { url: "/apple-icon.png?v=2", type: "image/png" },
     ],
-    shortcut: "/favicon.svg",
+    shortcut: "/favicon.svg?v=2",
   },
   openGraph: {
     type: "website",
