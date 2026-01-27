@@ -168,20 +168,20 @@ export function HeroSection() {
                         {/* Trust Label */}
                         <motion.div
                             variants={fadeUpVariants}
-                            className="inline-flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-6 lg:mb-8 bg-white/10 border border-white/20 rounded-full px-2.5 sm:px-4 py-1 sm:py-1.5 shadow-lg backdrop-blur-md"
+                            className="inline-flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-6 lg:mb-8 bg-white/10 border border-white/20 rounded-full px-3 sm:px-4 py-1.5 sm:py-1.5 shadow-lg backdrop-blur-md"
                         >
                             <motion.span
-                                className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-gold"
+                                className="flex h-2 w-2 rounded-full bg-gold"
                                 animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
                                 transition={{ duration: 2, repeat: Infinity }}
                             />
-                            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/90">
+                            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/90">
                                 Premium Beauty & Wellness
                             </span>
                         </motion.div>
 
                         {/* Headline with Staggered Animation */}
-                        <h1 className="font-serif text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.15] text-white mb-3 sm:mb-6 lg:mb-8">
+                        <h1 className="font-serif text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
                             <motion.span variants={wordVariants} className="inline-block drop-shadow-lg">Science </motion.span>
                             <motion.span
                                 variants={wordVariants}
@@ -196,12 +196,12 @@ export function HeroSection() {
                             >
                                 Beauty.
                                 <motion.span
-                                    className="absolute -top-0.5 -right-4 sm:-top-1 sm:-right-6"
+                                    className="absolute -top-1 -right-5 sm:-top-1 sm:-right-6"
                                     initial={{ opacity: 0, scale: 0 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 1.2, duration: 0.5 }}
                                 >
-                                    <Sparkles className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gold" />
+                                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-gold" />
                                 </motion.span>
                             </motion.span>
                         </h1>
@@ -209,7 +209,7 @@ export function HeroSection() {
                         {/* Description - shorter on mobile, full on larger screens */}
                         <motion.p
                             variants={fadeUpVariants}
-                            className="text-xs sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-4 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
+                            className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-5 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
                             <span className="sm:hidden">Advanced medical technology meets luxury aesthetics.</span>
                             <span className="hidden sm:inline">Experience the convergence of advanced medical technology and luxury aesthetics. Results-driven treatments tailored to your unique biology.</span>
@@ -248,29 +248,29 @@ export function HeroSection() {
                         {/* Enhanced Trust Badges with Animated Counters */}
                         <motion.div
                             variants={fadeUpVariants}
-                            className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/20"
+                            className="flex flex-wrap items-center gap-5 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/20"
                         >
-                            <div className="flex items-center gap-2 sm:gap-3 group">
-                                <div className="p-2 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
-                                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                            <div className="flex items-center gap-2.5 sm:gap-3 group">
+                                <div className="p-2.5 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
+                                    <Award className="w-4 h-4 sm:w-4 sm:h-4 text-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">
+                                    <span className="text-xl sm:text-xl font-bold text-white drop-shadow-md">
                                         <AnimatedCounter target={500} suffix="+" />
                                     </span>
-                                    <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
+                                    <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Happy Clients
                                     </span>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2 sm:gap-3 group">
-                                <div className="p-2 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
-                                    <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white" />
+                            <div className="flex items-center gap-2.5 sm:gap-3 group">
+                                <div className="p-2.5 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
+                                    <Star className="w-4 h-4 sm:w-4 sm:h-4 text-white fill-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">5.0</span>
-                                    <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
+                                    <span className="text-xl sm:text-xl font-bold text-white drop-shadow-md">5.0</span>
+                                    <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Star Rating
                                     </span>
                                 </div>
