@@ -221,11 +221,11 @@ export function Header() {
                                     {navItems.map((item, index) => (
                                         <motion.div
                                             key={item.href}
-                                            initial={{ opacity: 0, x: 60 }}
-                                            animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}
+                                            initial={{ opacity: 0, x: 40 }}
+                                            animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
                                             transition={{
-                                                duration: 0.6,
-                                                delay: isMobileMenuOpen ? 0.2 + index * 0.15 : 0,
+                                                duration: 0.35,
+                                                delay: isMobileMenuOpen ? 0.1 + index * 0.1 : 0,
                                                 ease: [0.25, 0.1, 0.25, 1]
                                             }}
                                         >
@@ -248,11 +248,11 @@ export function Header() {
                                 {/* CTA Button - Slides in after nav items */}
                                 <motion.div
                                     className="px-6 mt-6"
-                                    initial={{ opacity: 0, x: 60 }}
-                                    animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}
+                                    initial={{ opacity: 0, x: 40 }}
+                                    animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
                                     transition={{
-                                        duration: 0.6,
-                                        delay: isMobileMenuOpen ? 0.2 + navItems.length * 0.15 : 0,
+                                        duration: 0.35,
+                                        delay: isMobileMenuOpen ? 0.1 + navItems.length * 0.1 : 0,
                                         ease: [0.25, 0.1, 0.25, 1]
                                     }}
                                 >
