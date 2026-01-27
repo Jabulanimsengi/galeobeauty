@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Shield, Star, Sparkles, Award } from "lucide-react";
@@ -19,7 +18,7 @@ function AnimatedCounter({ target, suffix = "", duration = 2 }: { target: number
                 if (entry.isIntersecting && !hasAnimated) {
                     setHasAnimated(true);
                     let start = 0;
-                    const increment = target / (duration * 60);
+                    const increment = target / (duration * 60); // 60fps animation
                     const timer = setInterval(() => {
                         start += increment;
                         if (start >= target) {
@@ -31,7 +30,7 @@ function AnimatedCounter({ target, suffix = "", duration = 2 }: { target: number
                     }, 1000 / 60);
                 }
             },
-            { threshold: 0.5 }
+            { threshold: 0.3 }
         );
 
         if (ref.current) observer.observe(ref.current);
@@ -41,7 +40,7 @@ function AnimatedCounter({ target, suffix = "", duration = 2 }: { target: number
     return <span ref={ref}>{count}{suffix}</span>;
 }
 
-// Floating decorative element
+// Floating decorative element - Hidden on mobile for performance
 function FloatingShape({ className, delay = 0 }: { className?: string; delay?: number }) {
     return (
         <motion.div
@@ -69,7 +68,7 @@ const containerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.1,
+            staggerChildren: 0.08,
             delayChildren: 0.1
         }
     }
@@ -78,7 +77,7 @@ const containerVariants = {
 const wordVariants = {
     hidden: {
         opacity: 0,
-        y: 20
+        y: 15
     },
     visible: {
         opacity: 1,
@@ -100,28 +99,67 @@ const fadeUpVariants = {
 };
 
 export function HeroSection() {
-    const [imageHovered, setImageHovered] = useState(false);
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    // Array of hero images
+    const heroImages = [
+        "/images/main_hero_section2.jpeg",
+        "/images/main_hero_section03.png",
+        "/images/main_hero_section04.png",
+        "/images/main_hero_section05.png",
+        "/images/main_hero_section06.png",
+        "/images/main_hero_section07.png",
+    ];
+
+    // Auto-slide effect - changes image every 5 seconds
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+        }, 5000);
+
+        return () => clearInterval(timer);
+    }, [heroImages.length]);
 
     return (
-        <section className="relative min-h-[90vh] lg:h-screen flex flex-col lg:flex-row overflow-hidden">
+        <section className="relative h-[80vh] sm:h-[90vh] lg:h-screen overflow-hidden">
 
-            {/* Floating Decorative Elements - Hidden on mobile for performance */}
+            {/* Image carousel - Full Width Background */}
+            <div className="absolute inset-0 w-full h-full">
+                {heroImages.map((image, index) => (
+                    <motion.img
+                        key={image}
+                        src={image}
+                        alt={`Galeo Beauty Spa ${index + 1}`}
+                        className="absolute inset-0 w-full h-full object-cover object-center"
+                        initial={{ opacity: 0 }}
+                        animate={{
+                            opacity: currentSlide === index ? 1 : 0,
+                            scale: currentSlide === index ? 1 : 0.98,
+                        }}
+                        transition={{
+                            opacity: { duration: 1, ease: "easeInOut" },
+                            scale: { duration: 1.2, ease: "easeOut" },
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Dark overlay for text contrast - All devices */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 sm:bg-gradient-to-r sm:from-black/70 sm:via-black/50 sm:to-black/30 z-10" />
+
+            {/* Floating Decorative Elements - Desktop only */}
             <FloatingShape
-                className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 blur-2xl z-0 hidden xl:block"
+                className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 blur-2xl z-20 hidden xl:block"
                 delay={0}
             />
             <FloatingShape
-                className="absolute bottom-40 left-[30%] w-24 h-24 rounded-full bg-gradient-to-br from-gold/15 to-transparent blur-xl z-0 hidden xl:block"
+                className="absolute bottom-40 left-[15%] w-24 h-24 rounded-full bg-gradient-to-br from-gold/15 to-transparent blur-xl z-20 hidden xl:block"
                 delay={1.5}
             />
-            <FloatingShape
-                className="absolute top-[40%] right-[45%] w-16 h-16 rounded-full bg-gradient-to-br from-gold/25 to-gold/10 blur-lg z-0 hidden xl:block"
-                delay={3}
-            />
 
-            {/* Left Column: Content */}
-            <div className="w-full lg:w-[45%] xl:w-[40%] bg-[#FAFAFA] text-foreground flex flex-col justify-center px-6 sm:px-12 lg:px-16 xl:px-24 py-12 lg:py-0 relative z-10 order-2 lg:order-1">
-                <div className="max-w-xl">
+            {/* Content Overlay - All Devices */}
+            <div className="relative z-30 w-full h-full flex flex-col justify-center px-5 sm:px-12 lg:px-16 xl:px-24 py-16 sm:py-12 lg:py-12">
+                <div className="max-w-3xl">
                     <motion.div
                         variants={containerVariants}
                         initial="hidden"
@@ -130,78 +168,77 @@ export function HeroSection() {
                         {/* Trust Label */}
                         <motion.div
                             variants={fadeUpVariants}
-                            className="inline-flex items-center gap-2 mb-8 bg-white border border-black/5 rounded-full px-4 py-1.5 shadow-sm backdrop-blur-sm"
+                            className="inline-flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-6 lg:mb-8 bg-white/10 border border-white/20 rounded-full px-2.5 sm:px-4 py-1 sm:py-1.5 shadow-lg backdrop-blur-md"
                         >
                             <motion.span
-                                className="flex h-2 w-2 rounded-full bg-gold"
+                                className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-gold"
                                 animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
                                 transition={{ duration: 2, repeat: Infinity }}
                             />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/60">
+                            <span className="text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/90">
                                 Premium Beauty & Wellness
                             </span>
                         </motion.div>
 
                         {/* Headline with Staggered Animation */}
-                        <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.1] text-foreground mb-8">
-                            <motion.span variants={wordVariants} className="inline-block">Science </motion.span>
+                        <h1 className="font-serif text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.15] text-white mb-3 sm:mb-6 lg:mb-8">
+                            <motion.span variants={wordVariants} className="inline-block drop-shadow-lg">Science </motion.span>
                             <motion.span
                                 variants={wordVariants}
-                                className="inline-block font-light italic text-foreground/60"
+                                className="inline-block font-light italic text-white/80 drop-shadow-lg"
                             >
                                 Meets
                             </motion.span>
                             <br />
                             <motion.span
                                 variants={wordVariants}
-                                className="inline-block text-gold relative"
+                                className="inline-block text-gold relative drop-shadow-lg"
                             >
                                 Beauty.
                                 <motion.span
-                                    className="absolute -top-1 -right-6"
+                                    className="absolute -top-0.5 -right-4 sm:-top-1 sm:-right-6"
                                     initial={{ opacity: 0, scale: 0 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     transition={{ delay: 1.2, duration: 0.5 }}
                                 >
-                                    <Sparkles className="w-5 h-5 text-gold/60" />
+                                    <Sparkles className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-gold" />
                                 </motion.span>
                             </motion.span>
                         </h1>
 
-                        {/* Description */}
+                        {/* Description - shorter on mobile, full on larger screens */}
                         <motion.p
                             variants={fadeUpVariants}
-                            className="text-lg text-foreground/70 leading-relaxed mb-10 font-light max-w-sm"
+                            className="text-xs sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-4 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
-                            Experience the convergence of advanced medical technology and luxury aesthetics.
-                            Results-driven treatments tailored to your unique biology.
+                            <span className="sm:hidden">Advanced medical technology meets luxury aesthetics.</span>
+                            <span className="hidden sm:inline">Experience the convergence of advanced medical technology and luxury aesthetics. Results-driven treatments tailored to your unique biology.</span>
                         </motion.p>
 
-                        {/* CTA Group - Dual Buttons */}
+                        {/* CTA Group - Hidden on mobile */}
                         <motion.div
                             variants={fadeUpVariants}
-                            className="flex flex-col sm:flex-row gap-4 mb-12"
+                            className="hidden sm:flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
                         >
                             <Button
                                 asChild
                                 size="lg"
-                                className="group bg-[#1A1A1A] hover:bg-black text-white transition-all duration-300 rounded-full px-10 h-14 font-medium text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden"
+                                className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-6 sm:px-10 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20"
                             >
                                 <NavLink href="/prices">
-                                    <span className="relative z-10 group-hover:text-gold transition-colors duration-300">
+                                    <span className="relative z-10 font-semibold">
                                         View Treatments
                                     </span>
-                                    <span className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/10 to-gold/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                                    <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                                 </NavLink>
                             </Button>
                             <Button
                                 asChild
                                 size="lg"
-                                variant="outline"
-                                className="group border-2 border-foreground/20 hover:border-gold bg-transparent hover:bg-gold/5 text-foreground transition-all duration-300 rounded-full px-8 h-14 font-medium text-base hover:-translate-y-1"
+                                className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-6 sm:px-8 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10"
                             >
                                 <NavLink href="/specials">
-                                    <span className="group-hover:text-gold transition-colors duration-300">
+                                    <span className="group-hover:text-gold transition-colors duration-300 font-semibold">
                                         View Specials
                                     </span>
                                 </NavLink>
@@ -211,44 +248,30 @@ export function HeroSection() {
                         {/* Enhanced Trust Badges with Animated Counters */}
                         <motion.div
                             variants={fadeUpVariants}
-                            className="flex flex-wrap items-center gap-6 lg:gap-8 pt-8 border-t border-black/5"
+                            className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/20"
                         >
-                            <div className="flex items-center gap-3 group">
-                                <div className="p-2.5 bg-white rounded-full shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    <Award className="w-4 h-4 text-gold" />
+                            <div className="flex items-center gap-2 sm:gap-3 group">
+                                <div className="p-2 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
+                                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-xl font-bold text-foreground">
+                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">
                                         <AnimatedCounter target={500} suffix="+" />
                                     </span>
-                                    <span className="text-[10px] font-medium uppercase tracking-wider text-foreground/50">
+                                    <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Happy Clients
                                     </span>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 group">
-                                <div className="p-2.5 bg-white rounded-full shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    <Star className="w-4 h-4 text-gold fill-gold" />
+                            <div className="flex items-center gap-2 sm:gap-3 group">
+                                <div className="p-2 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
+                                    <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-xl font-bold text-foreground">5.0</span>
-                                    <span className="text-[10px] font-medium uppercase tracking-wider text-foreground/50">
+                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">5.0</span>
+                                    <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Star Rating
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-3 group">
-                                <div className="p-2.5 bg-white rounded-full shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    <Shield className="w-4 h-4 text-gold" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xl font-bold text-foreground">
-                                        <AnimatedCounter target={10} suffix="+" />
-                                    </span>
-                                    <span className="text-[10px] font-medium uppercase tracking-wider text-foreground/50">
-                                        Years Expertise
                                     </span>
                                 </div>
                             </div>
@@ -257,66 +280,36 @@ export function HeroSection() {
                 </div>
             </div>
 
-            {/* Right Column: Image with Hover Effect */}
+            {/* Carousel Navigation Dots - Centered */}
+            <div className="absolute bottom-32 sm:bottom-36 lg:bottom-40 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2">
+                {heroImages.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentSlide(index)}
+                        className={`transition-all duration-300 rounded-full shadow-lg ${currentSlide === index
+                            ? "w-6 sm:w-8 h-2 bg-gold"
+                            : "w-2 h-2 bg-white/50 hover:bg-white/80"
+                            }`}
+                        aria-label={`Go to slide ${index + 1}`}
+                    />
+                ))}
+            </div>
+            {/* Scroll Indicator - Desktop & Tablet Only */}
             <motion.div
-                className="w-full lg:w-[55%] xl:w-[60%] relative min-h-[40vh] lg:min-h-screen order-1 lg:order-2 cursor-pointer overflow-hidden"
-                onHoverStart={() => setImageHovered(true)}
-                onHoverEnd={() => setImageHovered(false)}
-            >
-                {/* Warm golden overlay */}
-                <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-black/20 z-10"
-                    animate={{ opacity: imageHovered ? 0.8 : 1 }}
-                    transition={{ duration: 0.4 }}
-                />
-
-                <motion.img
-                    src="/images/main_hero_section2.jpeg"
-                    alt="Galeo Beauty Spa"
-                    className="w-full h-full object-cover object-center lg:object-[center_20%]"
-                    animate={{
-                        scale: imageHovered ? 1.05 : 1,
-                        filter: imageHovered ? "brightness(1.05)" : "brightness(1)"
-                    }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                />
-
-                {/* Floating CTA on hover */}
-                <motion.div
-                    className="absolute inset-0 flex items-center justify-center z-20"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: imageHovered ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                >
-                    <Button
-                        asChild
-                        size="lg"
-                        className="bg-white/95 hover:bg-white text-foreground hover:text-gold shadow-2xl rounded-full px-8 h-14 font-medium backdrop-blur-sm"
-                    >
-                        <Link href="/prices">Book Now</Link>
-                    </Button>
-                </motion.div>
-
-                {/* Gradient fade on mobile */}
-                <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#FAFAFA] to-transparent lg:hidden z-20" />
-            </motion.div>
-
-            {/* Scroll Indicator */}
-            <motion.div
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 hidden lg:flex flex-col items-center gap-2 cursor-pointer"
+                className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex-col items-center gap-2 cursor-pointer"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.5, duration: 0.6 }}
                 onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
             >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground/40">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60 drop-shadow-md">
                     Discover More
                 </span>
                 <motion.div
                     animate={{ y: [0, 8, 0] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                 >
-                    <ChevronDown className="w-5 h-5 text-gold" />
+                    <ChevronDown className="w-5 h-5 text-gold drop-shadow-lg" />
                 </motion.div>
             </motion.div>
 

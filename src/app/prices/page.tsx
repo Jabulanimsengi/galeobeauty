@@ -37,10 +37,10 @@ function PricesContent() {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
 
-    // Track which categories are expanded (use param if available, otherwise default to first)
-    const [expandedCategories, setExpandedCategories] = useState<string[]>([
-        categoryParam || serviceCategories[0]?.id || ""
-    ]);
+    // Track which categories are expanded (only expand if URL param is present)
+    const [expandedCategories, setExpandedCategories] = useState<string[]>(
+        categoryParam ? [categoryParam] : []
+    );
 
     // Update expansion if param changes client-side
     useEffect(() => {
@@ -155,7 +155,7 @@ function PricesContent() {
                                                         animate={{ rotate: isExpanded ? 180 : 0 }}
                                                         transition={{ duration: 0.2 }}
                                                     >
-                                                        <ChevronDown className="w-4 h-4" />
+                                                        <ChevronDown className="w-6 h-6" strokeWidth={3} />
                                                     </motion.div>
                                                 </button>
 
