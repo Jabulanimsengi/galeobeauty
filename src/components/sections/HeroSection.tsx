@@ -124,21 +124,17 @@ export function HeroSection() {
         <section className="relative h-[80vh] sm:h-[90vh] lg:h-screen overflow-hidden">
 
             {/* Image carousel - Full Width Background */}
-            <div className="absolute inset-0 w-full h-full">
+            <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>
                 {heroImages.map((image, index) => (
-                    <motion.img
+                    <img
                         key={image}
                         src={image}
                         alt={`Galeo Beauty Spa ${index + 1}`}
-                        className="absolute inset-0 w-full h-full object-cover object-center"
-                        initial={{ opacity: 0 }}
-                        animate={{
+                        className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out"
+                        style={{
                             opacity: currentSlide === index ? 1 : 0,
-                            scale: currentSlide === index ? 1 : 0.98,
-                        }}
-                        transition={{
-                            opacity: { duration: 1, ease: "easeInOut" },
-                            scale: { duration: 1.2, ease: "easeOut" },
+                            willChange: 'opacity',
+                            transform: 'translateZ(0)',
                         }}
                     />
                 ))}

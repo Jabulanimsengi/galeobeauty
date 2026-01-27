@@ -126,11 +126,12 @@ export function Header() {
             {/* Main Header */}
             <header
                 className={cn(
-                    "sticky top-0 z-50 transition-all duration-300",
+                    "sticky top-0 z-50 transition-all duration-300 isolate",
                     isScrolled
                         ? "bg-background/95 backdrop-blur-md shadow-lg py-2"
                         : "bg-transparent py-4"
                 )}
+                style={{ transform: 'translateZ(0)' }}
             >
                 <div className="container mx-auto flex justify-between items-center px-4">
                     {/* Logo - Responsive sizing */}
@@ -214,28 +215,47 @@ export function Header() {
                             </SheetHeader>
 
                             {/* Scrollable content area */}
-                            <div className="flex-1 overflow-y-auto">
-                                {/* Nav Links - Simplified animations */}
-                                <nav className="flex flex-col mt-8 px-6">
-                                    {navItems.map((item) => (
-                                        <NavLink
+                            <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                                {/* Nav Links - Staggered Slide-in Animation (Right to Left) */}
+                                <nav className="flex flex-col mt-8 px-6 overflow-hidden">
+                                    {navItems.map((item, index) => (
+                                        <motion.div
                                             key={item.href}
-                                            href={item.href}
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                            className="group relative overflow-hidden py-4 border-b border-background/10"
+                                            initial={{ opacity: 0, x: 60 }}
+                                            animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}
+                                            transition={{
+                                                duration: 0.6,
+                                                delay: isMobileMenuOpen ? 0.2 + index * 0.15 : 0,
+                                                ease: [0.25, 0.1, 0.25, 1]
+                                            }}
                                         >
-                                            <span className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-200 group-hover:text-white">
-                                                {item.label}
-                                            </span>
+                                            <NavLink
+                                                href={item.href}
+                                                onClick={() => setIsMobileMenuOpen(false)}
+                                                className="group relative overflow-hidden py-4 border-b border-background/10 block"
+                                            >
+                                                <span className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-200 group-hover:text-white">
+                                                    {item.label}
+                                                </span>
 
-                                            {/* Hover slide effect */}
-                                            <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
-                                        </NavLink>
+                                                {/* Hover slide effect */}
+                                                <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
+                                            </NavLink>
+                                        </motion.div>
                                     ))}
                                 </nav>
 
-                                {/* CTA Button */}
-                                <div className="px-6 mt-6">
+                                {/* CTA Button - Slides in after nav items */}
+                                <motion.div
+                                    className="px-6 mt-6"
+                                    initial={{ opacity: 0, x: 60 }}
+                                    animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}
+                                    transition={{
+                                        duration: 0.6,
+                                        delay: isMobileMenuOpen ? 0.2 + navItems.length * 0.15 : 0,
+                                        ease: [0.25, 0.1, 0.25, 1]
+                                    }}
+                                >
                                     <Button
                                         asChild
                                         size="lg"
@@ -248,7 +268,7 @@ export function Header() {
                                             Book Now
                                         </NavLink>
                                     </Button>
-                                </div>
+                                </motion.div>
                             </div>
 
                             {/* Contact Info - Fixed at bottom */}
