@@ -1,0 +1,162 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getAllBlogPosts } from '@/lib/blog-data';
+import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from '@/lib/sitemap-config';
+import { getAllSEOServices } from '@/lib/seo-data';
+
+const BASE_URL = 'https://www.galeobeauty.com';
+
+const STATIC_PAGES = [
+    { path: '', priority: 1.0, changefreq: 'weekly' },
+    { path: '/prices', priority: 0.9, changefreq: 'weekly' },
+    { path: '/specials', priority: 0.8, changefreq: 'weekly' },
+    { path: '/gallery', priority: 0.7, changefreq: 'monthly' },
+    { path: '/about', priority: 0.6, changefreq: 'monthly' },
+    { path: '/contact', priority: 0.8, changefreq: 'monthly' },
+    { path: '/blog', priority: 0.85, changefreq: 'weekly' },
+    { path: '/careers', priority: 0.5, changefreq: 'monthly' },
+    { path: '/prices/hart-aesthetics', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/fat-freezing', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/slimming', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/dermalogica', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/ipl', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/makeup', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/medical', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/permanent-makeup', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/pro-skin', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/qms-facial', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/sunbed', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/waxing', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/hair', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/nails', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/lashes', priority: 0.85, changefreq: 'weekly' },
+    { path: '/prices/hair-extensions', priority: 0.85, changefreq: 'weekly' },
+    { path: '/services/microblading', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/fat-freezing-treatment', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/lash-extensions', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/lip-fillers', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/brazilian-wax', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/dermalogica-facial', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/nail-art', priority: 0.85, changefreq: 'monthly' },
+    { path: '/services/massage-therapy', priority: 0.85, changefreq: 'monthly' },
+];
+
+function escapeXml(unsafe: string): string {
+    return unsafe
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+
+export async function GET(
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+
+    if (id !== '0' && id !== '1') {
+        return NextResponse.json({ error: 'Invalid sitemap ID' }, { status: 404 });
+    }
+
+    const services = getAllSEOServices();
+    const entries: string[] = [];
+
+    if (id === '0') {
+        // SITEMAP 0: Primary Local & Northwest Areas
+
+        // Add static pages
+        for (const page of STATIC_PAGES) {
+            entries.push(`
+  <url>
+    <loc>${escapeXml(BASE_URL + page.path)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`);
+        }
+
+        // Add blog posts
+        const blogPosts = getAllBlogPosts();
+        for (const post of blogPosts) {
+            entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/blog/${post.slug}`)}</loc>
+    <lastmod>${new Date(post.date).toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>`);
+        }
+
+        // Add location index
+        entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/locations`)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>`);
+
+        // Add location hubs for SITEMAP_0_LOCATIONS
+        for (const location of SITEMAP_0_LOCATIONS) {
+            entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`);
+        }
+
+        // Add location service pages for SITEMAP_0_LOCATIONS
+        for (const location of SITEMAP_0_LOCATIONS) {
+            for (const service of services) {
+                entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`);
+            }
+        }
+    } else if (id === '1') {
+        // SITEMAP 1: Extended Gauteng Coverage
+
+        // Add location hubs for SITEMAP_1_LOCATIONS
+        for (const location of SITEMAP_1_LOCATIONS) {
+            entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`);
+        }
+
+        // Add location service pages for SITEMAP_1_LOCATIONS
+        for (const location of SITEMAP_1_LOCATIONS) {
+            for (const service of services) {
+                entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`);
+            }
+        }
+    }
+
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.join('')}
+</urlset>`;
+
+    return new NextResponse(xml, {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/xml',
+            'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+        },
+    });
+}
