@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getAllBlogPosts } from '@/lib/blog-data';
-import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from '@/lib/sitemap-config';
+import { SITEMAP_0_LOCATIONS } from '@/lib/sitemap-config';
 import { getAllSEOServices } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
@@ -49,47 +49,35 @@ function escapeXml(unsafe: string): string {
         .replace(/'/g, '&apos;');
 }
 
-export async function GET(
-    request: NextRequest,
-    { params }: { params: Promise<{ id: string }> }
-) {
-    const { id } = await params;
-
-    if (id !== '0' && id !== '1') {
-        return NextResponse.json({ error: 'Invalid sitemap ID' }, { status: 404 });
-    }
-
+export async function GET() {
     const services = getAllSEOServices();
     const entries: string[] = [];
 
-    if (id === '0') {
-        // SITEMAP 0: Primary Local & Northwest Areas
-
-        // Add static pages
-        for (const page of STATIC_PAGES) {
-            entries.push(`
+    // Add static pages
+    for (const page of STATIC_PAGES) {
+        entries.push(`
   <url>
     <loc>${escapeXml(BASE_URL + page.path)}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`);
-        }
+    }
 
-        // Add blog posts
-        const blogPosts = getAllBlogPosts();
-        for (const post of blogPosts) {
-            entries.push(`
+    // Add blog posts
+    const blogPosts = getAllBlogPosts();
+    for (const post of blogPosts) {
+        entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/blog/${post.slug}`)}</loc>
     <lastmod>${new Date(post.date).toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`);
-        }
+    }
 
-        // Add location index
-        entries.push(`
+    // Add location index
+    entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations`)}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
@@ -97,54 +85,27 @@ export async function GET(
     <priority>0.9</priority>
   </url>`);
 
-        // Add location hubs for SITEMAP_0_LOCATIONS
-        for (const location of SITEMAP_0_LOCATIONS) {
-            entries.push(`
+    // Add location hubs for SITEMAP_0_LOCATIONS
+    for (const location of SITEMAP_0_LOCATIONS) {
+        entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`);
-        }
+    }
 
-        // Add location service pages for SITEMAP_0_LOCATIONS
-        for (const location of SITEMAP_0_LOCATIONS) {
-            for (const service of services) {
-                entries.push(`
-  <url>
-    <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>`);
-            }
-        }
-    } else if (id === '1') {
-        // SITEMAP 1: Extended Gauteng Coverage
-
-        // Add location hubs for SITEMAP_1_LOCATIONS
-        for (const location of SITEMAP_1_LOCATIONS) {
+    // Add location service pages for SITEMAP_0_LOCATIONS
+    for (const location of SITEMAP_0_LOCATIONS) {
+        for (const service of services) {
             entries.push(`
   <url>
-    <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>`);
-        }
-
-        // Add location service pages for SITEMAP_1_LOCATIONS
-        for (const location of SITEMAP_1_LOCATIONS) {
-            for (const service of services) {
-                entries.push(`
-  <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>`);
-            }
         }
     }
 

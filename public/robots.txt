@@ -1,6 +1,0 @@
-# Allow all crawlers
-User-agent: *
-Allow: /
-
-# Sitemap location (use www version)
-Sitemap: https://www.galeobeauty.com/sitemap.xml
