@@ -1,5 +1,8 @@
-
-export const TARGET_LOCATIONS = [
+// ============================================
+// SITEMAP 0: PRIMARY LOCAL & NORTHWEST AREAS
+// ============================================
+export const SITEMAP_0_LOCATIONS = [
+    // Hartbeespoort & Harties Core (50 locations)
     "hartbeespoort", "harties", "schoemansville", "melodie", "ifafi", "meerhof", "kosmos", "kosmos-village",
     "the-islands-estate", "estate-dafrique", "caribbean-beach-club", "key-west-estate", "eagles-landing", "montego-bay",
     "pecanwood", "pecanwood-estate", "magalies-park", "seasons-lifestyle-estate", "cove-ridge", "magalies-golf-estate", "lakeland-estate",
@@ -7,23 +10,74 @@ export const TARGET_LOCATIONS = [
     "gateway-manor", "landsmeer", "landsmeer-estate", "kosmos-ridge", "mount-kos", "ile-du-lac", "kshane",
     "broederstroom", "skeerpoort", "rietfontein-ah", "melodie-ah", "remhoogte", "welgegund",
     "village-mall-hartbeespoort", "islands-shopping-mall", "damdoryn", "damdoryn-junction", "mountain-lake-shopping-centre", "sediba-plaza", "jasmyn", "jasmyn-farm",
+
+    // Hartbeespoort Dam Area (9 locations)
     "hartbeespoort-dam", "dam-wall", "oberon", "zilkaatsnek", "buffelspoort", "kommando-nek", "safari-gardens", "elandsfontein", "hekpoort",
-    "magaliesburg", "brits",
-    "johannesburg", "sandton", "bryanston", "rivonia", "fourways", "morningside", "douglasdale", "sunninghill", "paulshof", "lonehill", "woodmead", "diepsloot", "alexandra",
-    "johannesburg-cbd", "braamfontein", "rosebank", "parkhurst", "houghton", "melville", "greenside", "auckland-park",
-    "randburg", "northcliff", "linden", "blairgowrie", "ferndale", "roodepoort", "florida", "constantia-kloof", "weltevredenpark", "zandspruit", "north-riding", "honeydew",
-    "glenvista", "mulbarton", "mondeor", "winchester-hills", "southgate", "kibler-park", "soweto", "orange-farm", "lenasia", "ennerdale", "eldorado-park",
-    "midrand", "kyalami", "waterfall", "waterfall-city", "blue-hills", "halfway-house", "carlswald", "vorna-valley", "ivory-park", "rabie-ridge",
+
+    // Magaliesburg Area (2 locations)
+    "magaliesburg", "magalies",
+
+    // Pretoria Core & East (11 locations)
     "pretoria", "pretoria-east", "garsfontein", "moreleta-park", "faerie-glen", "lynnwood", "silver-lakes", "menlyn", "constantia-park", "waterkloof", "mamelodi",
+
+    // Pretoria North (10 locations)
     "pretoria-north", "montana", "annlin", "wonderboom", "akasia", "florauna", "theresapark", "soshanguve", "mabopane", "ga-rankuwa",
+
+    // Centurion (11 locations)
     "centurion", "irene", "die-hoewes", "zwartkop", "lyttelton", "eldoraigne", "rooihuiskraal", "wierdapark", "pierre-van-ryneveld", "midstream", "olievenhoutbosch",
+
+    // Pretoria CBD & West (7 locations)
     "pretoria-cbd", "arcadia", "hatfield", "brooklyn", "pretoria-west", "lotus-gardens", "atteridgeville",
+
+    // Pretoria Surrounds (6 locations)
     "roodeplaat", "rayton", "cullinan", "hammanskraal", "temba", "winterveldt",
+
+    // Brits & Northwest Province (30 locations)
+    "brits", "brits-cbd", "rosslyn", "de-wildt", "oukasie", "madibeng",
+    "rustenburg", "rustenburg-cbd", "tlhabane", "phokeng", "boitekong", "karlienpark", "safari-gardens-rustenburg", "geelhoutpark", "waterval-east", "protea-park-rustenburg",
+    "sun-city", "pilanesberg", "boshoek", "ledig", "chaneng", "marikana",
+    "potchefstroom", "ikageng", "mohadin", "klerksdorp", "alabama", "jouberton", "stilfontein", "orkney"
+];
+
+// ============================================
+// SITEMAP 1: EXTENDED GAUTENG COVERAGE
+// ============================================
+export const SITEMAP_1_LOCATIONS = [
+    // Johannesburg North (13 locations)
+    "johannesburg", "sandton", "bryanston", "rivonia", "fourways", "morningside", "douglasdale", "sunninghill", "paulshof", "lonehill", "woodmead", "diepsloot", "alexandra",
+
+    // Johannesburg CBD & Surrounds (8 locations)
+    "johannesburg-cbd", "braamfontein", "rosebank", "parkhurst", "houghton", "melville", "greenside", "auckland-park",
+
+    // Randburg & West Rand (12 locations)
+    "randburg", "northcliff", "linden", "blairgowrie", "ferndale", "roodepoort", "florida", "constantia-kloof", "weltevredenpark", "zandspruit", "north-riding", "honeydew",
+
+    // Johannesburg South (11 locations)
+    "glenvista", "mulbarton", "mondeor", "winchester-hills", "southgate", "kibler-park", "soweto", "orange-farm", "lenasia", "ennerdale", "eldorado-park",
+
+    // Midrand (10 locations)
+    "midrand", "kyalami", "waterfall", "waterfall-city", "blue-hills", "halfway-house", "carlswald", "vorna-valley", "ivory-park", "rabie-ridge",
+
+    // Kempton Park & East Rand North (7 locations)
     "kempton-park", "glen-marais", "birchleigh", "rhodesfield", "isando", "jet-park", "tembisa",
+
+    // Boksburg & East Rand Central (14 locations)
     "boksburg", "sunward-park", "benoni", "northmead", "rynfield", "brakpan", "springs", "nigel", "daveyton", "kwathema", "tsakane", "duduza", "etwatwa",
+
+    // Germiston & Alberton (10 locations)
     "germiston", "bedfordview", "edenvale", "greenstone-hill", "modderfontein", "alberton", "brackenhurst", "katlehong", "vosloorus", "thokoza",
+
+    // Vaal Triangle (8 locations)
     "vereeniging", "vanderbijlpark", "meyerton", "heidelberg", "sebokeng", "sharpeville", "evaton", "ratanda",
+
+    // West Rand (10 locations)
     "krugersdorp", "randfontein", "westonaria", "carletonville", "muldersdrift", "lanseria", "kagiso", "mohlakeng", "khutsong", "bekkersdal"
+];
+
+// Combined list for backward compatibility
+export const TARGET_LOCATIONS = [
+    ...SITEMAP_0_LOCATIONS,
+    ...SITEMAP_1_LOCATIONS
 ];
 
 export const SERVICE_SLUGS = [

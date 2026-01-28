@@ -1,133 +1,37 @@
 import { MetadataRoute } from 'next';
-import { getAllBlogPosts } from '@/lib/blog-data';
-import { TARGET_LOCATIONS } from '@/lib/sitemap-config';
-import { getAllSEOServices } from '@/lib/seo-data';
 
 /**
- * OPTIMIZED SITEMAP - 50,000 URLs (Google's limit)
+ * MULTI-SITEMAP INDEX
  *
- * Distribution:
- * - Static pages: 32 URLs (home, prices, services, etc.)
- * - Blog articles: 16 URLs
- * - Location index & hubs: ~209 URLs
- * - Location service pages: ~49,743 URLs
- * Total: ~50,000 URLs
+ * This sitemap index references two separate sitemaps:
  *
- * Note: All service slugs are pulled from services-data.ts to ensure
- * location/service URLs match actual routes.
+ * SITEMAP 0: Primary Local & Northwest Areas (36,769 URLs)
+ * - Hartbeespoort/Harties and all estates
+ * - Pretoria, Centurion, and surrounding areas
+ * - Northwest Province (Brits, Rustenburg, Potchefstroom, etc.)
+ * - All static pages, blog posts, and location index
+ *
+ * SITEMAP 1: Extended Gauteng Coverage (27,540 URLs)
+ * - Johannesburg and all suburbs
+ * - East Rand, West Rand
+ * - Midrand, Kempton Park
+ * - Vaal Triangle
+ *
+ * Total: 64,309 URLs across 2 sitemaps
+ * Both sitemaps are well under Google's 50,000 URL limit per sitemap
  */
 
 const BASE_URL = 'https://www.galeobeauty.com';
-const MAX_URLS = 50000;
 
-const STATIC_PAGES = [
-    { path: '', priority: 1.0, changefreq: 'weekly' as const },
-    { path: '/prices', priority: 0.9, changefreq: 'weekly' as const },
-    { path: '/specials', priority: 0.8, changefreq: 'weekly' as const },
-    { path: '/gallery', priority: 0.7, changefreq: 'monthly' as const },
-    { path: '/about', priority: 0.6, changefreq: 'monthly' as const },
-    { path: '/contact', priority: 0.8, changefreq: 'monthly' as const },
-    { path: '/blog', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/careers', priority: 0.5, changefreq: 'monthly' as const },
-    { path: '/prices/hart-aesthetics', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/fat-freezing', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/slimming', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/dermalogica', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/ipl', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/makeup', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/medical', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/permanent-makeup', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/pro-skin', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/qms-facial', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/sunbed', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/waxing', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/hair', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/nails', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/lashes', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/prices/hair-extensions', priority: 0.85, changefreq: 'weekly' as const },
-    { path: '/services/microblading', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/fat-freezing-treatment', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/lash-extensions', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/lip-fillers', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/brazilian-wax', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/dermalogica-facial', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/nail-art', priority: 0.85, changefreq: 'monthly' as const },
-    { path: '/services/massage-therapy', priority: 0.85, changefreq: 'monthly' as const },
-];
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const sitemapEntries: MetadataRoute.Sitemap = [];
-    let urlCount = 0;
-
-    // 1. Add Static Pages
-    for (const page of STATIC_PAGES) {
-        sitemapEntries.push({
-            url: `${BASE_URL}${page.path}`,
+export default function sitemap(): MetadataRoute.Sitemap {
+    return [
+        {
+            url: `${BASE_URL}/sitemap/0.xml`,
             lastModified: new Date(),
-            changeFrequency: page.changefreq,
-            priority: page.priority,
-        });
-        urlCount++;
-    }
-
-    // 2. Add Blog Articles
-    const blogPosts = getAllBlogPosts();
-    for (const post of blogPosts) {
-        sitemapEntries.push({
-            url: `${BASE_URL}/blog/${post.slug}`,
-            lastModified: new Date(post.date),
-            changeFrequency: 'monthly',
-            priority: 0.8,
-        });
-        urlCount++;
-    }
-
-    // 3. Add Location Index & Hub Pages
-    // Location Index
-    sitemapEntries.push({
-        url: `${BASE_URL}/locations`,
-        lastModified: new Date(),
-        changeFrequency: 'weekly',
-        priority: 0.9,
-    });
-    urlCount++;
-
-    // Location Hubs (e.g. /locations/pretoria)
-    for (const location of TARGET_LOCATIONS) {
-        if (urlCount >= MAX_URLS) break;
-
-        sitemapEntries.push({
-            url: `${BASE_URL}/locations/${location}`,
+        },
+        {
+            url: `${BASE_URL}/sitemap/1.xml`,
             lastModified: new Date(),
-            changeFrequency: 'weekly',
-            priority: 0.8,
-        });
-        urlCount++;
-    }
-
-    // 4. Add Location Pages - up to 50,000 URL limit
-    // Get actual services from services-data.ts to ensure valid URLs
-    const services = getAllSEOServices();
-
-    for (const location of TARGET_LOCATIONS) {
-        for (const service of services) {
-            if (urlCount >= MAX_URLS) {
-                break;
-            }
-
-            sitemapEntries.push({
-                url: `${BASE_URL}/locations/${location}/${service.slug}`,
-                lastModified: new Date(),
-                changeFrequency: 'monthly',
-                priority: 0.7,
-            });
-            urlCount++;
-        }
-
-        if (urlCount >= MAX_URLS) {
-            break;
-        }
-    }
-
-    return sitemapEntries;
+        },
+    ];
 }
