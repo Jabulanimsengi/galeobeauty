@@ -11,21 +11,21 @@ interface GalleryGridProps {
     items: GalleryItem[];
 }
 
-// Assign varying heights to each image for visual variety
+// Responsive heights: shorter on mobile, taller on desktop for visual variety
 const getHeightClass = (index: number): string => {
     const heights = [
-        "h-[280px]",   // Standard
-        "h-[380px]",   // Tall
-        "h-[240px]",   // Short
-        "h-[320px]",   // Medium-tall
-        "h-[260px]",   // Medium-short
-        "h-[400px]",   // Extra tall
-        "h-[300px]",   // Standard
-        "h-[350px]",   // Tall
-        "h-[220px]",   // Short
-        "h-[360px]",   // Tall
-        "h-[280px]",   // Standard
-        "h-[420px]",   // Extra tall
+        "h-[200px] sm:h-[240px] md:h-[280px]",   // Standard
+        "h-[240px] sm:h-[300px] md:h-[380px]",   // Tall
+        "h-[180px] sm:h-[220px] md:h-[240px]",   // Short
+        "h-[220px] sm:h-[280px] md:h-[320px]",   // Medium-tall
+        "h-[190px] sm:h-[240px] md:h-[260px]",   // Medium-short
+        "h-[260px] sm:h-[320px] md:h-[400px]",   // Extra tall
+        "h-[210px] sm:h-[260px] md:h-[300px]",   // Standard
+        "h-[230px] sm:h-[290px] md:h-[350px]",   // Tall
+        "h-[170px] sm:h-[200px] md:h-[220px]",   // Short
+        "h-[250px] sm:h-[300px] md:h-[360px]",   // Tall
+        "h-[200px] sm:h-[240px] md:h-[280px]",   // Standard
+        "h-[270px] sm:h-[340px] md:h-[420px]",   // Extra tall
     ];
     return heights[index % heights.length];
 };
@@ -46,8 +46,8 @@ export function GalleryGrid({ items }: GalleryGridProps) {
 
     return (
         <>
-            {/* True Masonry Layout using CSS Columns - No gaps */}
-            <div className="columns-2 md:columns-3 lg:columns-4 gap-3 md:gap-4">
+            {/* Responsive Masonry Layout: 2 cols mobile, 3 cols tablet, 4 cols desktop */}
+            <div className="columns-2 md:columns-3 lg:columns-4 gap-2 sm:gap-3 md:gap-4">
                 {items.map((item, index) => (
                     <motion.div
                         key={item.id}
@@ -55,7 +55,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.4, delay: (index % 6) * 0.05 }}
-                        className="break-inside-avoid mb-3 md:mb-4"
+                        className="break-inside-avoid mb-2 sm:mb-3 md:mb-4"
                     >
                         <button
                             onClick={() => openLightbox(index)}

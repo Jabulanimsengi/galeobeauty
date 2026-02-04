@@ -583,6 +583,135 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </section>
                 )}
 
+                {/* Popular Treatments - Strategic Internal Links */}
+                <section className="py-16 bg-background border-t border-b border-border">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-4 text-center">
+                            <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
+                            Our Most Popular Treatments
+                        </h2>
+                        <p className="text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
+                            Explore our signature treatments loved by clients across {location.region}
+                        </p>
+
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <Link
+                                href="/services/microblading"
+                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">✨</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Microblading
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Perfect Brows
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/services/fat-freezing-treatment"
+                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">❄️</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Fat Freezing
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Body Sculpting
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/services/lip-fillers"
+                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">💋</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Lip Fillers
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Plump & Natural
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/services/lash-extensions"
+                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">👁️</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Lash Extensions
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Dramatic Eyes
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/services/dermalogica-facial"
+                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">🧖</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Dermalogica Facial
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Skin Therapy
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/services/brazilian-wax"
+                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">✨</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Brazilian Wax
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Smooth Skin
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/prices"
+                                className="group bg-secondary hover:bg-gold rounded-xl p-5 border-2 border-gold hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">💰</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    All Prices
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    View Pricing
+                                </p>
+                            </Link>
+
+                            <Link
+                                href="/specials"
+                                className="group bg-secondary hover:bg-gold rounded-xl p-5 border-2 border-gold hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                            >
+                                <div className="text-3xl mb-2">🎁</div>
+                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                    Specials
+                                </h3>
+                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                    Save More
+                                </p>
+                            </Link>
+                        </div>
+
+                        <div className="mt-8 text-center">
+                            <Link
+                                href={`/locations/${locationSlug}`}
+                                className="inline-flex items-center gap-2 text-gold hover:text-gold-dark font-medium transition-colors"
+                            >
+                                <ArrowRight className="w-4 h-4" />
+                                View all services available in {location.name}
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Reviews Section */}
                 <ReviewsSection />
 
