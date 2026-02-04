@@ -297,35 +297,49 @@ export const PRIORITY_LOCATIONS = [
     'landsmeer',                    // 🏢 ACTUAL SALON LOCATION: Shop 6, Landsmeer Estate
     'landsmeer-estate',             // 🏢 Salon location (estate variant)
 
-    // Hartbeespoort Core Area
-    'schoemansville',               // Tourist hub (2km)
+    // Hartbeespoort Core Area - Big 5 Suburbs
+    'schoemansville',               // Tourist hub (2km) - Old town
+    'meerhof',                      // ⭐ CRITICAL - Pretoria entry point, large stands
+    'melodie',                      // 5km - Commercial heart (Village Mall area)
 
     // Immediate neighbors (0-5km radius) - Wealthy estates
-    'ifafi',                        // 3km - Exclusive estate
-    'the-islands-estate',           // 4km - Luxury lakeside
-    'estate-dafrique',              // 5km - Upscale development
-    'melodie',                      // 5km - Residential area
-    'pecanwood',                    // 4km - Wealthy estate
+    'ifafi',                        // 3km - Exclusive estate with views
+    'the-islands-estate',           // 4km - Luxury lakeside canals
+    'estate-dafrique',              // 5km - French Provencal style
+    'pecanwood',                    // 4km - Golf & wealthy estate
     'pecanwood-estate',             // 4km - Estate variant
+    'caribbean-beach-club',         // ⭐ Golf/Marina - high search volume
+    'the-coves',                    // ⭐ Aviation estate
+    'birdwood-estate',              // ⭐ Clubhouse, mountain views
 
     // High-traffic locations (5-10km)
-    'kosmos',                       // 8km - Holiday destination
-    'magalies-park',                // 6km - Resort town
+    'kosmos',                       // 8km - Holiday destination, iconic village
+    'magalies-park',                // 6km - Resort & timeshare town
     'xanadu',                       // 7km - Nature estate
     'xanadu-nature-estate',         // 7km - Estate variant
+    'westlake',                     // ⭐ Equestrian/lifestyle estate
+    'westlake-country-safari-estate', // ⭐ Estate variant
 
     // Shopping centers & landmarks (high search volume)
-    'village-mall-hartbeespoort',  // 3km - Shopping center
+    'village-mall-hartbeespoort',   // 3km - Shopping center
     'islands-shopping-mall',        // 4km - Shopping destination
     'hartbeespoort-dam',            // 2km - Tourist landmark
+    'damdoryn',                     // ⭐ 4-way stop area, Chameleon Village (high traffic)
 
     // Extended Hartbeespoort area (10-15km)
     'leloko',                       // 12km - Lifestyle estate
     'leloko-lifestyle-estate',      // 12km - Estate variant
     'safari-gardens',               // 12km - Wildlife estate
+    'seasons-lifestyle-estate',     // ⭐ Golf/Spa resort
+    'redstone-estate',              // ⭐ Newer, high-value development
+    'la-camargue-estate',           // ⭐ Wildlife estate, growing fast
+    'eagles-landing',               // ⭐ Smaller, exclusive estate
+
+    // Tourism & Activity Hubs
+    'skeerpoort',                   // ⭐ Ballooning, MTB trails, adventure tourism
 
     // Regional tourist destination
-    'magaliesburg',                 // 25km - Tourist town
+    'magaliesburg',                 // 25km - Tourist town, hiking
 
     // Key commuter cities (highest search volume)
     'johannesburg',                 // 1hr - Major metro
@@ -336,10 +350,11 @@ export const PRIORITY_LOCATIONS = [
 
     // Nearby towns
     'brits',                        // 20min - Closest town
-    'broederstroom',                // 10min - Neighboring village
+    'broederstroom',                // 10min - Neighboring village, Lion Park
 
-    // Total: 31 locations × ~262 services = ~8,122 pages
+    // Total: 43 locations × ~262 services = ~11,266 pages
     // Focus: Complete Hartbeespoort area coverage (0-25km) + major cities
+    // ⭐ = Phase 1 additions (12 high-value locations for comprehensive coverage)
 ];
 
 // ============================================
