@@ -1,6 +1,7 @@
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
+import { NearbyLocationsSection } from "@/components/sections/NearbyLocationsSection";
 import { Heart, CheckCircle, Sparkles, Award, Clock, Shield } from "lucide-react";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -467,6 +468,9 @@ export default function BridalBeautyPage() {
                         </div>
                     </div>
                 </section>
+
+                {/* Nearby Locations - Internal Linking for SEO */}
+                <NearbyLocationsSection serviceName="Bridal Beauty Packages" />
             </main>
             <Footer />
         </>

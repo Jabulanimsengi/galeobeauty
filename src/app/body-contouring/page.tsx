@@ -1,6 +1,7 @@
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
+import { NearbyLocationsSection } from "@/components/sections/NearbyLocationsSection";
 import { Zap, CheckCircle, Clock, TrendingUp, Shield, Sparkles } from "lucide-react";
 import Image from "next/image";
 import type { Metadata } from "next";
@@ -356,6 +357,9 @@ export default function BodyContouringPage() {
                         </div>
                     </div>
                 </section>
+
+                {/* Nearby Locations - Internal Linking for SEO */}
+                <NearbyLocationsSection serviceName="Body Contouring" />
             </main>
             <Footer />
         </>
