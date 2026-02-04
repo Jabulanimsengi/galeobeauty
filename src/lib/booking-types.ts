@@ -1,5 +1,7 @@
 import { ServiceItem } from "./services-data";
 
+export type BookingType = "treatment" | "consultation";
+
 export interface SelectedTreatment {
   categoryId: string;
   categoryTitle: string;
@@ -21,7 +23,8 @@ export interface AppointmentDetails {
 }
 
 export interface BookingState {
-  treatments: SelectedTreatment[];
+  bookingType: BookingType;
+  treatments?: SelectedTreatment[]; // Optional for consultations
   userDetails: UserDetails;
   appointment: AppointmentDetails;
   currentStep: 1 | 2 | 3;
@@ -30,6 +33,7 @@ export interface BookingState {
 }
 
 export const initialBookingState: BookingState = {
+  bookingType: "treatment",
   treatments: [],
   userDetails: {
     name: "",

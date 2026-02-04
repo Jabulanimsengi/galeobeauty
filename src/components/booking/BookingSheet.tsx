@@ -33,12 +33,21 @@ import { businessInfo } from "@/lib/constants";
 interface BookingSheetProps {
   isOpen: boolean;
   onClose: () => void;
-  treatments: SelectedTreatment[];
+  treatments?: SelectedTreatment[];
+  bookingType?: "treatment" | "consultation";
+  consultationContext?: string;
 }
 
-export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps) {
+export function BookingSheet({
+  isOpen,
+  onClose,
+  treatments = [],
+  bookingType = "treatment",
+  consultationContext
+}: BookingSheetProps) {
   const [state, setState] = useState<BookingState>({
     ...initialBookingState,
+    bookingType,
     treatments,
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -61,9 +70,11 @@ export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps)
     }
   };
 
-  // Update treatments when prop changes
+  // Update state when props change (only for treatments array)
   useEffect(() => {
-    setState((prev) => ({ ...prev, treatments }));
+    if (treatments && treatments.length > 0) {
+      setState((prev) => ({ ...prev, treatments }));
+    }
   }, [treatments]);
 
   // Reset state when closing
@@ -114,6 +125,7 @@ export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps)
 
   // Calculate totals
   const calculateTotal = () => {
+    if (!state.treatments) return 0;
     let total = 0;
     for (const item of state.treatments) {
       const priceStr = item.item.price.replace(/[R\s,]/g, "");
@@ -124,6 +136,7 @@ export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps)
   };
 
   const calculateTotalDuration = () => {
+    if (!state.treatments) return 0;
     return state.treatments.reduce((acc, item) => {
       if (!item.item.duration) return acc;
       const hours = item.item.duration.match(/(\d+)\s*hr/)?.[1] || "0";
@@ -160,28 +173,48 @@ export function BookingSheet({ isOpen, onClose, treatments }: BookingSheetProps)
 
   // Submit booking via WhatsApp
   const handleSubmit = () => {
-    if (state.treatments.length === 0) return;
+    let message = "";
 
-    const treatmentsList = state.treatments
-      .map(
-        (t, i) =>
-          `${i + 1}. ${t.item.name}${t.item.duration ? ` (${t.item.duration})` : ""} - ${t.item.price}`
-      )
-      .join("\n");
+    if (state.bookingType === "consultation") {
+      // Consultation message format
+      message = `*Free Consultation Request - Galeo Beauty*
 
-    const total = calculateTotal();
-    const depositAmount = Math.round(total / 2);
-    const totalDuration = calculateTotalDuration();
+*Type:* ${consultationContext || "General Consultation"}
 
-    const bankingDetails = businessInfo.banking
-      ? `\n*Banking Details for Deposit:*
+*Client Information*
+Name: ${state.userDetails.name}
+Phone: ${state.userDetails.phone}${state.userDetails.email ? `\nEmail: ${state.userDetails.email}` : ""}
+
+*Preferred Date & Time*
+Date: ${formatDate(state.appointment.date)}
+Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
+
+---
+📱 *Source:* galeobeauty.com`;
+    } else {
+      // Treatment booking message format
+      if (!state.treatments || state.treatments.length === 0) return;
+
+      const treatmentsList = state.treatments
+        .map(
+          (t, i) =>
+            `${i + 1}. ${t.item.name}${t.item.duration ? ` (${t.item.duration})` : ""} - ${t.item.price}`
+        )
+        .join("\n");
+
+      const total = calculateTotal();
+      const depositAmount = Math.round(total / 2);
+      const totalDuration = calculateTotalDuration();
+
+      const bankingDetails = businessInfo.banking
+        ? `\n*Banking Details for Deposit:*
 Account: ${businessInfo.banking.companyName}
 Bank: ${businessInfo.banking.bank}
 Account No: ${businessInfo.banking.accountNumber}
 Branch: ${businessInfo.banking.branch} (${businessInfo.banking.branchCode})`
-      : "";
+        : "";
 
-    const message = `*New Booking Request - Galeo Beauty*
+      message = `*New Booking Request - Galeo Beauty*
 
 *Treatments Selected (${state.treatments.length})*
 ${treatmentsList}
@@ -202,6 +235,7 @@ ${bankingDetails}
 
 ---
 📱 *Source:* Customer found this service on galeobeauty.com`;
+    }
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${businessInfo.socials.whatsapp}?text=${encodedMessage}`;
@@ -228,24 +262,32 @@ ${bankingDetails}
         {/* Header */}
         <SheetHeader className="p-6 pb-4 border-b bg-foreground text-background">
           <SheetTitle className="text-background font-serif text-xl">
-            Book Treatments
+            {state.bookingType === "consultation" ? "Book Free Consultation" : "Book Treatments"}
           </SheetTitle>
           <SheetDescription className="text-background/70">
-            <span className="block font-medium text-background">
-              {state.treatments.length} {state.treatments.length === 1 ? "treatment" : "treatments"} selected
-            </span>
-            <span className="flex items-center gap-2 mt-1">
-              <span className="text-gold font-semibold">R {total.toLocaleString()}</span>
-              {totalDuration > 0 && (
-                <>
-                  <span className="text-background/50">·</span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {formatDuration(totalDuration)}
-                  </span>
-                </>
-              )}
-            </span>
+            {state.bookingType === "consultation" ? (
+              <span className="block font-medium text-background">
+                {consultationContext || "General Consultation"}
+              </span>
+            ) : (
+              <>
+                <span className="block font-medium text-background">
+                  {state.treatments?.length || 0} {(state.treatments?.length || 0) === 1 ? "treatment" : "treatments"} selected
+                </span>
+                <span className="flex items-center gap-2 mt-1">
+                  <span className="text-gold font-semibold">R {total.toLocaleString()}</span>
+                  {totalDuration > 0 && (
+                    <>
+                      <span className="text-background/50">·</span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {formatDuration(totalDuration)}
+                      </span>
+                    </>
+                  )}
+                </span>
+              </>
+            )}
           </SheetDescription>
 
           {/* Step Indicator */}
@@ -397,30 +439,43 @@ ${bankingDetails}
                 transition={{ duration: 0.2 }}
                 className="space-y-6"
               >
-                <h3 className="font-semibold text-foreground">Booking Summary</h3>
+                <h3 className="font-semibold text-foreground">
+                  {state.bookingType === "consultation" ? "Consultation Request Summary" : "Booking Summary"}
+                </h3>
 
-                {/* Treatments Summary */}
-                <div className="bg-gold/10 border border-gold/30 rounded-xl p-4 space-y-3">
-                  <p className="text-sm text-muted-foreground font-medium">Treatments</p>
-                  {state.treatments.map((t, i) => (
-                    <div key={i} className="flex justify-between items-start text-sm">
-                      <div>
-                        <p className="font-medium text-foreground">{t.item.name}</p>
-                        {t.item.duration && (
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {t.item.duration}
-                          </p>
-                        )}
-                      </div>
-                      <span className="font-semibold text-gold">{t.item.price}</span>
-                    </div>
-                  ))}
-                  <div className="border-t border-gold/30 pt-3 flex justify-between">
-                    <span className="font-semibold">Total</span>
-                    <span className="text-lg font-bold text-gold">R {total.toLocaleString()}</span>
+                {/* Consultation Type (Consultation only) */}
+                {state.bookingType === "consultation" && (
+                  <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
+                    <p className="text-sm text-muted-foreground font-medium mb-2">Consultation Type</p>
+                    <p className="text-lg font-semibold text-foreground">{consultationContext || "General Consultation"}</p>
+                    <p className="text-sm text-green-700 font-medium mt-2">Free Consultation</p>
                   </div>
-                </div>
+                )}
+
+                {/* Treatments Summary (Treatment bookings only) */}
+                {state.bookingType === "treatment" && state.treatments && (
+                  <div className="bg-gold/10 border border-gold/30 rounded-xl p-4 space-y-3">
+                    <p className="text-sm text-muted-foreground font-medium">Treatments</p>
+                    {state.treatments.map((t, i) => (
+                      <div key={i} className="flex justify-between items-start text-sm">
+                        <div>
+                          <p className="font-medium text-foreground">{t.item.name}</p>
+                          {t.item.duration && (
+                            <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {t.item.duration}
+                            </p>
+                          )}
+                        </div>
+                        <span className="font-semibold text-gold">{t.item.price}</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-gold/30 pt-3 flex justify-between">
+                      <span className="font-semibold">Total</span>
+                      <span className="text-lg font-bold text-gold">R {total.toLocaleString()}</span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Details Summary */}
                 <div className="space-y-3 text-sm">
@@ -448,25 +503,29 @@ ${bankingDetails}
                       {getTimeSlotLabel(state.appointment.timeSlot)}
                     </span>
                   </div>
-                  <div className="flex justify-between py-2">
-                    <span className="text-muted-foreground">Payment</span>
-                    <span className="font-medium text-amber-600">50% Deposit Required</span>
-                  </div>
+                  {state.bookingType === "treatment" && (
+                    <div className="flex justify-between py-2">
+                      <span className="text-muted-foreground">Payment</span>
+                      <span className="font-medium text-amber-600">50% Deposit Required</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* 50% Deposit Notice */}
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-amber-800 text-sm">50% Deposit Required</p>
-                    <p className="text-xs text-amber-700 mt-1">
-                      A 50% deposit of <span className="font-bold">R {Math.round(total / 2).toLocaleString()}</span> is required to secure your appointment.
-                    </p>
+                {/* 50% Deposit Notice (Treatment only) */}
+                {state.bookingType === "treatment" && (
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-semibold text-amber-800 text-sm">50% Deposit Required</p>
+                      <p className="text-xs text-amber-700 mt-1">
+                        A 50% deposit of <span className="font-bold">R {Math.round(total / 2).toLocaleString()}</span> is required to secure your appointment.
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                {/* Booking Reference */}
-                {bookingReference && (
+                {/* Booking Reference (Treatment only) */}
+                {state.bookingType === "treatment" && bookingReference && (
                   <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
                     <p className="text-xs text-muted-foreground mb-1">Your Booking Reference</p>
                     <div className="flex items-center justify-between">
@@ -487,8 +546,8 @@ ${bankingDetails}
                   </div>
                 )}
 
-                {/* Banking Details */}
-                {businessInfo.banking && (
+                {/* Banking Details (Treatment only) */}
+                {state.bookingType === "treatment" && businessInfo.banking && (
                   <div className="bg-secondary/30 rounded-xl p-4 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
                       <CreditCard className="w-4 h-4 text-foreground" />

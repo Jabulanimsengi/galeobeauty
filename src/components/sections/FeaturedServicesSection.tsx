@@ -1,9 +1,10 @@
 "use client";
 
 import { NavLink } from "@/components/ui/nav-link";
-import { Sparkles, Heart, Zap, Scissors, Shield, Award } from "lucide-react";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { BookingSheet } from "@/components/booking/BookingSheet";
+import Image from "next/image";
 
 const featuredServices = [
     {
@@ -11,7 +12,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Non-surgical fat reduction & EMS body sculpting",
         href: "/body-contouring",
-        Icon: Zap,
+        image: "/images/services/fat_freezing/Gallery_image_01(32).png.jpeg",
         color: "from-gold/5 to-gold/10",
         borderColor: "border-gold/20",
     },
@@ -20,7 +21,7 @@ const featuredServices = [
         location: "Near Pretoria",
         description: "Injectable aesthetics & facial rejuvenation",
         href: "/anti-aging",
-        Icon: Sparkles,
+        image: "/images/services/anti_ageing/anti_ageing_01.jpeg",
         color: "from-gold/10 to-gold/5",
         borderColor: "border-gold/20",
     },
@@ -29,7 +30,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Microblading, powder brows & lip blush",
         href: "/permanent-makeup",
-        Icon: Scissors,
+        image: "/images/services/makeup/makeup_01.jpeg",
         color: "from-foreground/5 to-gold/10",
         borderColor: "border-gold/20",
     },
@@ -38,7 +39,7 @@ const featuredServices = [
         location: "Hartbeespoort Dam",
         description: "Advanced aesthetic treatments & skincare",
         href: "/medical-spa",
-        Icon: Shield,
+        image: "/images/services/facials/Image_facial_02.jpeg",
         color: "from-gold/10 to-foreground/5",
         borderColor: "border-gold/20",
     },
@@ -47,7 +48,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Complete wedding day makeup & styling",
         href: "/bridal-beauty",
-        Icon: Heart,
+        image: "/images/services/bridal/bridal_01.jpeg",
         color: "from-foreground/5 to-gold/5",
         borderColor: "border-gold/20",
     },
@@ -56,7 +57,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Permanent IPL hair removal for all areas",
         href: "/laser-hair-removal",
-        Icon: Award,
+        image: "/images/services/IPL_Hair_removal/IPL_image_01.jpeg",
         color: "from-gold/5 to-foreground/5",
         borderColor: "border-gold/20",
     },
@@ -64,11 +65,13 @@ const featuredServices = [
 
 export function FeaturedServicesSection() {
     const [isPaused, setIsPaused] = useState(false);
+    const [isConsultationBookingOpen, setIsConsultationBookingOpen] = useState(false);
 
     // Duplicate services for seamless infinite scroll
     const duplicatedServices = [...featuredServices, ...featuredServices];
 
     return (
+        <>
         <section className="py-20 md:py-28 bg-white overflow-hidden">
             <div className="container mx-auto px-6">
                 {/* Header */}
@@ -117,7 +120,7 @@ export function FeaturedServicesSection() {
                             x: {
                                 repeat: Infinity,
                                 repeatType: "loop",
-                                duration: 30,
+                                duration: 60,
                                 ease: "linear",
                             },
                         }}
@@ -130,31 +133,36 @@ export function FeaturedServicesSection() {
                                 transition={{ duration: 0.3 }}
                             >
                                 <NavLink href={service.href} className="group block h-full">
-                                    <div className={`h-full bg-gradient-to-br ${service.color} bg-white border-2 ${service.borderColor} rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:shadow-gold/30 transition-all duration-300 hover:border-gold/60`}>
-                                        {/* Icon */}
-                                        <div className="mb-6">
-                                            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-foreground shadow-md group-hover:shadow-lg group-hover:bg-gold transition-all">
-                                                <service.Icon className="w-8 h-8 text-gold group-hover:text-foreground transition-colors" />
-                                            </div>
+                                    <div className={`h-full bg-gradient-to-br ${service.color} bg-white border-2 ${service.borderColor} rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-gold/30 transition-all duration-300 hover:border-gold/60`}>
+                                        {/* Image */}
+                                        <div className="relative w-full h-32 overflow-hidden">
+                                            <Image
+                                                src={service.image}
+                                                alt={service.title}
+                                                fill
+                                                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                            />
                                         </div>
 
                                         {/* Content */}
-                                        <h3 className="font-serif text-2xl text-foreground mb-2 group-hover:text-gold transition-colors">
-                                            {service.title}
-                                        </h3>
-                                        <p className="text-sm text-gold font-medium mb-3">
-                                            {service.location}
-                                        </p>
-                                        <p className="text-foreground/70 leading-relaxed mb-4">
-                                            {service.description}
-                                        </p>
+                                        <div className="p-8">
+                                            <h3 className="font-serif text-2xl text-foreground mb-2 group-hover:text-gold transition-colors">
+                                                {service.title}
+                                            </h3>
+                                            <p className="text-sm text-gold font-medium mb-3">
+                                                {service.location}
+                                            </p>
+                                            <p className="text-foreground/70 leading-relaxed mb-4">
+                                                {service.description}
+                                            </p>
 
-                                        {/* Arrow */}
-                                        <div className="flex items-center gap-2 text-gold font-medium group-hover:gap-3 transition-all">
-                                            <span>Learn More</span>
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                            </svg>
+                                            {/* Arrow */}
+                                            <div className="flex items-center gap-2 text-gold font-medium group-hover:gap-3 transition-all">
+                                                <span>Learn More</span>
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                                </svg>
+                                            </div>
                                         </div>
                                     </div>
                                 </NavLink>
@@ -173,19 +181,26 @@ export function FeaturedServicesSection() {
                     <p className="text-muted-foreground mb-6">
                         Not sure which treatment is right for you?
                     </p>
-                    <a
-                        href="https://wa.me/27824447389?text=Hi%2C%20I%27d%20like%20to%20book%20a%20free%20consultation.%20I%20found%20you%20on%20www.galeobeauty.com"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-foreground font-semibold px-8 py-4 rounded-full transition-all hover:shadow-lg hover:shadow-gold/50"
+                    <button
+                        onClick={() => setIsConsultationBookingOpen(true)}
+                        className="inline-flex items-center gap-2 bg-black hover:bg-gold text-white font-semibold px-8 py-4 rounded-full transition-all hover:shadow-lg"
                     >
                         Book Free Consultation
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
-                    </NavLink>
+                    </button>
                 </motion.div>
             </div>
         </section>
+
+        {/* Consultation Booking Sheet */}
+        <BookingSheet
+            isOpen={isConsultationBookingOpen}
+            onClose={() => setIsConsultationBookingOpen(false)}
+            bookingType="consultation"
+            consultationContext="General Consultation"
+        />
+        </>
     );
 }
