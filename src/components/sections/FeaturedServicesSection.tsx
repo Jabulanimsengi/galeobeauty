@@ -173,8 +173,10 @@ export function FeaturedServicesSection() {
                     <p className="text-muted-foreground mb-6">
                         Not sure which treatment is right for you?
                     </p>
-                    <NavLink
-                        href="/contact"
+                    <a
+                        href="https://wa.me/27824447389?text=Hi%2C%20I%27d%20like%20to%20book%20a%20free%20consultation.%20I%20found%20you%20on%20www.galeobeauty.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-foreground font-semibold px-8 py-4 rounded-full transition-all hover:shadow-lg hover:shadow-gold/50"
                     >
                         Book Free Consultation
