@@ -291,27 +291,55 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
 // All other location/service combinations are generated on-demand with ISR.
 
 export const PRIORITY_LOCATIONS = [
-    // Primary - Salon location (most important for local SEO)
-    'hartbeespoort',
-    'harties',
-    'schoemansville',
+    // Primary locations - EQUAL RANKING (Most Critical!)
+    'hartbeespoort',                // Main town name
+    'harties',                      // Short name for Hartbeespoort (equally important)
+    'landsmeer',                    // 🏢 ACTUAL SALON LOCATION: Shop 6, Landsmeer Estate
+    'landsmeer-estate',             // 🏢 Salon location (estate variant)
 
-    // High-traffic Hartbeespoort suburbs
-    'melodie',
-    'pecanwood',
-    'kosmos',
+    // Hartbeespoort Core Area
+    'schoemansville',               // Tourist hub (2km)
+
+    // Immediate neighbors (0-5km radius) - Wealthy estates
+    'ifafi',                        // 3km - Exclusive estate
+    'the-islands-estate',           // 4km - Luxury lakeside
+    'estate-dafrique',              // 5km - Upscale development
+    'melodie',                      // 5km - Residential area
+    'pecanwood',                    // 4km - Wealthy estate
+    'pecanwood-estate',             // 4km - Estate variant
+
+    // High-traffic locations (5-10km)
+    'kosmos',                       // 8km - Holiday destination
+    'magalies-park',                // 6km - Resort town
+    'xanadu',                       // 7km - Nature estate
+    'xanadu-nature-estate',         // 7km - Estate variant
+
+    // Shopping centers & landmarks (high search volume)
+    'village-mall-hartbeespoort',  // 3km - Shopping center
+    'islands-shopping-mall',        // 4km - Shopping destination
+    'hartbeespoort-dam',            // 2km - Tourist landmark
+
+    // Extended Hartbeespoort area (10-15km)
+    'leloko',                       // 12km - Lifestyle estate
+    'leloko-lifestyle-estate',      // 12km - Estate variant
+    'safari-gardens',               // 12km - Wildlife estate
+
+    // Regional tourist destination
+    'magaliesburg',                 // 25km - Tourist town
 
     // Key commuter cities (highest search volume)
-    'johannesburg',
-    'sandton',
-    'pretoria',
-    'centurion',
-    'midrand',
+    'johannesburg',                 // 1hr - Major metro
+    'sandton',                      // 1hr - Wealthy suburb
+    'pretoria',                     // 45min - Capital city
+    'centurion',                    // 35min - Between PTA/JHB
+    'midrand',                      // 40min - Business hub
 
     // Nearby towns
-    'brits',
-    'broederstroom',
-    // Total: 13 locations × ~262 services = ~3,406 pages (under 3,500 limit)
+    'brits',                        // 20min - Closest town
+    'broederstroom',                // 10min - Neighboring village
+
+    // Total: 31 locations × ~262 services = ~8,122 pages
+    // Focus: Complete Hartbeespoort area coverage (0-25km) + major cities
 ];
 
 // ============================================

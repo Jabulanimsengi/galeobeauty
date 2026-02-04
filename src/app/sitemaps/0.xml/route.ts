@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAllBlogPosts } from '@/lib/blog-data';
 import { SITEMAP_0_LOCATIONS } from '@/lib/sitemap-config';
-import { getAllSEOServices } from '@/lib/seo-data';
+import { getAllSEOServices, PRIORITY_LOCATIONS } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
 
@@ -14,6 +14,13 @@ const STATIC_PAGES = [
     { path: '/contact', priority: 0.8, changefreq: 'monthly' },
     { path: '/blog', priority: 0.85, changefreq: 'weekly' },
     { path: '/careers', priority: 0.5, changefreq: 'monthly' },
+    // SEO Landing Pages (High Priority)
+    { path: '/body-contouring', priority: 0.9, changefreq: 'monthly' },
+    { path: '/anti-aging', priority: 0.9, changefreq: 'monthly' },
+    { path: '/permanent-makeup', priority: 0.9, changefreq: 'monthly' },
+    { path: '/medical-spa', priority: 0.9, changefreq: 'monthly' },
+    { path: '/bridal-beauty', priority: 0.9, changefreq: 'monthly' },
+    { path: '/laser-hair-removal', priority: 0.9, changefreq: 'monthly' },
     { path: '/prices/hart-aesthetics', priority: 0.85, changefreq: 'weekly' },
     { path: '/prices/fat-freezing', priority: 0.85, changefreq: 'weekly' },
     { path: '/prices/slimming', priority: 0.85, changefreq: 'weekly' },
@@ -85,8 +92,8 @@ export async function GET() {
     <priority>0.9</priority>
   </url>`);
 
-    // Add location hubs for SITEMAP_0_LOCATIONS
-    for (const location of SITEMAP_0_LOCATIONS) {
+    // Add location hubs for PRIORITY_LOCATIONS only (pages that are actually pre-built)
+    for (const location of PRIORITY_LOCATIONS) {
         entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
@@ -96,8 +103,8 @@ export async function GET() {
   </url>`);
     }
 
-    // Add location service pages for SITEMAP_0_LOCATIONS
-    for (const location of SITEMAP_0_LOCATIONS) {
+    // Add location service pages for PRIORITY_LOCATIONS only (avoid 404s)
+    for (const location of PRIORITY_LOCATIONS) {
         for (const service of services) {
             entries.push(`
   <url>

@@ -4,3 +4,4 @@ export { ServicesSection } from "./ServicesSection";
 export { AboutSection } from "./AboutSection";
 export { ReviewsSection } from "./ReviewsSection";
 export { BrandsSection } from "./BrandsSection";
+export { FeaturedServicesSection } from "./FeaturedServicesSection";
