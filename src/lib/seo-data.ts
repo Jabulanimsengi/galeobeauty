@@ -287,8 +287,9 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
 // ============================================
 // PRIORITY LOCATIONS & SERVICES FOR PRE-BUILDING
 // ============================================
-// These key SEO target locations are pre-built at build time (~1,000 pages).
+// These key SEO target locations are pre-built at build time (~3,500 pages).
 // All other location/service combinations are generated on-demand with ISR.
+// REDUCED TO 12 LOCATIONS to stay under Vercel's 75MB deployment size limit.
 
 export const PRIORITY_LOCATIONS = [
     // Primary locations - EQUAL RANKING (Most Critical!)
@@ -297,64 +298,24 @@ export const PRIORITY_LOCATIONS = [
     'landsmeer',                    // 🏢 ACTUAL SALON LOCATION: Shop 6, Landsmeer Estate
     'landsmeer-estate',             // 🏢 Salon location (estate variant)
 
-    // Hartbeespoort Core Area - Big 5 Suburbs
+    // Hartbeespoort Core Area - Big 5 Suburbs (Top 3 only)
     'schoemansville',               // Tourist hub (2km) - Old town
     'meerhof',                      // ⭐ CRITICAL - Pretoria entry point, large stands
     'melodie',                      // 5km - Commercial heart (Village Mall area)
 
-    // Immediate neighbors (0-5km radius) - Wealthy estates
+    // Top Immediate neighbors (most searched estates)
     'ifafi',                        // 3km - Exclusive estate with views
     'the-islands-estate',           // 4km - Luxury lakeside canals
-    'estate-dafrique',              // 5km - French Provencal style
     'pecanwood',                    // 4km - Golf & wealthy estate
-    'pecanwood-estate',             // 4km - Estate variant
-    'caribbean-beach-club',         // ⭐ Golf/Marina - high search volume
-    'the-coves',                    // ⭐ Aviation estate
-    'birdwood-estate',              // ⭐ Clubhouse, mountain views
-
-    // High-traffic locations (5-10km)
-    'kosmos',                       // 8km - Holiday destination, iconic village
-    'magalies-park',                // 6km - Resort & timeshare town
-    'xanadu',                       // 7km - Nature estate
-    'xanadu-nature-estate',         // 7km - Estate variant
-    'westlake',                     // ⭐ Equestrian/lifestyle estate
-    'westlake-country-safari-estate', // ⭐ Estate variant
-
-    // Shopping centers & landmarks (high search volume)
-    'village-mall-hartbeespoort',   // 3km - Shopping center
-    'islands-shopping-mall',        // 4km - Shopping destination
-    'hartbeespoort-dam',            // 2km - Tourist landmark
-    'damdoryn',                     // ⭐ 4-way stop area, Chameleon Village (high traffic)
-
-    // Extended Hartbeespoort area (10-15km)
-    'leloko',                       // 12km - Lifestyle estate
-    'leloko-lifestyle-estate',      // 12km - Estate variant
-    'safari-gardens',               // 12km - Wildlife estate
-    'seasons-lifestyle-estate',     // ⭐ Golf/Spa resort
-    'redstone-estate',              // ⭐ Newer, high-value development
-    'la-camargue-estate',           // ⭐ Wildlife estate, growing fast
-    'eagles-landing',               // ⭐ Smaller, exclusive estate
-
-    // Tourism & Activity Hubs
-    'skeerpoort',                   // ⭐ Ballooning, MTB trails, adventure tourism
-
-    // Regional tourist destination
-    'magaliesburg',                 // 25km - Tourist town, hiking
 
     // Key commuter cities (highest search volume)
-    'johannesburg',                 // 1hr - Major metro
-    'sandton',                      // 1hr - Wealthy suburb
-    'pretoria',                     // 45min - Capital city
-    'centurion',                    // 35min - Between PTA/JHB
-    'midrand',                      // 40min - Business hub
+    'johannesburg',                 // 1hr - Major metro - HIGHEST SEARCH VOLUME
+    'pretoria',                     // 45min - Capital city - HIGHEST SEARCH VOLUME
 
-    // Nearby towns
-    'brits',                        // 20min - Closest town
-    'broederstroom',                // 10min - Neighboring village, Lion Park
-
-    // Total: 43 locations × ~262 services = ~11,266 pages
-    // Focus: Complete Hartbeespoort area coverage (0-25km) + major cities
-    // ⭐ = Phase 1 additions (12 high-value locations for comprehensive coverage)
+    // Total: 12 locations × ~262 services = ~3,144 pages
+    // Focus: Core Hartbeespoort area (0-5km) + major metros
+    // All other locations available via on-demand ISR
+    // REDUCED FROM 43 TO 12 LOCATIONS TO STAY UNDER VERCEL 75MB DEPLOYMENT LIMIT
 ];
 
 // ============================================
