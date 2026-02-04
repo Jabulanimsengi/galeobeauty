@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getAllBlogPosts } from '@/lib/blog-data';
-import { SITEMAP_0_LOCATIONS } from '@/lib/sitemap-config';
 import { getAllSEOServices, PRIORITY_LOCATIONS } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
@@ -37,14 +36,7 @@ const STATIC_PAGES = [
     { path: '/prices/nails', priority: 0.85, changefreq: 'weekly' },
     { path: '/prices/lashes', priority: 0.85, changefreq: 'weekly' },
     { path: '/prices/hair-extensions', priority: 0.85, changefreq: 'weekly' },
-    { path: '/services/microblading', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/fat-freezing-treatment', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/lash-extensions', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/lip-fillers', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/brazilian-wax', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/dermalogica-facial', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/nail-art', priority: 0.85, changefreq: 'monthly' },
-    { path: '/services/massage-therapy', priority: 0.85, changefreq: 'monthly' },
+    // Note: All 262 service pages are added dynamically below
 ];
 
 function escapeXml(unsafe: string): string {
@@ -80,6 +72,17 @@ export async function GET() {
     <lastmod>${new Date(post.date).toISOString()}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>`);
+    }
+
+    // Add ALL service pages (262 total) - targets generic keywords like "gel nails", "microblading"
+    for (const service of services) {
+        entries.push(`
+  <url>
+    <loc>${escapeXml(`${BASE_URL}/services/${service.slug}`)}</loc>
+    <lastmod>${new Date().toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>`);
     }
 
