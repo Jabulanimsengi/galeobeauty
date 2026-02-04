@@ -22,10 +22,10 @@ export default function HomePage() {
       <main>
         <HeroSection />
         <BrandsSection />
-        <FeaturedServicesSection />
         <ServicesSection />
         <ReviewsSection />
         <StatsSection />
+        <FeaturedServicesSection />
 
       </main>
       <Footer />

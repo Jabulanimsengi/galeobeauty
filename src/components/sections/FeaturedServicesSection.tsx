@@ -11,8 +11,8 @@ const featuredServices = [
         description: "Non-surgical fat reduction & EMS body sculpting",
         href: "/body-contouring",
         Icon: Zap,
-        color: "from-blue-500/10 to-cyan-500/10",
-        borderColor: "border-blue-500/20",
+        color: "from-gold/5 to-gold/10",
+        borderColor: "border-gold/20",
     },
     {
         title: "Anti-Aging",
@@ -20,8 +20,8 @@ const featuredServices = [
         description: "Injectable aesthetics & facial rejuvenation",
         href: "/anti-aging",
         Icon: Sparkles,
-        color: "from-purple-500/10 to-pink-500/10",
-        borderColor: "border-purple-500/20",
+        color: "from-gold/10 to-gold/5",
+        borderColor: "border-gold/20",
     },
     {
         title: "Permanent Makeup",
@@ -29,8 +29,8 @@ const featuredServices = [
         description: "Microblading, powder brows & lip blush",
         href: "/permanent-makeup",
         Icon: Scissors,
-        color: "from-pink-500/10 to-rose-500/10",
-        borderColor: "border-pink-500/20",
+        color: "from-foreground/5 to-gold/10",
+        borderColor: "border-gold/20",
     },
     {
         title: "Medical Spa",
@@ -38,8 +38,8 @@ const featuredServices = [
         description: "Advanced aesthetic treatments & skincare",
         href: "/medical-spa",
         Icon: Shield,
-        color: "from-green-500/10 to-emerald-500/10",
-        borderColor: "border-green-500/20",
+        color: "from-gold/10 to-foreground/5",
+        borderColor: "border-gold/20",
     },
     {
         title: "Bridal Beauty",
@@ -47,8 +47,8 @@ const featuredServices = [
         description: "Complete wedding day makeup & styling",
         href: "/bridal-beauty",
         Icon: Heart,
-        color: "from-red-500/10 to-pink-500/10",
-        borderColor: "border-red-500/20",
+        color: "from-foreground/5 to-gold/5",
+        borderColor: "border-gold/20",
     },
     {
         title: "Laser Hair Removal",
@@ -56,14 +56,14 @@ const featuredServices = [
         description: "Permanent IPL hair removal for all areas",
         href: "/laser-hair-removal",
         Icon: Award,
-        color: "from-amber-500/10 to-yellow-500/10",
-        borderColor: "border-amber-500/20",
+        color: "from-gold/5 to-foreground/5",
+        borderColor: "border-gold/20",
     },
 ];
 
 export function FeaturedServicesSection() {
     return (
-        <section className="py-20 md:py-28 bg-gradient-to-b from-white via-secondary/5 to-white">
+        <section className="py-20 md:py-28 bg-gradient-to-b from-foreground via-foreground/95 to-foreground text-background">
             <div className="container mx-auto px-6">
                 {/* Header */}
                 <div className="text-center mb-16">
@@ -80,7 +80,7 @@ export function FeaturedServicesSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.1 }}
-                        className="font-serif text-3xl md:text-4xl lg:text-5xl text-foreground mb-6"
+                        className="font-serif text-3xl md:text-4xl lg:text-5xl text-background mb-6"
                     >
                         Hartbeespoort's Leading Beauty & Wellness Destination
                     </motion.h2>
@@ -89,7 +89,7 @@ export function FeaturedServicesSection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
-                        className="text-muted-foreground text-lg max-w-3xl mx-auto leading-relaxed"
+                        className="text-background/70 text-lg max-w-3xl mx-auto leading-relaxed"
                     >
                         Discover our signature treatments combining medical-grade technology with luxury spa experiences.
                         Serving Hartbeespoort, Pretoria, Centurion, and surrounding areas.
@@ -107,11 +107,11 @@ export function FeaturedServicesSection() {
                             transition={{ delay: index * 0.1 }}
                         >
                             <NavLink href={service.href} className="group block h-full">
-                                <div className={`h-full bg-gradient-to-br ${service.color} border-2 ${service.borderColor} rounded-2xl p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+                                <div className={`h-full bg-gradient-to-br ${service.color} bg-white border-2 ${service.borderColor} rounded-2xl p-8 hover:shadow-2xl hover:shadow-gold/20 transition-all duration-300 hover:-translate-y-1 hover:border-gold/40`}>
                                     {/* Icon */}
                                     <div className="mb-6">
-                                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-md group-hover:shadow-lg transition-shadow">
-                                            <service.Icon className="w-8 h-8 text-gold" />
+                                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-foreground shadow-md group-hover:shadow-lg group-hover:bg-gold transition-all">
+                                            <service.Icon className="w-8 h-8 text-gold group-hover:text-foreground transition-colors" />
                                         </div>
                                     </div>
 
@@ -122,7 +122,7 @@ export function FeaturedServicesSection() {
                                     <p className="text-sm text-gold font-medium mb-3">
                                         📍 {service.location}
                                     </p>
-                                    <p className="text-muted-foreground leading-relaxed mb-4">
+                                    <p className="text-foreground/70 leading-relaxed mb-4">
                                         {service.description}
                                     </p>
 
@@ -146,12 +146,12 @@ export function FeaturedServicesSection() {
                     viewport={{ once: true }}
                     className="text-center mt-16"
                 >
-                    <p className="text-muted-foreground mb-6">
+                    <p className="text-background/70 mb-6">
                         Not sure which treatment is right for you?
                     </p>
                     <NavLink
                         href="/contact"
-                        className="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-black font-semibold px-8 py-4 rounded-full transition-all hover:shadow-lg"
+                        className="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-foreground font-semibold px-8 py-4 rounded-full transition-all hover:shadow-lg hover:shadow-gold/50"
                     >
                         Book Free Consultation
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
