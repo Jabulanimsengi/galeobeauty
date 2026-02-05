@@ -203,7 +203,7 @@ export default function CareersPage() {
                                     className="bg-gold hover:bg-gold-dark text-white rounded-full px-6 mt-6"
                                 >
                                     <a
-                                        href="https://wa.me/27824447389?text=Hi%20Galeo%20Beauty%2C%20I%20would%20like%20to%20send%20my%20CV%20for%20a%20potential%20career%20opportunity."
+                                        href={`https://wa.me/27824447389?text=${encodeURIComponent("Hi Galeo Beauty, I found you on www.galeobeauty.com and I would like to send my CV for a potential career opportunity.")}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >

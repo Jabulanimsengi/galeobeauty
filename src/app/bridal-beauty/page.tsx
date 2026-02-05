@@ -4,7 +4,15 @@ import { SEOLandingPage } from "@/components/seo/SEOLandingPage";
 export const metadata: Metadata = {
     title: "Bridal Beauty Packages Hartbeespoort | Wedding Hair & Makeup",
     description: "Look flawless on your big day! Complete bridal beauty packages including makeup, hair styling, lash extensions, nails & trial sessions. Wedding day perfection in Hartbeespoort.",
-    keywords: "bridal makeup hartbeespoort, wedding beauty packages, bridal hair and makeup, wedding day salon, bridal beauty services, bride makeup artist, wedding hair stylist",
+    keywords: [
+        "bridal makeup hartbeespoort",
+        "wedding beauty packages",
+        "bridal hair and makeup",
+        "wedding day salon",
+        "bridal beauty services",
+        "bride makeup artist",
+        "wedding hair stylist",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/bridal-beauty",
     },

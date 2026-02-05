@@ -4,7 +4,16 @@ import { SEOLandingPage } from "@/components/seo/SEOLandingPage";
 export const metadata: Metadata = {
     title: "Anti-Aging Treatments Hartbeespoort | Non-Surgical Facial Rejuvenation",
     description: "Turn back the clock with advanced anti-aging treatments. Botox alternatives, dermal fillers, liquid facelifts & collagen stimulators. Medical-grade skincare at Galeo Beauty.",
-    keywords: "anti-aging treatments hartbeespoort, botox alternative south africa, non-surgical facelift, liquid facelift, collagen stimulator, wrinkle reduction, facial rejuvenation, dermal fillers",
+    keywords: [
+        "anti-aging treatments hartbeespoort",
+        "botox alternative south africa",
+        "non-surgical facelift",
+        "liquid facelift",
+        "collagen stimulator",
+        "wrinkle reduction",
+        "facial rejuvenation",
+        "dermal fillers",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/anti-aging",
     },

@@ -100,7 +100,7 @@ export function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
                                 {/* WhatsApp Option */}
                                 <a
-                                    href={`https://wa.me/${businessInfo.phone.replace(/\s/g, "").replace("+", "")}?text=Hi%20Galeo%20Beauty!%20I'd%20like%20to%20book%20an%20appointment.`}
+                                    href={`https://wa.me/${businessInfo.phone.replace(/\s/g, "").replace("+", "")}?text=${encodeURIComponent("Hi Galeo Beauty! I found you on www.galeobeauty.com and I'd like to book an appointment.")}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-start gap-4 p-4 rounded-xl border border-border hover:border-green-500/50 hover:bg-green-500/5 transition-all group"

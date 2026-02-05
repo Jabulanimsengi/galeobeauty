@@ -5,12 +5,11 @@ import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import {
     getLocationBySlug,
-    getAllSEOServices,
     getDrivingContext,
     TARGET_LOCATIONS
 } from "@/lib/seo-data";
-import { serviceCategories } from "@/lib/services-data";
-import { MapPin, Sparkles, ArrowRight, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
+import { LocationServicesClient } from "@/components/location/LocationServicesClient";
 
 // Pre-build priority locations
 export const dynamic = "force-static";
@@ -22,31 +21,57 @@ export function generateStaticParams() {
     }));
 }
 
-interface PageProps {
-    params: Promise<{
-        location: string;
-    }>;
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-    const { location: locationSlug } = await params;
-    const location = getLocationBySlug(locationSlug);
+export async function generateMetadata({ params }: { params: { location: string } }): Promise<Metadata> {
+    const location = getLocationBySlug(params.location);
 
     if (!location) {
-        return { title: "Location Not Found" };
+        return {
+            title: "Location Not Found",
+        };
     }
 
+    const title = `Beauty Services in ${location.name} | Galeo Beauty`;
+    const description = `Professional beauty treatments for ${location.name} residents. Facials, lash extensions, nails, fat freezing, permanent makeup & more at our Hartbeespoort salon near ${location.region}.`;
+
     return {
-        title: `Beauty Salon Services targeting ${location.name} | Galeo Beauty`,
-        description: `Premium beauty salon services for clients in ${location.name}. Facials, nails, lashes, and aesthetic treatments just a drive away. Book your appointment today.`,
+        title,
+        description,
+        keywords: [
+            `beauty salon ${location.name.toLowerCase()}`,
+            `spa near ${location.name.toLowerCase()}`,
+            `facials ${location.name.toLowerCase()}`,
+            `lash extensions ${location.name.toLowerCase()}`,
+            `beauty treatments ${location.region.toLowerCase()}`,
+            `salon near ${location.name.toLowerCase()}`,
+            `day spa ${location.name.toLowerCase()}`,
+        ],
         alternates: {
-            canonical: `https://www.galeobeauty.com/locations/${locationSlug}`,
+            canonical: `https://www.galeobeauty.com/locations/${params.location}`,
+        },
+        openGraph: {
+            title,
+            description,
+            url: `https://www.galeobeauty.com/locations/${params.location}`,
+            type: "website",
+            siteName: "Galeo Beauty",
+            locale: "en_ZA",
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
         },
     };
 }
 
+interface PageProps {
+    params: {
+        location: string;
+    };
+}
+
 export default async function LocationHubPage({ params }: PageProps) {
-    const { location: locationSlug } = await params;
+    const locationSlug = params.location;
     const location = getLocationBySlug(locationSlug);
 
     if (!location) {
@@ -54,13 +79,6 @@ export default async function LocationHubPage({ params }: PageProps) {
     }
 
     const drivingContext = getDrivingContext(location);
-    const services = getAllSEOServices();
-
-    // Group services by category for better organization
-    const servicesByCategory = serviceCategories.map(cat => ({
-        ...cat,
-        services: services.filter(s => s.categoryId === cat.id)
-    })).filter(cat => cat.services.length > 0);
 
     return (
         <>
@@ -88,43 +106,8 @@ export default async function LocationHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {/* Service Categories Grid */}
-                <section className="py-16">
-                    <div className="container mx-auto px-6 max-w-6xl">
-                        {servicesByCategory.map((category) => (
-                            <div key={category.id} className="mb-16 last:mb-0">
-                                <div className="flex items-center gap-4 mb-8 border-b border-border pb-4">
-                                    <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold">
-                                        <Sparkles className="w-5 h-5" />
-                                    </div>
-                                    <h2 className="font-serif text-3xl text-foreground">
-                                        {category.title}
-                                    </h2>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {category.services.map((service) => (
-                                        <Link
-                                            key={service.slug}
-                                            href={`/locations/${location.slug}/${service.slug}`}
-                                            className="group bg-white p-5 rounded-xl border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col"
-                                        >
-                                            <div className="flex justify-between items-start mb-2">
-                                                <h3 className="font-medium text-foreground group-hover:text-gold transition-colors text-lg">
-                                                    {service.keyword}
-                                                </h3>
-                                                <ArrowRight className="w-4 h-4 text-gold opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            </div>
-                                            <p className="text-sm text-muted-foreground mt-auto">
-                                                Professional {service.keyword.toLowerCase()} treatment available for {location.name} clients.
-                                            </p>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                {/* Service Categories - Accordion Layout with Booking */}
+                <LocationServicesClient locationSlug={locationSlug} location={location} />
 
                 {/* Why Choose Us */}
                 <section className="py-16 bg-foreground text-background">

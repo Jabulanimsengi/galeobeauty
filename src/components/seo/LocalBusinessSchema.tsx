@@ -1,3 +1,5 @@
+import { AGGREGATE_RATING } from "@/lib/reviews-data";
+
 export function LocalBusinessSchema() {
     const schema = {
         "@context": "https://schema.org",
@@ -5,59 +7,44 @@ export function LocalBusinessSchema() {
         "name": "Galeo Beauty Salon & Spa",
         "description": "Premier beauty salon and medical spa in Hartbeespoort offering body contouring, anti-aging treatments, permanent makeup, laser hair removal, and bridal beauty services.",
         "url": "https://www.galeobeauty.com",
-        "logo": "https://www.galeobeauty.com/logo.png",
-        "image": "https://www.galeobeauty.com/images/salon.jpg",
-        "telephone": "+27-XX-XXX-XXXX", // Replace with actual phone
-        "email": "info@galeobeauty.com", // Replace with actual email
+        "logo": "https://www.galeobeauty.com/images/logo.png",
+        "image": "https://www.galeobeauty.com/images/logo.png",
+        "telephone": "+27121111730",
+        "email": "info@galeobeauty.com",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Your Street Address", // Replace with actual address
-            "addressLocality": "Hartbeespoort",
+            "streetAddress": "Shop 6, Landsmeer Estate, Jan Smuts Ave",
+            "addressLocality": "Hartbeespoort Dam",
             "addressRegion": "North West",
             "postalCode": "0216",
             "addressCountry": "ZA"
         },
         "geo": {
             "@type": "GeoCoordinates",
-            "latitude": "-25.7479", // Replace with actual coordinates
-            "longitude": "27.8561"
+            "latitude": "-25.753414",
+            "longitude": "27.909252"
         },
         "openingHoursSpecification": [
             {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                "opens": "09:00",
-                "closes": "17:00"
+                "opens": "08:00",
+                "closes": "18:00"
             },
             {
                 "@type": "OpeningHoursSpecification",
                 "dayOfWeek": "Saturday",
-                "opens": "09:00",
-                "closes": "15:00"
+                "opens": "08:00",
+                "closes": "16:00"
             }
         ],
-        "priceRange": "R200 - R5000",
+        "priceRange": "$$",
         "areaServed": [
-            {
-                "@type": "City",
-                "name": "Hartbeespoort"
-            },
-            {
-                "@type": "City",
-                "name": "Brits"
-            },
-            {
-                "@type": "City",
-                "name": "Rustenburg"
-            },
-            {
-                "@type": "City",
-                "name": "Pretoria"
-            },
-            {
-                "@type": "City",
-                "name": "Centurion"
-            }
+            { "@type": "City", "name": "Hartbeespoort" },
+            { "@type": "City", "name": "Pretoria" },
+            { "@type": "City", "name": "Johannesburg" },
+            { "@type": "City", "name": "Centurion" },
+            { "@type": "City", "name": "Brits" }
         ],
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
@@ -121,14 +108,11 @@ export function LocalBusinessSchema() {
         },
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": "5.0",
-            "reviewCount": "500",
-            "bestRating": "5",
-            "worstRating": "1"
+            ...AGGREGATE_RATING,
         },
         "sameAs": [
-            "https://www.facebook.com/galeobeauty", // Replace with actual social links
-            "https://www.instagram.com/galeobeauty"
+            "https://web.facebook.com/galeobeauty",
+            "https://www.instagram.com/galeo_beauty/"
         ]
     };
 

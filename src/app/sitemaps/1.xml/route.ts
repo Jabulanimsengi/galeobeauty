@@ -4,6 +4,9 @@ import { getAllSEOServices } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
 
+// Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
+const BUILD_DATE = new Date().toISOString();
+
 function escapeXml(unsafe: string): string {
     return unsafe
         .replace(/&/g, '&amp;')
@@ -13,6 +16,8 @@ function escapeXml(unsafe: string): string {
         .replace(/'/g, '&apos;');
 }
 
+// SITEMAP 1: Extended Gauteng Coverage
+// These pages generate on-demand via ISR (not pre-built)
 export async function GET() {
     const services = getAllSEOServices();
     const entries: string[] = [];
@@ -22,9 +27,9 @@ export async function GET() {
         entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>`);
     }
 
@@ -34,9 +39,9 @@ export async function GET() {
             entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
   </url>`);
         }
     }

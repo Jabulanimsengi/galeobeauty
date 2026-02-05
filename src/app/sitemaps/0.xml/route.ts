@@ -4,6 +4,9 @@ import { getAllSEOServices, PRIORITY_LOCATIONS } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
 
+// Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
+const BUILD_DATE = new Date().toISOString();
+
 const STATIC_PAGES = [
     { path: '', priority: 1.0, changefreq: 'weekly' },
     { path: '/prices', priority: 0.9, changefreq: 'weekly' },
@@ -57,7 +60,7 @@ export async function GET() {
         entries.push(`
   <url>
     <loc>${escapeXml(BASE_URL + page.path)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
   </url>`);
@@ -80,7 +83,7 @@ export async function GET() {
         entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/services/${service.slug}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>`);
@@ -90,7 +93,7 @@ export async function GET() {
     entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>`);
@@ -100,7 +103,7 @@ export async function GET() {
         entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`);
@@ -112,7 +115,7 @@ export async function GET() {
             entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
-    <lastmod>${new Date().toISOString()}</lastmod>
+    <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>`);

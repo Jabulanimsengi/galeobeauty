@@ -40,7 +40,7 @@ const FreshaIcon = ({ className }: { className?: string }) => (
 const socialLinks = [
     {
         name: "WhatsApp",
-        href: `https://wa.me/${businessInfo.socials.whatsapp}`,
+        href: `https://wa.me/${businessInfo.socials.whatsapp}?text=${encodeURIComponent("Hi, I found you on www.galeobeauty.com and would like to enquire about your services.")}`,
         icon: WhatsAppIcon,
         color: "bg-[#25D366] hover:bg-[#128C7E]",
         label: "Chat with us",

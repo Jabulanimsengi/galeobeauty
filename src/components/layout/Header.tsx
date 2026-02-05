@@ -93,7 +93,7 @@ export function Header() {
                             </svg>
                         </a>
                         <a
-                            href={`https://wa.me/${businessInfo.socials.whatsapp}`}
+                            href={`https://wa.me/${businessInfo.socials.whatsapp}?text=${encodeURIComponent("Hi, I found you on www.galeobeauty.com and would like to enquire about your services.")}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="WhatsApp"

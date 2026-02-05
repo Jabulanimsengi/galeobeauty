@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import {
@@ -13,23 +12,30 @@ import {
     getNearbyLocations,
     getRelatedServices,
     getPopularServicesFromOtherCategories,
-    getCategoryBenefits,
+    getServiceSpecificBenefits,
     generateServiceIntro,
     getDrivingContext,
+    getLocationInsights,
+    getLocationServiceInsight,
+    getDynamicRelatedServices,
+    getServiceFAQs,
+    getTreatmentProcess,
     type SEOLocation,
     type SEOService,
+    type FAQ,
+    type TreatmentStep,
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 
 // ============================================
-// STATIC GENERATION - NO ISR
+// STATIC GENERATION WITH ISR
 // ============================================
-// All pages are pre-built at build time.
-// No on-demand regeneration to reduce Vercel ISR usage.
+// Priority locations (Hartbeespoort core) pre-built at build time.
+// All other Gauteng locations generate on-demand via ISR when first visited.
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = false; // Fully static, no ISR
+export const revalidate = 43200; // ISR: Revalidate every 12 hours
 
 export function generateStaticParams() {
     // Only pre-build priority location/service combinations
@@ -79,161 +85,63 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title,
         description,
         keywords: [
-            // Core service + location keywords
-            service.keyword,
-            `${service.keyword} salon`,
+            // PRIMARY: Core service + location (High Search Volume)
             `${service.keyword} ${location.name}`,
-            `${service.keyword} salon ${location.name}`,
             `${service.keyword} near me`,
             `${service.keyword} near ${location.name}`,
-            `${service.keyword} ${location.region}`,
 
-            // Industry terms (spa, beauty parlour, etc.)
-            `beauty salon ${location.name}`,
-            `salon ${location.name}`,
-            `${location.name} beauty salon`,
-            `${location.name} spa`,
-            `day spa ${location.name}`,
-            `beauty spa ${location.name}`,
-            `beauty parlour ${location.name}`,
-            `beauty treatments ${location.name}`,
-            `beauty services ${location.name}`,
-
-            // Intent-based keywords
+            // SECONDARY: Booking Intent (High Conversion)
             `book ${service.keyword} ${location.name}`,
-            `${service.keyword} appointment ${location.name}`,
-            `walk-in salon ${location.name}`,
-            `same day ${service.keyword}`,
-            `best salon ${location.name}`,
-            `top rated salon ${location.name}`,
-            `affordable ${service.keyword} ${location.name}`,
-            `cheap ${service.keyword} near me`,
+            `best ${service.keyword} ${location.name}`,
 
-            // Category-specific keywords
-            ...serviceCategoryKeywords,
-
-            // Local SEO keywords
-            `${service.keyword} nearby`,
-            `${service.keyword} close to me`,
-            `${service.keyword} in my area`,
-            `salon near ${location.name}`,
-            `beauty salon near ${location.name}`,
-
-            // Pretoria, Gauteng & Regional
+            // TERTIARY: Regional Coverage (Medium Search Volume)
             `${service.keyword} Pretoria`,
             `${service.keyword} Gauteng`,
-            `${service.keyword} Tshwane`,
-            `${service.keyword} Centurion`,
-            `${service.keyword} North West`,
-            `beauty salon Pretoria`,
-            `beauty salon Gauteng`,
-            `salon near Pretoria`,
-            `spa near Pretoria`,
-            `beauty treatments Pretoria`,
-            `beauty treatments Gauteng`,
-            `best salon Pretoria`,
-            `best salon Gauteng`,
+            `beauty salon ${location.name}`,
 
-            // South African specific
-            `beauty salon SA`,
-            `salon South Africa`,
-            `beauty treatments South Africa`,
-            `${location.name} beauty treatments SA`,
+            // LOCAL ADVANTAGE: Afrikaans (Low Competition, High Relevance)
+            `skoonheidsalon ${location.name}`,
 
-            // Differentiators
-            `luxury salon ${location.name}`,
-            `premium salon ${location.name}`,
-            `professional salon ${location.name}`,
-            `boutique salon ${location.name}`,
-
-            // Action keywords
-            `get ${service.keyword} ${location.name}`,
-            `where to get ${service.keyword} ${location.name}`,
-            `${service.keyword} specialist`,
-            `${service.keyword} expert`,
-            `${service.keyword} professional`,
-
-            // Wellness & body treatment keywords
-            `massage ${location.name}`,
-            `body treatment ${location.name}`,
-            `pampering ${location.name}`,
-            `relaxation treatment ${location.name}`,
-            `wellness spa ${location.name}`,
-            `slimming ${location.name}`,
-            `weight loss treatment ${location.name}`,
-            `body contouring ${location.name}`,
-            `cellulite treatment ${location.name}`,
-            `pamper day ${location.name}`,
-            `spa day ${location.name}`,
-            `self care ${location.name}`,
-
-            // Brand keywords
-            "Galeo Beauty Salon",
-            "Galeo Beauty Spa",
+            // BRAND: Core Brand Terms
             "Galeo Beauty",
             "Galeo Beauty Hartbeespoort",
-            "Hartbeespoort beauty salon",
-            "Hartbeespoort salon",
-            "Hartbeespoort spa",
-            "Hartbeespoort day spa",
-            "beauty salon Hartbeespoort",
-            "salon Hartbeespoort Dam",
-            "spa Hartbeespoort Dam",
-            "Hartbeespoort massage",
-            "Hartbeespoort pampering",
-            "Hartbeespoort wellness",
-            "beauty salon near Pretoria",
-            "spa near Pretoria",
-
-            // Afrikaans Keywords (Local advantage)
-            "skoonheidsalon",
-            `skoonheidsalon ${location.name}`,
-            "naelsalon",
-            "gesigbehandeling",
-            "haarverwydering",
-            "permanente grimering",
-            "wimper verlengings",
-            "spa naby my",
-            "skoonheid",
-
-            // Long-tail Question Keywords
-            `where to get ${service.keyword} in ${location.name}`,
-            `best ${service.keyword} near ${location.name}`,
-            `how much does ${service.keyword} cost`,
-            `${service.keyword} price ${location.name}`,
-
-            // Seasonal & Event Keywords
-            "matric ball makeup",
-            "matric ball hair",
-            "matric farewell makeup",
-            "wedding season specials",
-            "bridal beauty packages",
-            "Mother's Day spa gift",
-            "Valentine's Day pamper",
-
-            // Problem-based Keywords
-            `acne treatment ${location.name}`,
-            `anti-aging ${location.name}`,
-            `wrinkle treatment ${location.name}`,
-            `skin pigmentation treatment ${location.name}`,
-            "stubborn fat removal",
-            "double chin treatment",
-            "damaged hair repair",
-
-            // Price-intent Keywords
-            `affordable ${service.keyword} ${location.name}`,
-            `cheap ${service.keyword} near me`,
-            `${service.keyword} specials ${location.name}`,
-            "budget-friendly spa",
         ],
         openGraph: {
             title,
             description,
             type: "website",
             url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            siteName: "Galeo Beauty Salon & Spa",
+            locale: "en_ZA",
+            images: [
+                {
+                    url: "https://www.galeobeauty.com/images/og-image.jpg",
+                    width: 1200,
+                    height: 630,
+                    alt: `${service.keyword} at Galeo Beauty - Professional Beauty Salon in Hartbeespoort`,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: ["https://www.galeobeauty.com/images/og-image.jpg"],
+            site: "@galeobeauty",
         },
         alternates: {
             canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+        },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                "max-video-preview": -1,
+                "max-image-preview": "large",
+                "max-snippet": -1,
+            },
         },
     };
 }
@@ -256,24 +164,37 @@ export default async function LocationServicePage({ params }: PageProps) {
     const nearbyLocations = getNearbyLocations(locationSlug, 5);
     const relatedServices = getRelatedServices(serviceSlug, 4);
     const otherCategoryServices = getPopularServicesFromOtherCategories(service.categoryId, 3);
+    const dynamicRelatedServices = getDynamicRelatedServices(serviceSlug, 5);
 
     // Get unique content
-    const benefits = getCategoryBenefits(service.categoryId);
+    const benefits = getServiceSpecificBenefits(service);
     const introText = generateServiceIntro(service, location);
     const drivingContext = getDrivingContext(location);
+    const locationInsights = getLocationInsights(location);
+    const locationServiceInsight = getLocationServiceInsight(service, location);
+    const faqs = getServiceFAQs(service);
+    const treatmentProcess = getTreatmentProcess(service);
 
     const whatsappMessage = encodeURIComponent(
-        `Hi! I'm interested in ${service.keyword} and I'm based in ${location.name}. Can I book an appointment?`
+        `Hi! I found you on www.galeobeauty.com and I'm interested in ${service.keyword}. I'm based in ${location.name}. Can I book an appointment?`
     );
     const whatsappLink = `https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`;
 
-    // Schema.org structured data
+    // Schema.org structured data with Reviews
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "Service",
         name: `${service.keyword} at Galeo Beauty Salon & Spa`,
         description: `Professional ${service.keyword} salon and spa service near ${location.name}. Premium beauty parlour and day spa treatments at affordable prices. Book your appointment today.`,
         serviceType: [service.keyword, "Beauty Treatment", "Spa Treatment", "Salon Service"],
+        aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.9",
+            reviewCount: "159",
+            bestRating: "5",
+            worstRating: "1",
+        },
+        // Note: Individual reviews are only shown on the homepage to avoid duplicate content across 70k+ pages
         provider: {
             "@type": "BeautySalon",
             name: "Galeo Beauty Salon & Spa",
@@ -282,6 +203,13 @@ export default async function LocationServicePage({ params }: PageProps) {
             additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
             image: "https://www.galeobeauty.com/images/logo.png",
             priceRange: "$$",
+            aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.9",
+                reviewCount: "159",
+                bestRating: "5",
+                worstRating: "1",
+            },
             address: {
                 "@type": "PostalAddress",
                 streetAddress: businessInfo.address.street,
@@ -327,14 +255,79 @@ export default async function LocationServicePage({ params }: PageProps) {
         },
     };
 
+    // BreadcrumbList Schema
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://www.galeobeauty.com",
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Locations",
+                item: "https://www.galeobeauty.com/locations",
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: location.name,
+                item: `https://www.galeobeauty.com/locations/${locationSlug}`,
+            },
+            {
+                "@type": "ListItem",
+                position: 4,
+                name: service.keyword,
+                item: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            },
+        ],
+    };
+
+    // FAQPage Schema for rich snippets
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+            },
+        })),
+    };
+
+    // HowTo Schema for treatment process
+    const howToSchema = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        name: `How to Get ${service.keyword} at Galeo Beauty`,
+        description: `Step-by-step guide to receiving ${service.keyword} treatment at our Hartbeespoort salon near ${location.name}.`,
+        totalTime: service.duration || "PT1H",
+        step: treatmentProcess.map((step) => ({
+            "@type": "HowToStep",
+            position: step.step,
+            name: step.title,
+            text: step.description,
+            ...(step.duration && { itemListElement: { "@type": "HowToDirection", duringMedia: step.duration } }),
+        })),
+    };
+
+    // Combine all schemas
+    const allSchemas = [structuredData, breadcrumbSchema, faqSchema, howToSchema];
+
     return (
         <>
             <Header />
             <main className="bg-background min-h-screen">
-                {/* Schema.org JSON-LD */}
+                {/* Schema.org JSON-LD - Multiple schemas */}
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(allSchemas) }}
                 />
 
                 {/* Hero Section */}
@@ -430,18 +423,77 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {/* Location Info - Unique driving context */}
+                {/* Treatment Process - What to Expect */}
+                <section className="py-16">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
+                            What to Expect During {service.keyword}
+                        </h2>
+                        <p className="text-muted-foreground text-center mb-12">
+                            Your step-by-step treatment journey at Galeo Beauty
+                        </p>
+
+                        <div className="space-y-6">
+                            {treatmentProcess.map((step) => (
+                                <div key={step.step} className="flex gap-6">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-12 h-12 rounded-full bg-gold/10 border-2 border-gold flex items-center justify-center">
+                                            <span className="text-gold font-bold text-lg">{step.step}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 pb-6">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <h3 className="font-semibold text-foreground text-lg">
+                                                {step.title}
+                                            </h3>
+                                            {step.duration && (
+                                                <span className="text-sm text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
+                                                    {step.duration}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-muted-foreground leading-relaxed">
+                                            {step.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-10 text-center p-6 bg-secondary/20 rounded-xl">
+                            <p className="text-muted-foreground mb-4">
+                                Have questions about the {service.keyword} process?
+                            </p>
+                            <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
+                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                    Chat with Us on WhatsApp
+                                </a>
+                            </Button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Location Info - Location-specific insights for uniqueness */}
                 <section className="py-16">
                     <div className="container mx-auto px-6 max-w-4xl">
                         <h2 className="font-serif text-3xl text-foreground mb-6">
                             Serving <span className="text-gold">{location.name}</span> & {location.region}
                         </h2>
 
-                        <p className="text-muted-foreground text-lg leading-relaxed mb-6">
-                            {drivingContext}. We proudly welcome clients from <strong>{location.name}</strong> and
-                            surrounding areas in {location.region}. Our salon is nestled in the beautiful
-                            Hartbeespoort area, offering a peaceful escape for your beauty treatments.
-                        </p>
+                        <div className="space-y-4 mb-8">
+                            <p className="text-muted-foreground text-lg leading-relaxed">
+                                {locationInsights.characteristic}
+                            </p>
+                            <p className="text-muted-foreground text-lg leading-relaxed">
+                                {locationInsights.clientProfile}
+                            </p>
+                            <p className="text-muted-foreground text-lg leading-relaxed">
+                                {drivingContext}. {locationInsights.travelNote}
+                            </p>
+                            <p className="text-muted-foreground text-lg leading-relaxed bg-secondary/20 p-4 rounded-lg border-l-4 border-gold">
+                                {locationServiceInsight}
+                            </p>
+                        </div>
 
                         <div className="bg-secondary/30 rounded-xl p-6 border border-border">
                             <div className="flex items-start gap-4">
@@ -583,126 +635,43 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </section>
                 )}
 
-                {/* Popular Treatments - Strategic Internal Links */}
+                {/* Dynamic Related Services - Unique Per Page */}
                 <section className="py-16 bg-background border-t border-b border-border">
                     <div className="container mx-auto px-6 max-w-4xl">
                         <h2 className="font-serif text-3xl text-foreground mb-4 text-center">
                             <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
-                            Our Most Popular Treatments
+                            You Might Also Be Interested In
                         </h2>
                         <p className="text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
-                            Explore our signature treatments loved by clients across {location.region}
+                            Discover complementary treatments popular with {location.name} clients
                         </p>
 
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <Link
-                                href="/services/microblading"
-                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">✨</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Microblading
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Perfect Brows
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/services/fat-freezing-treatment"
-                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">❄️</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Fat Freezing
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Body Sculpting
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/services/lip-fillers"
-                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">💋</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Lip Fillers
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Plump & Natural
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/services/lash-extensions"
-                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">👁️</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Lash Extensions
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Dramatic Eyes
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/services/dermalogica-facial"
-                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">🧖</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Dermalogica Facial
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Skin Therapy
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/services/brazilian-wax"
-                                className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">✨</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Brazilian Wax
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Smooth Skin
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/prices"
-                                className="group bg-secondary hover:bg-gold rounded-xl p-5 border-2 border-gold hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">💰</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    All Prices
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    View Pricing
-                                </p>
-                            </Link>
-
-                            <Link
-                                href="/specials"
-                                className="group bg-secondary hover:bg-gold rounded-xl p-5 border-2 border-gold hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                            >
-                                <div className="text-3xl mb-2">🎁</div>
-                                <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                    Specials
-                                </h3>
-                                <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                    Save More
-                                </p>
-                            </Link>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            {dynamicRelatedServices.map((relatedService) => (
+                                <Link
+                                    key={relatedService.slug}
+                                    href={`/locations/${locationSlug}/${relatedService.slug}`}
+                                    className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
+                                >
+                                    <div className="text-gold mb-2"><Sparkles className="w-6 h-6" /></div>
+                                    <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
+                                        {relatedService.keyword}
+                                    </h3>
+                                    <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
+                                        from {relatedService.price}
+                                    </p>
+                                    {relatedService.duration && (
+                                        <p className="text-xs text-muted-foreground group-hover:text-white/70 mt-1">
+                                            {relatedService.duration}
+                                        </p>
+                                    )}
+                                </Link>
+                            ))}
                         </div>
 
                         <div className="mt-8 text-center">
                             <Link
-                                href={`/locations/${locationSlug}`}
+                                href="/prices"
                                 className="inline-flex items-center gap-2 text-gold hover:text-gold-dark font-medium transition-colors"
                             >
                                 <ArrowRight className="w-4 h-4" />
@@ -712,8 +681,41 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {/* Reviews Section */}
-                <ReviewsSection />
+                {/* FAQ Section - Service-specific questions */}
+                <section className="py-16 bg-secondary/20">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
+                            Frequently Asked Questions
+                        </h2>
+                        <p className="text-muted-foreground text-center mb-10">
+                            Common questions about {service.keyword} in {location.name}
+                        </p>
+
+                        <div className="space-y-6">
+                            {faqs.map((faq, index) => (
+                                <div key={index} className="bg-background border border-border rounded-xl p-6">
+                                    <h3 className="font-semibold text-foreground mb-3 text-lg">
+                                        {faq.question}
+                                    </h3>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        {faq.answer}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-10 text-center">
+                            <p className="text-muted-foreground mb-4">
+                                Have more questions about {service.keyword}?
+                            </p>
+                            <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
+                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                    Ask Us on WhatsApp
+                                </a>
+                            </Button>
+                        </div>
+                    </div>
+                </section>
 
                 {/* Final CTA */}
                 <section className="py-20 text-center bg-foreground text-background">

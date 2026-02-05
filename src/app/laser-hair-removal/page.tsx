@@ -4,7 +4,15 @@ import { SEOLandingPage } from "@/components/seo/SEOLandingPage";
 export const metadata: Metadata = {
     title: "Laser Hair Removal Hartbeespoort | IPL Permanent Hair Removal",
     description: "Say goodbye to shaving forever! Professional IPL laser hair removal for face, body, bikini & legs. CE-approved technology with permanent results in Hartbeespoort.",
-    keywords: "laser hair removal hartbeespoort, IPL treatment south africa, permanent hair removal, IPL hair removal, laser hair removal near me, bikini laser, facial hair removal",
+    keywords: [
+        "laser hair removal hartbeespoort",
+        "IPL treatment south africa",
+        "permanent hair removal",
+        "IPL hair removal",
+        "laser hair removal near me",
+        "bikini laser",
+        "facial hair removal",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/laser-hair-removal",
     },

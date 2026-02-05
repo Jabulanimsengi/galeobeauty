@@ -4,7 +4,16 @@ import { SEOLandingPage } from "@/components/seo/SEOLandingPage";
 export const metadata: Metadata = {
     title: "Body Contouring Hartbeespoort | Non-Surgical Fat Reduction & Body Sculpting",
     description: "Transform your body with advanced body contouring treatments in Hartbeespoort. Fat freezing, EMS body sculpting & non-surgical fat reduction. CE-approved technology with proven results.",
-    keywords: "body contouring hartbeespoort, body sculpting south africa, non-surgical fat reduction, EMS body sculpting, fat freezing, cryolipolysis, body shaping salon, cellulite reduction",
+    keywords: [
+        "body contouring hartbeespoort",
+        "body sculpting south africa",
+        "non-surgical fat reduction",
+        "EMS body sculpting",
+        "fat freezing",
+        "cryolipolysis",
+        "body shaping salon",
+        "cellulite reduction",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/body-contouring",
     },

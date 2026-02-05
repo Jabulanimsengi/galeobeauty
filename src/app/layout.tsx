@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cormorant, montserrat } from "@/lib/fonts";
 import { FloatingSocials } from "@/components/ui/floating-socials";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
+import { AGGREGATE_RATING } from "@/lib/reviews-data";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -674,10 +675,7 @@ export default function RootLayout({
               priceRange: "$$",
               aggregateRating: {
                 "@type": "AggregateRating",
-                ratingValue: "4.9",
-                reviewCount: "302",
-                bestRating: "5",
-                worstRating: "1",
+                ...AGGREGATE_RATING,
               },
             }),
           }}

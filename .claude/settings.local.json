@@ -18,7 +18,11 @@
       "Bash(taskkill:*)",
       "Bash(git add:*)",
       "Bash(git push:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(grep:*)",
+      "Bash(wc:*)",
+      "Bash(find:*)",
+      "Bash(powershell -Command \"if \\(Test-Path ''C:\\\\Users\\\\ramos\\\\all_coding\\\\galeobeauty\\\\.next''\\) { $size = \\(Get-ChildItem -Recurse ''C:\\\\Users\\\\ramos\\\\all_coding\\\\galeobeauty\\\\.next'' -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; Write-Host \\(''Total .next size: {0:N2} MB'' -f \\($size / 1MB\\)\\); Write-Host ''''; Write-Host ''Breakdown:''; Get-ChildItem ''C:\\\\Users\\\\ramos\\\\all_coding\\\\galeobeauty\\\\.next'' -Directory | ForEach-Object { $s = \\(Get-ChildItem -Recurse $_FullName -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum\\).Sum; Write-Host \\(''{0}: {1:N2} MB'' -f $_Name, \\($s / 1MB\\)\\) } } else { Write-Host ''.next folder not found - run a build first'' }\")"
     ]
   }
 }

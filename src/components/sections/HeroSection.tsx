@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
@@ -101,14 +102,14 @@ const fadeUpVariants = {
 export function HeroSection() {
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    // Array of hero images
+    // Array of hero images with descriptive alt text
     const heroImages = [
-        "/images/main_hero_section2.jpeg",
-        "/images/main_hero_section03.png",
-        "/images/main_hero_section04.png",
-        "/images/main_hero_section05.png",
-        "/images/main_hero_section06.png",
-        "/images/main_hero_section07.png",
+        { src: "/images/main_hero_section2.jpeg", alt: "Galeo Beauty Salon luxury treatment room in Hartbeespoort" },
+        { src: "/images/main_hero_section03.png", alt: "Professional facial skincare treatment at Galeo Beauty" },
+        { src: "/images/main_hero_section04.png", alt: "Lash extension and beauty services at Galeo Beauty Spa" },
+        { src: "/images/main_hero_section05.png", alt: "Premium beauty and wellness treatments in Hartbeespoort" },
+        { src: "/images/main_hero_section06.png", alt: "Medical aesthetics and anti-aging treatments at Galeo Beauty" },
+        { src: "/images/main_hero_section07.png", alt: "Relaxing spa day experience at Galeo Beauty Hartbeespoort" },
     ];
 
     // Auto-slide effect - changes image every 5 seconds
@@ -126,16 +127,20 @@ export function HeroSection() {
             {/* Image carousel - Full Width Background */}
             <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>
                 {heroImages.map((image, index) => (
-                    <img
-                        key={image}
-                        src={image}
-                        alt={`Galeo Beauty Spa ${index + 1}`}
-                        className="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ease-in-out"
+                    <Image
+                        key={image.src}
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        sizes="100vw"
+                        className="object-cover object-center transition-opacity duration-1000 ease-in-out"
                         style={{
                             opacity: currentSlide === index ? 1 : 0,
                             willChange: 'opacity',
                             transform: 'translateZ(0)',
                         }}
+                        priority={index === 0}
+                        quality={85}
                     />
                 ))}
             </div>
@@ -278,7 +283,7 @@ export function HeroSection() {
 
             {/* Carousel Navigation Dots - Centered */}
             <div className="absolute bottom-32 sm:bottom-36 lg:bottom-40 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2">
-                {heroImages.map((_, index) => (
+                {heroImages.map((image, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}

@@ -4,7 +4,16 @@ import { SEOLandingPage } from "@/components/seo/SEOLandingPage";
 export const metadata: Metadata = {
     title: "Medical Spa Hartbeespoort | Aesthetic Clinic & Advanced Treatments",
     description: "Premier medical spa offering advanced aesthetic treatments. Injectable fillers, laser treatments, body contouring, medical-grade facials & skin rejuvenation in Hartbeespoort.",
-    keywords: "medical spa hartbeespoort, aesthetic clinic south africa, medical grade skincare, aesthetic procedures, medical aesthetics, skin tightening, laser treatments, medi-spa",
+    keywords: [
+        "medical spa hartbeespoort",
+        "aesthetic clinic south africa",
+        "medical grade skincare",
+        "aesthetic procedures",
+        "medical aesthetics",
+        "skin tightening",
+        "laser treatments",
+        "medi-spa",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/medical-spa",
     },

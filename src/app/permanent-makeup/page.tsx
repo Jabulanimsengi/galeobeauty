@@ -4,7 +4,17 @@ import { SEOLandingPage } from "@/components/seo/SEOLandingPage";
 export const metadata: Metadata = {
     title: "Permanent Makeup Hartbeespoort | Microblading, Powder Brows & Lip Blush",
     description: "Wake up with perfect makeup! Certified permanent makeup artist offering microblading, powder brows, hybrid brows, permanent eyeliner & lip blush in Hartbeespoort.",
-    keywords: "permanent makeup hartbeespoort, semi-permanent makeup south africa, microblading, powder brows, eyebrow tattoo, permanent eyeliner, cosmetic tattooing, ombre brows, lip blush",
+    keywords: [
+        "permanent makeup hartbeespoort",
+        "semi-permanent makeup south africa",
+        "microblading",
+        "powder brows",
+        "eyebrow tattoo",
+        "permanent eyeliner",
+        "cosmetic tattooing",
+        "ombre brows",
+        "lip blush",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/permanent-makeup",
     },

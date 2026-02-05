@@ -14,6 +14,7 @@ interface TreatmentListItemProps {
   note?: string;
   isSelected?: boolean;
   onToggle: (treatment: SelectedTreatment) => void;
+  detailsLink?: string;
 }
 
 export function TreatmentListItem({
@@ -25,6 +26,7 @@ export function TreatmentListItem({
   note,
   isSelected = false,
   onToggle,
+  detailsLink,
 }: TreatmentListItemProps) {
   const [expanded, setExpanded] = useState(false);
 
