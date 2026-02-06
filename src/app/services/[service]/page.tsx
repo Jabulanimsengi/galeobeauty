@@ -41,16 +41,28 @@ export async function generateMetadata({ params }: { params: Promise<{ service: 
     const category = serviceCategories.find((c) => c.id === service.categoryId);
     const categoryTitle = category?.title || "Beauty Services";
 
+    const kw = service.keyword.toLowerCase();
+
     return {
         title: `${service.keyword} ${service.price} | ${categoryTitle} Hartbeespoort`,
-        description: `Professional ${service.keyword.toLowerCase()} services at Galeo Beauty in Hartbeespoort. ${service.price}${service.duration ? ` • ${service.duration}` : ''}. Serving Pretoria, Johannesburg, Centurion. Book now!`,
-        keywords: `${service.keyword.toLowerCase()}, ${service.keyword.toLowerCase()} hartbeespoort, ${service.keyword.toLowerCase()} near me, ${service.keyword.toLowerCase()} pretoria, ${categoryTitle.toLowerCase()}, galeo beauty`,
+        description: `Professional ${kw} at Galeo Beauty in Hartbeespoort. ${service.price}${service.duration ? ` • ${service.duration}` : ''}. Serving Pretoria, Johannesburg, Centurion. Walk-ins welcome. Book now!`,
+        keywords: [
+            `${kw} Hartbeespoort`,
+            `${kw} near me`,
+            `${kw} prices South Africa`,
+            `${kw} Pretoria`,
+            `best ${kw} near me`,
+            `affordable ${kw}`,
+            `how much does ${kw} cost`,
+            categoryTitle.toLowerCase(),
+            "Galeo Beauty",
+        ],
         alternates: {
             canonical: `https://www.galeobeauty.com/services/${service.slug}`,
         },
         openGraph: {
             title: `${service.keyword} - ${service.price}`,
-            description: `Professional ${service.keyword.toLowerCase()} at Galeo Beauty Hartbeespoort`,
+            description: `Professional ${kw} at Galeo Beauty Hartbeespoort. ${service.price}. Book now!`,
             url: `https://www.galeobeauty.com/services/${service.slug}`,
             type: "website",
         },
@@ -90,8 +102,60 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
         "Flexible appointment scheduling",
     ];
 
+    // JSON-LD Structured Data
+    const serviceSchema = {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        name: `${service.keyword} at Galeo Beauty`,
+        description: `Professional ${service.keyword.toLowerCase()} at Galeo Beauty in Hartbeespoort. ${service.price}${service.duration ? ` • ${service.duration}` : ''}.`,
+        serviceType: [service.keyword, category.title, "Beauty Treatment"],
+        provider: {
+            "@type": "BeautySalon",
+            name: "Galeo Beauty Salon & Spa",
+            image: "https://www.galeobeauty.com/images/logo.png",
+            priceRange: "$$",
+            address: {
+                "@type": "PostalAddress",
+                streetAddress: businessInfo.address.street,
+                addressLocality: "Hartbeespoort",
+                addressRegion: "North West",
+                postalCode: "0216",
+                addressCountry: "ZA",
+            },
+            telephone: businessInfo.phone,
+            url: "https://www.galeobeauty.com",
+        },
+        offers: {
+            "@type": "Offer",
+            price: service.price.replace(/[^0-9.]/g, ""),
+            priceCurrency: "ZAR",
+            availability: "https://schema.org/InStock",
+        },
+        areaServed: [
+            { "@type": "City", name: "Hartbeespoort" },
+            { "@type": "City", name: "Pretoria" },
+            { "@type": "City", name: "Johannesburg" },
+        ],
+    };
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://www.galeobeauty.com" },
+            { "@type": "ListItem", position: 2, name: "Services", item: "https://www.galeobeauty.com/prices" },
+            { "@type": "ListItem", position: 3, name: category.title, item: `https://www.galeobeauty.com/prices/${category.id}` },
+            { "@type": "ListItem", position: 4, name: service.keyword, item: `https://www.galeobeauty.com/services/${service.slug}` },
+        ],
+    };
+
     return (
         <>
+            {/* JSON-LD Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceSchema, breadcrumbSchema]) }}
+            />
             <Header />
             <main className="bg-background">
                 {/* Hero Section */}

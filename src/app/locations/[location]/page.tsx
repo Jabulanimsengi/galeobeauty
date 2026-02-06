@@ -8,6 +8,7 @@ import {
     getDrivingContext,
     TARGET_LOCATIONS
 } from "@/lib/seo-data";
+import { businessInfo } from "@/lib/constants";
 import { CheckCircle } from "lucide-react";
 import { LocationServicesClient } from "@/components/location/LocationServicesClient";
 
@@ -39,11 +40,13 @@ export async function generateMetadata({ params }: { params: { location: string 
         keywords: [
             `beauty salon ${location.name.toLowerCase()}`,
             `spa near ${location.name.toLowerCase()}`,
-            `facials ${location.name.toLowerCase()}`,
-            `lash extensions ${location.name.toLowerCase()}`,
-            `beauty treatments ${location.region.toLowerCase()}`,
-            `salon near ${location.name.toLowerCase()}`,
-            `day spa ${location.name.toLowerCase()}`,
+            `best beauty salon ${location.name.toLowerCase()}`,
+            `skoonheidsalon ${location.name.toLowerCase()}`,
+            `beauty treatments ${location.name.toLowerCase()}`,
+            `facials nails lashes ${location.name.toLowerCase()}`,
+            `affordable salon near ${location.name.toLowerCase()}`,
+            `day spa ${location.region.toLowerCase()}`,
+            `walk-in salon ${location.name.toLowerCase()}`,
         ],
         alternates: {
             canonical: `https://www.galeobeauty.com/locations/${params.location}`,
@@ -80,8 +83,63 @@ export default async function LocationHubPage({ params }: PageProps) {
 
     const drivingContext = getDrivingContext(location);
 
+    // JSON-LD Structured Data
+    const localBusinessSchema = {
+        "@context": "https://schema.org",
+        "@type": "BeautySalon",
+        name: `Galeo Beauty - Serving ${location.name}`,
+        description: `Professional beauty treatments for ${location.name} residents. Facials, lash extensions, nails, fat freezing, permanent makeup & more at our Hartbeespoort salon.`,
+        image: "https://www.galeobeauty.com/images/logo.png",
+        priceRange: "$$",
+        aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.9",
+            reviewCount: "159",
+            bestRating: "5",
+        },
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: businessInfo.address.street,
+            addressLocality: "Hartbeespoort",
+            addressRegion: "North West",
+            postalCode: "0216",
+            addressCountry: "ZA",
+        },
+        geo: {
+            "@type": "GeoCoordinates",
+            latitude: -25.753414,
+            longitude: 27.909252,
+        },
+        telephone: businessInfo.phone,
+        url: "https://www.galeobeauty.com",
+        areaServed: {
+            "@type": "Place",
+            name: location.name,
+            containedInPlace: { "@type": "AdministrativeArea", name: location.region },
+        },
+        openingHoursSpecification: [
+            { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "18:00" },
+            { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "08:00", closes: "16:00" },
+        ],
+    };
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: "https://www.galeobeauty.com" },
+            { "@type": "ListItem", position: 2, name: "Locations", item: "https://www.galeobeauty.com/locations" },
+            { "@type": "ListItem", position: 3, name: location.name, item: `https://www.galeobeauty.com/locations/${locationSlug}` },
+        ],
+    };
+
     return (
         <>
+            {/* JSON-LD Structured Data */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify([localBusinessSchema, breadcrumbSchema]) }}
+            />
             <Header />
             <main className="bg-background min-h-screen">
                 {/* Hero Section */}

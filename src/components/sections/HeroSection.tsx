@@ -183,6 +183,7 @@ export function HeroSection() {
 
                         {/* Headline with Staggered Animation */}
                         <h1 className="font-serif text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
+                            <span className="sr-only">Galeo Beauty Salon & Spa Hartbeespoort – </span>
                             <motion.span variants={wordVariants} className="inline-block drop-shadow-lg">Science </motion.span>
                             <motion.span
                                 variants={wordVariants}

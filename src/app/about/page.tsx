@@ -7,7 +7,7 @@ import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Shield, Award } from "lucide-react";
+import { Sparkles, Heart, Shield, Award, CheckCircle, MapPin, Clock, Star } from "lucide-react";
 
 const values = [
     {
@@ -50,6 +50,7 @@ export default function AboutPage() {
                                 The Galeo Standard
                             </span>
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
+                                <span className="sr-only">About Galeo Beauty Salon Hartbeespoort – </span>
                                 Defined by <span className="text-gold italic">Science</span>.<br />
                                 Inspired by <span className="text-gold italic">Art</span>.
                             </h1>
@@ -111,6 +112,83 @@ export default function AboutPage() {
                                     <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-white rounded-full px-8">
                                         <NavLink href="/prices">Explore Our Treatments</NavLink>
                                     </Button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* E-E-A-T Credentials Section */}
+                <section className="py-20 lg:py-28 bg-white">
+                    <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="text-center mb-16"
+                        >
+                            <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-4 block">
+                                Why Trust Galeo Beauty
+                            </span>
+                            <h2 className="font-serif text-3xl md:text-4xl text-foreground">
+                                Our Qualifications & <span className="text-gold">Expertise</span>
+                            </h2>
+                        </motion.div>
+
+                        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+                            {/* Founder Credentials */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6 }}
+                            >
+                                <h3 className="font-serif text-2xl text-foreground mb-6">Meet Our Founder</h3>
+                                <div className="bg-secondary/10 rounded-xl p-6 border border-border/40 mb-6">
+                                    <p className="font-semibold text-foreground text-lg mb-1">Dandi Meyer</p>
+                                    <p className="text-gold text-sm font-medium mb-4">Founder & Lead Practitioner</p>
+                                    <div className="space-y-3">
+                                        {[
+                                            "Certified aesthetic practitioner with 5+ years of experience",
+                                            "Trained in advanced injectable techniques and medical aesthetics",
+                                            "Dermalogica & QMS Medicosmetics certified skin therapist",
+                                            "Specialist in permanent makeup and cosmetic tattooing",
+                                            "Ongoing professional development in latest beauty technologies",
+                                        ].map((credential, idx) => (
+                                            <div key={idx} className="flex items-start gap-3">
+                                                <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                                                <span className="text-muted-foreground text-sm">{credential}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* Salon Trust Signals */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                            >
+                                <h3 className="font-serif text-2xl text-foreground mb-6">Salon Credentials</h3>
+                                <div className="space-y-4">
+                                    {[
+                                        { icon: Star, title: "4.9 Star Rating", desc: "Based on 159+ verified client reviews across Google and Fresha" },
+                                        { icon: Shield, title: "CE-Approved Equipment", desc: "All aesthetic devices are medically certified and regularly maintained" },
+                                        { icon: Award, title: "Premium Brand Partners", desc: "Official stockist of Dermalogica, QMS Medicosmetics, and Kryolan" },
+                                        { icon: MapPin, title: "Established Since 2020", desc: "Proudly serving Hartbeespoort, Pretoria, and greater Gauteng" },
+                                        { icon: Clock, title: "5,000+ Treatments Performed", desc: "From facials to injectables, our team delivers consistent results" },
+                                    ].map((item, idx) => (
+                                        <div key={idx} className="flex items-start gap-4 p-4 bg-secondary/10 rounded-xl border border-border/40">
+                                            <item.icon className="w-6 h-6 text-gold flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-semibold text-foreground text-sm">{item.title}</p>
+                                                <p className="text-muted-foreground text-sm">{item.desc}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </motion.div>
                         </div>

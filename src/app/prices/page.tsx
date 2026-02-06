@@ -121,6 +121,7 @@ function PricesContent() {
                             Transparent Pricing
                         </span>
                         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
+                            <span className="sr-only">Beauty Treatment Prices Hartbeespoort – </span>
                             Our <span className="text-gold">Prices</span>
                         </h1>
                         <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-2xl mx-auto">

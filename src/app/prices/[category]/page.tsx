@@ -23,7 +23,7 @@ const categoryMeta: Record<string, {
     "hart-aesthetics": {
         title: "Hart Aesthetics - Dermal Fillers & Injectables",
         description: "Professional dermal fillers, lip fillers, cheek fillers, and Botox treatments in Hartbeespoort. Medical-grade injectables by certified practitioners. Book your consultation today.",
-        keywords: ["dermal fillers Hartbeespoort", "lip fillers near me", "cheek fillers", "Botox treatment", "anti-ageing injectables", "face lift injections", "cosmetic injectables Pretoria", "beauty clinic Hartbeespoort"],
+        keywords: ["dermal fillers Hartbeespoort", "lip fillers price South Africa", "cheek fillers near me", "Botox alternative Pretoria", "how much do lip fillers cost", "anti-wrinkle injections near me", "non-surgical facelift Hartbeespoort", "cosmetic injectables Gauteng"],
         h1: "Hart Aesthetics - Professional Injectables",
         intro: "Transform your appearance with our medical-grade injectable treatments. Our certified practitioners use premium dermal fillers and Botox to deliver natural-looking, rejuvenating results.",
         benefits: ["Medical-grade products", "Certified practitioners", "Natural-looking results", "Personalized treatment plans"],
@@ -35,7 +35,7 @@ const categoryMeta: Record<string, {
     "fat-freezing": {
         title: "Fat Freezing Cryolipolysis Treatment",
         description: "Non-invasive fat freezing (cryolipolysis) treatments in Hartbeespoort. Target stubborn fat on belly, love handles, arms, and thighs. CE approved, safe and effective body contouring.",
-        keywords: ["fat freezing Hartbeespoort", "cryolipolysis near me", "body contouring", "non-surgical fat removal", "fat freeze treatment Pretoria", "coolsculpting alternative", "belly fat treatment", "love handles removal"],
+        keywords: ["fat freezing cost South Africa", "cryolipolysis prices Hartbeespoort", "body contouring near me", "how much does fat freezing cost", "stubborn belly fat treatment", "love handles removal Pretoria", "non-surgical fat removal Gauteng", "coolsculpting alternative near me"],
         h1: "Fat Freezing - Cryolipolysis Body Contouring",
         intro: "Eliminate stubborn fat without surgery using our CE-approved cryolipolysis treatment. Fat freezing targets and destroys fat cells that diet and exercise can't reach.",
         benefits: ["Non-invasive procedure", "No downtime required", "Permanent fat cell reduction", "CE approved equipment"],
@@ -47,7 +47,7 @@ const categoryMeta: Record<string, {
     "slimming": {
         title: "Tesla EMS Slimming & Weight Loss Treatment",
         description: "Revolutionary Tesla EMS slimming machine in Hartbeespoort. Build muscle and burn fat simultaneously with High-Intensity Focused Electromagnetic technology. No gym required.",
-        keywords: ["EMS slimming Hartbeespoort", "Tesla body sculpting", "muscle building treatment", "weight loss Hartbeespoort", "body toning", "HIFEM technology", "non-invasive body sculpting", "slimming spa near me"],
+        keywords: ["EMS slimming prices Hartbeespoort", "Tesla body sculpting near me", "muscle toning treatment cost", "non-invasive weight loss Pretoria", "body toning near me", "HIFEM technology South Africa", "slimming spa Gauteng", "tummy toning treatment"],
         h1: "Tesla EMS Slimming - Build Muscle, Burn Fat",
         intro: "Experience the revolutionary Tesla EMS Slimming Machine. Using High-Intensity Focused Electromagnetic technology, it induces powerful muscle contractions equivalent to 20,000 sit-ups in 30 minutes.",
         benefits: ["Builds muscle & burns fat", "30-minute treatments", "No downtime", "Visible results in weeks"],
@@ -59,7 +59,7 @@ const categoryMeta: Record<string, {
     "dermalogica": {
         title: "Dermalogica Facial Treatments & Skincare",
         description: "Professional Dermalogica facial treatments in Hartbeespoort. Pro skin treatments including microneedling, power peels, dermaplaning, and customized facials. Expert skincare specialists.",
-        keywords: ["Dermalogica facial Hartbeespoort", "professional facial near me", "microneedling", "power peel", "dermaplaning", "skincare treatment Pretoria", "anti-ageing facial", "skin specialist Hartbeespoort"],
+        keywords: ["Dermalogica facial prices Hartbeespoort", "professional facial near me", "acne treatment facial", "oily skin facial near me", "best facial for anti-aging", "skincare treatment Pretoria", "deep cleansing facial prices", "skin specialist Gauteng"],
         h1: "Dermalogica Professional Skincare Treatments",
         intro: "Experience world-class skincare with our Dermalogica professional treatments. Our trained skin therapists customize each treatment to address your unique skin concerns.",
         benefits: ["Customized skin analysis", "Professional-grade products", "Trained skin therapists", "Visible results"],
@@ -71,7 +71,7 @@ const categoryMeta: Record<string, {
     "ipl": {
         title: "IPL Laser Hair Removal - Ladies & Gents",
         description: "CE-approved IPL laser hair removal in Hartbeespoort. Permanent hair reduction for face, body, bikini, and intimate areas. Safe treatments for ladies and gents.",
-        keywords: ["IPL hair removal Hartbeespoort", "laser hair removal near me", "permanent hair removal", "Brazilian IPL", "Hollywood IPL", "full body laser", "mens laser hair removal", "facial laser Pretoria"],
+        keywords: ["IPL hair removal prices Hartbeespoort", "laser hair removal cost South Africa", "permanent hair removal near me", "painless hair removal Pretoria", "Brazilian IPL prices", "full body laser near me", "mens laser hair removal Gauteng", "how much does laser hair removal cost"],
         h1: "IPL Laser Hair Removal - Permanent Results",
         intro: "Achieve silky smooth skin with our advanced CE-approved IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
         benefits: ["CE approved equipment", "Permanent hair reduction", "Suitable for all areas", "Ladies & gents welcome"],
@@ -83,7 +83,7 @@ const categoryMeta: Record<string, {
     "makeup": {
         title: "Professional Make-Up Services",
         description: "Professional make-up services in Hartbeespoort. Kryolan trained artists for bridal, evening, and special occasion make-up. Flawless looks for your special day.",
-        keywords: ["bridal makeup Hartbeespoort", "wedding makeup artist", "professional makeup near me", "evening makeup", "special occasion makeup", "makeup artist Pretoria", "Kryolan makeup"],
+        keywords: ["bridal makeup Hartbeespoort", "wedding makeup artist near me", "matric dance makeup prices", "matric farewell makeup Pretoria", "professional makeup Gauteng", "evening makeup near me", "how much does bridal makeup cost"],
         h1: "Professional Make-Up Artistry",
         intro: "Look stunning for any occasion with our professional make-up services. Our Kryolan-trained artists create flawless looks from natural day makeup to glamorous bridal transformations.",
         benefits: ["Kryolan professional products", "Trained makeup artists", "Long-lasting formulas", "Personalized looks"],
@@ -95,7 +95,7 @@ const categoryMeta: Record<string, {
     "medical": {
         title: "Medical Aesthetic Treatments",
         description: "Advanced medical aesthetic treatments in Hartbeespoort. Vaginal tightening, fractional laser, and Plasmage treatments by certified practitioners. Medical-grade results.",
-        keywords: ["medical aesthetics Hartbeespoort", "vaginal tightening", "fractional laser", "Plasmage treatment", "skin tightening", "medical spa Pretoria", "aesthetic clinic near me"],
+        keywords: ["medical aesthetics prices Hartbeespoort", "fractional laser cost South Africa", "skin tightening treatment near me", "Plasmage treatment prices", "scar treatment near me", "medical spa Pretoria", "aesthetic clinic Gauteng"],
         h1: "Medical Aesthetic Treatments",
         intro: "Advanced medical-grade aesthetic treatments performed by certified practitioners. We offer cutting-edge solutions for skin tightening, rejuvenation, and intimate wellness.",
         benefits: ["Medical-grade equipment", "Certified practitioners", "Private consultations", "Proven results"],
@@ -107,7 +107,7 @@ const categoryMeta: Record<string, {
     "permanent-makeup": {
         title: "Permanent Make-Up - Brows, Lips & Eyes",
         description: "Semi-permanent makeup in Hartbeespoort. Microblading, powder brows, lip contour, and eyeliner. Wake up beautiful every day with long-lasting results.",
-        keywords: ["permanent makeup Hartbeespoort", "microblading near me", "powder brows", "lip tattoo", "permanent eyeliner", "semi-permanent makeup Pretoria", "Phi-Brows", "cosmetic tattooing"],
+        keywords: ["microblading cost South Africa", "powder brows prices Hartbeespoort", "permanent makeup near me", "how much does microblading cost", "lip blush tattoo prices", "permanent eyeliner Pretoria", "semi-permanent brows Gauteng", "best microblading near me"],
         h1: "Permanent Make-Up - Wake Up Beautiful",
         intro: "Simplify your beauty routine with our semi-permanent makeup services. From perfectly shaped brows to defined lips and eyes, wake up looking flawless every day.",
         benefits: ["Long-lasting results", "Natural-looking enhancement", "Time-saving beauty", "Certified technicians"],
@@ -119,7 +119,7 @@ const categoryMeta: Record<string, {
     "pro-skin": {
         title: "Pro Skin Treatments - Advanced Skincare",
         description: "Professional skin treatments in Hartbeespoort. Dermaplaning, microneedling, and high-frequency facials. Advanced solutions for all skin concerns.",
-        keywords: ["pro skin treatment Hartbeespoort", "dermaplaning near me", "microneedling facial", "high frequency facial", "skin rejuvenation", "acne treatment", "anti-ageing treatment Pretoria"],
+        keywords: ["dermaplaning prices Hartbeespoort", "microneedling cost South Africa", "acne scar treatment near me", "pigmentation treatment Pretoria", "skin rejuvenation prices", "how much does microneedling cost", "best facial for acne scars"],
         h1: "Pro Skin - Advanced Skin Treatments",
         intro: "Transform your skin with our professional-grade treatments. From dermaplaning to microneedling, we offer advanced solutions targeting ageing, acne, scarring, and uneven skin tone.",
         benefits: ["Advanced techniques", "Visible improvements", "Customized treatments", "Expert therapists"],
@@ -131,7 +131,7 @@ const categoryMeta: Record<string, {
     "qms-facial": {
         title: "QMS Medicosmetics Facials",
         description: "Premium QMS Medicosmetics facials in Hartbeespoort. Medical-grade skincare with collagen treatments, chemical peels, and rejuvenating facials. German precision skincare.",
-        keywords: ["QMS facial Hartbeespoort", "collagen facial near me", "chemical peel", "rejuvenating facial", "medical skincare", "German skincare Pretoria", "premium facial treatment"],
+        keywords: ["QMS facial prices Hartbeespoort", "collagen facial near me", "best anti-aging facial South Africa", "fine lines treatment near me", "luxury facial prices Pretoria", "wrinkle treatment facial", "premium skincare Gauteng"],
         h1: "QMS Medicosmetics - Premium Facials",
         intro: "Experience German precision skincare with QMS Medicosmetics. Our premium facials use medical-grade formulations to deliver visible anti-ageing and rejuvenating results.",
         benefits: ["German precision formulas", "Medical-grade ingredients", "Collagen-boosting treatments", "Visible results"],
@@ -143,7 +143,7 @@ const categoryMeta: Record<string, {
     "sunbed": {
         title: "Sunbed Tanning & Spray Tan",
         description: "Safe sunbed tanning and professional spray tan services in Hartbeespoort. Achieve a beautiful golden glow year-round. Package deals available.",
-        keywords: ["sunbed Hartbeespoort", "spray tan near me", "tanning salon", "indoor tanning", "golden tan", "tanning packages Pretoria", "sunless tan"],
+        keywords: ["sunbed prices Hartbeespoort", "spray tan near me", "tanning salon Pretoria", "sunbed packages near me", "how much does spray tan cost", "indoor tanning Gauteng", "bridal tan near me"],
         h1: "Sunbed & Spray Tan Services",
         intro: "Achieve a beautiful sun-kissed glow safely with our sunbed and spray tan services. Perfect for special occasions or maintaining your tan year-round.",
         benefits: ["Controlled UV exposure", "Professional spray tans", "Package savings", "Year-round glow"],
@@ -155,7 +155,7 @@ const categoryMeta: Record<string, {
     "waxing": {
         title: "Professional Waxing Services",
         description: "Professional waxing services in Hartbeespoort. Brazilian, Hollywood, full body waxing for ladies and gents. Hygienic, gentle techniques for smooth skin.",
-        keywords: ["waxing Hartbeespoort", "Brazilian wax near me", "Hollywood wax", "full body wax", "mens waxing", "bikini wax Pretoria", "leg waxing", "face waxing"],
+        keywords: ["waxing prices Hartbeespoort", "Brazilian wax cost near me", "Hollywood wax prices", "how much does a Brazilian wax cost", "mens waxing near me", "full body wax Pretoria", "painless waxing Gauteng", "affordable waxing near me"],
         h1: "Professional Waxing - Smooth & Silky Skin",
         intro: "Achieve silky smooth skin with our professional waxing services. We use gentle techniques and premium wax for minimal discomfort and long-lasting results.",
         benefits: ["Hygienic environment", "Premium quality wax", "Gentle techniques", "Long-lasting smoothness"],
@@ -167,7 +167,7 @@ const categoryMeta: Record<string, {
     "hair": {
         title: "Hair Salon - Cuts, Colour & Styling",
         description: "Professional hair salon in Hartbeespoort. Haircuts, blow dry, colour, foils, balayage, and Brazilian blow treatments. Expert stylists for all hair types.",
-        keywords: ["hair salon Hartbeespoort", "haircut near me", "hair colour", "balayage", "Brazilian blow", "foils highlights", "blow dry bar Pretoria", "hair styling"],
+        keywords: ["hair salon prices Hartbeespoort", "balayage cost South Africa", "haircut near me", "hair colour prices Pretoria", "keratin treatment cost", "highlights near me", "blow dry bar Gauteng", "best hair salon near me"],
         h1: "Hair Salon - Expert Cuts & Colour",
         intro: "Transform your look with our professional hair services. From precision cuts to stunning colour transformations, our expert stylists create beautiful results for all hair types.",
         benefits: ["Expert stylists", "Premium products", "All hair types welcome", "Latest techniques"],
@@ -179,7 +179,7 @@ const categoryMeta: Record<string, {
     "nails": {
         title: "Nail Salon - Manicure, Pedicure & Nail Art",
         description: "Professional nail services in Hartbeespoort. Manicures, pedicures, acrylic nails, gel nails, and nail art. Hygienic nail artistry with premium products.",
-        keywords: ["nail salon Hartbeespoort", "manicure near me", "pedicure", "acrylic nails", "gel nails", "nail art Pretoria", "nail extensions", "nail spa"],
+        keywords: ["nail prices Hartbeespoort", "gel nails cost near me", "acrylic nails prices South Africa", "manicure pedicure near me", "how much do acrylic nails cost", "nail salon Pretoria", "affordable nails Gauteng", "best nail salon near me"],
         h1: "Nail Artistry - Manicure & Pedicure",
         intro: "Pamper your hands and feet with our professional nail services. From classic manicures to stunning nail art and durable acrylics, we create beautiful nails you'll love.",
         benefits: ["Hygienic practices", "Premium nail products", "Skilled nail technicians", "Lasting results"],
@@ -191,7 +191,7 @@ const categoryMeta: Record<string, {
     "lashes": {
         title: "Lash Extensions & Brow Services",
         description: "Professional lash extensions and brow treatments in Hartbeespoort. Russian volume lashes, classic lashes, lash lifts, brow lamination, and tinting. Certified lash technicians.",
-        keywords: ["lash extensions Hartbeespoort", "Russian volume lashes", "eyelash extensions near me", "lash lift", "brow lamination", "brow tinting Pretoria", "eyelash salon"],
+        keywords: ["lash extensions prices Hartbeespoort", "how much do lash extensions cost", "volume lashes near me", "lash lift prices South Africa", "brow lamination cost", "best lash extensions Pretoria", "eyelash extensions Gauteng", "lash fill near me"],
         h1: "Lashes & Brows - Eye Enhancement",
         intro: "Enhance your natural beauty with our professional lash and brow services. From stunning volume lash extensions to perfectly shaped brows, we perfect every detail.",
         benefits: ["Certified lash technicians", "Premium lash materials", "Customized looks", "Long-lasting results"],
@@ -203,7 +203,7 @@ const categoryMeta: Record<string, {
     "hair-extensions": {
         title: "Hair Extensions - European Remy Human Hair",
         description: "Premium European Remy human hair extensions in Hartbeespoort. Tape-in, clip-in, keratin U-tip, micro loop, and halo hair. Double drawn, premium quality.",
-        keywords: ["hair extensions Hartbeespoort", "tape in extensions", "clip in hair", "Remy human hair", "hair extension salon Pretoria", "keratin extensions", "halo hair"],
+        keywords: ["hair extensions prices Hartbeespoort", "tape-in extensions cost South Africa", "clip-in hair near me", "Remy human hair extensions prices", "best hair extensions Pretoria", "how much do hair extensions cost", "hair extension salon Gauteng"],
         h1: "Hair Extensions - Premium Remy Human Hair",
         intro: "Add length, volume, and dimension with our premium European Remy human hair extensions. We offer various application methods to suit your lifestyle and desired look.",
         benefits: ["100% Remy human hair", "Double drawn quality", "Multiple methods available", "Expert application"],
@@ -315,6 +315,16 @@ export default async function CategoryPage({ params }: PageProps) {
         }
     };
 
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.galeobeauty.com" },
+            { "@type": "ListItem", "position": 2, "name": "Prices", "item": "https://www.galeobeauty.com/prices" },
+            { "@type": "ListItem", "position": 3, "name": category.title, "item": `https://www.galeobeauty.com/prices/${categoryId}` },
+        ],
+    };
+
     const faqJsonLd = faqs.length > 0 ? {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -334,6 +344,10 @@ export default async function CategoryPage({ params }: PageProps) {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
             />
             {faqJsonLd && (
                 <script

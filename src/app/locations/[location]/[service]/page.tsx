@@ -65,18 +65,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
     const description = `Book ${service.keyword} at Galeo Beauty Salon near ${location.name}, ${location.region}. Professional beauty spa & day spa treatments in Hartbeespoort. Walk-in welcome, affordable prices from ${service.price}. Top-rated beauty parlour.`;
 
-    // Category-specific keywords
+    // Category-specific keywords with problem/solution and price-intent
     const categoryKeywords: Record<string, string[]> = {
-        "hart-aesthetics": ["aesthetic clinic", "anti-aging treatments", "injectable treatments", "botox alternative", "dermal fillers", "cosmetic treatments", "anti-wrinkle treatment", "rejuvenation clinic"],
-        "fat-freezing": ["body contouring", "fat reduction", "cryolipolysis", "non-surgical fat removal", "body sculpting", "weight loss treatment", "slimming treatment", "cellulite treatment", "body shaping", "inch loss"],
-        "dermalogica": ["skincare salon", "facial salon", "professional facial", "skin therapist", "skin analysis", "deep cleansing facial", "hydrating facial"],
-        "qms": ["anti-aging facial", "luxury facial", "medical skincare", "collagen treatment", "premium skincare", "wrinkle treatment", "skin tightening"],
-        "skin-treatments": ["skincare salon", "skin rejuvenation", "facial treatments", "skin clinic", "skin specialist", "microdermabrasion", "chemical peel", "LED therapy"],
-        "hair-care": ["hair salon", "hair treatment", "hair spa", "hair stylist", "hair care specialist", "hair conditioning", "hair repair", "scalp treatment"],
-        "nails": ["nail salon", "nail technician", "manicure pedicure", "gel nails", "nail art", "acrylic nails", "nail spa", "hand treatment", "foot treatment"],
-        "lashes-brows": ["lash salon", "brow salon", "lash technician", "brow specialist", "lash extensions", "lash lift", "brow lamination", "microblading"],
-        "waxing": ["waxing salon", "hair removal", "wax specialist", "body waxing", "smooth skin treatment", "brazilian wax", "full body wax", "leg wax"],
-        "tinting": ["brow tinting", "lash tinting", "tinting specialist", "semi-permanent color", "eyebrow dye", "lash dye", "brow shaping"],
+        "hart-aesthetics": [`anti-aging treatment ${location.name}`, `dermal fillers ${location.name}`, `lip fillers price ${location.name}`, "wrinkle treatment near me", "non-surgical facelift"],
+        "fat-freezing": [`fat freezing cost ${location.name}`, `body contouring ${location.name}`, "stubborn fat removal near me", "cryolipolysis prices", "non-surgical fat removal"],
+        "slimming": [`slimming treatment ${location.name}`, `EMS body sculpting ${location.name}`, "muscle toning near me", "inch loss treatment prices"],
+        "dermalogica": [`facial prices ${location.name}`, `acne treatment ${location.name}`, "oily skin facial near me", "Dermalogica facial near me", "professional skincare"],
+        "qms-facial": [`anti-aging facial ${location.name}`, `collagen facial ${location.name}`, "fine lines treatment near me", "luxury facial prices"],
+        "pro-skin": [`skin treatment ${location.name}`, "microneedling near me", "pigmentation treatment prices", "skin rejuvenation near me"],
+        "ipl": [`laser hair removal ${location.name}`, `IPL prices ${location.name}`, "permanent hair removal near me", "painless hair removal"],
+        "hair": [`hair salon ${location.name}`, `balayage ${location.name}`, "hair colour prices near me", "keratin treatment near me", "hair extensions prices"],
+        "nails": [`nail salon ${location.name}`, `gel nails ${location.name}`, "acrylic nails prices near me", "manicure pedicure near me"],
+        "lashes": [`lash extensions ${location.name}`, `lash extensions cost ${location.name}`, "volume lashes near me", "lash lift prices"],
+        "permanent-makeup": [`microblading ${location.name}`, `powder brows ${location.name}`, "microblading cost near me", "permanent eyebrows prices"],
+        "waxing": [`waxing ${location.name}`, `Brazilian wax ${location.name}`, "waxing prices near me", "Hollywood wax near me"],
+        "makeup": [`makeup artist ${location.name}`, `bridal makeup ${location.name}`, "matric dance makeup near me", "wedding makeup prices"],
+        "sunbed": [`sunbed ${location.name}`, `spray tan ${location.name}`, "tanning salon near me", "sunbed prices"],
+        "medical": [`fractional laser ${location.name}`, "skin tightening near me", "scar treatment prices"],
+        "hair-extensions": [`hair extensions ${location.name}`, "tape-in extensions prices", "clip-in extensions near me"],
     };
 
     const serviceCategoryKeywords = categoryKeywords[service.categoryId] || [];
@@ -85,26 +91,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title,
         description,
         keywords: [
-            // PRIMARY: Core service + location (High Search Volume)
+            // PRIMARY: Core service + location
             `${service.keyword} ${location.name}`,
             `${service.keyword} near me`,
-            `${service.keyword} near ${location.name}`,
 
-            // SECONDARY: Booking Intent (High Conversion)
-            `book ${service.keyword} ${location.name}`,
+            // CONVERSION: Price & booking intent
+            `${service.keyword} prices ${location.name}`,
             `best ${service.keyword} ${location.name}`,
+            `affordable ${service.keyword} near me`,
 
-            // TERTIARY: Regional Coverage (Medium Search Volume)
-            `${service.keyword} Pretoria`,
-            `${service.keyword} Gauteng`,
-            `beauty salon ${location.name}`,
-
-            // LOCAL ADVANTAGE: Afrikaans (Low Competition, High Relevance)
+            // LOCAL: Afrikaans
             `skoonheidsalon ${location.name}`,
 
-            // BRAND: Core Brand Terms
-            "Galeo Beauty",
-            "Galeo Beauty Hartbeespoort",
+            // CATEGORY-SPECIFIC (problem/solution + price-intent)
+            ...serviceCategoryKeywords.slice(0, 5),
         ],
         openGraph: {
             title,

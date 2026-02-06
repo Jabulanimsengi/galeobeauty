@@ -20,6 +20,7 @@ export default function ContactPage() {
                             Contact Us
                         </span>
                         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
+                            <span className="sr-only">Contact Galeo Beauty Hartbeespoort – </span>
                             Get in <span className="text-gold">Touch</span>
                         </h1>
                         <p className="text-muted-foreground text-base leading-relaxed font-light max-w-2xl mx-auto">

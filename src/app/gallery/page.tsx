@@ -29,6 +29,7 @@ export default function GalleryPage() {
                                 Portfolio
                             </span>
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
+                                <span className="sr-only">Galeo Beauty Treatment Gallery Hartbeespoort – </span>
                                 Visual <span className="italic text-gold">Artistry</span>
                             </h1>
                             <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto leading-relaxed">

@@ -256,10 +256,18 @@ export function Footer() {
 
             {/* Bottom Bar */}
             <div className="border-t border-background/10">
-                <div className="container mx-auto px-4 sm:px-6 py-6 md:py-8 text-center">
-                    <p className="text-background/50 text-xs sm:text-sm">
+                <div className="container mx-auto px-4 sm:px-6 py-6 md:py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <p className="text-background/50 text-xs sm:text-sm text-center sm:text-left">
                         &copy; {currentYear} Galeo Beauty. All rights reserved.
                     </p>
+                    <div className="flex gap-6 text-xs sm:text-sm text-background/50">
+                        <NavLink href="/privacy-policy" className="hover:text-gold transition-colors">
+                            Privacy Policy
+                        </NavLink>
+                        <NavLink href="/terms-of-service" className="hover:text-gold transition-colors">
+                            Terms of Service
+                        </NavLink>
+                    </div>
                 </div>
             </div>
         </footer>

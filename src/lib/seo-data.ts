@@ -287,44 +287,33 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
 // ============================================
 // PRIORITY LOCATIONS & SERVICES FOR PRE-BUILDING
 // ============================================
-// These key SEO target locations are pre-built at build time (~5,000 pages).
+// These key SEO target locations are pre-built at build time (~2,600 pages).
 // All other location/service combinations are generated on-demand with ISR.
-// 19 core Hartbeespoort locations + major metros - optimized to stay under Vercel's 75MB limit.
+// 10 core locations - optimized to stay under Vercel's 75MB limit.
 
 export const PRIORITY_LOCATIONS = [
     // Primary locations - EQUAL RANKING (Most Critical!)
     'hartbeespoort',                // Main town name
     'harties',                      // Short name for Hartbeespoort (equally important)
     'landsmeer',                    // 🏢 ACTUAL SALON LOCATION: Shop 6, Landsmeer Estate
-    'landsmeer-estate',             // 🏢 Salon location (estate variant)
 
-    // Hartbeespoort Core Area - Big 5 Suburbs
+    // Hartbeespoort Core Area - Big 3 Suburbs
     'schoemansville',               // Tourist hub (2km) - Old town
     'meerhof',                      // ⭐ CRITICAL - Pretoria entry point, large stands
     'melodie',                      // 5km - Commercial heart (Village Mall area)
 
     // Top Estates (Luxury & High-Traffic)
-    'ifafi',                        // 3km - Exclusive estate with views
-    'the-islands-estate',           // 4km - Luxury lakeside canals
     'pecanwood',                    // 4km - Golf & wealthy estate
-    'caribbean-beach-club',         // Golf & marina lifestyle - high search volume
-    'xanadu',                       // 7km - Nature estate, central location
-
-    // Tourism & Commercial Hubs (High Traffic)
-    'kosmos',                       // 8km - Iconic holiday village destination
-    'hartbeespoort-dam',            // 2km - Tourist landmark, water activities
-    'village-mall-hartbeespoort',   // 3km - Main shopping center
-    'magalies-park',                // 6km - Resort & timeshare town
-    'broederstroom',                // 10km - Lion Park area, craft market
+    'ifafi',                        // 3km - Exclusive estate with views
 
     // Key commuter cities (highest search volume)
     'johannesburg',                 // 1hr - Major metro - HIGHEST SEARCH VOLUME
     'pretoria',                     // 45min - Capital city - HIGHEST SEARCH VOLUME
 
-    // Total: 19 locations × ~262 services = ~4,978 pages
-    // Focus: Complete Hartbeespoort core (0-10km) + top estates + major metros
-    // All other locations available via on-demand ISR
-    // Optimized to stay under Vercel 75MB deployment limit (~5,000 pages)
+    // Total: 10 locations × ~262 services = ~2,620 pages
+    // Removed: landsmeer-estate, the-islands-estate, caribbean-beach-club, xanadu, 
+    //          kosmos, hartbeespoort-dam, village-mall-hartbeespoort, magalies-park, broederstroom
+    // These are now generated on-demand via ISR when first visited
 ];
 
 // ============================================
