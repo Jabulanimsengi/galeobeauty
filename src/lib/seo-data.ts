@@ -830,10 +830,10 @@ export function generateServiceIntro(service: SEOService, location: SEOLocation)
         ],
     };
 
-    // Use hash for consistent variation selection per service
+    // Use combined hash for location+service variation (different locations get different intros)
     const variations = introVariations[service.categoryId];
     if (variations && variations.length > 0) {
-        const hash = hashString(service.slug);
+        const hash = hashString(service.slug + location.slug);
         const selectedVariation = variations[hash % variations.length];
         return selectedVariation;
     }
@@ -1104,270 +1104,274 @@ export interface FAQ {
  * Generate 3-4 unique FAQs for each service
  * Uses category, subcategory, and service attributes for variety
  */
-export function getServiceFAQs(service: SEOService): FAQ[] {
-    // Category-specific FAQ pools
+export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[] {
+    const drivingContext = getDrivingContext(location);
+
+    // Category-specific FAQ pools — location-aware answers
     const categoryFAQPools: Record<string, FAQ[]> = {
         "hart-aesthetics": [
             {
-                question: `How long do ${service.keyword} results last?`,
-                answer: `Results from ${service.keyword} typically last 3-6 months, though this varies by individual metabolism and treatment area. We recommend follow-up appointments to maintain your desired look.`
+                question: `How long do ${service.keyword} results last for ${location.name} clients?`,
+                answer: `Results from ${service.keyword} typically last 3-6 months, though this varies by individual metabolism and treatment area. ${location.name} clients often schedule follow-up appointments at our Hartbeespoort salon to maintain their desired look.`
             },
             {
-                question: `Is ${service.keyword} painful?`,
-                answer: `Most clients report minimal discomfort during ${service.keyword}. We use fine needles and can apply numbing cream if needed. The sensation is often described as a slight pinch that subsides quickly.`
+                question: `Is ${service.keyword} painful at your salon near ${location.name}?`,
+                answer: `Most ${location.name} clients report minimal discomfort during ${service.keyword}. We use fine needles and can apply numbing cream if needed. The sensation is often described as a slight pinch that subsides quickly.`
             },
             {
                 question: `When will I see results from ${service.keyword}?`,
-                answer: `For ${service.keyword}, initial results appear within 3-5 days, with full results visible at 10-14 days. Collagen-stimulating treatments may take 4-8 weeks to show gradual improvements.`
+                answer: `For ${service.keyword}, initial results appear within 3-5 days, with full results visible at 10-14 days. We invite ${location.name} clients to return for a complimentary 2-week check at our salon to ensure satisfaction.`
             },
             {
-                question: `Are there any side effects with ${service.keyword}?`,
-                answer: `${service.keyword} is very safe when performed by qualified professionals. Minor temporary side effects may include slight swelling, redness, or bruising at injection sites, typically resolving within 24-48 hours.`
+                question: `Are there any side effects with ${service.keyword} for first-time clients?`,
+                answer: `${service.keyword} is very safe when performed by qualified professionals. Minor temporary side effects may include slight swelling, redness, or bruising at injection sites, typically resolving within 24-48 hours. ${location.name} clients can return home comfortably after treatment.`
             },
             {
-                question: `Can I return to work after ${service.keyword}?`,
-                answer: `Yes! ${service.keyword} requires no downtime. Any minor redness or swelling can be covered with makeup if needed. Most clients return to normal activities immediately.`
+                question: `Can I return to work after ${service.keyword} at your Hartbeespoort salon?`,
+                answer: `Yes! ${service.keyword} requires no downtime, making it ideal for ${location.name} clients who want results without disrupting their schedule. Any minor redness can be covered with makeup if needed.`
             },
             {
                 question: `Who performs ${service.keyword} treatments at Galeo Beauty?`,
-                answer: `All ${service.keyword} treatments are administered by qualified medical professionals with extensive training in facial anatomy and aesthetic medicine, ensuring safe and natural-looking results.`
+                answer: `All ${service.keyword} treatments are administered by qualified medical professionals with extensive training in facial anatomy and aesthetic medicine. ${location.name} clients benefit from the same practitioner consistency across visits.`
             },
         ],
         "fat-freezing": [
             {
-                question: `How does ${service.keyword} work?`,
-                answer: `${service.keyword} uses controlled cooling technology to freeze and eliminate fat cells without surgery. The targeted fat cells crystallize, die, and are naturally eliminated by your body over 8-12 weeks.`
+                question: `How does ${service.keyword} work at your salon near ${location.name}?`,
+                answer: `${service.keyword} uses controlled cooling technology to freeze and eliminate fat cells without surgery. ${location.name} clients see the targeted fat cells crystallize and naturally eliminate over 8-12 weeks.`
             },
             {
-                question: `Is ${service.keyword} permanent?`,
-                answer: `Yes! ${service.keyword} permanently eliminates fat cells in treated areas. Once destroyed, fat cells don't regenerate. Maintaining a healthy lifestyle preserves your ${service.keyword} results long-term.`
+                question: `Is ${service.keyword} permanent for clients from ${location.name}?`,
+                answer: `Yes! ${service.keyword} permanently eliminates fat cells in treated areas. Once destroyed, fat cells don't regenerate. ${location.name} clients maintain results long-term with a healthy lifestyle.`
             },
             {
                 question: `How many ${service.keyword} sessions will I need?`,
-                answer: `Most clients see significant results after 1-2 ${service.keyword} sessions per area. Your practitioner will assess your goals and recommend a personalized treatment plan during consultation.`
+                answer: `Most ${location.name} clients see significant results after 1-2 ${service.keyword} sessions per area. During your initial consultation at our Hartbeespoort salon, we'll create a personalized treatment plan tailored to your body goals.`
             },
             {
                 question: `What can I expect during ${service.keyword} treatment?`,
-                answer: `During ${service.keyword}, you'll feel intense cold for 5-10 minutes as the area numbs. Most clients read, work on devices, or relax during the session. The treatment typically lasts 35-60 minutes per area.`
+                answer: `During ${service.keyword}, you'll feel intense cold for 5-10 minutes as the area numbs. Many ${location.name} clients bring a book or laptop — you can relax during the 35-60 minute session at our comfortable salon.`
             },
             {
                 question: `When will I see ${service.keyword} results?`,
-                answer: `You may notice changes as early as 3 weeks after ${service.keyword}. Most dramatic results appear at 8-12 weeks as your body naturally processes and eliminates the destroyed fat cells.`
+                answer: `You may notice changes as early as 3 weeks after ${service.keyword}. Most ${location.name} clients report dramatic results at 8-12 weeks as the body naturally eliminates destroyed fat cells.`
             },
             {
-                question: `Is there downtime after ${service.keyword}?`,
-                answer: `${service.keyword} requires no downtime. You might experience temporary numbness, redness, or mild tenderness in treated areas. Most clients return to work and normal activities immediately.`
+                question: `Is there downtime after ${service.keyword} for ${location.name} clients?`,
+                answer: `${service.keyword} requires no downtime. You might experience temporary numbness or mild tenderness. ${location.name} clients drive home comfortably and return to normal activities immediately.`
             },
         ],
         "dermalogica": [
             {
-                question: `What makes ${service.keyword} different from regular facials?`,
-                answer: `${service.keyword} uses professional-grade Dermalogica products and Face Mapping® skin analysis technology. Your treatment is customized based on your unique skin concerns, not a one-size-fits-all approach.`
+                question: `What makes ${service.keyword} different from regular facials near ${location.name}?`,
+                answer: `${service.keyword} uses professional-grade Dermalogica products and Face Mapping® skin analysis technology. Unlike generic facials, we customize each treatment for ${location.name} clients based on their unique skin concerns.`
             },
             {
-                question: `How often should I get ${service.keyword}?`,
-                answer: `For optimal results, we recommend ${service.keyword} every 4-6 weeks. This aligns with your skin's natural renewal cycle and maintains consistent improvement in skin health and appearance.`
+                question: `How often should ${location.name} clients get ${service.keyword}?`,
+                answer: `For optimal results, we recommend ${service.keyword} every 4-6 weeks. This aligns with your skin's natural renewal cycle. Many ${location.name} clients schedule their next appointment before leaving our salon.`
             },
             {
-                question: `Can ${service.keyword} help with acne?`,
-                answer: `Yes! ${service.keyword} can significantly improve acne-prone skin. We use products formulated to clear breakouts, reduce inflammation, and prevent future blemishes without harsh ingredients.`
+                question: `Can ${service.keyword} help with acne for clients in ${location.region}?`,
+                answer: `Yes! ${service.keyword} can significantly improve acne-prone skin. ${location.region}'s climate can affect skin health, and we use Dermalogica products formulated to clear breakouts and prevent future blemishes.`
             },
             {
-                question: `Will ${service.keyword} work for sensitive skin?`,
-                answer: `Absolutely! ${service.keyword} is suitable for sensitive skin. Dermalogica products are formulated without common irritants like artificial fragrances and colors. We customize every treatment to your skin's tolerance.`
+                question: `Will ${service.keyword} work for my sensitive skin?`,
+                answer: `Absolutely! ${service.keyword} is suitable for sensitive skin. Dermalogica products are free from common irritants. We customize every treatment for ${location.name} clients based on individual skin tolerance.`
             },
             {
-                question: `What should I do after ${service.keyword}?`,
-                answer: `After ${service.keyword}, avoid harsh products for 24 hours, use SPF 30+ daily, and follow the homecare recommendations provided. We'll suggest specific Dermalogica products to maintain your results.`
+                question: `What should I do after ${service.keyword} at your salon?`,
+                answer: `After ${service.keyword}, avoid harsh products for 24 hours, use SPF 30+ daily (especially important in ${location.region}'s sun), and follow the homecare recommendations we provide.`
             },
         ],
         "qms": [
             {
                 question: `What is QMS Medicosmetics used in ${service.keyword}?`,
-                answer: `QMS Medicosmetics is medical-grade German skincare featuring patented Oxygen Complex and collagen-boosting formulations. ${service.keyword} delivers pharmaceutical-quality ingredients for clinical anti-aging results.`
+                answer: `QMS Medicosmetics is medical-grade German skincare featuring patented Oxygen Complex and collagen-boosting formulations. ${location.name} clients benefit from pharmaceutical-quality ingredients delivering clinical anti-aging results.`
             },
             {
-                question: `How quickly will I see results from ${service.keyword}?`,
-                answer: `Many clients notice immediate radiance after ${service.keyword}. Cumulative benefits like reduced fine lines and improved firmness become more pronounced with a series of treatments over 6-12 weeks.`
+                question: `How quickly will ${location.name} clients see results from ${service.keyword}?`,
+                answer: `Many ${location.name} clients notice immediate radiance after ${service.keyword}. Cumulative benefits like reduced fine lines and improved firmness become more pronounced over 6-12 weeks with regular visits to our salon.`
             },
             {
                 question: `Is ${service.keyword} suitable for mature skin?`,
-                answer: `${service.keyword} is ideal for mature skin! QMS's advanced collagen-stimulating formulations specifically target aging concerns like loss of elasticity, deep wrinkles, and volume depletion with proven results.`
+                answer: `${service.keyword} is ideal for mature skin! QMS's collagen-stimulating formulations target aging concerns like loss of elasticity and deep wrinkles. Many ${location.name} clients in their 40s-60s see remarkable improvements.`
             },
             {
-                question: `Can I combine ${service.keyword} with injectables?`,
-                answer: `Yes! ${service.keyword} complements injectable treatments beautifully. QMS treatments enhance skin quality while injectables address volume and lines. Consult with us for an integrated approach.`
+                question: `Can ${location.name} clients combine ${service.keyword} with other treatments?`,
+                answer: `Yes! ${service.keyword} complements injectable treatments beautifully. Many ${location.name} clients pair QMS facials with aesthetic services for comprehensive results. Consult with us for an integrated approach.`
             },
         ],
         "skin-treatments": [
             {
-                question: `What skin concerns does ${service.keyword} address?`,
-                answer: `${service.keyword} effectively treats fine lines, pigmentation, acne scarring, uneven texture, large pores, and dullness. We customize each treatment to your specific concerns and skin type.`
+                question: `What skin concerns does ${service.keyword} address for ${location.name} clients?`,
+                answer: `${service.keyword} effectively treats fine lines, pigmentation, acne scarring, uneven texture, and dullness. We customize each treatment for ${location.name} clients based on their specific concerns and skin type.`
             },
             {
-                question: `Is ${service.keyword} safe for all skin types?`,
-                answer: `Yes! ${service.keyword} is suitable for all Fitzpatrick skin types. We adjust treatment parameters based on your skin tone and sensitivity to ensure safe, effective results without complications.`
+                question: `Is ${service.keyword} safe for all skin types in ${location.region}?`,
+                answer: `Yes! ${service.keyword} is suitable for all Fitzpatrick skin types. We adjust treatment parameters based on your skin tone and sensitivity, important for ${location.region}'s diverse population.`
             },
             {
-                question: `How many ${service.keyword} sessions do I need?`,
-                answer: `Most clients need 3-6 ${service.keyword} sessions spaced 2-4 weeks apart for optimal results. Your practitioner will create a personalized treatment plan based on your skin goals during consultation.`
+                question: `How many ${service.keyword} sessions do ${location.name} clients need?`,
+                answer: `Most ${location.name} clients need 3-6 ${service.keyword} sessions spaced 2-4 weeks apart. During consultation at our Hartbeespoort salon, we'll create a personalized treatment plan based on your skin goals.`
             },
             {
                 question: `Will ${service.keyword} hurt?`,
-                answer: `${service.keyword} typically involves minimal discomfort. You may feel warmth, tingling, or mild prickling depending on the treatment. We can adjust intensity levels to ensure your comfort throughout.`
+                answer: `${service.keyword} typically involves minimal discomfort. You may feel warmth or mild tingling. We adjust intensity levels for each ${location.name} client's comfort throughout the treatment.`
             },
             {
                 question: `What's the recovery time for ${service.keyword}?`,
-                answer: `${service.keyword} usually involves minimal downtime. You might experience temporary redness (30 minutes to 24 hours) depending on treatment intensity. Most clients apply makeup and resume activities the next day.`
+                answer: `${service.keyword} usually involves minimal downtime. You might experience temporary redness for 30 minutes to 24 hours. ${location.name} clients typically apply makeup and resume activities the next day.`
             },
         ],
         "hair-care": [
             {
-                question: `What products are used in ${service.keyword}?`,
-                answer: `${service.keyword} features premium Moroccanoil and Milkshake products enriched with argan oil and natural ingredients. All products are sulfate-free and paraben-free to protect your hair's health.`
+                question: `What products are used in ${service.keyword} at your salon near ${location.name}?`,
+                answer: `${service.keyword} features premium Moroccanoil and Milkshake products enriched with argan oil and natural ingredients. All products are sulfate-free and paraben-free, protecting ${location.name} clients' hair health.`
             },
             {
-                question: `How often should I get ${service.keyword}?`,
-                answer: `For maintaining healthy hair, we recommend ${service.keyword} every 6-8 weeks. Deep conditioning treatments can be done monthly, while color services depend on your hair growth and color choice.`
+                question: `How often should ${location.name} clients get ${service.keyword}?`,
+                answer: `For maintaining healthy hair, we recommend ${service.keyword} every 6-8 weeks. ${location.name} clients can schedule standing appointments at our salon for consistent hair maintenance.`
             },
             {
                 question: `Will ${service.keyword} damage my hair?`,
-                answer: `No! ${service.keyword} is designed to improve hair health. We use nourishing, reparative products and professional techniques that minimize damage while achieving beautiful results.`
+                answer: `No! ${service.keyword} is designed to improve hair health. We use nourishing products and professional techniques. ${location.name} clients consistently see healthier, more vibrant hair after treatment.`
             },
             {
-                question: `Can ${service.keyword} help with damaged hair?`,
-                answer: `Absolutely! ${service.keyword} includes intensive repair treatments that restore moisture, strengthen hair bonds, and improve texture. We'll assess your damage and recommend a restoration plan.`
+                question: `Can ${service.keyword} help with damaged hair from ${location.region}'s climate?`,
+                answer: `Absolutely! ${service.keyword} includes intensive repair treatments that restore moisture and strengthen hair bonds. ${location.region}'s sun and dry air can affect hair health, making regular treatments beneficial.`
             },
         ],
         "nails": [
             {
-                question: `How long does ${service.keyword} last?`,
-                answer: `${service.keyword} typically lasts 2-3 weeks for gel polish, 3-4 weeks for acrylics, and up to 2 weeks for regular polish with proper care. We use professional-grade products for maximum durability.`
+                question: `How long does ${service.keyword} last for ${location.name} clients?`,
+                answer: `${service.keyword} typically lasts 2-3 weeks for gel polish and 3-4 weeks for acrylics with proper care. ${location.name} clients love the durability of our professional-grade products.`
             },
             {
                 question: `Is ${service.keyword} safe for my natural nails?`,
-                answer: `Yes! ${service.keyword} is performed using proper techniques and quality products that minimize damage. We include cuticle care and nail health treatments to keep your natural nails strong.`
+                answer: `Yes! ${service.keyword} is performed using proper techniques and quality products that minimize damage. We include cuticle care for every ${location.name} client to keep natural nails strong.`
             },
             {
-                question: `Do you do custom nail art for ${service.keyword}?`,
-                answer: `Absolutely! ${service.keyword} can include custom nail art designs. Our skilled technicians create everything from minimalist accents to intricate designs. Discuss your vision during your appointment.`
+                question: `Do you do custom nail art for ${location.name} clients?`,
+                answer: `Absolutely! ${service.keyword} can include custom nail art designs. Our skilled technicians create everything from minimalist accents to intricate patterns. ${location.name} clients share their vision during appointments.`
             },
             {
-                question: `How should I maintain ${service.keyword} results?`,
-                answer: `To extend ${service.keyword} results, moisturize cuticles daily, wear gloves for household tasks, avoid using nails as tools, and book touch-ups every 2-3 weeks as needed.`
+                question: `How should I maintain ${service.keyword} results between salon visits?`,
+                answer: `To extend ${service.keyword} results, moisturize cuticles daily, wear gloves for household tasks, and avoid using nails as tools. ${location.name} clients typically book touch-ups every 2-3 weeks.`
             },
         ],
         "lashes-brows": [
             {
-                question: `How long does ${service.keyword} take?`,
-                answer: `${service.keyword} typically takes 15-60 minutes depending on the service. Lash extensions take longer (90-120 minutes for full sets), while tinting and shaping are quicker services.`
+                question: `How long does ${service.keyword} take at your salon near ${location.name}?`,
+                answer: `${service.keyword} typically takes 15-60 minutes depending on the service. Lash extensions take 90-120 minutes for full sets. ${location.name} clients can plan their visit accordingly.`
             },
             {
                 question: `How long do ${service.keyword} results last?`,
-                answer: `${service.keyword} longevity varies: lash extensions last 3-4 weeks with fills every 2-3 weeks, tints last 4-6 weeks, and lash lifts last 6-8 weeks as your natural lashes grow.`
+                answer: `${service.keyword} longevity varies: lash extensions last 3-4 weeks, tints 4-6 weeks, and lash lifts 6-8 weeks. ${location.name} clients schedule maintenance appointments to keep their look fresh.`
             },
             {
                 question: `Will ${service.keyword} damage my natural lashes or brows?`,
-                answer: `When done professionally, ${service.keyword} won't damage your natural lashes or brows. We use high-quality products and proper techniques to maintain the health of your natural hair.`
+                answer: `When done professionally, ${service.keyword} won't damage your natural features. We use high-quality products and proper techniques that ${location.name} clients trust for safe, beautiful results.`
             },
             {
                 question: `Is ${service.keyword} suitable for sensitive eyes?`,
-                answer: `Yes! ${service.keyword} can be performed on sensitive eyes. We use hypoallergenic products and offer patch testing. Inform your technician of any sensitivities during consultation.`
+                answer: `Yes! ${service.keyword} can be performed on sensitive eyes. We use hypoallergenic products and offer patch testing for ${location.name} clients with any sensitivities.`
             },
             {
                 question: `What's the aftercare for ${service.keyword}?`,
-                answer: `After ${service.keyword}, avoid water for 24 hours, no oil-based products near eyes, sleep on your back if possible, and brush lashes gently daily. We'll provide detailed aftercare instructions.`
+                answer: `After ${service.keyword}, avoid water for 24 hours, skip oil-based products near eyes, and brush lashes gently daily. We provide ${location.name} clients with detailed aftercare instructions at each visit.`
             },
         ],
         "waxing": [
             {
-                question: `How long does ${service.keyword} take?`,
-                answer: `${service.keyword} duration varies by area: facial areas take 10-15 minutes, legs 30-45 minutes, and full body services up to 90 minutes. We work efficiently while ensuring thorough hair removal.`
+                question: `How long does ${service.keyword} take at your Hartbeespoort salon?`,
+                answer: `${service.keyword} duration varies: facial areas take 10-15 minutes, legs 30-45 minutes, and full body up to 90 minutes. ${location.name} clients appreciate our efficient yet thorough approach.`
             },
             {
-                question: `Is ${service.keyword} painful?`,
-                answer: `${service.keyword} involves brief discomfort, but we use premium wax formulated for sensitive skin and expert techniques to minimize pain. First-time clients often find it more tolerable than expected.`
+                question: `Is ${service.keyword} painful for first-time clients from ${location.name}?`,
+                answer: `${service.keyword} involves brief discomfort, but we use premium wax formulated for sensitive skin. First-time ${location.name} clients often find it more tolerable than expected.`
             },
             {
                 question: `How long will ${service.keyword} results last?`,
-                answer: `${service.keyword} keeps skin smooth for 3-6 weeks depending on your hair growth cycle. Regular waxing leads to finer regrowth and longer-lasting smoothness over time.`
+                answer: `${service.keyword} keeps skin smooth for 3-6 weeks depending on your hair growth cycle. Regular ${location.name} clients notice finer regrowth and longer-lasting smoothness over time.`
             },
             {
-                question: `What should I do before ${service.keyword}?`,
-                answer: `Before ${service.keyword}, let hair grow to 1/4 inch, exfoliate 24 hours prior, avoid sun exposure and retinol products. Arrive with clean, dry skin for best results.`
+                question: `What should ${location.name} clients do before ${service.keyword}?`,
+                answer: `Before ${service.keyword}, let hair grow to 1/4 inch, exfoliate 24 hours prior, and avoid sun exposure and retinol products. Arrive at our salon with clean, dry skin for best results.`
             },
             {
                 question: `Can I wax during pregnancy?`,
-                answer: `Most ${service.keyword} services are safe during pregnancy, though skin may be more sensitive. Consult your doctor first, and inform our therapist so we can adjust our approach accordingly.`
+                answer: `Most ${service.keyword} services are safe during pregnancy, though skin may be more sensitive. ${location.name} clients should consult their doctor first and inform our therapist so we can adjust our approach.`
             },
         ],
         "tinting": [
             {
-                question: `How long does ${service.keyword} last?`,
-                answer: `${service.keyword} typically lasts 4-6 weeks depending on your hair growth cycle, sun exposure, and skincare routine. Oil-based products can fade tint faster, so we recommend avoiding them near treated areas.`
+                question: `How long does ${service.keyword} last for ${location.name} clients?`,
+                answer: `${service.keyword} typically lasts 4-6 weeks depending on your hair growth cycle, sun exposure in ${location.region}, and skincare routine. We recommend avoiding oil-based products near treated areas.`
             },
             {
                 question: `Will ${service.keyword} look natural?`,
-                answer: `Yes! ${service.keyword} is designed to enhance your natural features subtly. We custom-match the color to your hair, skin tone, and preferences for a flattering, natural-looking result.`
+                answer: `Yes! ${service.keyword} enhances your natural features subtly. We custom-match the color to your hair, skin tone, and preferences so ${location.name} clients leave with a flattering, natural result.`
             },
             {
                 question: `Is ${service.keyword} safe?`,
-                answer: `${service.keyword} uses salon-grade professional tints that are safe when applied correctly. We perform patch testing 24-48 hours before your appointment to ensure no allergic reactions.`
+                answer: `${service.keyword} uses salon-grade professional tints that are safe when applied correctly. We perform patch testing 24-48 hours before your appointment. ${location.name} clients can schedule their patch test separately.`
             },
             {
                 question: `Can I still wear makeup after ${service.keyword}?`,
-                answer: `Absolutely! Many clients love ${service.keyword} because it reduces daily makeup time. You can still wear makeup over tinted areas, but many find they don't need to anymore.`
+                answer: `Absolutely! Many ${location.name} clients love ${service.keyword} because it reduces daily makeup time. You can wear makeup over tinted areas, but many find they don't need to anymore.`
             },
         ],
     };
 
-    // Universal FAQs that apply to most services
+    // Location-specific FAQs — unique per location, always included
+    const locationFAQs: FAQ[] = [
+        {
+            question: `How do I get to Galeo Beauty from ${location.name}?`,
+            answer: `${drivingContext}. Our Hartbeespoort salon is easily accessible from ${location.name}, ${location.region}. We have ample parking and welcome walk-in ${service.keyword} appointments when available.`
+        },
+        {
+            question: `Do you serve ${location.name} clients for ${service.keyword}?`,
+            answer: `Yes! We welcome ${service.keyword} clients from ${location.name} and throughout ${location.region}. Many of our regular clients travel from ${location.name} for our professional treatments and personal service.`
+        },
+    ];
+
+    // Universal FAQs with location context
     const universalFAQs: FAQ[] = [
         {
-            question: `How do I book ${service.keyword} at Galeo Beauty?`,
-            answer: `Booking ${service.keyword} is easy! Contact us via WhatsApp at ${service.price ? `to schedule your appointment. ${service.keyword} is priced at ${service.price}` : 'for pricing and availability'}.`
+            question: `How do I book ${service.keyword} from ${location.name}?`,
+            answer: `Booking ${service.keyword} is easy! Contact us via WhatsApp to schedule your appointment at our Hartbeespoort salon. ${service.keyword} is priced at ${service.price}. ${location.name} clients can also call us directly.`
         },
         {
-            question: `Do you offer consultations for ${service.keyword}?`,
-            answer: `Yes! We offer complimentary consultations for ${service.keyword}. This allows us to assess your needs, discuss expectations, and create a personalized treatment plan before you commit.`
-        },
-        {
-            question: `What payment methods do you accept for ${service.keyword}?`,
-            answer: `We accept cash, card, and EFT payments for ${service.keyword}. Payment is due at the time of service. Contact us for package deals that may offer savings on ${service.keyword}.`
+            question: `Do you offer consultations for ${service.keyword} for ${location.name} residents?`,
+            answer: `Yes! We offer complimentary ${service.keyword} consultations for ${location.name} clients. This allows us to assess your needs, discuss expectations, and create a personalized treatment plan.`
         },
     ];
 
     // Get category-specific FAQs
     const categoryFAQs = categoryFAQPools[service.categoryId] || [];
 
-    // Combine all possible FAQs
-    const allFAQs = [...categoryFAQs, ...universalFAQs];
+    // Use combined hash for location+service variation
+    const hash = hashString(service.slug + location.slug);
 
-    // Use hash to select 4 unique FAQs consistently
-    const hash = hashString(service.slug);
-    const selectedFAQs: FAQ[] = [];
+    // Select 3 category FAQs using hash (different per location)
+    const selectedCategoryFAQs: FAQ[] = [];
     const usedIndices = new Set<number>();
-
-    // Select 4 FAQs
-    for (let i = 0; i < 4 && selectedFAQs.length < 4; i++) {
-        const index = (hash + i * 11) % allFAQs.length;
+    for (let i = 0; i < 3 && selectedCategoryFAQs.length < 3 && categoryFAQs.length > 0; i++) {
+        const index = (hash + i * 7) % categoryFAQs.length;
         if (!usedIndices.has(index)) {
-            selectedFAQs.push(allFAQs[index]);
+            selectedCategoryFAQs.push(categoryFAQs[index]);
             usedIndices.add(index);
         }
     }
 
-    // Fallback: ensure we have at least 3 FAQs
-    if (selectedFAQs.length < 3) {
-        for (let i = 0; i < allFAQs.length && selectedFAQs.length < 4; i++) {
-            if (!usedIndices.has(i)) {
-                selectedFAQs.push(allFAQs[i]);
-                usedIndices.add(i);
-            }
-        }
-    }
+    // Select 1 location FAQ
+    const selectedLocationFAQ = locationFAQs[hash % locationFAQs.length];
 
-    return selectedFAQs;
+    // Select 1 universal FAQ
+    const selectedUniversalFAQ = universalFAQs[(hash + 3) % universalFAQs.length];
+
+    // Combine: 3 category + 1 location + 1 universal = 5 FAQs
+    return [...selectedCategoryFAQs, selectedLocationFAQ, selectedUniversalFAQ];
 }
 
 // ============================================
@@ -1385,7 +1389,7 @@ export interface TreatmentStep {
  * Generate treatment process "What to Expect" content
  * Returns 4-5 steps unique to each service
  */
-export function getTreatmentProcess(service: SEOService): TreatmentStep[] {
+export function getTreatmentProcess(service: SEOService, location: SEOLocation): TreatmentStep[] {
     // Category-specific treatment processes
     const processTemplates: Record<string, TreatmentStep[]> = {
         "hart-aesthetics": [
@@ -1714,29 +1718,32 @@ export function getTreatmentProcess(service: SEOService): TreatmentStep[] {
     const categoryProcess = processTemplates[service.categoryId];
 
     if (categoryProcess) {
-        // Add service-level variation to treatment descriptions
-        const hash = hashString(service.slug);
+        // Use combined hash for location+service variation
+        const hash = hashString(service.slug + location.slug);
 
-        // Variation pools for each step type to make content more unique per service
+        // Location-aware variation pools
         const consultationVariations = [
-            `Your ${service.keyword} journey starts with understanding your unique needs and desired outcomes.`,
-            `We begin by listening to your goals and crafting a personalized ${service.keyword} approach.`,
-            `First, we take time to discuss what you hope to achieve with ${service.keyword}.`,
+            `${location.name} clients begin their ${service.keyword} journey with a thorough assessment of their unique needs and desired outcomes.`,
+            `We start by listening to your goals and crafting a personalized ${service.keyword} approach for ${location.name} clients.`,
+            `For ${location.name} residents, we take extra time to discuss lifestyle factors and desired ${service.keyword} outcomes.`,
+            `Your consultation includes discussing how ${location.region}'s environment may affect your ${service.keyword} results.`,
         ];
 
         const prepVariations = [
-            `Your comfort and safety are paramount as we prepare for your ${service.keyword} session.`,
-            `We ensure everything is perfectly ready before beginning your ${service.keyword} treatment.`,
-            `Careful preparation sets the stage for excellent ${service.keyword} results.`,
+            `Your comfort is paramount as we prepare for your ${service.keyword} session at our Hartbeespoort salon.`,
+            `We ensure everything is perfectly ready for ${location.name} clients before beginning treatment.`,
+            `Careful preparation sets the stage for excellent ${service.keyword} results for every ${location.name} client.`,
+            `${location.name} clients appreciate our meticulous preparation process before ${service.keyword}.`,
         ];
 
         const aftercareVariations = [
-            `We provide personalized guidance to maximize and maintain your ${service.keyword} results.`,
-            `Proper aftercare is essential—we'll ensure you know exactly how to care for your results.`,
-            `Your ${service.keyword} journey continues at home with our tailored aftercare recommendations.`,
+            `We provide ${location.name} clients with personalized guidance to maximize their ${service.keyword} results.`,
+            `Proper aftercare is essential — we equip ${location.name} clients with everything they need to maintain results.`,
+            `Your ${service.keyword} journey continues at home in ${location.name} with our tailored aftercare plan.`,
+            `${location.name} clients receive detailed aftercare instructions customized for their lifestyle.`,
         ];
 
-        // Clone and modify the first, second, and last steps with service-specific text
+        // Clone and modify steps with location-specific text
         const modifiedProcess = categoryProcess.map((step, index) => {
             const newStep = { ...step };
 
@@ -1764,37 +1771,37 @@ export function getTreatmentProcess(service: SEOService): TreatmentStep[] {
         return modifiedProcess;
     }
 
-    // Fallback generic process with hash-based variations
-    const hash = hashString(service.slug);
+    // Fallback generic process with location-aware variations
+    const hash = hashString(service.slug + location.slug);
 
     const genericConsultVariations = [
-        `Your ${service.keyword} experience begins with a thorough consultation to understand your goals and create a personalized treatment plan.`,
-        `We start with a detailed discussion about your ${service.keyword} expectations and tailor our approach accordingly.`,
-        `Every great ${service.keyword} result starts with understanding you—your preferences, concerns, and desired outcomes.`,
+        `Your ${service.keyword} experience begins with a thorough consultation at our Hartbeespoort salon, creating a personalized treatment plan for ${location.name} clients.`,
+        `We start with a detailed discussion about your ${service.keyword} expectations, tailored specifically for ${location.name} residents.`,
+        `Every great ${service.keyword} result starts with understanding you—${location.name} clients appreciate our personalized approach.`,
     ];
 
     const genericPrepVariations = [
-        `We prepare the treatment area and ensure you're comfortable before beginning your ${service.keyword} service.`,
-        `Proper preparation is key—we ensure optimal conditions for your ${service.keyword} treatment.`,
-        `Your comfort matters. We carefully prepare everything needed for your ${service.keyword} session.`,
+        `We prepare the treatment area and ensure ${location.name} clients are comfortable before beginning ${service.keyword}.`,
+        `Proper preparation is key—we ensure optimal conditions for your ${service.keyword} treatment at our salon.`,
+        `Your comfort matters. We carefully prepare everything needed for your ${service.keyword} session, as ${location.name} clients expect.`,
     ];
 
     const genericTreatmentVariations = [
-        `Your ${service.keyword} treatment is performed with precision and care, using premium products and professional techniques.`,
-        `Expert hands deliver your ${service.keyword} service using proven methods and quality products.`,
-        `We perform ${service.keyword} with meticulous attention to detail for the best possible results.`,
+        `Your ${service.keyword} treatment is performed with precision and care, using premium products that ${location.name} clients trust.`,
+        `Expert hands deliver your ${service.keyword} service using proven methods and quality products at our Hartbeespoort salon.`,
+        `We perform ${service.keyword} with meticulous attention to detail, a standard ${location.name} clients have come to expect.`,
     ];
 
     const genericFinishVariations = [
-        `We complete your ${service.keyword} service with finishing touches and soothing products to enhance and protect results.`,
-        `The finishing phase ensures your ${service.keyword} results look polished and feel comfortable.`,
-        `Final touches are applied to perfect your ${service.keyword} outcome and ensure lasting results.`,
+        `We complete your ${service.keyword} with finishing touches and soothing products. ${location.name} clients leave our salon feeling refreshed.`,
+        `The finishing phase ensures your ${service.keyword} results look polished. Many ${location.name} clients extend their visit for additional pampering.`,
+        `Final touches are applied to perfect your ${service.keyword} outcome, ensuring ${location.name} clients see lasting results.`,
     ];
 
     const genericAftercareVariations = [
-        `Detailed aftercare instructions are provided to help you maintain your beautiful ${service.keyword} results for as long as possible.`,
-        `We equip you with aftercare knowledge so your ${service.keyword} results last and you feel confident about maintenance.`,
-        `Your ${service.keyword} success continues at home—we'll explain exactly how to protect and prolong your results.`,
+        `Detailed aftercare instructions help ${location.name} clients maintain their beautiful ${service.keyword} results for as long as possible.`,
+        `We equip ${location.name} clients with aftercare knowledge so your ${service.keyword} results last and you feel confident at home.`,
+        `Your ${service.keyword} success continues at home in ${location.name}—we'll explain exactly how to protect and prolong your results.`,
     ];
 
     return [
@@ -1843,57 +1850,126 @@ export function getLocationServiceInsight(service: SEOService, location: SEOLoca
     // Hash both service and location for unique but consistent content
     const combinedHash = hashString(service.slug + location.slug);
 
-    // High-end estate insights templates
-    const luxuryEstateInsights = [
-        `Residents of ${location.name} appreciate the discretion and premium quality our ${service.keyword} treatments offer, with many of our ${location.region} clients becoming long-term regulars.`,
-        `${location.name} clients often combine ${service.keyword} appointments with other wellness services, creating comprehensive beauty days at our tranquil Hartbeespoort sanctuary.`,
-        `Our ${service.keyword} service is particularly popular among ${location.name} residents who value results-driven treatments delivered in a luxurious, relaxing environment.`,
-        `Many ${location.name} professionals choose ${service.keyword} at our salon for the perfect balance of proximity, quality, and privacy in their beauty routine.`,
-    ];
-
-    // Urban/city area insights
-    const urbanInsights = [
-        `${location.name} clients love escaping the city for ${service.keyword} appointments at our peaceful Hartbeespoort location, often extending their visit with lunch by the dam.`,
-        `For busy ${location.name} professionals, ${service.keyword} at Galeo Beauty offers a perfect mini-retreat without the long drive to distant spas.`,
-        `Many ${location.name} residents schedule ${service.keyword} during weekend getaways to Hartbeespoort, combining beauty treatments with relaxation time.`,
-        `Our ${service.keyword} service has become a favorite among ${location.name} clients seeking expert care in a tranquil setting away from urban hustle.`,
-    ];
-
-    // Local Hartbeespoort area insights
-    const localInsights = [
-        `As a ${location.name} local favorite, our ${service.keyword} treatment combines neighborhood convenience with professional expertise you'd expect from top city salons.`,
-        `${location.name} residents trust Galeo Beauty for ${service.keyword} because we understand the lifestyle and aesthetic preferences of our Hartbeespoort community.`,
-        `Living in ${location.name} means you have premier ${service.keyword} services right in your backyard, with no need to travel to Johannesburg or Pretoria for quality results.`,
-        `Our ${service.keyword} service has become an essential part of many ${location.name} residents' self-care routines, with convenient appointment times fitting local lifestyles.`,
-    ];
-
-    // Determine which insight pool to use based on location characteristics
-    let insightPool: string[];
-
-    // Check if it's a luxury estate
-    const luxuryKeywords = ['estate', 'pecanwood', 'islands', 'caribbean', 'xanadu', 'ifafi', 'kosmos'];
+    // Determine location type
+    const luxuryKeywords = ['estate', 'pecanwood', 'islands', 'caribbean', 'xanadu', 'ifafi', 'kosmos', 'cove', 'camargue', 'redstone', 'birdwood'];
     const isLuxuryEstate = luxuryKeywords.some(keyword => location.slug.includes(keyword));
-
-    // Check if it's urban area
-    const urbanAreas = ['johannesburg', 'pretoria', 'centurion', 'midrand', 'sandton', 'fourways'];
-    const isUrban = urbanAreas.includes(location.slug);
-
-    // Check if it's local Hartbeespoort
+    const urbanAreas = ['johannesburg', 'pretoria', 'centurion', 'midrand', 'sandton', 'fourways', 'randburg', 'boksburg', 'germiston', 'bedfordview', 'edenvale', 'roodepoort', 'krugersdorp', 'kempton-park', 'benoni'];
+    const isUrban = urbanAreas.some(area => location.slug.includes(area));
     const isLocal = location.region === 'Hartbeespoort' || location.region === 'North West';
 
-    if (isLuxuryEstate) {
-        insightPool = luxuryEstateInsights;
-    } else if (isUrban) {
-        insightPool = urbanInsights;
-    } else if (isLocal) {
-        insightPool = localInsights;
-    } else {
-        insightPool = [...localInsights, ...urbanInsights];
+    // Category-specific insight templates per location type
+    const categoryInsights: Record<string, Record<string, string[]>> = {
+        "hart-aesthetics": {
+            luxury: [
+                `${location.name} estate residents value the privacy and discretion our salon offers for ${service.keyword}, with many scheduling treatments for special occasions and regular maintenance.`,
+                `Discerning ${location.name} clients choose our ${service.keyword} service for its combination of medical precision and the relaxed, private atmosphere our Hartbeespoort salon provides.`,
+                `Many ${location.name} residents pair their ${service.keyword} appointment with a scenic drive along the dam, making beauty treatments part of their lifestyle routine.`,
+            ],
+            urban: [
+                `${location.name} professionals escape the city for ${service.keyword} at our tranquil Hartbeespoort salon, where quality aesthetic treatments meet a peaceful, unhurried atmosphere.`,
+                `Busy ${location.name} clients find our ${service.keyword} service worth the drive—they get city-quality results in a relaxing lakeside setting away from urban congestion.`,
+                `Many ${location.name} clients schedule ${service.keyword} as part of a weekend Hartbeespoort getaway, combining aesthetic care with leisure time by the dam.`,
+            ],
+            local: [
+                `${location.name} locals appreciate having expert ${service.keyword} treatments available in their own community without traveling to Johannesburg or Pretoria.`,
+                `As your neighbourhood salon, we provide ${location.name} residents with the same ${service.keyword} quality you'd find at premium city clinics, at more affordable prices.`,
+                `${location.name} residents trust our ${service.keyword} practitioners for consistent, natural-looking results that enhance their Hartbeespoort lifestyle.`,
+            ],
+        },
+        "fat-freezing": {
+            luxury: [
+                `${location.name} residents preparing for pool season or special events choose ${service.keyword} at our salon for targeted body contouring in a luxurious, private setting.`,
+                `Active ${location.name} estate residents complement their fitness routines with ${service.keyword} to target those last stubborn areas that exercise alone can't address.`,
+            ],
+            urban: [
+                `Fitness-focused ${location.name} clients use ${service.keyword} to complement their gym routines, targeting stubborn fat deposits that resist even dedicated exercise programs.`,
+                `${location.name} professionals appreciate the zero-downtime nature of ${service.keyword}—they can drive back to the city and resume their schedule immediately after treatment.`,
+            ],
+            local: [
+                `${location.name} residents love that they can access professional ${service.keyword} treatments locally without traveling to expensive Johannesburg clinics.`,
+                `Our ${service.keyword} service has helped many ${location.name} residents achieve their body confidence goals right here in the Hartbeespoort area.`,
+            ],
+        },
+        "dermalogica": {
+            luxury: [
+                `${location.name} estate residents make ${service.keyword} facials a regular part of their self-care routine, appreciating the medical-grade skincare in our serene environment.`,
+                `Many ${location.name} clients book monthly ${service.keyword} sessions, treating it as an investment in their skin health that complements their premium lifestyle.`,
+            ],
+            urban: [
+                `${location.name} clients use their ${service.keyword} appointment as a peaceful escape from city life, combining professional skincare with the restorative atmosphere of Hartbeespoort.`,
+                `Busy ${location.name} professionals find that regular ${service.keyword} treatments reduce their daily skincare routine time while delivering superior results.`,
+            ],
+            local: [
+                `${location.name} residents enjoy convenient access to professional-grade ${service.keyword} treatments without the hassle of driving to city day spas.`,
+                `Our ${service.keyword} facials have become a ${location.name} favourite, with many locals scheduling regular treatments for consistently healthy, glowing skin.`,
+            ],
+        },
+        "hair-care": {
+            luxury: [
+                `${location.name} residents expect salon-quality ${service.keyword} with premium products, and our Moroccanoil and Milkshake treatments deliver exactly that level of luxury.`,
+                `Many ${location.name} clients make ${service.keyword} part of their regular beauty routine, appreciating our salon's ability to match the quality of exclusive city hair studios.`,
+            ],
+            urban: [
+                `${location.name} clients discover that ${service.keyword} at our Hartbeespoort salon offers the same premium products and expertise as top city salons, in a far more relaxing environment.`,
+                `Smart ${location.name} professionals combine ${service.keyword} with a Hartbeespoort day trip, turning their hair appointment into a mini wellness retreat.`,
+            ],
+            local: [
+                `${location.name} residents count on our salon for consistent, high-quality ${service.keyword} services that keep their hair looking its best year-round.`,
+                `Our ${service.keyword} treatments are a ${location.name} community staple, with many local families trusting us for their entire household's hair care needs.`,
+            ],
+        },
+        "nails": {
+            luxury: [
+                `${location.name} residents treat themselves to ${service.keyword} at our salon, where meticulous attention to detail meets the relaxed atmosphere of Hartbeespoort.`,
+                `Many ${location.name} clients pair ${service.keyword} with other services for a full pampering session, making a day of their salon visit.`,
+            ],
+            urban: [
+                `${location.name} clients find that ${service.keyword} at our Hartbeespoort salon is more relaxing than rushed city appointments, with unhurried attention to every detail.`,
+                `Weekend nail appointments are popular with ${location.name} clients who combine ${service.keyword} with exploring the Hartbeespoort area's restaurants and markets.`,
+            ],
+            local: [
+                `${location.name} locals know our salon as the go-to destination for quality ${service.keyword} that lasts, with many booking standing fortnightly appointments.`,
+                `Our ${service.keyword} service has earned a loyal following among ${location.name} residents who appreciate consistent quality and friendly, professional service.`,
+            ],
+        },
+    };
+
+    // Get category-specific insights or fall back to generic
+    const categoryId = service.categoryId;
+    const locationType = isLuxuryEstate ? 'luxury' : isUrban ? 'urban' : 'local';
+
+    const specificInsights = categoryInsights[categoryId]?.[locationType];
+
+    if (specificInsights && specificInsights.length > 0) {
+        return specificInsights[combinedHash % specificInsights.length];
     }
 
-    // Select one insight consistently using hash
-    const selectedInsight = insightPool[combinedHash % insightPool.length];
+    // Fallback: generic insights by location type (expanded)
+    const genericInsights: Record<string, string[]> = {
+        luxury: [
+            `Residents of ${location.name} appreciate the discretion and premium quality our ${service.keyword} treatments offer, with many becoming long-term regulars.`,
+            `${location.name} clients often combine ${service.keyword} with other wellness services, creating comprehensive beauty days at our Hartbeespoort sanctuary.`,
+            `Our ${service.keyword} service is popular among ${location.name} residents who value results-driven treatments in a luxurious, relaxing environment.`,
+            `Many ${location.name} estate residents choose our salon for the perfect balance of proximity, quality, and privacy in their ${service.keyword} routine.`,
+            `${location.name} clients love that our ${service.keyword} treatments match the premium standards they expect, all within easy reach of their estate.`,
+        ],
+        urban: [
+            `${location.name} clients escape the city for ${service.keyword} at our peaceful Hartbeespoort location, often extending their visit with lunch by the dam.`,
+            `For busy ${location.name} professionals, ${service.keyword} at Galeo Beauty offers a perfect mini-retreat from the urban pace.`,
+            `Many ${location.name} residents schedule ${service.keyword} during weekend getaways, combining beauty treatments with Hartbeespoort's natural beauty.`,
+            `Our ${service.keyword} service has become a favorite among ${location.name} clients seeking expert care in a tranquil setting away from city hustle.`,
+            `${location.name} clients tell us the drive to our salon is part of the ${service.keyword} experience—a chance to decompress before their treatment even begins.`,
+        ],
+        local: [
+            `As a ${location.name} local favourite, our ${service.keyword} treatment combines neighbourhood convenience with expertise you'd expect from top city salons.`,
+            `${location.name} residents trust Galeo Beauty for ${service.keyword} because we understand the lifestyle and aesthetic preferences of our community.`,
+            `Living in ${location.name} means premier ${service.keyword} services right in your area, with no need to travel to the city for quality results.`,
+            `Our ${service.keyword} service has become part of many ${location.name} residents' self-care routines, with convenient scheduling that fits local lifestyles.`,
+            `${location.name} clients appreciate that our ${service.keyword} prices are competitive with city salons while offering a more personalized experience.`,
+        ],
+    };
 
-    return selectedInsight;
+    const pool = genericInsights[locationType] || genericInsights.local;
+    return pool[combinedHash % pool.length];
 }
 

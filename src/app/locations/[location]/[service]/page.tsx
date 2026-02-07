@@ -87,6 +87,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const serviceCategoryKeywords = categoryKeywords[service.categoryId] || [];
 
+    // Noindex low-value variant pages (hair extension size/color combos, blow-dry packages)
+    // These create near-identical thin content that wastes crawl budget
+    const lowValuePatterns = /^(tape|utip|microloop|clip|halo|ponytail)-\d+cm-(dark|light)$/;
+    const isLowValueVariant = lowValuePatterns.test(serviceSlug);
+
     return {
         title,
         description,
@@ -133,10 +138,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         },
         robots: {
-            index: true,
+            index: !isLowValueVariant,
             follow: true,
             googleBot: {
-                index: true,
+                index: !isLowValueVariant,
                 follow: true,
                 "max-video-preview": -1,
                 "max-image-preview": "large",
@@ -172,8 +177,8 @@ export default async function LocationServicePage({ params }: PageProps) {
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
     const locationServiceInsight = getLocationServiceInsight(service, location);
-    const faqs = getServiceFAQs(service);
-    const treatmentProcess = getTreatmentProcess(service);
+    const faqs = getServiceFAQs(service, location);
+    const treatmentProcess = getTreatmentProcess(service, location);
 
     const whatsappMessage = encodeURIComponent(
         `Hi! I found you on www.galeobeauty.com and I'm interested in ${service.keyword}. I'm based in ${location.name}. Can I book an appointment?`

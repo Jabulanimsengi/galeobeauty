@@ -7,6 +7,9 @@ const BASE_URL = 'https://www.galeobeauty.com';
 // Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
 const BUILD_DATE = new Date().toISOString();
 
+// Low-value variants: hair extension size/color combos that create thin, near-identical pages
+const LOW_VALUE_PATTERN = /^(tape|utip|microloop|clip|halo|ponytail)-\d+cm-(dark|light)$/;
+
 function escapeXml(unsafe: string): string {
     return unsafe
         .replace(/&/g, '&amp;')
@@ -33,9 +36,10 @@ export async function GET() {
   </url>`);
     }
 
-    // Add location service pages for SITEMAP_1_LOCATIONS
+    // Add location service pages for SITEMAP_1_LOCATIONS (excluding low-value variants)
     for (const location of SITEMAP_1_LOCATIONS) {
         for (const service of services) {
+            if (LOW_VALUE_PATTERN.test(service.slug)) continue;
             entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
