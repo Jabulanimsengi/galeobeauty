@@ -65,24 +65,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
     const description = `Book ${service.keyword} at Galeo Beauty Salon near ${location.name}, ${location.region}. Professional beauty spa & day spa treatments in Hartbeespoort. Walk-in welcome, affordable prices from ${service.price}. Top-rated beauty parlour.`;
 
-    // Category-specific keywords with problem/solution and price-intent
+    // Category-specific keywords with treatment-specific names, problem/solution, and high-conversion intent
     const categoryKeywords: Record<string, string[]> = {
-        "hart-aesthetics": [`anti-aging treatment ${location.name}`, `dermal fillers ${location.name}`, `lip fillers price ${location.name}`, "wrinkle treatment near me", "non-surgical facelift"],
-        "fat-freezing": [`fat freezing cost ${location.name}`, `body contouring ${location.name}`, "stubborn fat removal near me", "cryolipolysis prices", "non-surgical fat removal"],
-        "slimming": [`slimming treatment ${location.name}`, `EMS body sculpting ${location.name}`, "muscle toning near me", "inch loss treatment prices"],
-        "dermalogica": [`facial prices ${location.name}`, `acne treatment ${location.name}`, "oily skin facial near me", "Dermalogica facial near me", "professional skincare"],
-        "qms-facial": [`anti-aging facial ${location.name}`, `collagen facial ${location.name}`, "fine lines treatment near me", "luxury facial prices"],
-        "pro-skin": [`skin treatment ${location.name}`, "microneedling near me", "pigmentation treatment prices", "skin rejuvenation near me"],
-        "ipl": [`laser hair removal ${location.name}`, `IPL prices ${location.name}`, "permanent hair removal near me", "painless hair removal"],
-        "hair": [`hair salon ${location.name}`, `balayage ${location.name}`, "hair colour prices near me", "keratin treatment near me", "hair extensions prices"],
-        "nails": [`nail salon ${location.name}`, `gel nails ${location.name}`, "acrylic nails prices near me", "manicure pedicure near me"],
-        "lashes": [`lash extensions ${location.name}`, `lash extensions cost ${location.name}`, "volume lashes near me", "lash lift prices"],
-        "permanent-makeup": [`microblading ${location.name}`, `powder brows ${location.name}`, "microblading cost near me", "permanent eyebrows prices"],
-        "waxing": [`waxing ${location.name}`, `Brazilian wax ${location.name}`, "waxing prices near me", "Hollywood wax near me"],
-        "makeup": [`makeup artist ${location.name}`, `bridal makeup ${location.name}`, "matric dance makeup near me", "wedding makeup prices"],
-        "sunbed": [`sunbed ${location.name}`, `spray tan ${location.name}`, "tanning salon near me", "sunbed prices"],
-        "medical": [`fractional laser ${location.name}`, "skin tightening near me", "scar treatment prices"],
-        "hair-extensions": [`hair extensions ${location.name}`, "tape-in extensions prices", "clip-in extensions near me"],
+        "hart-aesthetics": [`liquid facelift ${location.name}`, `Russian lip fillers ${location.name}`, `Nefertiti lift cost ${location.name}`, "skin boosters under eye near me", "collagen biostimulator injections"],
+        "fat-freezing": [`fat freezing cost ${location.name}`, `cryolipolysis before and after ${location.name}`, "stubborn belly fat treatment near me", "double chin fat freezing prices", "non-surgical fat removal results"],
+        "slimming": [`Tesla EMS slimming ${location.name}`, `body sculpting ${location.name}`, "HIFEM muscle toning near me", "inch loss treatment results", "non-invasive weight loss near me"],
+        "dermalogica": [`Dermalogica Pro Power Peel ${location.name}`, `chemical peel for pigmentation ${location.name}`, "microneedling with nanoinfusion near me", "deep pore cleansing facial for acne", "medical grade facial near me"],
+        "qms-facial": [`QMS collagen facial ${location.name}`, `anti-aging facial results ${location.name}`, "collagen boosting treatment near me", "fine lines and wrinkle facial prices", "luxury medical facial near me"],
+        "pro-skin": [`microneedling ${location.name}`, `dermaplaning results ${location.name}`, "chemical peel for acne scars near me", "pigmentation treatment before and after", "skin rejuvenation near me"],
+        "ipl": [`IPL Brazilian hair removal ${location.name}`, `full body laser ${location.name}`, "laser hair removal for men near me", "permanent hair removal face and neck", "IPL hair removal results"],
+        "hair": [`balayage stylist ${location.name}`, `Brazilian blowout ${location.name}`, "keratin treatment for frizzy hair near me", "full head foils and toner prices", "hair botox treatment near me"],
+        "nails": [`gel nails ${location.name}`, `acrylic full set ${location.name}`, "rubber base gel manicure near me", "nail art designs prices", "pedicure with gel soak off near me"],
+        "lashes": [`volume lash extensions ${location.name}`, `lash lift and tint ${location.name}`, "classic vs volume lashes near me", "silky soft master lashes prices", "lash lamination results"],
+        "permanent-makeup": [`microblading ${location.name}`, `powder pixel brows ${location.name}`, "hybrid brows vs microblading near me", "lip contour permanent makeup prices", "permanent eyeliner top and bottom"],
+        "waxing": [`Brazilian wax ${location.name}`, `Hollywood wax ${location.name}`, "mens back and chest waxing near me", "full body wax prices", "painless waxing near me"],
+        "makeup": [`bridal makeup artist ${location.name}`, `matric dance makeup ${location.name}`, "wedding makeup trial near me", "Kryolan professional makeup prices", "evening glam makeup near me"],
+        "sunbed": [`sunbed tanning ${location.name}`, `spray tan ${location.name}`, "bridal spray tan near me", "sunbed packages prices", "safe indoor tanning near me"],
+        "medical": [`fractional laser for acne scars ${location.name}`, `Plasmage skin tightening ${location.name}`, "non-surgical vaginal tightening near me", "scar treatment before and after", "medical aesthetics results"],
+        "hair-extensions": [`tape-in hair extensions ${location.name}`, `clip-in extensions ${location.name}`, "Remy human hair extensions prices", "keratin bond extensions near me", "hair extensions before and after"],
     };
 
     const serviceCategoryKeywords = categoryKeywords[service.categoryId] || [];
@@ -103,12 +103,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             // CONVERSION: Price & booking intent
             `${service.keyword} prices ${location.name}`,
             `best ${service.keyword} ${location.name}`,
-            `affordable ${service.keyword} near me`,
 
-            // LOCAL: Afrikaans
-            `skoonheidsalon ${location.name}`,
+            // DECISION STAGE: Results & before/after
+            `${service.keyword} results`,
+            `${service.keyword} before and after`,
 
-            // CATEGORY-SPECIFIC (problem/solution + price-intent)
+            // CATEGORY-SPECIFIC (treatment names + problem/solution)
             ...serviceCategoryKeywords.slice(0, 5),
         ],
         openGraph: {
