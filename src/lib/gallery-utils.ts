@@ -101,9 +101,9 @@ const imageMetadata: Record<string, { alt: string; title: string; category: stri
         aspect: "portrait",
     },
     "french-gel-nails-with-nail-art-detail": {
-        alt: "French gel nails with nail art detail at Galeo Beauty salon",
-        title: "French Nails with Art Detail",
-        category: "Nails",
+        alt: "Lip blush permanent makeup before and after at Galeo Beauty salon",
+        title: "Lip Blush Customized Look",
+        category: "Permanent Makeup",
         aspect: "portrait",
     },
     "lip-blush-before-after-customized-look": {

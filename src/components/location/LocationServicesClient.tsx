@@ -5,8 +5,8 @@ import { ChevronDown } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
 import { TreatmentListItem } from "@/components/booking/TreatmentListItem";
 import { BookingSheet } from "@/components/booking/BookingSheet";
+import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
-import { Button } from "@/components/ui/button";
 import { SelectedTreatment } from "@/lib/booking-types";
 import type { SEOLocation } from "@/lib/seo-data";
 
@@ -148,40 +148,24 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                         {/* Right Column - Sticky Booking Summary (Desktop Only) */}
                         <div className="hidden lg:block lg:w-80 flex-shrink-0">
                             <div className="sticky top-24">
-                                <BookingCart
-                                    selectedTreatments={selectedTreatments}
-                                    onRemoveTreatment={handleRemoveTreatment}
-                                    onClearAll={handleClearAll}
-                                    onOpenBooking={handleOpenBooking}
+                                <BookingSummary
+                                    items={selectedTreatments}
+                                    onRemoveItem={handleRemoveTreatment}
+                                    onBook={handleOpenBooking}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    {/* Mobile Floating Booking Summary */}
-                    {selectedTreatments.length > 0 && (
-                        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border shadow-lg">
-                            <div className="px-4 py-3">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-sm text-muted-foreground">
-                                        {selectedTreatments.length} treatment{selectedTreatments.length > 1 ? "s" : ""} selected
-                                    </span>
-                                    <button
-                                        onClick={handleClearAll}
-                                        className="text-xs text-red-500 hover:text-red-600"
-                                    >
-                                        Clear All
-                                    </button>
-                                </div>
-                                <Button
-                                    onClick={handleOpenBooking}
-                                    className="w-full bg-gold hover:bg-gold-dark text-white"
-                                >
-                                    Book Now
-                                </Button>
-                            </div>
-                        </div>
-                    )}
+                    {/* Mobile Floating Booking Bar */}
+                    <div className="lg:hidden">
+                        <BookingCart
+                            items={selectedTreatments}
+                            onRemoveItem={handleRemoveTreatment}
+                            onClearAll={handleClearAll}
+                            onBook={handleOpenBooking}
+                        />
+                    </div>
                 </div>
             </section>
 
@@ -190,7 +174,7 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                 isOpen={isBookingOpen}
                 onClose={handleCloseBooking}
                 bookingType="treatment"
-                selectedTreatments={selectedTreatments}
+                treatments={selectedTreatments}
             />
         </>
     );

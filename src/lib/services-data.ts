@@ -720,6 +720,7 @@ export const serviceCategories: ServiceCategory[] = [
                     { id: "full-set-volume", name: "Full Set Volume Lashes", duration: "1hr", price: "R720", description: "Multiple fine extensions per lash for dramatic, fluffy volume. Bold, glamorous look." },
                     { id: "hybrid-lashes", name: "Hybrid Lashes", duration: "1hr", price: "R720", description: "Mix of classic and volume for textured, dimensional lashes. Best of both worlds." },
                     { id: "glamour-lashes", name: "Glamour Lashes", duration: "1hr", price: "R900", description: "Maximum drama with mega volume technique. Red carpet-worthy, show-stopping lashes." },
+                    { id: "silky-soft-master-lashes", name: "Silky Soft Master Lashes by Dandi Meyer", duration: "1hr", price: "R700", description: "Premium silky soft master lashes by Dandi Meyer. Ultra-lightweight, natural feel with beautiful fullness and lasting comfort." },
                     { id: "lash-fill", name: "Lash Fill", duration: "1hr", price: "R360", description: "Maintenance fill for existing extensions. Keep your lashes full and beautiful." },
                 ],
             },

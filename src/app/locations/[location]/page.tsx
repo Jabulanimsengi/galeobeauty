@@ -22,8 +22,15 @@ export function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: { params: { location: string } }): Promise<Metadata> {
-    const location = getLocationBySlug(params.location);
+interface PageProps {
+    params: Promise<{
+        location: string;
+    }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { location: locationSlug } = await params;
+    const location = getLocationBySlug(locationSlug);
 
     if (!location) {
         return {
@@ -49,12 +56,12 @@ export async function generateMetadata({ params }: { params: { location: string 
             `walk-in salon ${location.name.toLowerCase()}`,
         ],
         alternates: {
-            canonical: `https://www.galeobeauty.com/locations/${params.location}`,
+            canonical: `https://www.galeobeauty.com/locations/${locationSlug}`,
         },
         openGraph: {
             title,
             description,
-            url: `https://www.galeobeauty.com/locations/${params.location}`,
+            url: `https://www.galeobeauty.com/locations/${locationSlug}`,
             type: "website",
             siteName: "Galeo Beauty",
             locale: "en_ZA",
@@ -67,14 +74,8 @@ export async function generateMetadata({ params }: { params: { location: string 
     };
 }
 
-interface PageProps {
-    params: {
-        location: string;
-    };
-}
-
 export default async function LocationHubPage({ params }: PageProps) {
-    const locationSlug = params.location;
+    const { location: locationSlug } = await params;
     const location = getLocationBySlug(locationSlug);
 
     if (!location) {
