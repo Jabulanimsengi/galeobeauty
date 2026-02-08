@@ -161,7 +161,7 @@ export function Footer() {
                     {/* Popular Services - Internal Linking for SEO */}
                     <div className="lg:hidden xl:block">
                         <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
-                            Popular Services
+                            Services
                         </h4>
                         <ul className="space-y-3">
                             <li>
@@ -170,27 +170,27 @@ export function Footer() {
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/lash-extensions" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/services/full-set-classic" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Lash Extensions
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/fat-freezing-treatment" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/services/fat-freezing-session" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Fat Freezing
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/lip-fillers" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/services/dermal-filler-1ml" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Lip Fillers
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/dermalogica-facial" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/prices/dermalogica" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Dermalogica Facial
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/prices" className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium">
+                                <NavLink href="/services" className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium">
                                     View All Services →
                                 </NavLink>
                             </li>

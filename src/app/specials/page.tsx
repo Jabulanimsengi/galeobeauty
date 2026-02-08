@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { Tag, ArrowRight, Plus, Check } from "lucide-react";
 import { useState } from "react";
 import { BookingSheet } from "@/components/booking/BookingSheet";
+import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
 
@@ -156,105 +157,128 @@ export default function SpecialsPage() {
                     </div>
                 </section>
 
-                {/* Specials - Alternating Layout */}
-                <section className="py-16 lg:py-24">
+                {/* Main Content - Flex Layout with Conditional Sidebar */}
+                <section className="py-12 lg:py-16">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="space-y-16 lg:space-y-24">
-                            {specials.map((special, idx) => {
-                                const isEven = idx % 2 === 0;
-                                return (
-                                    <motion.div
-                                        key={special.id}
-                                        initial={{ opacity: 0, y: 40 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.6 }}
-                                        className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 lg:gap-16 items-center`}
-                                    >
-                                        {/* Image */}
-                                        <div className="w-full lg:w-1/2">
-                                            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-                                                <Image
-                                                    src={special.image}
-                                                    alt={special.title}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                                {/* Discount Badge */}
-                                                <div className="absolute top-4 left-4">
-                                                    <div className="inline-flex items-center gap-1.5 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                                                        <Tag className="w-3.5 h-3.5" />
-                                                        {special.discount}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Content */}
-                                        <div className="w-full lg:w-1/2">
-                                            <span className="text-gold text-sm font-medium uppercase tracking-wider block mb-2">
-                                                {special.subtitle}
-                                            </span>
-                                            <h2 className="font-serif text-3xl sm:text-4xl text-foreground mb-6">
-                                                {special.title}
-                                            </h2>
-
-                                            {/* Items List with Plus Buttons */}
-                                            <div className="space-y-2 mb-8">
-                                                {special.items.map((item) => {
-                                                    const isSelected = isItemSelected(item.id);
-                                                    return (
-                                                        <div
-                                                            key={item.id}
-                                                            className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 ${isSelected
-                                                                ? 'border-gold bg-gold/5'
-                                                                : 'border-border/50 hover:border-gold/30'
-                                                                }`}
-                                                        >
-                                                            <div className="flex-1">
-                                                                <span className="text-foreground font-medium">
-                                                                    {item.service}
-                                                                </span>
-                                                                {item.duration && (
-                                                                    <span className="text-muted-foreground text-sm ml-2">
-                                                                        ({item.duration})
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="flex items-center gap-4">
-                                                                <div className="text-right">
-                                                                    {item.originalPrice && (
-                                                                        <span className="text-muted-foreground line-through text-sm block">
-                                                                            {item.originalPrice}
-                                                                        </span>
-                                                                    )}
-                                                                    <span className="font-semibold text-gold">
-                                                                        {item.price}
-                                                                    </span>
-                                                                </div>
-                                                                {/* Plus/Check Button */}
-                                                                <button
-                                                                    onClick={() => handleToggleTreatment(special, item)}
-                                                                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected
-                                                                        ? 'bg-gold text-white'
-                                                                        : 'bg-foreground/10 text-foreground hover:bg-gold hover:text-white'
-                                                                        }`}
-                                                                >
-                                                                    {isSelected ? (
-                                                                        <Check className="w-5 h-5" />
-                                                                    ) : (
-                                                                        <Plus className="w-5 h-5" />
-                                                                    )}
-                                                                </button>
+                        <div className="flex gap-8 lg:gap-12">
+                            {/* Left Column - Specials List */}
+                            <div className="flex-1 min-w-0 transition-all duration-300">
+                                <div className="space-y-16 lg:space-y-24">
+                                    {specials.map((special, idx) => {
+                                        const isEven = idx % 2 === 0;
+                                        return (
+                                            <motion.div
+                                                key={special.id}
+                                                initial={{ opacity: 0, y: 40 }}
+                                                whileInView={{ opacity: 1, y: 0 }}
+                                                viewport={{ once: true }}
+                                                transition={{ duration: 0.6 }}
+                                                className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 lg:gap-16 items-center`}
+                                            >
+                                                {/* Image */}
+                                                <div className="w-full lg:w-1/2">
+                                                    <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
+                                                        <Image
+                                                            src={special.image}
+                                                            alt={special.title}
+                                                            fill
+                                                            className="object-cover"
+                                                        />
+                                                        {/* Discount Badge */}
+                                                        <div className="absolute top-4 left-4">
+                                                            <div className="inline-flex items-center gap-1.5 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                                                                <Tag className="w-3.5 h-3.5" />
+                                                                {special.discount}
                                                             </div>
                                                         </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+                                                    </div>
+                                                </div>
+
+                                                {/* Content */}
+                                                <div className="w-full lg:w-1/2">
+                                                    <span className="text-gold text-sm font-medium uppercase tracking-wider block mb-2">
+                                                        {special.subtitle}
+                                                    </span>
+                                                    <h2 className="font-serif text-3xl sm:text-4xl text-foreground mb-6">
+                                                        {special.title}
+                                                    </h2>
+
+                                                    {/* Items List */}
+                                                    <div className="space-y-2 mb-8">
+                                                        {special.items.map((item) => {
+                                                            const isSelected = isItemSelected(item.id);
+                                                            return (
+                                                                <div
+                                                                    key={item.id}
+                                                                    onClick={() => handleToggleTreatment(special, item)}
+                                                                    className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 cursor-pointer ${isSelected
+                                                                        ? 'border-gold bg-gold/5'
+                                                                        : 'border-border/50 hover:border-gold/30 hover:bg-secondary/30'
+                                                                        }`}
+                                                                >
+                                                                    <div className="flex-1 pr-4">
+                                                                        <span className="text-foreground font-medium block">
+                                                                            {item.service}
+                                                                        </span>
+                                                                        {item.duration && (
+                                                                            <span className="text-muted-foreground text-sm block mt-0.5">
+                                                                                {item.duration}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-4 shrink-0">
+                                                                        <div className="text-right">
+                                                                            {item.originalPrice && (
+                                                                                <span className="text-muted-foreground line-through text-xs block">
+                                                                                    {item.originalPrice}
+                                                                                </span>
+                                                                            )}
+                                                                            <span className="font-semibold text-gold">
+                                                                                {item.price}
+                                                                            </span>
+                                                                        </div>
+                                                                        {/* Plus/Check Button */}
+                                                                        <div
+                                                                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${isSelected
+                                                                                ? 'bg-gold text-white'
+                                                                                : 'bg-foreground/10 text-foreground group-hover:bg-gold group-hover:text-white'
+                                                                                }`}
+                                                                        >
+                                                                            {isSelected ? (
+                                                                                <Check className="w-5 h-5" />
+                                                                            ) : (
+                                                                                <Plus className="w-5 h-5" />
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Right Column - Sticky Booking Summary (Desktop Only) */}
+                            {selectedTreatments.length > 0 && (
+                                <motion.div
+                                    initial={{ width: 0, opacity: 0, x: 50 }}
+                                    animate={{ width: 380, opacity: 1, x: 0 }}
+                                    exit={{ width: 0, opacity: 0, x: 50 }}
+                                    className="hidden lg:block shrink-0"
+                                >
+                                    <div className="sticky top-[140px]">
+                                        <BookingSummary
+                                            items={selectedTreatments}
+                                            onRemoveItem={handleRemoveTreatment}
+                                            onBook={handleOpenBooking}
+                                        />
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -283,13 +307,15 @@ export default function SpecialsPage() {
             </main>
             <Footer />
 
-            {/* Mobile Booking Cart */}
-            <BookingCart
-                items={selectedTreatments}
-                onRemoveItem={handleRemoveTreatment}
-                onClearAll={handleClearAll}
-                onBook={handleOpenBooking}
-            />
+            {/* Mobile Booking Cart (Hide on Large Screens) */}
+            <div className="lg:hidden">
+                <BookingCart
+                    items={selectedTreatments}
+                    onRemoveItem={handleRemoveTreatment}
+                    onClearAll={handleClearAll}
+                    onBook={handleOpenBooking}
+                />
+            </div>
 
             {/* Booking Sheet */}
             <BookingSheet

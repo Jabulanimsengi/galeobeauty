@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SelectedTreatment } from "@/lib/booking-types";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 interface BookingSummaryProps {
@@ -59,7 +60,10 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
       </div>
 
       {/* Selected treatments list - Scrollable */}
-      <div className="flex-1 overflow-y-auto min-h-0">
+      <div className={cn(
+        "flex-1 min-h-[150px]",
+        items.length > 2 ? "overflow-y-auto" : "overflow-y-hidden"
+      )}>
         <div className="p-6">
           <AnimatePresence mode="popLayout">
             {items.length === 0 ? (
@@ -133,11 +137,11 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
         )}
 
         {/* Continue button */}
-        <div className="p-6 pt-0">
+        <div className="p-6 pt-0 pb-10">
           <Button
             onClick={onBook}
             disabled={items.length === 0}
-            className="w-full py-7 text-lg bg-foreground hover:bg-foreground/90 text-background font-semibold rounded-full disabled:opacity-50"
+            className="w-full py-6 text-base bg-foreground hover:bg-foreground/90 text-background font-semibold rounded-full disabled:opacity-50"
           >
             Continue
           </Button>

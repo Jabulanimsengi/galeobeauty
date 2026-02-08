@@ -5,9 +5,9 @@ import { Header, Footer } from "@/components/layout";
 import { NearbyLocationsSection } from "@/components/sections/NearbyLocationsSection";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
-import { CheckCircle, Clock, DollarSign, MapPin, ArrowRight, Star } from "lucide-react";
+import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
-import { getAllSEOServices } from "@/lib/seo-data";
+import { getAllSEOServices, getAllServiceParams } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 
 //============================================
@@ -22,17 +22,14 @@ export const revalidate = false;
 
 // Generate static pages for all 262 services
 export function generateStaticParams() {
-    const allServices = getAllSEOServices();
-    return allServices.map((service) => ({
-        service: service.slug,
-    }));
+    return getAllServiceParams();
 }
 
 // Generate metadata for each service page
-export async function generateMetadata({ params }: { params: Promise<{ service: string }> }): Promise<Metadata> {
-    const { service: serviceSlug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ category: string; service: string }> }): Promise<Metadata> {
+    const { category: categoryId, service: serviceSlug } = await params;
     const allServices = getAllSEOServices();
-    const service = allServices.find((s) => s.slug === serviceSlug);
+    const service = allServices.find((s) => s.slug === serviceSlug && s.categoryId === categoryId);
 
     if (!service) {
         return { title: "Service Not Found" };
@@ -58,23 +55,25 @@ export async function generateMetadata({ params }: { params: Promise<{ service: 
             "Galeo Beauty",
         ],
         alternates: {
-            canonical: `https://www.galeobeauty.com/services/${service.slug}`,
+            canonical: `https://www.galeobeauty.com/services/${categoryId}/${service.slug}`,
         },
         openGraph: {
             title: `${service.keyword} - ${service.price}`,
             description: `Professional ${kw} at Galeo Beauty Hartbeespoort. ${service.price}. Book now!`,
-            url: `https://www.galeobeauty.com/services/${service.slug}`,
+            url: `https://www.galeobeauty.com/services/${categoryId}/${service.slug}`,
             type: "website",
         },
     };
 }
 
-export default async function ServicePage({ params }: { params: Promise<{ service: string }> }) {
-    const { service: serviceSlug } = await params;
+export default async function ServicePage({ params }: { params: Promise<{ category: string; service: string }> }) {
+    const { category: categoryId, service: serviceSlug } = await params;
+
+    // Validate that category matches the service
     const allServices = getAllSEOServices();
     const service = allServices.find((s) => s.slug === serviceSlug);
 
-    if (!service) {
+    if (!service || service.categoryId !== categoryId) {
         notFound();
     }
 
@@ -143,9 +142,9 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
         "@type": "BreadcrumbList",
         itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://www.galeobeauty.com" },
-            { "@type": "ListItem", position: 2, name: "Services", item: "https://www.galeobeauty.com/prices" },
-            { "@type": "ListItem", position: 3, name: category.title, item: `https://www.galeobeauty.com/prices/${category.id}` },
-            { "@type": "ListItem", position: 4, name: service.keyword, item: `https://www.galeobeauty.com/services/${service.slug}` },
+            { "@type": "ListItem", position: 2, name: "Services", item: "https://www.galeobeauty.com/services" },
+            { "@type": "ListItem", position: 3, name: category.title, item: `https://www.galeobeauty.com/services/${category.id}` },
+            { "@type": "ListItem", position: 4, name: service.keyword, item: `https://www.galeobeauty.com/services/${category.id}/${service.slug}` },
         ],
     };
 
@@ -167,9 +166,9 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
                                 <Link href="/" className="hover:text-gold transition-colors">Home</Link>
                                 <span>/</span>
-                                <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
+                                <Link href="/services" className="hover:text-gold transition-colors">Services</Link>
                                 <span>/</span>
-                                <Link href={`/prices#${category.id}`} className="hover:text-gold transition-colors">{category.title}</Link>
+                                <Link href={`/services/${category.id}`} className="hover:text-gold transition-colors">{category.title}</Link>
                                 <span>/</span>
                                 <span className="text-foreground">{service.keyword}</span>
                             </div>
@@ -194,7 +193,6 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
                             {/* Quick Info */}
                             <div className="flex flex-wrap gap-6 mb-8">
                                 <div className="flex items-center gap-2">
-                                    <DollarSign className="w-5 h-5 text-gold" />
                                     <span className="text-foreground font-semibold">{service.price}</span>
                                 </div>
                                 {service.duration && (
@@ -212,10 +210,10 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
                             {/* CTAs */}
                             <div className="flex flex-wrap gap-4">
                                 <Button asChild size="lg" className="bg-gold hover:bg-gold/90">
-                                    <NavLink href="/booking">Book Now</NavLink>
+                                    <NavLink href={`/prices?category=${category.id}`}>Book Now</NavLink>
                                 </Button>
                                 <Button asChild size="lg" variant="outline">
-                                    <NavLink href={`/prices#${category.id}`}>View All {category.title}</NavLink>
+                                    <NavLink href={`/services/${category.id}`}>View All {category.title}</NavLink>
                                 </Button>
                             </div>
                         </div>
@@ -266,7 +264,7 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
                                 {relatedServices.map((related) => (
                                     <Link
                                         key={related.slug}
-                                        href={`/services/${related.slug}`}
+                                        href={`/services/${category.id}/${related.slug}`}
                                         className="group p-6 bg-secondary/5 rounded-xl border border-border hover:border-gold/50 hover:shadow-lg transition-all duration-300"
                                     >
                                         <h3 className="font-semibold text-lg text-foreground group-hover:text-gold transition-colors mb-2">
@@ -301,7 +299,7 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
                         </p>
                         <div className="flex flex-wrap gap-4 justify-center">
                             <Button asChild size="lg" className="bg-gold hover:bg-gold/90">
-                                <NavLink href="/booking">Book Appointment</NavLink>
+                                <NavLink href={`/prices?category=${category.id}`}>Book Appointment</NavLink>
                             </Button>
                             <Button asChild size="lg" variant="outline">
                                 <a href={`tel:${businessInfo.phone}`}>Call {businessInfo.phone}</a>

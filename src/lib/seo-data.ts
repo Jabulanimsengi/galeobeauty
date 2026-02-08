@@ -376,6 +376,17 @@ export function getAllSEOParams(): { location: string; service: string }[] {
 }
 
 /**
+ * Get all valid category-service combinations for static generation
+ */
+export function getAllServiceParams(): { category: string; service: string }[] {
+    const services = getAllSEOServices();
+    return services.map((service) => ({
+        category: service.categoryId,
+        service: service.slug,
+    }));
+}
+
+/**
  * Get location data by slug
  */
 export function getLocationBySlug(slug: string): SEOLocation | undefined {

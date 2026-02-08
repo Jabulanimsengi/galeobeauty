@@ -114,7 +114,7 @@ export function BookingCart({ items, onRemoveItem, onClearAll, onBook }: Booking
         </AnimatePresence>
 
         {/* Main Bar */}
-        <div className="p-4">
+        <div className="p-6 pb-10">
           <div className="max-w-2xl mx-auto">
             {/* Toggle & Summary Row */}
             <button

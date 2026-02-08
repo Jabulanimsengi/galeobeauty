@@ -14,6 +14,7 @@ const LOW_VALUE_PATTERN = /^(tape|utip|microloop|clip|halo|ponytail)-\d+cm-(dark
 const STATIC_PAGES = [
   { path: '', priority: 1.0, changefreq: 'weekly' },
   { path: '/prices', priority: 0.9, changefreq: 'weekly' },
+  { path: '/services', priority: 0.9, changefreq: 'weekly' },
   { path: '/specials', priority: 0.8, changefreq: 'weekly' },
   { path: '/gallery', priority: 0.7, changefreq: 'monthly' },
   { path: '/about', priority: 0.6, changefreq: 'monthly' },
