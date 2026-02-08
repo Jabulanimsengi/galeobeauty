@@ -90,7 +90,7 @@ export async function GET() {
   for (const service of services) {
     entries.push(`
   <url>
-    <loc>${escapeXml(`${BASE_URL}/services/${service.slug}`)}</loc>
+    <loc>${escapeXml(`${BASE_URL}/services/${service.categoryId}/${service.slug}`)}</loc>
     <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
