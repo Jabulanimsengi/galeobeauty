@@ -185,13 +185,21 @@ export default async function LocationServicePage({ params }: PageProps) {
     );
     const whatsappLink = `https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`;
 
-    // Schema.org structured data with Reviews
+    // Schema.org structured data — BeautySalon as top-level type
+    // Google Review Snippets only support aggregateRating on LocalBusiness/BeautySalon,
+    // NOT on Service type. Placing it on Service causes "Invalid object type for field '<parent_node>'" error.
     const structuredData = {
         "@context": "https://schema.org",
-        "@type": "Service",
-        name: `${service.keyword} at Galeo Beauty Salon & Spa`,
-        description: `Professional ${service.keyword} salon and spa service near ${location.name}. Premium beauty parlour and day spa treatments at affordable prices. Book your appointment today.`,
-        serviceType: [service.keyword, "Beauty Treatment", "Spa Treatment", "Salon Service"],
+        "@type": "BeautySalon",
+        "@id": "https://www.galeobeauty.com/#salon",
+        name: "Galeo Beauty Salon & Spa",
+        alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
+        description: "Premium beauty salon, spa and day spa in Hartbeespoort offering skincare, facials, nails, hair care, lashes, waxing, body treatments and aesthetic treatments. Top-rated beauty parlour serving Gauteng and North West.",
+        additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
+        image: "https://www.galeobeauty.com/images/logo.png",
+        priceRange: "$$",
+        url: "https://www.galeobeauty.com",
+        telephone: businessInfo.phone,
         aggregateRating: {
             "@type": "AggregateRating",
             ratingValue: "4.9",
@@ -199,52 +207,33 @@ export default async function LocationServicePage({ params }: PageProps) {
             bestRating: "5",
             worstRating: "1",
         },
-        // Note: Individual reviews are only shown on the homepage to avoid duplicate content across 70k+ pages
-        provider: {
-            "@type": "BeautySalon",
-            name: "Galeo Beauty Salon & Spa",
-            alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
-            description: "Premium beauty salon, spa and day spa in Hartbeespoort offering skincare, facials, nails, hair care, lashes, waxing, body treatments and aesthetic treatments. Top-rated beauty parlour serving Gauteng and North West.",
-            additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
-            image: "https://www.galeobeauty.com/images/logo.png",
-            priceRange: "$$",
-            aggregateRating: {
-                "@type": "AggregateRating",
-                ratingValue: "4.9",
-                reviewCount: "159",
-                bestRating: "5",
-                worstRating: "1",
-            },
-            address: {
-                "@type": "PostalAddress",
-                streetAddress: businessInfo.address.street,
-                addressLocality: "Hartbeespoort",
-                addressRegion: "North West",
-                postalCode: "0216",
-                addressCountry: "ZA",
-            },
-            geo: {
-                "@type": "GeoCoordinates",
-                latitude: -25.753414,
-                longitude: 27.909252,
-            },
-            telephone: businessInfo.phone,
-            url: "https://www.galeobeauty.com",
-            openingHoursSpecification: [
-                {
-                    "@type": "OpeningHoursSpecification",
-                    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-                    opens: "08:00",
-                    closes: "18:00",
-                },
-                {
-                    "@type": "OpeningHoursSpecification",
-                    dayOfWeek: "Saturday",
-                    opens: "08:00",
-                    closes: "16:00",
-                },
-            ],
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: businessInfo.address.street,
+            addressLocality: "Hartbeespoort",
+            addressRegion: "North West",
+            postalCode: "0216",
+            addressCountry: "ZA",
         },
+        geo: {
+            "@type": "GeoCoordinates",
+            latitude: -25.753414,
+            longitude: 27.909252,
+        },
+        openingHoursSpecification: [
+            {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                opens: "08:00",
+                closes: "18:00",
+            },
+            {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: "Saturday",
+                opens: "08:00",
+                closes: "16:00",
+            },
+        ],
         areaServed: {
             "@type": "Place",
             name: location.name,
@@ -253,8 +242,14 @@ export default async function LocationServicePage({ params }: PageProps) {
                 name: location.region,
             },
         },
-        offers: {
+        makesOffer: {
             "@type": "Offer",
+            itemOffered: {
+                "@type": "Service",
+                name: `${service.keyword} at Galeo Beauty Salon & Spa`,
+                description: `Professional ${service.keyword} salon and spa service near ${location.name}. Premium beauty parlour and day spa treatments at affordable prices. Book your appointment today.`,
+                serviceType: [service.keyword, "Beauty Treatment", "Spa Treatment", "Salon Service"],
+            },
             price: service.price.replace(/[^0-9.]/g, ""),
             priceCurrency: "ZAR",
         },

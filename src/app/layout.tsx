@@ -91,10 +91,10 @@ export default function RootLayout({
               telephone: "+27121111730",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Shop 6, Landsmeer Estate, Jan Smuts Ave",
-                addressLocality: "Hartbeespoort Dam",
+                streetAddress: "Shop 6, Landsmeer, Jan Smuts Rd",
+                addressLocality: "Hartbeespoort",
                 addressRegion: "North West",
-                postalCode: "",
+                postalCode: "0216",
                 addressCountry: "ZA",
               },
               openingHoursSpecification: [
@@ -204,7 +204,7 @@ export default function RootLayout({
                   name: "Where is Galeo Beauty located?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "We are located at Shop 6, Landsmeer Estate, Jan Smuts Ave, Hartbeespoort Dam. We're a 45-minute drive from Pretoria and easily accessible from Johannesburg, Centurion, and surrounding areas.",
+                    text: "We are located at Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort, 0216, North West, South Africa. We're a 45-minute drive from Pretoria and easily accessible from Johannesburg, Centurion, and surrounding areas.",
                   },
                 },
                 {

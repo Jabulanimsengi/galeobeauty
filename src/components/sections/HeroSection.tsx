@@ -104,12 +104,10 @@ export function HeroSection() {
 
     // Array of hero images with descriptive alt text
     const heroImages = [
-        { src: "/images/main_hero_section2.jpeg", alt: "Galeo Beauty Salon luxury treatment room in Hartbeespoort" },
-        { src: "/images/main_hero_section03.png", alt: "Professional facial skincare treatment at Galeo Beauty" },
-        { src: "/images/main_hero_section04.png", alt: "Lash extension and beauty services at Galeo Beauty Spa" },
-        { src: "/images/main_hero_section05.png", alt: "Premium beauty and wellness treatments in Hartbeespoort" },
-        { src: "/images/main_hero_section06.png", alt: "Medical aesthetics and anti-aging treatments at Galeo Beauty" },
-        { src: "/images/main_hero_section07.png", alt: "Relaxing spa day experience at Galeo Beauty Hartbeespoort" },
+        { src: "/images/galeo-beauty-interior-p1.jpg", alt: "Galeo Beauty Salon luxury interior - Reception and Waiting Area" },
+        { src: "/images/galeo-beauty-interior-p2.jpg", alt: "Galeo Beauty Salon luxury interior - Treatment Rooms" },
+        { src: "/images/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon luxury interior - Nail Station" },
+        { src: "/images/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon luxury interior - Spa Lounge" },
     ];
 
     // Auto-slide effect - changes image every 5 seconds
@@ -122,7 +120,7 @@ export function HeroSection() {
     }, [heroImages.length]);
 
     return (
-        <section className="relative h-[80vh] sm:h-[90vh] lg:h-screen overflow-hidden">
+        <section className="relative h-[80svh] sm:h-[90dvh] lg:h-[100vh] overflow-hidden">
 
             {/* Image carousel - Full Width Background */}
             <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>

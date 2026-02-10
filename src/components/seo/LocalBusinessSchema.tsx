@@ -13,8 +13,8 @@ export function LocalBusinessSchema() {
         "email": "info@galeobeauty.com",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Shop 6, Landsmeer Estate, Jan Smuts Ave",
-            "addressLocality": "Hartbeespoort Dam",
+            "streetAddress": "Shop 6, Landsmeer, Jan Smuts Rd",
+            "addressLocality": "Hartbeespoort",
             "addressRegion": "North West",
             "postalCode": "0216",
             "addressCountry": "ZA"

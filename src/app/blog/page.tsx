@@ -5,21 +5,33 @@ import { Header, Footer } from "@/components/layout";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { getAllBlogPosts } from "@/lib/blog-data";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
+import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
-    title: "Beauty Blog | Tips, Guides & Trends",
-    description: "Expert beauty tips, treatment guides, and skincare advice from Galeo Beauty. Learn about facials, lash extensions, permanent makeup, and more.",
+    title: "Beauty Blog | Expert Tips & Guides | Galeo Beauty Hartbeespoort",
+    description: "Expert beauty tips, treatment guides, and skincare advice from Galeo Beauty in Hartbeespoort. Learn about facials, lash extensions, permanent makeup, anti-aging & more.",
     keywords: [
-        "beauty blog",
-        "skincare tips",
-        "beauty advice Pretoria",
-        "facial guide",
-        "lash extensions guide",
-        "wedding makeup tips",
+        "beauty blog Hartbeespoort",
+        "skincare tips South Africa",
+        "beauty advice Hartbeespoort Dam",
+        "facial guide Hartbeespoort",
+        "lash extensions tips",
+        "wedding makeup tips South Africa",
         "beauty trends South Africa",
+        "anti-aging skincare advice",
+        "permanent makeup guide",
+        "IPL hair removal tips",
+        "Galeo Beauty blog",
     ],
     alternates: {
         canonical: "https://www.galeobeauty.com/blog",
+    },
+    openGraph: {
+        title: "Beauty Blog | Expert Tips & Guides | Galeo Beauty",
+        description:
+            "Expert beauty tips, treatment guides & skincare advice from Galeo Beauty in Hartbeespoort.",
+        url: "https://www.galeobeauty.com/blog",
+        type: "website",
     },
 };
 
@@ -30,8 +42,32 @@ export const revalidate = false;
 export default function BlogPage() {
     const posts = getAllBlogPosts();
 
+    const breadcrumbSchema = generateBreadcrumbSchema([
+        { name: "Home", url: "https://www.galeobeauty.com" },
+        { name: "Blog", url: "https://www.galeobeauty.com/blog" },
+    ]);
+
+    const blogListSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: "Galeo Beauty Blog Articles",
+        description: "Expert beauty tips, treatment guides, and skincare advice from Galeo Beauty in Hartbeespoort.",
+        url: "https://www.galeobeauty.com/blog",
+        numberOfItems: posts.length,
+        itemListElement: posts.map((post, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `https://www.galeobeauty.com/blog/${post.slug}`,
+            name: post.title,
+        })),
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, blogListSchema]) }}
+            />
             <Header />
             <main className="bg-background min-h-screen">
                 {/* Hero Section */}

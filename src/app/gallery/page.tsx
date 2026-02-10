@@ -1,23 +1,53 @@
+import type { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { GalleryGrid } from "@/components/gallery";
 import { getGalleryImages } from "@/lib/gallery-utils";
+import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
-export const metadata = {
-    title: "Gallery | Galeo Beauty Salon & Spa",
+export const metadata: Metadata = {
+    title: "Gallery | Galeo Beauty Salon & Spa in Hartbeespoort",
     description:
-        "Browse our gallery of beauty treatments, nail art, skincare results, and salon ambiance at Galeo Beauty Salon in Hartbeespoort.",
+        "Browse our gallery of beauty treatments, nail art, skincare results, and salon ambiance at Galeo Beauty in Hartbeespoort. See real before & after results.",
+    keywords: [
+        "beauty salon gallery Hartbeespoort",
+        "nail art photos Hartbeespoort",
+        "before and after beauty treatments",
+        "skincare results gallery",
+        "lash extensions gallery near me",
+        "salon interior Hartbeespoort Dam",
+        "permanent makeup results",
+        "facial treatment photos",
+        "Galeo Beauty portfolio",
+        "beauty transformation gallery South Africa",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/gallery",
     },
+    openGraph: {
+        title: "Gallery | Galeo Beauty Salon & Spa Hartbeespoort",
+        description:
+            "Browse real treatment results, nail art, skincare before & afters at Galeo Beauty in Hartbeespoort.",
+        url: "https://www.galeobeauty.com/gallery",
+        type: "website",
+    },
 };
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "https://www.galeobeauty.com" },
+    { name: "Gallery", url: "https://www.galeobeauty.com/gallery" },
+]);
 
 export default function GalleryPage() {
     // This runs at build time - automatically reads images from the gallery folder
-    const galleryItems = getGalleryImages();
+    const images = getGalleryImages();
 
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
             <Header />
             <main className="bg-background min-h-screen">
                 {/* Hero Section */}
@@ -47,8 +77,8 @@ export default function GalleryPage() {
                             Galeo Life
                         </h2>
 
-                        {galleryItems.length > 0 ? (
-                            <GalleryGrid items={galleryItems} />
+                        {images.length > 0 ? (
+                            <GalleryGrid items={images} />
                         ) : (
                             <p className="text-center text-muted-foreground">
                                 No gallery images found. Add images to{" "}

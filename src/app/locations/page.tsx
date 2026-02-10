@@ -7,9 +7,25 @@ import { MapPin, Star, Building2, Home, Landmark, TrendingUp, Plane } from "luci
 export const metadata: Metadata = {
     title: "Areas We Serve | Beauty Salon Services Across Hartbeespoort & Gauteng",
     description: "Galeo Beauty serves 60+ locations in Hartbeespoort, Pretoria, Johannesburg, and surrounding areas. Find premium beauty treatments near you - from luxury estates to major metros.",
-    keywords: "beauty salon hartbeespoort, galeo beauty locations, areas we serve, hartbeespoort estates, pretoria beauty salon, johannesburg beauty services",
+    keywords: [
+        "beauty salon Hartbeespoort",
+        "Galeo Beauty locations",
+        "areas we serve Hartbeespoort",
+        "Hartbeespoort estates salon",
+        "Pretoria beauty salon",
+        "Johannesburg beauty services",
+        "salon near me Hartbeespoort Dam",
+        "beauty treatments Gauteng",
+    ],
     alternates: {
         canonical: "https://www.galeobeauty.com/locations",
+    },
+    openGraph: {
+        title: "Areas We Serve | Galeo Beauty Hartbeespoort & Gauteng",
+        description:
+            "Find Galeo Beauty services across 60+ locations in Hartbeespoort, Pretoria, Johannesburg & surrounding areas.",
+        url: "https://www.galeobeauty.com/locations",
+        type: "website",
     },
 };
 

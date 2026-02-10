@@ -1,32 +1,56 @@
 import { Metadata } from "next";
+import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
-    title: "About Galeo Beauty | Our Story, Team & Salon in Hartbeespoort",
-    description: "Meet the team behind Galeo Beauty. Founded in 2020, our Hartbeespoort salon delivers premium skincare, medical aesthetics, and luxury beauty treatments with qualified therapists.",
+    title: "About Galeo Beauty | Top-Rated Salon in Hartbeespoort | Shop 6, Landsmeer",
+    description: "Galeo Beauty is the top-rated beauty salon in Hartbeespoort, located at Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort 0216. Founded in 2020, we offer premium facials, medical aesthetics, nail care, lash extensions & more. Serving Hartbeespoort Dam, Schoemansville, Melodie, Kosmos & Pretoria.",
     keywords: [
         "about galeo beauty",
-        "galeo beauty story",
         "beauty salon hartbeespoort",
-        "galeo beauty team",
-        "beauty therapists hartbeespoort",
-        "premium salon south africa",
+        "salon in hartbeespoort",
+        "hartbeespoort beauty salon",
         "hartbeespoort dam salon",
+        "best salon hartbeespoort",
+        "top rated salon hartbeespoort",
+        "beauty salon near me hartbeespoort",
+        "salon landsmeer hartbeespoort",
+        "galeo beauty hartbeespoort",
+        "beauty therapists hartbeespoort",
+        "spa hartbeespoort",
+        "day spa hartbeespoort dam",
+        "facials hartbeespoort",
+        "nails hartbeespoort",
+        "lash extensions hartbeespoort",
+        "skoonheidsalon hartbeespoort",
     ],
     alternates: {
         canonical: "https://www.galeobeauty.com/about",
     },
     openGraph: {
-        title: "About Galeo Beauty | Our Story & Team",
-        description: "Meet the team behind Galeo Beauty. Premium skincare, medical aesthetics, and luxury beauty treatments in Hartbeespoort.",
+        title: "About Galeo Beauty | Top-Rated Beauty Salon in Hartbeespoort",
+        description: "Visit Galeo Beauty at Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort 0216. Premium skincare, medical aesthetics, and luxury beauty treatments. 4.9★ rated.",
         url: "https://www.galeobeauty.com/about",
         type: "website",
     },
 };
+
+const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: "https://www.galeobeauty.com" },
+    { name: "About", url: "https://www.galeobeauty.com/about" },
+]);
 
 export default function AboutLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return <>{children}</>;
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            {children}
+        </>
+    );
 }

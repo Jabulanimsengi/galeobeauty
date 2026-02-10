@@ -2,12 +2,13 @@
 
 import { Header, Footer } from "@/components/layout";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
+import { Map } from "@/components/ui/map";
 import Image from "next/image";
 import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Shield, Award, CheckCircle, MapPin, Clock, Star } from "lucide-react";
+import { Sparkles, Heart, Shield, Award, CheckCircle, MapPin, Clock, Star, Phone, Navigation } from "lucide-react";
 
 const values = [
     {
@@ -189,6 +190,121 @@ export default function AboutPage() {
                                             </div>
                                         </div>
                                     ))}
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Visit Our Salon - Location Section for Local SEO */}
+                <section className="py-20 lg:py-28 bg-secondary/20" id="location">
+                    <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="text-center mb-16"
+                        >
+                            <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-4 block">
+                                Our Location
+                            </span>
+                            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+                                Visit Our <span className="text-gold">Salon in Hartbeespoort</span>
+                            </h2>
+                            <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
+                                Nestled in the heart of Hartbeespoort, Galeo Beauty is your destination for premium beauty treatments and relaxation by the Hartbeespoort Dam.
+                            </p>
+                        </motion.div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+                            {/* Map */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6 }}
+                                className="rounded-2xl overflow-hidden shadow-xl min-h-[400px]"
+                            >
+                                <Map
+                                    latitude={-25.753414}
+                                    longitude={27.909252}
+                                    zoom={15}
+                                    markerTitle="Galeo Beauty"
+                                    markerDescription="Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort, 0216"
+                                />
+                            </motion.div>
+
+                            {/* Address & Details */}
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="flex flex-col justify-center"
+                            >
+                                <div className="space-y-8">
+                                    {/* Address */}
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-3 bg-gold/10 rounded-full flex-shrink-0">
+                                            <MapPin className="w-6 h-6 text-gold" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-serif text-xl text-foreground mb-2">Salon Address</h3>
+                                            <address className="not-italic text-muted-foreground leading-relaxed">
+                                                <strong className="text-foreground">Shop 6, Landsmeer</strong><br />
+                                                Jan Smuts Road<br />
+                                                Hartbeespoort, 0216<br />
+                                                North West, South Africa
+                                            </address>
+                                        </div>
+                                    </div>
+
+                                    {/* Opening Hours */}
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-3 bg-gold/10 rounded-full flex-shrink-0">
+                                            <Clock className="w-6 h-6 text-gold" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-serif text-xl text-foreground mb-2">Opening Hours</h3>
+                                            <div className="text-muted-foreground space-y-1">
+                                                <p>Monday – Friday: <span className="text-foreground font-medium">8:00 AM – 6:00 PM</span></p>
+                                                <p>Saturday: <span className="text-foreground font-medium">8:00 AM – 4:00 PM</span></p>
+                                                <p>Sunday: <span className="text-foreground font-medium">Closed</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Contact */}
+                                    <div className="flex items-start gap-4">
+                                        <div className="p-3 bg-gold/10 rounded-full flex-shrink-0">
+                                            <Phone className="w-6 h-6 text-gold" />
+                                        </div>
+                                        <div>
+                                            <h3 className="font-serif text-xl text-foreground mb-2">Contact Us</h3>
+                                            <p className="text-muted-foreground">
+                                                Call or WhatsApp: <a href="tel:+27121111730" className="text-gold hover:underline font-medium">012 111 1730</a>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* About the location - SEO text */}
+                                    <div className="bg-white/80 rounded-xl p-6 border border-gold/10">
+                                        <p className="text-muted-foreground text-sm leading-relaxed">
+                                            Galeo Beauty is proudly located in <strong className="text-foreground">Hartbeespoort</strong>, conveniently situated on Jan Smuts Road at the Landsmeer centre. As the <strong className="text-foreground">top-rated beauty salon in Hartbeespoort</strong>, we serve clients from across the Hartbeespoort Dam area, including Schoemansville, Melodie, Ifafi, Kosmos, Pecanwood, and surrounding estates. We're also just a scenic 45-minute drive from Pretoria and easily accessible from Johannesburg and Centurion.
+                                        </p>
+                                    </div>
+
+                                    {/* Get Directions CTA */}
+                                    <a
+                                        href="https://www.google.com/maps/dir/?api=1&destination=-25.753414,27.909252"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-white px-8 py-4 rounded-full font-semibold transition-colors duration-300 shadow-lg w-fit"
+                                    >
+                                        <Navigation className="w-5 h-5" />
+                                        Get Directions to Galeo Beauty
+                                    </a>
                                 </div>
                             </motion.div>
                         </div>
