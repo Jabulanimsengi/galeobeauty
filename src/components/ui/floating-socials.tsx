@@ -77,6 +77,7 @@ const socialLinks = [
 
 export function FloatingSocials() {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isLabelDismissed, setIsLabelDismissed] = useState(false);
 
     return (
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col-reverse items-end gap-2 sm:gap-3">
@@ -118,8 +119,8 @@ export function FloatingSocials() {
                 )}
             </AnimatePresence>
 
-            {/* Toggle Button - Hidden when expanded, Close button appears at top of expanded menu */}
-            <AnimatePresence>
+            {/* Toggle Button */}
+            <AnimatePresence mode="wait">
                 {isExpanded ? (
                     <motion.button
                         key="close-button"
@@ -134,9 +135,10 @@ export function FloatingSocials() {
                     >
                         <X className="h-6 w-6" />
                     </motion.button>
-                ) : (
+                ) : isLabelDismissed ? (
+                    /* Compact icon only */
                     <motion.button
-                        key="open-button"
+                        key="icon-only-button"
                         onClick={() => setIsExpanded(true)}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -144,10 +146,41 @@ export function FloatingSocials() {
                         transition={{ duration: 0.15 }}
                         className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-all duration-300 hover:bg-[#128C7E] hover:scale-110"
                         whileTap={{ scale: 0.95 }}
-                        aria-label="Open social menu"
+                        aria-label="Chat with us on WhatsApp"
                     >
                         <MessageCircle className="h-6 w-6 sm:h-7 sm:w-7" />
                     </motion.button>
+                ) : (
+                    /* Pill with label + dismiss X */
+                    <motion.div
+                        key="pill-button"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex items-center rounded-full bg-[#25D366] text-white shadow-2xl"
+                    >
+                        <button
+                            onClick={() => setIsExpanded(true)}
+                            className="flex items-center gap-2 pl-4 sm:pl-5 py-1.5 sm:py-2 pr-1 rounded-l-full transition-colors hover:bg-[#128C7E]"
+                            aria-label="Chat with us on WhatsApp"
+                        >
+                            <span className="text-sm sm:text-base font-semibold whitespace-nowrap">Chat with us</span>
+                            <span className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/20">
+                                <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
+                            </span>
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsLabelDismissed(true);
+                            }}
+                            className="flex items-center justify-center h-8 w-8 mr-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
+                            aria-label="Dismiss label"
+                        >
+                            <X className="h-3.5 w-3.5" />
+                        </button>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </div>

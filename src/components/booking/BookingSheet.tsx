@@ -51,6 +51,15 @@ export function BookingSheet({
     treatments,
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Booking reference: Client's Name and Surname in uppercase
   const bookingReference = useMemo(() => {
@@ -256,11 +265,20 @@ ${bankingDetails}
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent
-        side="right"
-        className="w-full sm:max-w-md p-0 flex flex-col overflow-hidden h-auto max-h-[85vh] my-auto rounded-l-2xl sm:rounded-2xl sm:mr-4"
+        side={isMobile ? "bottom" : "right"}
+        className={
+          isMobile
+            ? "w-full p-0 flex flex-col overflow-hidden max-h-[90vh] rounded-t-2xl !gap-0"
+            : "w-full sm:max-w-md p-0 flex flex-col overflow-hidden h-auto max-h-[85vh] my-auto rounded-l-2xl sm:rounded-2xl sm:mr-4"
+        }
       >
-        {/* Header */}
-        <SheetHeader className="p-6 pb-4 border-b bg-foreground text-background">
+        {/* Header — drag handle is inside the dark bg on mobile */}
+        <SheetHeader className={`p-6 pb-4 border-b bg-foreground text-background ${isMobile ? "pt-0" : ""}`}>
+          {isMobile && (
+            <div className="flex justify-center pt-3 pb-2">
+              <div className="w-10 h-1 rounded-full bg-background/30" />
+            </div>
+          )}
           <SheetTitle className="text-background font-serif text-xl">
             {state.bookingType === "consultation" ? "Book Free Consultation" : "Book Treatments"}
           </SheetTitle>
@@ -592,7 +610,7 @@ ${bankingDetails}
         </div>
 
         {/* Footer Navigation */}
-        <div className="p-6 border-t bg-background flex gap-3">
+        <div className={`p-6 border-t bg-background flex gap-3 ${isMobile ? "pb-8" : ""}`}>
           {state.currentStep > 1 && (
             <Button
               variant="outline"
