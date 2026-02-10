@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import { TrustBadge } from "@/components/ui/trust-badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -460,7 +460,7 @@ export default async function CategoryPage({ params }: PageProps) {
                 )}
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
 
                 {/* CTA */}
                 <section className="py-20 bg-foreground text-background text-center">

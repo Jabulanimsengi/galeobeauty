@@ -144,6 +144,12 @@ export default function MatricDancePage() {
                 }}
                 ctaTitle="Ready to Shine at Your Matric Dance?"
                 ctaDescription="Book your matric dance beauty appointment today. Whether it's just makeup or the full package, we'll make sure you look and feel absolutely amazing on your special night."
+                currentPageHref="/matric-dance"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Matric Dance" },
+                ]}
             />
         </>
     );

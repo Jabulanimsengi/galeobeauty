@@ -1,7 +1,7 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { serviceCategories } from "@/lib/services-data";
 import { useState, useEffect, Suspense } from "react";
@@ -213,7 +213,7 @@ function PricesContent() {
                 </section>
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
 
                 {/* CTA */}
                 <section className="py-20 bg-foreground text-background text-center">

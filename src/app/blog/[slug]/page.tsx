@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import { Button } from "@/components/ui/button";
 import { getAllBlogPosts, getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
 import { ArrowLeft, ArrowRight, Clock, Calendar, User } from "lucide-react";
@@ -233,7 +233,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 )}
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
             </main>
             <Footer />
         </>

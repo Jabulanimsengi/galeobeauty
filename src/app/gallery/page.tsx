@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import { GalleryGrid } from "@/components/gallery";
 import { getGalleryImages } from "@/lib/gallery-utils";
 import { generateBreadcrumbSchema } from "@/lib/schema-utils";
@@ -91,7 +91,7 @@ export default function GalleryPage() {
                 </section>
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
             </main>
             <Footer />
         </>

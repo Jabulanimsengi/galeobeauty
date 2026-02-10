@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
 import { NearbyLocationsSection } from "@/components/sections/NearbyLocationsSection";
 import { Button } from "@/components/ui/button";
+import { ServiceBookingButton } from "@/components/booking/ServiceBookingButton";
 import { NavLink } from "@/components/ui/nav-link";
 import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
@@ -190,28 +191,32 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 </p>
                             )}
 
-                            {/* Quick Info */}
-                            <div className="flex flex-wrap gap-6 mb-8">
-                                <div className="flex items-center gap-2">
-                                    <span className="text-foreground font-semibold">{service.price}</span>
-                                </div>
-                                {service.duration && (
-                                    <div className="flex items-center gap-2">
-                                        <Clock className="w-5 h-5 text-gold" />
-                                        <span className="text-foreground">{service.duration}</span>
+                            {/* Quick Info + Book Button */}
+                            <div className="flex items-center gap-6 mb-8">
+                                <div className="flex flex-wrap items-center gap-6">
+                                    <span className="text-2xl font-bold text-gold">{service.price}</span>
+                                    {service.duration && (
+                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                            <Clock className="w-5 h-5" />
+                                            <span>{service.duration}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex items-center gap-2 text-muted-foreground">
+                                        <MapPin className="w-5 h-5" />
+                                        <span>Hartbeespoort</span>
                                     </div>
-                                )}
-                                <div className="flex items-center gap-2">
-                                    <MapPin className="w-5 h-5 text-gold" />
-                                    <span className="text-foreground">Hartbeespoort</span>
                                 </div>
+                                <ServiceBookingButton
+                                    item={fullServiceItem}
+                                    categoryId={category.id}
+                                    categoryTitle={category.title}
+                                    subcategoryId={subcategory?.id || ""}
+                                    subcategoryTitle={subcategory?.title || ""}
+                                />
                             </div>
 
                             {/* CTAs */}
                             <div className="flex flex-wrap gap-4">
-                                <Button asChild size="lg" className="bg-gold hover:bg-gold/90">
-                                    <NavLink href={`/prices?category=${category.id}`}>Book Now</NavLink>
-                                </Button>
                                 <Button asChild size="lg" variant="outline">
                                     <NavLink href={`/services/${category.id}`}>View All {category.title}</NavLink>
                                 </Button>

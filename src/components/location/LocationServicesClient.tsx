@@ -92,11 +92,10 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                             {/* Category Header - Compact Pill Button */}
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.id)}
-                                                className={`w-full flex items-center justify-between px-5 py-3 rounded-full transition-all duration-200 ${
-                                                    isExpanded
+                                                className={`w-full flex items-center justify-between px-5 py-3 rounded-full transition-all duration-200 ${isExpanded
                                                         ? "bg-gold text-white"
                                                         : "bg-neutral-900 text-white hover:bg-gold"
-                                                }`}
+                                                    }`}
                                             >
                                                 <div className="flex items-center gap-3">
                                                     <category.Icon className="w-5 h-5" />
@@ -105,9 +104,8 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                                     </span>
                                                 </div>
                                                 <ChevronDown
-                                                    className={`w-5 h-5 transition-transform duration-200 ${
-                                                        isExpanded ? "rotate-180" : ""
-                                                    }`}
+                                                    className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""
+                                                        }`}
                                                 />
                                             </button>
 
@@ -146,7 +144,7 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                         </div>
 
                         {/* Right Column - Sticky Booking Summary (Desktop Only) */}
-                        <div className="hidden lg:block lg:w-80 flex-shrink-0">
+                        <div className="hidden lg:block w-[380px] flex-shrink-0">
                             <div className="sticky top-24">
                                 <BookingSummary
                                     items={selectedTreatments}

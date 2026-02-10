@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
 import {
     CheckCircle, ArrowRight, Plus,
@@ -11,6 +12,8 @@ import {
 import { useState } from "react";
 import { BookingSheet } from "@/components/booking/BookingSheet";
 import { SelectedTreatment } from "@/lib/booking-types";
+import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs";
+import { serviceLandingPages } from "@/lib/service-links";
 
 // Icon mapping for string-based icon names
 const iconMap = {
@@ -73,6 +76,10 @@ export interface SEOLandingPageProps {
     // CTA
     ctaTitle: string;
     ctaDescription: string;
+
+    // Internal linking
+    breadcrumbs?: BreadcrumbItem[];
+    currentPageHref?: string;
 }
 
 export function SEOLandingPage({
@@ -87,6 +94,8 @@ export function SEOLandingPage({
     secondaryContent,
     ctaTitle,
     ctaDescription,
+    breadcrumbs,
+    currentPageHref,
 }: SEOLandingPageProps) {
     const whatsappLink = "https://wa.me/27824447389?text=Hi%2C%20I%27d%20like%20to%20book%20a%20consultation.%20I%20found%20you%20on%20www.galeobeauty.com";
 
@@ -127,8 +136,15 @@ export function SEOLandingPage({
         <>
             <Header />
             <main className="bg-background">
+                {/* Breadcrumbs */}
+                {breadcrumbs && breadcrumbs.length > 0 && (
+                    <div className="bg-secondary/20">
+                        <Breadcrumbs items={breadcrumbs} />
+                    </div>
+                )}
+
                 {/* Hero Section - Image Left, Text Right */}
-                <section className="py-24 lg:py-32 bg-secondary/20">
+                <section className={`${breadcrumbs ? 'pt-6 pb-24 lg:pt-8 lg:pb-32' : 'py-24 lg:py-32'} bg-secondary/20`}>
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                             {/* Image - Sticky */}
@@ -348,6 +364,74 @@ export function SEOLandingPage({
                         </div>
                     </section>
                 )}
+
+                {/* Explore Other Treatments - Cross-linking Section */}
+                {currentPageHref && (() => {
+                    const otherServices = serviceLandingPages.filter(s => s.href !== currentPageHref).slice(0, 3);
+                    if (otherServices.length === 0) return null;
+                    return (
+                        <section className="py-24 bg-secondary/10">
+                            <div className="container mx-auto px-4 sm:px-6">
+                                <div className="text-center mb-12">
+                                    <span className="text-gold font-medium uppercase tracking-widest text-sm block mb-3">
+                                        More Treatments
+                                    </span>
+                                    <h2 className="font-serif text-3xl md:text-4xl text-foreground">
+                                        Explore Other Treatments
+                                    </h2>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                                    {otherServices.map((service, idx) => (
+                                        <motion.div
+                                            key={service.href}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
+                                            transition={{ delay: idx * 0.1 }}
+                                        >
+                                            <Link href={service.href} className="group block">
+                                                <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/30 bg-white transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
+                                                    <div className="relative aspect-[16/10] w-full">
+                                                        <Image
+                                                            src={service.image}
+                                                            alt={service.title}
+                                                            fill
+                                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                                            sizes="(max-width: 768px) 100vw, 33vw"
+                                                        />
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                                    </div>
+                                                    <div className="p-5">
+                                                        <h3 className="font-serif text-lg text-foreground group-hover:text-gold transition-colors mb-1">
+                                                            {service.title}
+                                                        </h3>
+                                                        <p className="text-sm text-muted-foreground">
+                                                            {service.description}
+                                                        </p>
+                                                        <span className="inline-flex items-center gap-1 text-sm font-medium text-gold mt-3 group-hover:gap-2 transition-all">
+                                                            Learn more <ArrowRight className="w-4 h-4" />
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </motion.div>
+                                    ))}
+                                </div>
+
+                                <div className="text-center mt-10">
+                                    <Link
+                                        href="/prices"
+                                        className="inline-flex items-center gap-2 text-foreground hover:text-gold transition-colors font-medium"
+                                    >
+                                        View All Treatments & Prices
+                                        <ArrowRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </section>
+                    );
+                })()}
 
                 {/* Final CTA Section */}
                 <section className="py-24 bg-white">

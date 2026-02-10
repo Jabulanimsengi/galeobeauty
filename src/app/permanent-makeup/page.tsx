@@ -161,6 +161,12 @@ export default function PermanentMakeupPage() {
                 }}
                 ctaTitle="Ready for Effortless Beauty?"
                 ctaDescription="Book your consultation to discuss which permanent makeup service is right for you. Our certified artist will create a personalized plan to help you wake up beautiful every day."
+                currentPageHref="/permanent-makeup"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Permanent Makeup" },
+                ]}
             />
         </>
     );

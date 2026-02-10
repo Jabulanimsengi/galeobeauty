@@ -161,6 +161,12 @@ export default function LaserHairRemovalPage() {
                 }}
                 ctaTitle="Ready for Smooth, Hair-Free Skin?"
                 ctaDescription="Book your free consultation to discuss treatment areas, see our CE-approved technology, and get a personalized treatment plan with pricing. Start your journey to permanent hair removal today."
+                currentPageHref="/laser-hair-removal"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Laser Hair Removal" },
+                ]}
             />
         </>
     );

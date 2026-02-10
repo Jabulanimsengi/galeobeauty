@@ -167,6 +167,12 @@ export default function AntiAgingPage() {
                 }}
                 ctaTitle="Ready to Turn Back the Clock?"
                 ctaDescription="Book your complimentary consultation to discover which anti-aging treatments will help you achieve your aesthetic goals. Our certified practitioners will create a personalized rejuvenation plan just for you."
+                currentPageHref="/anti-aging"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Anti-Aging" },
+                ]}
             />
         </>
     );

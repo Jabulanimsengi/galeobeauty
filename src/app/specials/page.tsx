@@ -1,7 +1,7 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import Image from "next/image";
 import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
@@ -284,7 +284,7 @@ export default function SpecialsPage() {
                 </section>
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
 
                 {/* Simple CTA */}
                 <section className="py-16 bg-foreground text-background">

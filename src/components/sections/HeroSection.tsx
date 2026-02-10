@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Shield, Star, Sparkles, Award } from "lucide-react";
@@ -63,6 +63,26 @@ function FloatingShape({ className, delay = 0 }: { className?: string; delay?: n
     );
 }
 
+// Ken Burns animation presets — each slide gets a different zoom/pan direction
+const kenBurnsVariants = [
+    { // Slow zoom in from center
+        initial: { scale: 1, x: "0%", y: "0%" },
+        animate: { scale: 1.15, x: "0%", y: "0%" },
+    },
+    { // Zoom in + pan right
+        initial: { scale: 1.05, x: "-2%", y: "0%" },
+        animate: { scale: 1.2, x: "2%", y: "-1%" },
+    },
+    { // Zoom in + pan left
+        initial: { scale: 1.05, x: "2%", y: "1%" },
+        animate: { scale: 1.18, x: "-2%", y: "0%" },
+    },
+    { // Slow zoom out from slight zoom
+        initial: { scale: 1.2, x: "0%", y: "-1%" },
+        animate: { scale: 1.05, x: "0%", y: "1%" },
+    },
+];
+
 // Text animation variants - Simplified for mobile performance
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -122,25 +142,36 @@ export function HeroSection() {
     return (
         <section className="relative h-[80svh] sm:h-[90dvh] lg:h-[100vh] overflow-hidden">
 
-            {/* Image carousel - Full Width Background */}
+            {/* Ken Burns Image Carousel */}
             <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>
-                {heroImages.map((image, index) => (
-                    <Image
-                        key={image.src}
-                        src={image.src}
-                        alt={image.alt}
-                        fill
-                        sizes="100vw"
-                        className="object-cover object-center transition-opacity duration-1000 ease-in-out"
-                        style={{
-                            opacity: currentSlide === index ? 1 : 0,
-                            willChange: 'opacity',
-                            transform: 'translateZ(0)',
-                        }}
-                        priority={index === 0}
-                        quality={85}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    <motion.div
+                        key={currentSlide}
+                        className="absolute inset-0 w-full h-full"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1.2, ease: "easeInOut" }}
+                    >
+                        <motion.div
+                            className="absolute inset-0 w-full h-full"
+                            initial={kenBurnsVariants[currentSlide % kenBurnsVariants.length].initial}
+                            animate={kenBurnsVariants[currentSlide % kenBurnsVariants.length].animate}
+                            transition={{ duration: 6, ease: "linear" }}
+                            style={{ willChange: "transform" }}
+                        >
+                            <Image
+                                src={heroImages[currentSlide].src}
+                                alt={heroImages[currentSlide].alt}
+                                fill
+                                sizes="100vw"
+                                className="object-cover object-center"
+                                priority={currentSlide === 0}
+                                quality={85}
+                            />
+                        </motion.div>
+                    </motion.div>
+                </AnimatePresence>
             </div>
 
             {/* Dark overlay for text contrast - All devices */}

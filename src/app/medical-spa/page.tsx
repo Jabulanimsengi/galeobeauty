@@ -159,6 +159,12 @@ export default function MedicalSpaPage() {
                 }}
                 ctaTitle="Experience Medical Spa Excellence"
                 ctaDescription="Book your complimentary consultation to discover how our medical spa treatments can help you achieve your aesthetic goals safely and effectively. Our certified team will design a personalized plan just for you."
+                currentPageHref="/medical-spa"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Medical Spa" },
+                ]}
             />
         </>
     );

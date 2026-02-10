@@ -1,7 +1,7 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -216,7 +216,7 @@ export default function CareersPage() {
                 </section>
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
 
                 {/* CTA Section */}
                 <section className="py-20 lg:py-32 text-center bg-foreground text-background">

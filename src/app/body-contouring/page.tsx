@@ -133,7 +133,7 @@ export default function BodyContouringPage() {
                 secondaryContent={{
                     title: "How Body Contouring Works",
                     description: "Our body contouring treatments use advanced technology to target and eliminate stubborn fat cells while building muscle tone. Fat freezing (cryolipolysis) crystallizes fat cells, which your body then naturally eliminates over time. Tesla EMS uses high-intensity electromagnetic energy to create powerful muscle contractions, equivalent to 20,000 sit-ups in just 30 minutes. Both treatments are completely non-invasive, FDA/CE-approved, and require zero downtime.",
-                    image: "/images/services/fat_freezing/fat_freezing_03.jpeg",
+                    image: "/images/services/fat_freezing/Gallery_image_01(33).png.jpeg",
                     imageAlt: "Fat freezing cryolipolysis body contouring treatment",
                     features: [
                         "Free consultation to assess your goals and create personalized treatment plan",
@@ -146,6 +146,12 @@ export default function BodyContouringPage() {
                 }}
                 ctaTitle="Ready to Transform Your Body?"
                 ctaDescription="Book your free consultation today and discover which body contouring treatment is right for you. Our certified specialists will create a personalized plan to help you achieve your body goals."
+                currentPageHref="/body-contouring"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Body Contouring" },
+                ]}
             />
         </>
     );

@@ -145,6 +145,12 @@ export default function BridalBeautyPage() {
                 }}
                 ctaTitle="Ready to Look Stunning on Your Wedding Day?"
                 ctaDescription="Book your complimentary bridal consultation to discuss packages, trial dates, and create your perfect wedding day beauty plan. Our certified team will ensure you look absolutely breathtaking."
+                currentPageHref="/bridal-beauty"
+                breadcrumbs={[
+                    { label: "Home", href: "/" },
+                    { label: "Services", href: "/prices" },
+                    { label: "Bridal Beauty" },
+                ]}
             />
         </>
     );

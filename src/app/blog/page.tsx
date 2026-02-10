@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import { getAllBlogPosts } from "@/lib/blog-data";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 import { generateBreadcrumbSchema } from "@/lib/schema-utils";
@@ -150,7 +150,7 @@ export default function BlogPage() {
                 </section>
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
 
                 {/* CTA Section */}
                 <section className="py-20 bg-foreground text-background text-center">

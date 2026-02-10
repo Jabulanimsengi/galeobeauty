@@ -1,7 +1,7 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
-import { ReviewsSection } from "@/components/sections/ReviewsSection";
+
 import { Button } from "@/components/ui/button";
 import { Map } from "@/components/ui/map";
 import { Phone, Mail, MapPin, Clock, MessageCircle, ArrowRight, Instagram, Facebook, Smartphone } from "lucide-react";
@@ -160,7 +160,7 @@ export default function ContactPage() {
                 </section>
 
                 {/* Reviews Section */}
-                <ReviewsSection />
+
 
                 {/* Social Footer */}
                 <section className="py-16 text-center">

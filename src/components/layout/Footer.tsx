@@ -165,28 +165,28 @@ export function Footer() {
                         </h4>
                         <ul className="space-y-3">
                             <li>
-                                <NavLink href="/services/microblading" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
-                                    Microblading
+                                <NavLink href="/permanent-makeup" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Permanent Makeup
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/full-set-classic" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
-                                    Lash Extensions
+                                <NavLink href="/body-contouring" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Body Contouring
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/fat-freezing-session" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
-                                    Fat Freezing
+                                <NavLink href="/anti-aging" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Anti-Aging
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services/dermal-filler-1ml" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
-                                    Lip Fillers
+                                <NavLink href="/laser-hair-removal" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Laser Hair Removal
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/prices/dermalogica" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
-                                    Dermalogica Facial
+                                <NavLink href="/medical-spa" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                    Medical Spa
                                 </NavLink>
                             </li>
                             <li>
