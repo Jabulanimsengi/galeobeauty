@@ -1,6 +1,15 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Price List | Beauty Treatment Costs in Hartbeespoort",
+    description: "View our comprehensive price list for facials, massages, nails, lashes, and aesthetic treatments. Transparent pricing for premium beauty services at Galeo Beauty.",
+    alternates: {
+        canonical: "https://www.galeobeauty.com/prices",
+    },
+};
 
 import { motion, AnimatePresence } from "framer-motion";
 import { serviceCategories } from "@/lib/services-data";
@@ -33,26 +42,45 @@ const formatTitle = (title: string): string => {
 function PricesContent() {
     const searchParams = useSearchParams();
     const categoryParam = searchParams.get("category");
+    const queryParam = searchParams.get("q")?.toLowerCase(); // Support Sitelinks Searchbox
 
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
 
-    // Track which categories are expanded (only expand if URL param is present)
-    const [expandedCategories, setExpandedCategories] = useState<string[]>(
-        categoryParam ? [categoryParam] : []
-    );
+    // Track which categories are expanded
+    const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
-    // Update expansion if param changes client-side
+    // Derived state for filtering
+    const [searchQuery, setSearchQuery] = useState(queryParam || "");
+
+    // Update state when URL params change
     useEffect(() => {
         if (categoryParam) {
             setExpandedCategories([categoryParam]);
-            // Scroll to the category element smoothly
-            const element = document.getElementById(`category-${categoryParam}`);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
+            setTimeout(() => {
+                const element = document.getElementById(`category-${categoryParam}`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
         }
-    }, [categoryParam]);
+
+        if (queryParam) {
+            setSearchQuery(queryParam);
+            // If searching, we'll want to expand categories with matches (logic below)
+            const categoriesWithMatches = serviceCategories
+                .filter(cat =>
+                    cat.subcategories.some(sub =>
+                        sub.items.some(item =>
+                            item.name.toLowerCase().includes(queryParam) ||
+                            item.description?.toLowerCase().includes(queryParam)
+                        )
+                    )
+                )
+                .map(c => c.id);
+            setExpandedCategories(prev => Array.from(new Set([...prev, ...categoriesWithMatches])));
+        }
+    }, [categoryParam, queryParam]);
 
     // Toggle category expansion
     const toggleCategoryExpansion = (categoryId: string) => {
@@ -138,6 +166,19 @@ function PricesContent() {
                             <div className="flex-1 lg:max-w-2xl">
                                 <div className="space-y-2">
                                     {serviceCategories.map((category) => {
+                                        // Filter items if search query exists
+                                        const filteredSubcategories = category.subcategories.map(sub => ({
+                                            ...sub,
+                                            items: sub.items.filter(item =>
+                                                !searchQuery ||
+                                                item.name.toLowerCase().includes(searchQuery) ||
+                                                (item.description && item.description.toLowerCase().includes(searchQuery))
+                                            )
+                                        })).filter(sub => sub.items.length > 0);
+
+                                        // Hide category if no matches found
+                                        if (filteredSubcategories.length === 0) return null;
+
                                         const isExpanded = isCategoryExpanded(category.id);
                                         return (
                                             <div key={category.id} id={`category-${category.id}`} className="overflow-hidden">
@@ -171,7 +212,7 @@ function PricesContent() {
                                                             className="overflow-hidden"
                                                         >
                                                             <div className="pt-4 pb-2 space-y-2">
-                                                                {category.subcategories.map((subcategory) => (
+                                                                {filteredSubcategories.map((subcategory) => (
                                                                     <div key={subcategory.id} className="space-y-2">
                                                                         {subcategory.items.map((item) => (
                                                                             <TreatmentListItem

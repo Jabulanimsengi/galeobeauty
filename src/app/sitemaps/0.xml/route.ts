@@ -8,8 +8,9 @@ const BASE_URL = 'https://www.galeobeauty.com';
 // Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
 const BUILD_DATE = new Date().toISOString();
 
-// Low-value variants: hair extension size/color combos that create thin, near-identical pages
-const LOW_VALUE_PATTERN = /^(tape|utip|microloop|clip|halo|ponytail)-\d+cm-(dark|light)$/;
+// Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
+// BUILD_DATE is already computed above
+
 
 const STATIC_PAGES = [
   { path: '', priority: 1.0, changefreq: 'weekly' },
@@ -94,6 +95,10 @@ export async function GET() {
     <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+    <image:image>
+      <image:loc>https://www.galeobeauty.com/images/og-image.jpg</image:loc>
+      <image:title>${escapeXml(service.keyword + " at Galeo Beauty")}</image:title>
+    </image:image>
   </url>`);
   }
 
@@ -120,7 +125,6 @@ export async function GET() {
   // Add location service pages for all SITEMAP_0_LOCATIONS (excluding low-value variants)
   for (const location of SITEMAP_0_LOCATIONS) {
     for (const service of services) {
-      if (LOW_VALUE_PATTERN.test(service.slug)) continue;
       entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
@@ -132,7 +136,7 @@ export async function GET() {
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries.join('')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">${entries.join('')}
 </urlset>`;
 
   return new NextResponse(xml, {

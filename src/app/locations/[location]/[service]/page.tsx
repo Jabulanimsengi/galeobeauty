@@ -13,18 +13,14 @@ import {
     getRelatedServices,
     getPopularServicesFromOtherCategories,
     getServiceSpecificBenefits,
-    generateServiceIntro,
-    getDrivingContext,
-    getLocationInsights,
-    getLocationServiceInsight,
-    getDynamicRelatedServices,
-    getServiceFAQs,
     getTreatmentProcess,
+    generateServiceBenefits,
     type SEOLocation,
     type SEOService,
     type FAQ,
     type TreatmentStep,
 } from "@/lib/seo-data";
+import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
 
 // ============================================
@@ -87,14 +83,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const serviceCategoryKeywords = categoryKeywords[service.categoryId] || [];
 
-    // Noindex low-value variant pages (hair extension size/color combos, blow-dry packages)
-    // These create near-identical thin content that wastes crawl budget
-    const lowValuePatterns = /^(tape|utip|microloop|clip|halo|ponytail)-\d+cm-(dark|light)$/;
-    const isLowValueVariant = lowValuePatterns.test(serviceSlug);
+    // Removed lowValuePatterns logic - we now generate unique descriptions for ALL variants
+    // so they are no longer "thin content" and should be indexed.
+
+    const category = getCategoryForService(serviceSlug);
+    const categoryTitle = category?.title || "Beauty Services";
+
+    // Generate unique description
+    const richDescription = generateServiceDescription(
+        // @ts-ignore - mapping simplified
+        { ...service, name: service.keyword },
+        categoryTitle,
+        ""
+    );
 
     return {
         title,
-        description,
+        description: `${richDescription.substring(0, 150)}... Available in ${location.name}.`,
         keywords: [
             // PRIMARY: Core service + location
             `${service.keyword} ${location.name}`,
@@ -138,10 +143,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         },
         robots: {
-            index: !isLowValueVariant,
+            index: true,
             follow: true,
             googleBot: {
-                index: !isLowValueVariant,
+                index: true,
                 follow: true,
                 "max-video-preview": -1,
                 "max-image-preview": "large",
@@ -173,7 +178,17 @@ export default async function LocationServicePage({ params }: PageProps) {
 
     // Get unique content
     const benefits = getServiceSpecificBenefits(service);
-    const introText = generateServiceIntro(service, location);
+
+    // Use new generator for rich, attribute-based description
+    const richDescription = generateServiceDescription(
+        // @ts-ignore
+        { ...service, name: service.keyword },
+        category?.title || "Beauty Services",
+        ""
+    );
+    // Append location context
+    const introText = `${richDescription} ${location.name} residents can now enjoy this premium treatment close to home.`
+
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
     const locationServiceInsight = getLocationServiceInsight(service, location);
@@ -247,7 +262,7 @@ export default async function LocationServicePage({ params }: PageProps) {
             itemOffered: {
                 "@type": "Service",
                 name: `${service.keyword} at Galeo Beauty Salon & Spa`,
-                description: `Professional ${service.keyword} salon and spa service near ${location.name}. Premium beauty parlour and day spa treatments at affordable prices. Book your appointment today.`,
+                description: introText,
                 serviceType: [service.keyword, "Beauty Treatment", "Spa Treatment", "Salon Service"],
             },
             price: service.price.replace(/[^0-9.]/g, ""),

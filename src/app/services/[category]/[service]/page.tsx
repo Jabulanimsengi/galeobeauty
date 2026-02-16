@@ -10,6 +10,7 @@ import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
 import { getAllSEOServices, getAllServiceParams } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
+import { generateServiceDescription, generateServiceBenefits } from "@/lib/seo-generator";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
@@ -37,13 +38,24 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     }
 
     const category = serviceCategories.find((c) => c.id === service.categoryId);
+    const subcategory = category?.subcategories.find(sub => sub.id === service.subcategoryId);
+
     const categoryTitle = category?.title || "Beauty Services";
+    const subcategoryTitle = subcategory?.title || "";
+
+    // Generate a rich description if one is missing
+    const description = generateServiceDescription(
+        // @ts-ignore - mapping simplified for this utility
+        { ...service, name: service.keyword },
+        categoryTitle,
+        subcategoryTitle
+    );
 
     const kw = service.keyword.toLowerCase();
 
     return {
         title: `${service.keyword} ${service.price} | ${categoryTitle} Hartbeespoort`,
-        description: `Professional ${kw} at Galeo Beauty in Hartbeespoort. ${service.price}${service.duration ? ` • ${service.duration}` : ''}. Serving Pretoria, Johannesburg, Centurion. Walk-ins welcome. Book now!`,
+        description: description.substring(0, 160), // Truncate for meta description
         keywords: [
             `${kw} Hartbeespoort`,
             `${kw} near me`,
@@ -53,6 +65,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
             `affordable ${kw}`,
             `how much does ${kw} cost`,
             categoryTitle.toLowerCase(),
+            subcategoryTitle.toLowerCase(),
             "Galeo Beauty",
         ],
         alternates: {
@@ -60,7 +73,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
         },
         openGraph: {
             title: `${service.keyword} - ${service.price}`,
-            description: `Professional ${kw} at Galeo Beauty Hartbeespoort. ${service.price}. Book now!`,
+            description: description.substring(0, 200),
             url: `https://www.galeobeauty.com/services/${categoryId}/${service.slug}`,
             type: "website",
         },
@@ -92,23 +105,20 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         .filter((s) => s.categoryId === service.categoryId && s.slug !== service.slug)
         .slice(0, 6);
 
-    // Generic benefits applicable to all services
-    const benefits = [
-        "Professional treatment by certified specialists",
-        "Premium products and CE-approved equipment",
-        "Personalized consultation included",
-        "Hygienic, sterile environment",
-        "Convenient Hartbeespoort location",
-        "Flexible appointment scheduling",
-    ];
+    // Generate dynamic content
+    const categoryTitle = category.title;
+    const subcategoryTitle = subcategory?.title || "";
+
+    const richDescription = generateServiceDescription(fullServiceItem, categoryTitle, subcategoryTitle);
+    const benefits = generateServiceBenefits(categoryTitle, subcategoryTitle);
 
     // JSON-LD Structured Data
     const serviceSchema = {
         "@context": "https://schema.org",
         "@type": "Service",
         name: `${service.keyword} at Galeo Beauty`,
-        description: `Professional ${service.keyword.toLowerCase()} at Galeo Beauty in Hartbeespoort. ${service.price}${service.duration ? ` • ${service.duration}` : ''}.`,
-        serviceType: [service.keyword, category.title, "Beauty Treatment"],
+        description: richDescription,
+        serviceType: [service.keyword, category.title, subcategoryTitle, "Beauty Treatment"].filter(Boolean),
         provider: {
             "@type": "BeautySalon",
             name: "Galeo Beauty Salon & Spa",
@@ -184,12 +194,10 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 {service.keyword}
                             </h1>
 
-                            {/* Description */}
-                            {fullServiceItem.description && (
-                                <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                                    {fullServiceItem.description}
-                                </p>
-                            )}
+                            {/* Description - NOW DYNAMICALLY GENERATED */}
+                            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+                                {richDescription}
+                            </p>
 
                             {/* Quick Info + Book Button */}
                             <div className="flex items-center gap-6 mb-8">
@@ -225,7 +233,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                     </div>
                 </section>
 
-                {/* Benefits Section */}
+                {/* Benefits Section - DYNAMIC */}
                 <section className="py-20 bg-white">
                     <div className="container mx-auto px-6 max-w-6xl">
                         <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-12 text-center">

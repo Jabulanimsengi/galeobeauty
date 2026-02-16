@@ -1,6 +1,15 @@
 "use client";
 
 import { Header, Footer } from "@/components/layout";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "About Galeo Beauty | Luxury Salon & Spa in Hartbeespoort",
+    description: "Meet Dandi Meyer and the expert team at Galeo Beauty. Combining medical precision with luxury aesthetics to deliver results-driven beauty treatments in Hartbeespoort.",
+    alternates: {
+        canonical: "https://www.galeobeauty.com/about",
+    },
+};
 
 import { Map } from "@/components/ui/map";
 import Image from "next/image";

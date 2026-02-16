@@ -145,69 +145,78 @@ Book now and start your body transformation journey.`;
 
 const lashExtensionsContent = `## Transform Your Look with Lash Extensions
 
-Lash extensions have become one of the most popular beauty treatments in South Africa. At Galeo Beauty in Hartbeespoort, we offer a full range of lash services to enhance your natural beauty.
+Lash extensions have become one of the most popular beauty treatments in South Africa. At Galeo Beauty in Hartbeespoort, we offer a full range of lash services to enhance your natural beauty. Unlike strip lashes, these are semi-permanent fibers that are attached individually to your natural lashes for a longer, thicker, and darker lash line.
 
-## Types of Lash Extensions We Offer
+## Understanding Your Lash Options
 
-### 1. Classic Lashes (R630)
+### Classic Lashes: The Natural Enhancement
+Classic lashes are the original style where one extension is applied to one natural lash. This 1:1 ratio creates a natural, mascara-like effect without the clumps. It's the perfect choice if you have a good amount of natural lashes but want to add length and consistent curl.
 
-One extension per natural lash - perfect for a natural, enhanced look.
+**Best for:**
+- Everyday wear (work/school)
+- Clients who want a subtle enhancement
+- First-time lash clients who are nervous about looking "too done"
 
-- Natural enhancement
-- Lightweight and comfortable
-- Great for lash extension beginners
-- 1-hour application
+*Our Classic sets start from R630.*
 
-### 2. Volume Lashes (R720)
+### Volume Lashes: Drama and Fluffiness
+Volume lashes involve applying a handmade fan of 2-5 very fine extensions to a single natural lash. This creates a fluffy, fuller look that can fill in gaps if you have sparse natural lashes. While it sounds heavy, volume fans are actually lighter than a single classic extension!
 
-Multiple fine extensions per natural lash - for a fuller, more dramatic look.
+**Best for:**
+- Special occasions and weddings
+- Clients with sparse natural lashes (fans cover the gaps)
+- Those who love a glamorous, strip-lash look
 
-- 2D to 5D volume available
-- Fluffy, glamorous appearance
-- Still lightweight
-- 1.5-hour application
+*Our Volume sets start from R720.*
 
-### 3. Hybrid Lashes (R720)
+### Hybrid Lashes: The Perfect Balance
+Can't decide? Hybrid lashes combine the best of both worlds. We mix Classic (single extensions) and Volume (fans) to create a textured, wispy look that has both definition and fluffiness. This is often the most requested style as it offers a "Kim K" style texture.
 
-Mix of classic and volume - the best of both worlds.
+**Best for:**
+- A textured, messy-bun aesthetic
+- Clients who find Classic too simple but Volume too dramatic
+- Adding density without going full glam
 
-- Natural yet full
-- Textured, dimensional look
-- Customizable density
+*Our Hybrid sets start from R720.*
 
-### 4. Glamour Lashes (R900)
+### Glamour Lashes: Measured Maximum Volume
+For those who want maximum impact, our Glamour sets use advanced mega-volume techniques to create a dense, dark lash line. This is a show-stopping look for events, photoshoots, or anyone who loves a bold aesthetic.
 
-Our most dramatic option for special occasions - maximum fullness, red carpet ready.
+*Glamour sets start from R900.*
+
+## How to Choose the Right Style
+
+Choosing the right lash style depends on your eye shape and lifestyle:
+
+- **Almond Eyes**: Any style works! Cat-eye styling (longer at the ends) looks particularly stunning.
+- **Hooded Eyes**: Open-eye styling (longer in the middle) helps open up the eye area.
+- **Round Eyes**: Cat-eye styling helps elongate the eye for a sultry look.
+
+During your appointment at Galeo Beauty, our technicians will assess your natural lashes and recommend the style that will frame your face perfectly while maintaining the health of your natural lashes.
 
 ## Lash Treatments (No Extensions)
 
-### Lash Lift (R423)
+If you're not ready for extensions, we also offer natural lash enhancements:
 
-A lash lift curls your natural lashes from the root, giving a mascara-like effect that lasts 6-8 weeks.
-
-### Lash Lamination (R495)
-
-Similar to a lash lift but includes a nourishing treatment for healthier, shinier lashes.
-
-### Lash Tint (R108)
-
-Add definition with a professional tint. Great combined with a lash lift!
+- **Lash Lift**: Essentially a perm for your lashes, creating a lift and curl that lasts 6-8 weeks.
+- **Lash Tint**: Dyeing the lashes black to create definition without mascara.
+- **Lash Lamination**: A nourishing treatment that lifts, tints, and conditions lashes for a glossy finish.
 
 ## Lash Extension Aftercare
 
-1. Avoid water for 24-48 hours after application
-2. Don't use oil-based products around the eyes
-3. Sleep on your back to prevent crushing
-4. Brush daily with a clean spoolie
-5. Avoid mascara on extensions
-6. Book fills every 2-3 weeks
+To get the most out of your new lashes:
+
+1. Avoid water for 24-48 hours after application to let the glue cure.
+2. Don't use oil-based products around the eyes (oil dissolves the bond).
+3. Sleep on your back to prevent crushing them on your pillow.
+4. Brush daily with a clean spoolie to keep them neat.
+5. Book fills every 2-3 weeks to maintain fullness.
 
 ## Why Choose Galeo Beauty for Lashes?
 
-- Certified Technicians: All our lash artists are professionally trained
-- Quality Products: We use premium adhesives and synthetic mink lashes
-- Hygienic Practice: Individual tools, sanitized between each client
-- Competitive Pricing: Premium lashes without premium prices
+- **Certified Technicians**: All our lash artists are professionally trained and certified.
+- **Quality Products**: We use premium adhesives and high-quality synthetic mink lashes that feel soft and natural.
+- **Hygienic Practice**: We use individual tools sanitized between each client.
 
 ## Book Your Lash Appointment
 

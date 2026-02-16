@@ -10,6 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
+# .md files 
+*.md
+
+
+
 # testing
 /coverage
 

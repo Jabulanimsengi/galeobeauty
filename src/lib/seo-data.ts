@@ -328,6 +328,7 @@ export interface SEOService {
     itemId: string;
     price: string;
     duration?: string;
+    description?: string;
 }
 
 /**
@@ -348,6 +349,7 @@ export function getAllSEOServices(): SEOService[] {
                     itemId: item.id,
                     price: item.price,
                     duration: item.duration,
+                    description: item.description,
                 });
             }
         }
