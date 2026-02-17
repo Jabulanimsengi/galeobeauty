@@ -8,14 +8,20 @@ import { ServiceBookingButton } from "@/components/booking/ServiceBookingButton"
 import { NavLink } from "@/components/ui/nav-link";
 import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
-import { getAllSEOServices, getAllServiceParams } from "@/lib/seo-data";
+import {
+    getAllSEOServices,
+    getAllServiceParams,
+    getServiceFAQs,
+    getTreatmentProcess,
+    getLocationBySlug
+} from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 import { generateServiceDescription, generateServiceBenefits } from "@/lib/seo-generator";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
 // ============================================
-// Auto-generates SEO-optimized pages for every service
+// Canonical URL: /prices/[category]/[service]
 // Targets generic keywords like "gel nails", "microblading", etc.
 
 export const dynamic = "force-static";
@@ -69,12 +75,12 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
             "Galeo Beauty",
         ],
         alternates: {
-            canonical: `https://www.galeobeauty.com/services/${categoryId}/${service.slug}`,
+            canonical: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
         },
         openGraph: {
             title: `${service.keyword} - ${service.price}`,
             description: description.substring(0, 200),
-            url: `https://www.galeobeauty.com/services/${categoryId}/${service.slug}`,
+            url: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
             type: "website",
         },
     };
@@ -109,8 +115,16 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     const categoryTitle = category.title;
     const subcategoryTitle = subcategory?.title || "";
 
+    // Use hartbeespoort as the canonical location for content generation
+    // This ensures rich content (FAQs, Treatment Process) appears on the main service page
+    const location = getLocationBySlug("hartbeespoort");
+    if (!location) notFound();
+
     const richDescription = generateServiceDescription(fullServiceItem, categoryTitle, subcategoryTitle);
     const benefits = generateServiceBenefits(categoryTitle, subcategoryTitle);
+
+    const faqs = getServiceFAQs(service, location);
+    const treatmentProcess = getTreatmentProcess(service, location);
 
     // JSON-LD Structured Data
     const serviceSchema = {
@@ -153,9 +167,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         "@type": "BreadcrumbList",
         itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://www.galeobeauty.com" },
-            { "@type": "ListItem", position: 2, name: "Services", item: "https://www.galeobeauty.com/services" },
-            { "@type": "ListItem", position: 3, name: category.title, item: `https://www.galeobeauty.com/services/${category.id}` },
-            { "@type": "ListItem", position: 4, name: service.keyword, item: `https://www.galeobeauty.com/services/${category.id}/${service.slug}` },
+            { "@type": "ListItem", position: 2, name: "Services", item: "https://www.galeobeauty.com/prices" },
+            { "@type": "ListItem", position: 3, name: category.title, item: `https://www.galeobeauty.com/prices/${category.id}` },
+            { "@type": "ListItem", position: 4, name: service.keyword, item: `https://www.galeobeauty.com/prices/${category.id}/${service.slug}` },
         ],
     };
 
@@ -177,9 +191,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                             <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
                                 <Link href="/" className="hover:text-gold transition-colors">Home</Link>
                                 <span>/</span>
-                                <Link href="/services" className="hover:text-gold transition-colors">Services</Link>
+                                <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
                                 <span>/</span>
-                                <Link href={`/services/${category.id}`} className="hover:text-gold transition-colors">{category.title}</Link>
+                                <Link href={`/prices/${category.id}`} className="hover:text-gold transition-colors">{category.title}</Link>
                                 <span>/</span>
                                 <span className="text-foreground">{service.keyword}</span>
                             </div>
@@ -226,7 +240,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                             {/* CTAs */}
                             <div className="flex flex-wrap gap-4">
                                 <Button asChild size="lg" variant="outline">
-                                    <NavLink href={`/services/${category.id}`}>View All {category.title}</NavLink>
+                                    <NavLink href={`/prices/${category.id}`}>View All {category.title}</NavLink>
                                 </Button>
                             </div>
                         </div>
@@ -263,6 +277,81 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                     </section>
                 )}
 
+                {/* Treatment Process - What to Expect */}
+                <section className="py-16">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
+                            What to Expect During {service.keyword}
+                        </h2>
+                        <p className="text-muted-foreground text-center mb-12">
+                            Your step-by-step treatment journey at Galeo Beauty
+                        </p>
+
+                        <div className="space-y-6">
+                            {treatmentProcess.map((step) => (
+                                <div key={step.step} className="flex gap-6">
+                                    <div className="flex-shrink-0">
+                                        <div className="w-12 h-12 rounded-full bg-gold/10 border-2 border-gold flex items-center justify-center">
+                                            <span className="text-gold font-bold text-lg">{step.step}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 pb-6">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <h3 className="font-semibold text-foreground text-lg">
+                                                {step.title}
+                                            </h3>
+                                            {step.duration && (
+                                                <span className="text-sm text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
+                                                    {step.duration}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-muted-foreground leading-relaxed">
+                                            {step.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-10 text-center p-6 bg-secondary/20 rounded-xl">
+                            <p className="text-muted-foreground mb-4">
+                                Have questions about the {service.keyword} process?
+                            </p>
+                            <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
+                                <a href={`https://wa.me/${businessInfo.socials.whatsapp}`} target="_blank" rel="noopener noreferrer">
+                                    Chat with Us on WhatsApp
+                                </a>
+                            </Button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* FAQ Section - Service-specific questions */}
+                <section className="py-16 bg-secondary/20">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
+                            Frequently Asked Questions
+                        </h2>
+                        <p className="text-muted-foreground text-center mb-10">
+                            Common questions about {service.keyword}
+                        </p>
+
+                        <div className="space-y-6">
+                            {faqs.map((faq, index) => (
+                                <div key={index} className="bg-background border border-border rounded-xl p-6">
+                                    <h3 className="font-semibold text-foreground mb-3 text-lg">
+                                        {faq.question}
+                                    </h3>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        {faq.answer}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Related Services */}
                 {relatedServices.length > 0 && (
                     <section className="py-20 bg-white">
@@ -277,7 +366,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 {relatedServices.map((related) => (
                                     <Link
                                         key={related.slug}
-                                        href={`/services/${category.id}/${related.slug}`}
+                                        href={`/prices/${category.id}/${related.slug}`}
                                         className="group p-6 bg-secondary/5 rounded-xl border border-border hover:border-gold/50 hover:shadow-lg transition-all duration-300"
                                     >
                                         <h3 className="font-semibold text-lg text-foreground group-hover:text-gold transition-colors mb-2">
@@ -299,7 +388,11 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 )}
 
                 {/* Nearby Locations - Internal Linking for SEO */}
-                <NearbyLocationsSection serviceName={service.keyword} />
+                <NearbyLocationsSection
+                    serviceName={service.keyword}
+                    categorySlug={category.id}
+                    serviceSlug={service.id}
+                />
 
                 {/* CTA Section */}
                 <section className="py-20 px-6 bg-gradient-to-br from-secondary/20 to-background">

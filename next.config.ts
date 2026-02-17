@@ -1,4 +1,6 @@
-import type { NextConfig } from "next";
+
+
+
 
 const nextConfig: NextConfig = {
   // Disable React Compiler for faster builds (can re-enable later)
@@ -36,6 +38,31 @@ const nextConfig: NextConfig = {
     fetches: {
       fullUrl: false,
     },
+  },
+  async redirects() {
+    return [
+      // === SEO URL CONSOLIDATION ===
+      // All /services URLs redirect to /prices equivalents
+
+      // 1. /services hub → /prices
+      {
+        source: '/services',
+        destination: '/prices',
+        permanent: true,
+      },
+      // 2. /services/[category] → /prices/[category]
+      {
+        source: '/services/:category',
+        destination: '/prices/:category',
+        permanent: true,
+      },
+      // 3. /services/[category]/[service] → /prices/[category]/[service]
+      {
+        source: '/services/:category/:service',
+        destination: '/prices/:category/:service',
+        permanent: true,
+      },
+    ];
   },
 };
 

@@ -44,7 +44,7 @@ const schemas = [
     }),
     generateBreadcrumbSchema([
         { name: "Home", url: "https://www.galeobeauty.com" },
-        { name: "Services", url: "https://www.galeobeauty.com/services" },
+        { name: "Services", url: "https://www.galeobeauty.com/prices" },
         { name: "Anti-Aging", url: "https://www.galeobeauty.com/anti-aging" },
     ]),
     generateFAQSchema([

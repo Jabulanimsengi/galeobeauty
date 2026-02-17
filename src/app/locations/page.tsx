@@ -148,7 +148,7 @@ export default function LocationsIndexPage() {
                                         {group.locations.map((location) => (
                                             <Link
                                                 key={location.slug}
-                                                href={`/locations/${location.slug}`}
+                                                href={location.slug === 'hartbeespoort' || location.slug === 'harties' ? '/' : `/locations/${location.slug}`}
                                                 className="group flex items-center gap-2 px-4 py-3 rounded-lg border border-border bg-white hover:border-gold/50 hover:bg-gold/5 transition-all duration-200"
                                             >
                                                 <span className="text-sm font-medium text-foreground group-hover:text-gold transition-colors truncate flex-1">

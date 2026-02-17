@@ -82,7 +82,7 @@ export function Footer() {
                         <ul className="space-y-3">
                             <li>
                                 <NavLink
-                                    href="/locations/hartbeespoort"
+                                    href="/"
                                     className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
                                 >
                                     Hartbeespoort
@@ -190,7 +190,7 @@ export function Footer() {
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/services" className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium">
+                                <NavLink href="/prices" className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium">
                                     View All Services →
                                 </NavLink>
                             </li>

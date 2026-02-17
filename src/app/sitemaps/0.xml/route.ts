@@ -15,7 +15,6 @@ const BUILD_DATE = new Date().toISOString();
 const STATIC_PAGES = [
   { path: '', priority: 1.0, changefreq: 'weekly' },
   { path: '/prices', priority: 0.9, changefreq: 'weekly' },
-  { path: '/services', priority: 0.9, changefreq: 'weekly' },
   { path: '/specials', priority: 0.8, changefreq: 'weekly' },
   { path: '/gallery', priority: 0.7, changefreq: 'monthly' },
   { path: '/about', priority: 0.6, changefreq: 'monthly' },
@@ -88,10 +87,11 @@ export async function GET() {
   }
 
   // Add ALL service pages (262 total) - targets generic keywords like "gel nails", "microblading"
+  // Canonical URL: /prices/[category]/[service]
   for (const service of services) {
     entries.push(`
   <url>
-    <loc>${escapeXml(`${BASE_URL}/services/${service.categoryId}/${service.slug}`)}</loc>
+    <loc>${escapeXml(`${BASE_URL}/prices/${service.categoryId}/${service.slug}`)}</loc>
     <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
@@ -113,6 +113,9 @@ export async function GET() {
 
   // Add location hubs for all SITEMAP_0_LOCATIONS (136 locations)
   for (const location of SITEMAP_0_LOCATIONS) {
+    // EXCLUSION STRATEGY: Exclude home base from sitemap as pages are disabled
+    if (location === 'hartbeespoort' || location === 'harties') continue;
+
     entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
@@ -124,6 +127,9 @@ export async function GET() {
 
   // Add location service pages for all SITEMAP_0_LOCATIONS (excluding low-value variants)
   for (const location of SITEMAP_0_LOCATIONS) {
+    // EXCLUSION STRATEGY: Exclude home base from sitemap as pages are disabled
+    if (location === 'hartbeespoort' || location === 'harties') continue;
+
     for (const service of services) {
       entries.push(`
   <url>

@@ -24,7 +24,7 @@ At Galeo Beauty, located just 45 minutes from Pretoria in beautiful Hartbeespoor
 
 ## Types of Facials We Offer
 
-### 1. Dermalogica Pro Skin Treatment (R950)
+### 1. [Dermalogica Pro Skin Treatment](/prices/dermalogica/pro-skin) (R950)
 
 The Dermalogica Pro Skin Treatment is our most popular facial for clients from Pretoria. This 55-minute treatment includes:
 
@@ -36,7 +36,7 @@ The Dermalogica Pro Skin Treatment is our most popular facial for clients from P
 
 Best for: All skin types, first-time facial clients
 
-### 2. QMS Collagen Facial (R799)
+### 2. [QMS Collagen Facial](/prices/qms-facial/collagen-rejuvenation) (R799)
 
 This luxurious treatment from German skincare brand QMS focuses on boosting collagen production. It's perfect for anyone concerned about fine lines and loss of firmness.
 
@@ -47,7 +47,7 @@ This luxurious treatment from German skincare brand QMS focuses on boosting coll
 
 Best for: Anti-aging, mature skin, fine lines
 
-### 3. Pro Power Peel (R1,100)
+### 3. [Pro Power Peel](/prices/dermalogica/pro-power-peel) (R1,100)
 
 For those seeking more dramatic results, our Pro Power Peel delivers visible improvements in hyperpigmentation, sun damage, acne scarring, uneven skin tone, and fine lines.
 
@@ -96,7 +96,7 @@ The cost of fat freezing varies significantly across South Africa:
 - Johannesburg CBD: R1,500 - R3,000
 - Sandton: R2,000 - R4,000
 - Pretoria: R1,200 - R2,500
-- Galeo Beauty (Hartbeespoort): R799.20
+- Galeo Beauty (Hartbeespoort): [R799.20](/prices/fat-freezing/cryolipolysis-fat-freezing)
 - Cape Town: R1,800 - R3,500
 
 ### Why Our Price is Lower
@@ -143,7 +143,7 @@ Contact us today:
 
 Book now and start your body transformation journey.`;
 
-const lashExtensionsContent = `## Transform Your Look with Lash Extensions
+const lashExtensionsContent = `## Transform Your Look with [Lash Extensions](/prices/lashes/classic-lashes)
 
 Lash extensions have become one of the most popular beauty treatments in South Africa. At Galeo Beauty in Hartbeespoort, we offer a full range of lash services to enhance your natural beauty. Unlike strip lashes, these are semi-permanent fibers that are attached individually to your natural lashes for a longer, thicker, and darker lash line.
 
@@ -323,15 +323,15 @@ Contributing factors include stress, diet, hormonal imbalances, genetics, and us
 
 ## Professional Acne Treatments at Galeo Beauty
 
-### 1. Dermalogica Pro Skin Treatment (R950)
+### 1. [Dermalogica Pro Skin Treatment](/prices/dermalogica/pro-skin) (R950)
 
 Our signature facial includes deep cleansing, extraction, and customized treatment for acne-prone skin. The Face Mapping analysis identifies problem zones.
 
-### 2. Pro Power Peel (R1,100)
+### 2. [Pro Power Peel](/prices/dermalogica/pro-power-peel) (R1,100)
 
 Chemical peels are highly effective for acne. They exfoliate dead skin, unclog pores, reduce bacteria, fade acne scars, and improve skin texture.
 
-### 3. Microneedling (R1,620)
+### 3. [Microneedling](/prices/medical/microneedling) (R1,620)
 
 Microneedling stimulates collagen production and is excellent for treating acne scars, reducing active breakouts, improving skin texture, and minimizing pore size.
 
@@ -378,7 +378,7 @@ Dreaming of longer, fuller hair? Hair extensions can transform your look instant
 
 ## Types of Hair Extensions We Offer
 
-### 1. Tape-In Extensions (from R4,500)
+### 1. [Tape-In Extensions](/prices/hair-extensions/tape-in) (from R4,500)
 
 The most popular method in South Africa. Flat, comfortable, and quick to apply. Lasts 6-8 weeks before needing to be moved up.
 
@@ -388,11 +388,11 @@ Benefits:
 - Quick 1-2 hour application
 - Reusable for 6-12 months
 
-### 2. Clip-In Extensions (from R2,500)
+### 2. [Clip-In Extensions](/prices/hair-extensions/clip-in) (from R2,500)
 
 Perfect for special occasions. Put them in yourself for instant length and volume. No commitment required.
 
-### 3. Micro Loop Extensions (from R5,000)
+### 3. [Micro Loop Extensions](/prices/hair-extensions/micro-loop) (from R5,000)
 
 Individual strands attached with small silicone-lined rings. No heat or glue required. Very gentle on natural hair.
 
@@ -440,7 +440,7 @@ Ready for your hair transformation? Book a consultation at Galeo Beauty:
 We'll help you choose the perfect method for your hair goals.`;
 
 // New Article: IPL Hair Removal
-const iplHairRemovalContent = `## IPL Hair Removal: Your Complete Guide
+const iplHairRemovalContent = `## [IPL Hair Removal](/prices/ipl/ladies-full-face): Your Complete Guide
 
 Tired of shaving, waxing, and plucking? IPL (Intense Pulsed Light) hair removal offers a permanent solution to unwanted hair. At Galeo Beauty, we use CE-approved IPL equipment for safe, effective treatments.
 
@@ -536,7 +536,7 @@ Simple, elegant lines and geometric shapes for a sophisticated look.
 
 ## Nail Services at Galeo Beauty
 
-### Gel Manicure (R315)
+### [Gel Manicure](/prices/nails/gel-hands) (R315)
 Long-lasting gel polish that stays chip-free for 2-3 weeks. Cured under UV light.
 
 ### Acrylic Full Set (R450)
@@ -548,7 +548,7 @@ Gel applied over natural nails for added strength without extensions.
 ### Nail Art (from R50)
 Custom designs added to any service. From simple accent nails to full sets.
 
-### Spa Pedicure (R360)
+### [Spa Pedicure](/prices/nails/pedicure) (R360)
 Full pedicure with exfoliation, mask, and massage. Includes gel polish.
 
 ## Nail Shapes Explained
@@ -596,29 +596,29 @@ Skin ages due to:
 
 ### 1. QMS Medicosmetics Facials
 
-QMS uses medical-grade ingredients developed by a German surgeon. Our QMS Collagen Facial (R799) stimulates your skin's own collagen production.
+QMS uses medical-grade ingredients developed by a German surgeon. Our [QMS Collagen Facial](/prices/qms-facial/collagen-rejuvenation) (R799) stimulates your skin's own collagen production.
 
 Best for: Fine lines, loss of firmness, dull skin
 
-### 2. Dermalogica Pro Firm (R1,520)
+### 2. [Dermalogica Pro Firm](/prices/dermalogica/firm) (R1,520)
 
 This advanced treatment firms and tightens using Dermalogica's AGE Smart range. Immediate lifting effect with long-term benefits.
 
 Best for: Sagging skin, jawline definition, neck
 
-### 3. Microneedling (R1,620)
+### 3. [Microneedling](/prices/medical/microneedling) (R1,620)
 
 Creates micro-injuries that trigger collagen production. Excellent for fine lines, acne scars, and overall skin texture.
 
 Best for: Wrinkles, scars, large pores, skin texture
 
-### 4. Chemical Peels (from R809)
+### 4. [Chemical Peels](/prices/dermalogica/pro-power-peel) (from R809)
 
 Professional-strength peels remove damaged surface layers, revealing fresher skin beneath. Our Pro Power Peel (R1,100) targets multiple concerns.
 
 Best for: Sun damage, hyperpigmentation, fine lines
 
-### 5. Dermal Fillers (from R2,800)
+### 5. [Dermal Fillers](/prices/hart-aesthetics/fillers-cheeks) (from R2,800)
 
 Injectable hyaluronic acid restores volume to cheeks, lips, and nasolabial folds. Results last 6-18 months.
 
@@ -738,8 +738,8 @@ Lip fillers are injectable treatments using hyaluronic acid (HA) to add volume, 
 
 ## Lip Filler Prices at Galeo Beauty
 
-- Dermal Lip Fillers (1ml): R2,800
-- Russian Lip Technique (1ml): R3,000
+- [Dermal Lip Fillers](/prices/hart-aesthetics/fillers-lips) (1ml): R2,800
+- [Russian Lip Technique](/prices/hart-aesthetics/russian-lips) (1ml): R3,000
 
 ## Types of Lip Filler Techniques
 

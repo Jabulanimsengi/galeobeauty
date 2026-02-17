@@ -42,7 +42,7 @@ const schemas = [
     }),
     generateBreadcrumbSchema([
         { name: "Home", url: "https://www.galeobeauty.com" },
-        { name: "Services", url: "https://www.galeobeauty.com/services" },
+        { name: "Services", url: "https://www.galeobeauty.com/prices" },
         { name: "Matric Dance", url: "https://www.galeobeauty.com/matric-dance" },
     ]),
     generateFAQSchema([

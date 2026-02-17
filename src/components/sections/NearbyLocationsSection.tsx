@@ -14,6 +14,10 @@ interface NearbyLocationsSectionProps {
     title?: string;
     /** Optional: Custom description */
     description?: string;
+    /** Optional: Category slug for canonical linking (Hartbeespoort) */
+    categorySlug?: string;
+    /** Optional: Service slug for canonical linking (Hartbeespoort) */
+    serviceSlug?: string;
 }
 
 const FEATURED_LOCATIONS: Location[] = [
@@ -34,10 +38,25 @@ const FEATURED_LOCATIONS: Location[] = [
 export function NearbyLocationsSection({
     serviceName,
     title,
-    description
+    description,
+    categorySlug,
+    serviceSlug
 }: NearbyLocationsSectionProps) {
     const defaultTitle = `Find ${serviceName} Near You`;
     const defaultDescription = `We serve clients from across Hartbeespoort, Pretoria, Johannesburg, and surrounding areas. Click your location to see ${serviceName.toLowerCase()} services and pricing in your area.`;
+
+    // Helper to determine the correct link
+    const getLocationLink = (slug: string) => {
+        // EXCLUSION STRATEGY:
+        // Hartbeespoort & Harties are the "Home Base".
+        // Instead of linking to a /locations/hartbeespoort/... duplicate page,
+        // we link to the MAIN service page (canonical source of truth).
+        if ((slug === "hartbeespoort" || slug === "harties") && categorySlug && serviceSlug) {
+            return `/prices/${categorySlug}/${serviceSlug}`;
+        }
+        // Fallback or other locations
+        return `/locations/${slug}`;
+    };
 
     return (
         <section className="py-20 px-6 bg-secondary/10">
@@ -61,7 +80,7 @@ export function NearbyLocationsSection({
                     {FEATURED_LOCATIONS.map((location) => (
                         <Link
                             key={location.slug}
-                            href={`/locations/${location.slug}`}
+                            href={getLocationLink(location.slug)}
                             className="group bg-white p-4 rounded-xl border border-border hover:border-gold/50 hover:shadow-lg transition-all duration-300"
                         >
                             <div className="flex items-start justify-between mb-2">

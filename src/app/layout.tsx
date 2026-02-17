@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   },
   description:
     "Experience luxury beauty treatments at Galeo Beauty. Premium skincare, facials, nail care, lash extensions, massage therapy and more at Hartbeespoort Dam.",
+
   keywords: [
     "beauty salon Hartbeespoort",
     "spa Hartbeespoort Dam",
@@ -183,6 +184,10 @@ export default function RootLayout({
               publisher: {
                 "@type": "Organization",
                 name: "Galeo Beauty",
+                logo: {
+                  "@type": "ImageObject",
+                  url: "https://www.galeobeauty.com/images/logo.png"
+                }
               },
               potentialAction: {
                 "@type": "SearchAction",
@@ -194,6 +199,8 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
+
+
         <NavigationLoadingProvider>
           {children}
           <FloatingSocials />

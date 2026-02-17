@@ -14,7 +14,11 @@ import {
     getPopularServicesFromOtherCategories,
     getServiceSpecificBenefits,
     getTreatmentProcess,
-    generateServiceBenefits,
+    getDynamicRelatedServices,
+    getDrivingContext,
+    getLocationInsights,
+    getLocationServiceInsight,
+    getServiceFAQs,
     type SEOLocation,
     type SEOService,
     type FAQ,
@@ -140,7 +144,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             site: "@galeobeauty",
         },
         alternates: {
-            canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            canonical: `https://www.galeobeauty.com/prices/${service.categoryId}/${serviceSlug}`,
         },
         robots: {
             index: true,
@@ -306,7 +310,7 @@ export default async function LocationServicePage({ params }: PageProps) {
     const faqSchema = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: faqs.map((faq) => ({
+        mainEntity: faqs.map((faq: FAQ) => ({
             "@type": "Question",
             name: faq.question,
             acceptedAnswer: {
@@ -662,7 +666,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                         </p>
 
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {dynamicRelatedServices.map((relatedService) => (
+                            {dynamicRelatedServices.map((relatedService: SEOService) => (
                                 <Link
                                     key={relatedService.slug}
                                     href={`/locations/${locationSlug}/${relatedService.slug}`}
@@ -707,7 +711,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                         </p>
 
                         <div className="space-y-6">
-                            {faqs.map((faq, index) => (
+                            {faqs.map((faq: FAQ, index: number) => (
                                 <div key={index} className="bg-background border border-border rounded-xl p-6">
                                     <h3 className="font-semibold text-foreground mb-3 text-lg">
                                         {faq.question}

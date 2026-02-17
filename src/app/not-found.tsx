@@ -23,7 +23,7 @@ export default function NotFound() {
                             </Link>
                         </Button>
                         <Button asChild variant="outline" size="lg" className="rounded-full px-8">
-                            <Link href="/services">
+                            <Link href="/prices">
                                 View Services
                             </Link>
                         </Button>
