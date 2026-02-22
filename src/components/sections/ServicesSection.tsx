@@ -344,8 +344,10 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                         : 'opacity-0'
                                         }`}
                                     sizes="(max-width: 1024px) 100vw, 50vw"
-                                    priority={imgIndex === 0}
-                                    noSpinner={imgIndex > 0}
+                                    // Eagerly load all images in the carousel so they don't flash when transitioning
+                                    loading="eager"
+                                    priority={index === 0 || imgIndex === 0} // Highest priority to the first service card's images
+                                    noSpinner={true} // spinner would look broken here
                                 />
                             ))}
 
