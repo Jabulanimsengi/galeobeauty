@@ -19,7 +19,7 @@ const services = [
         images: [
             "/images/dermalogica/dermalogica-microneedling-treatment.png",
             "/images/dermalogica/dermalogica-microneedling-with-led-therapy.png",
-            "/images/dermalogica/dermalogica-proskin-treatment.jpeg"
+            "/images/dermalogica/dermalogica-proskin-treatment.jpg"
         ],
         imageAlts: ["Professional Dermalogica facial treatment at Galeo Beauty Hartbeespoort", "Anti-aging facial skincare treatment near Pretoria", "Proskin Dermalogica treatment"],
         badge: "Premium",
@@ -36,10 +36,10 @@ const services = [
         subtitle: "Kryolan Professional",
         description: "Look stunning for any occasion with our professional make-up services. From bridal looks to permanent make-up, Phi-Brows, and Phi-Contour, we create flawless beauty that lasts.",
         images: [
-            "/images/make-up/blending-sponge-makeup-application.jpeg",
-            "/images/make-up/expert-bridal-makeup-application.jpeg",
-            "/images/make-up/precision-makeup-base-application.jpeg",
-            "/images/make-up/professional-glamour-makeup-portfolio.jpeg"
+            "/images/make-up/blending-sponge-makeup-application.jpg",
+            "/images/make-up/expert-bridal-makeup-application.jpg",
+            "/images/make-up/precision-makeup-base-application.jpg",
+            "/images/make-up/professional-glamour-makeup-portfolio.jpg"
         ],
         imageAlts: ["Professional bridal makeup application at Galeo Beauty salon", "Kryolan makeup artist creating flawless look for special occasions", "Precision makeup base application", "Professional glamour makeup portfolio"],
         badge: "Professional",
@@ -55,10 +55,10 @@ const services = [
         subtitle: "Ladies & Gents",
         description: "Achieve silky smooth skin with our advanced IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
         images: [
-            "/images/ipl/ipl-cooling-gel-application-legs.jpeg",
-            "/images/ipl/ipl-full-leg-hair-removal.jpeg",
-            "/images/ipl/ipl-hair-removal-arms-treatment.jpeg",
-            "/images/ipl/ipl-hair-removal-face-treatment.jpeg"
+            "/images/ipl/ipl-cooling-gel-application-legs.jpg",
+            "/images/ipl/ipl-full-leg-hair-removal.jpg",
+            "/images/ipl/ipl-hair-removal-arms-treatment.jpg",
+            "/images/ipl/ipl-hair-removal-face-treatment.jpg"
         ],
         imageAlts: ["CE-approved IPL laser hair removal treatment in Hartbeespoort", "Permanent hair removal for ladies and gents near Pretoria", "IPL Hair removal arms", "IPL Hair removal face"],
         badge: "CE Approved",
@@ -75,14 +75,14 @@ const services = [
         subtitle: "Therapeutic & Relaxing",
         description: "Unwind with our therapeutic massage treatments using Lillian Terry aromatherapy oils. From Swedish relaxation to deep tissue therapy, our expert therapists melt away tension and stress.",
         images: [
-            "/images/massages/deep-relaxation-neck-massage.jpeg",
-            "/images/massages/deep-tissue-back-massage-therapy.jpeg",
-            "/images/massages/deep-tissue-trigger-point-massage.jpeg",
-            "/images/massages/luxury-spa-massage-room-ambience.jpeg",
-            "/images/massages/professional-full-body-massage-therapy.jpeg",
-            "/images/massages/reflexology-foot-massage-treatment.jpeg",
-            "/images/massages/serene-wellness-retreat-massage.jpeg",
-            "/images/massages/therapeutic-oil-massage-technique.jpeg"
+            "/images/massages/deep-relaxation-neck-massage.jpg",
+            "/images/massages/deep-tissue-back-massage-therapy.jpg",
+            "/images/massages/deep-tissue-trigger-point-massage.jpg",
+            "/images/massages/luxury-spa-massage-room-ambience.jpg",
+            "/images/massages/professional-full-body-massage-therapy.jpg",
+            "/images/massages/reflexology-foot-massage-treatment.jpg",
+            "/images/massages/serene-wellness-retreat-massage.jpg",
+            "/images/massages/therapeutic-oil-massage-technique.jpg"
         ],
         imageAlts: ["Relaxing Swedish massage at Galeo Beauty spa Hartbeespoort", "Deep tissue aromatherapy massage treatment near Pretoria", "Trigger point massage", "Spa massage room", "Full body massage", "Foot reflexology", "Wellness retreat", "Oil massage"],
         badge: "Wellness",
@@ -102,7 +102,7 @@ const services = [
             "/images/lashes-brows/dramatic-volume-eyelash-extensions.png",
             "/images/lashes-brows/eyebrow-microblading-hair-strokes-transformation.png",
             "/images/lashes-brows/fluffy-eyelash-extensions-brown-eyes.png",
-            "/images/lashes-brows/full-volume-lash-extensions-and-sculpted-brow..jpeg",
+            "/images/lashes-brows/full-volume-lash-extensions-and-sculpted-brow..jpg",
             "/images/lashes-brows/hybrid-lashes-with-defined-eyebrows.png"
         ],
         imageAlts: ["Russian volume lash extensions at Galeo Beauty Hartbeespoort", "Professional brow lamination and lash lift treatment near Pretoria", "Microblading", "Fluffy eyelash extensions", "Volume lash and brow", "Hybrid lashes"],
@@ -119,8 +119,8 @@ const services = [
         subtitle: "Smooth Skin",
         description: "Achieve silky smooth skin with our professional waxing services. We offer full body waxing, including Hollywood and Brazilian, using gentle techniques for minimal discomfort.",
         images: [
-            "/images/waxing/full-leg-wax-salon-service.jpeg",
-            "/images/waxing/professional-leg-waxing-service.jpeg"
+            "/images/waxing/full-leg-wax-salon-service.jpg",
+            "/images/waxing/professional-leg-waxing-service.jpg"
         ],
         imageAlts: ["Professional Brazilian and Hollywood waxing at Galeo Beauty", "Full body waxing services for smooth skin in Hartbeespoort"],
         badge: "Hygienic",
@@ -136,8 +136,8 @@ const services = [
         subtitle: "Cryolipolysis",
         description: "Fat freeze, or cryolipolysis, is a non-invasive cosmetic treatment that uses cold temperatures to reduce stubborn fat in targeted areas like the belly, love handles, arms, back, or thighs. Ideally for body contouring.",
         images: [
-            "/images/fat-freezing/fat-freezing-stomach-treatment.jpeg",
-            "/images/fat-freezing/stomach-fat-freezing-procedure.jpeg"
+            "/images/fat-freezing/fat-freezing-stomach-treatment.jpg",
+            "/images/fat-freezing/stomach-fat-freezing-procedure.jpg"
         ],
         imageAlts: ["Fat freezing cryolipolysis body contouring treatment in Hartbeespoort", "Non-invasive fat reduction treatment near Pretoria South Africa"],
         badge: "CE Approved",
@@ -191,9 +191,9 @@ const services = [
         subtitle: "Semi-Permanent Beauty",
         description: "Wake up beautiful every day with professional semi-permanent makeup. Expert microblading, powder pixel brows, hybrid brows, permanent eyeliner, lip blush, and full lip contour by certified cosmetic tattoo artists.",
         images: [
-            "/images/gallery/permanent-makeup/lip-blush-before-after-customized-look.jpg",
-            "/images/gallery/permanent-makeup/permanent-eyeliner-healed-blue-eyes-galeo.jpg",
-            "/images/gallery/permanent-makeup/nano-lip-colour-before-after-galeo-beauty.jpg"
+            "/images/permanent-makeup/Hybrid-Brows-Permanent-makeup.png",
+            "/images/permanent-makeup/Shaded-eye-liner-Permanent-Makeup.png",
+            "/images/permanent-makeup/ombre-powder-brows-close-up.png"
         ],
         imageAlts: [
             "Professional lip blush before and after customized look at Galeo Beauty Hartbeespoort",
@@ -216,9 +216,9 @@ const services = [
         subtitle: "Hands & Feet",
         description: "Pamper your hands and feet with our professional nail services. Gel overlays, acrylic nails, gel polish (Bio Sculpture & Gelish), nail art, manicures, pedicures, and luxurious hand and foot treatments.",
         images: [
-            "/images/gallery/nails/french-tip-square-gel-nails-galeo.jpg",
-            "/images/gallery/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
-            "/images/gallery/nails/french-tip-gel-nails-salon-treatment.jpg"
+            "/images/nails/french-tip-square-gel-nails-galeo.jpg",
+            "/images/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
+            "/images/nails/french-tip-gel-nails-salon-treatment.jpg"
         ],
         imageAlts: [
             "French tip square gel nails at Galeo Beauty Hartbeespoort",

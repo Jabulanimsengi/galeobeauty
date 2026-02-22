@@ -12,7 +12,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Non-surgical fat reduction & EMS body sculpting",
         href: "/body-contouring",
-        image: "/images/fat-freezing/fat-freezing-stomach-treatment.jpeg",
+        image: "/images/fat-freezing/fat-freezing-stomach-treatment.jpg",
         color: "from-gold/5 to-gold/10",
         borderColor: "border-gold/20",
         prices: [
@@ -28,7 +28,7 @@ const featuredServices = [
         location: "Near Pretoria",
         description: "Injectable aesthetics & facial rejuvenation",
         href: "/anti-aging",
-        image: "/images/gallery/Facials/professional-skin-facial-treatment-in-progress.jpeg",
+        image: "/images/dermalogica/dermalogica-proskin-treatment.jpg",
         color: "from-gold/10 to-gold/5",
         borderColor: "border-gold/20",
         prices: [
@@ -44,7 +44,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Microblading, powder brows & lip blush",
         href: "/permanent-makeup",
-        image: "/images/make-up/expert-bridal-makeup-application.jpeg",
+        image: "/images/make-up/expert-bridal-makeup-application.jpg",
         color: "from-foreground/5 to-gold/10",
         borderColor: "border-gold/20",
         prices: [
@@ -60,7 +60,7 @@ const featuredServices = [
         location: "Hartbeespoort Dam",
         description: "Advanced aesthetic treatments & skincare",
         href: "/medical-spa",
-        image: "/images/gallery/Laser-and-IPL/ipl-laser-hair-removal-underarm-treatment.jpeg",
+        image: "/images/ipl/ipl-hair-removal-arms-treatment.jpg",
         color: "from-gold/10 to-foreground/5",
         borderColor: "border-gold/20",
         prices: [
@@ -76,7 +76,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Complete wedding day makeup & styling",
         href: "/bridal-beauty",
-        image: "/images/make-up/precision-makeup-base-application.jpeg",
+        image: "/images/make-up/precision-makeup-base-application.jpg",
         color: "from-foreground/5 to-gold/5",
         borderColor: "border-gold/20",
         prices: [
@@ -92,7 +92,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Permanent IPL hair removal for all areas",
         href: "/laser-hair-removal",
-        image: "/images/ipl/ipl-full-leg-hair-removal.jpeg",
+        image: "/images/ipl/ipl-full-leg-hair-removal.jpg",
         color: "from-gold/5 to-foreground/5",
         borderColor: "border-gold/20",
         prices: [
