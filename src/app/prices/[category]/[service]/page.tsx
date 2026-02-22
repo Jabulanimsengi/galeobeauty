@@ -13,10 +13,13 @@ import {
     getAllServiceParams,
     getServiceFAQs,
     getTreatmentProcess,
-    getLocationBySlug
+    getLocationBySlug,
+    // New imports for enhanced uniqueness
+    generateServiceIntro,
+    getServiceSpecificBenefits
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
-import { generateServiceDescription, generateServiceBenefits } from "@/lib/seo-generator";
+import { generateServiceDescription } from "@/lib/seo-generator";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
@@ -60,26 +63,31 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     const kw = service.keyword.toLowerCase();
 
     return {
-        title: `${service.keyword} ${service.price} | ${categoryTitle} Hartbeespoort`,
-        description: description.substring(0, 160), // Truncate for meta description
+        title: `${service.keyword} in Hartbeespoort ${service.price} | ${categoryTitle} Harties`,
+        description: `${description.substring(0, 100)} in Hartbeespoort (Harties). Near Hartbeespoort Dam. Serving Centurion & Pretoria, North West.`,
         keywords: [
             `${kw} Hartbeespoort`,
+            `${kw} Harties`,
+            `${kw} near Hartbeespoort Dam`,
+            `${kw} Harties Dam`,
+            `${kw} near Centurion`,
+            `${kw} near Pretoria`,
+            `${kw} North West`,
             `${kw} near me`,
-            `${kw} prices South Africa`,
-            `${kw} Pretoria`,
-            `best ${kw} near me`,
-            `affordable ${kw}`,
-            `how much does ${kw} cost`,
+            `${kw} around Harties`,
+            `${kw} Hartbeespoort Dam area`,
+            `best ${kw} Hartbeespoort`,
+            `affordable ${kw} Harties`,
             categoryTitle.toLowerCase(),
             subcategoryTitle.toLowerCase(),
-            "Galeo Beauty",
+            "Galeo Beauty Hartbeespoort",
         ],
         alternates: {
             canonical: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
         },
         openGraph: {
-            title: `${service.keyword} - ${service.price}`,
-            description: description.substring(0, 200),
+            title: `${service.keyword} Hartbeespoort (Harties) - ${service.price}`,
+            description: `${description.substring(0, 140)} Near Hartbeespoort Dam. Serving Harties, Centurion & Pretoria.`,
             url: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
             type: "website",
         },
@@ -121,7 +129,10 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     if (!location) notFound();
 
     const richDescription = generateServiceDescription(fullServiceItem, categoryTitle, subcategoryTitle);
-    const benefits = generateServiceBenefits(categoryTitle, subcategoryTitle);
+
+    // NEW: Use advanced generators for better uniqueness
+    const benefits = getServiceSpecificBenefits(service);
+    const intro = generateServiceIntro(service, location);
 
     const faqs = getServiceFAQs(service, location);
     const treatmentProcess = getTreatmentProcess(service, location);
@@ -131,7 +142,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         "@context": "https://schema.org",
         "@type": "Service",
         name: `${service.keyword} at Galeo Beauty`,
-        description: richDescription,
+        description: intro + " " + richDescription, // Combine for schema
         serviceType: [service.keyword, category.title, subcategoryTitle, "Beauty Treatment"].filter(Boolean),
         provider: {
             "@type": "BeautySalon",
@@ -145,6 +156,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 addressRegion: "North West",
                 postalCode: "0216",
                 addressCountry: "ZA",
+                country: "ZA"
             },
             telephone: businessInfo.phone,
             url: "https://www.galeobeauty.com",
@@ -157,8 +169,11 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         },
         areaServed: [
             { "@type": "City", name: "Hartbeespoort" },
+            { "@type": "City", name: "Harties" },
+            { "@type": "City", name: "Centurion" },
             { "@type": "City", name: "Pretoria" },
             { "@type": "City", name: "Johannesburg" },
+            { "@type": "AdministrativeArea", name: "North West Province" },
         ],
     };
 
@@ -205,13 +220,18 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
 
                             {/* Title */}
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
-                                {service.keyword}
+                                {service.keyword} in Hartbeespoort
                             </h1>
 
-                            {/* Description - NOW DYNAMICALLY GENERATED */}
-                            <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-                                {richDescription}
-                            </p>
+                            {/* Description - NOW DYNAMICALLY GENERATED WITH INTRO */}
+                            <div className="text-muted-foreground text-lg mb-8 space-y-4">
+                                <p className="font-medium text-foreground/80 leading-relaxed">
+                                    {intro}
+                                </p>
+                                <p className="leading-relaxed">
+                                    {richDescription}
+                                </p>
+                            </div>
 
                             {/* Quick Info + Book Button */}
                             <div className="flex items-center gap-6 mb-8">
@@ -391,7 +411,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 <NearbyLocationsSection
                     serviceName={service.keyword}
                     categorySlug={category.id}
-                    serviceSlug={service.id}
+                    serviceSlug={service.slug}
                 />
 
                 {/* CTA Section */}

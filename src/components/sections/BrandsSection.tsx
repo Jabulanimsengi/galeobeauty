@@ -1,20 +1,20 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 // Real brand logos from public/images/brands
 const brands = [
-    { name: "Dermalogica", src: "/images/brands/dermalogica.png", id: 1 },
-    { name: "QMS Medicosmetics", src: "/images/brands/qms.png", id: 2 },
-    { name: "Moroccanoil", src: "/images/brands/moroccanoil.png", id: 3 },
-    { name: "Milkshake", src: "/images/brands/milkshake.png", id: 4 },
-    { name: "Lola Lee", src: "/images/brands/lola-lee.png", id: 5 },
+    { name: "Dermalogica", src: "/images/brands/dermalogica.png", id: 1, alt: "Dermalogica professional skincare products used at Galeo Beauty Hartbeespoort" },
+    { name: "QMS Medicosmetics", src: "/images/brands/qms.png", id: 2, alt: "QMS Medicosmetics medical-grade skincare at Galeo Beauty salon Harties" },
+    { name: "Moroccanoil", src: "/images/brands/moroccanoil.png", id: 3, alt: "Moroccanoil hair care products at Galeo Beauty Hartbeespoort" },
+    { name: "Milkshake", src: "/images/brands/milkshake.png", id: 4, alt: "Milkshake hair products at Galeo Beauty salon near Hartbeespoort Dam" },
+    { name: "Lola Lee", src: "/images/brands/lola-lee.png", id: 5, alt: "Lola Lee nail products at Galeo Beauty Hartbeespoort" },
 ];
 
 export const BrandsSection = () => {
     return (
-        <section className="py-8 md:py-16 bg-gradient-to-b from-background to-secondary/30 overflow-hidden">
+        <section className="py-8 md:py-16 bg-gradient-to-b from-stone-100/60 to-stone-50/50 overflow-hidden">
             {/* Header */}
             <div className="container mx-auto px-6 mb-6 md:mb-12 text-center">
                 <motion.div
@@ -27,10 +27,10 @@ export const BrandsSection = () => {
                         Premium Brands We Trust
                     </span>
                     <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-4">
-                        Our <span className="text-gold italic">Products</span>
+                        Premium Brands at Our <span className="text-gold italic">Hartbeespoort Salon</span>
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
-                        We use only the finest professional-grade products from world-renowned beauty brands.
+                        We use only the finest professional-grade products from world-renowned beauty brands at Galeo Beauty in Harties.
                     </p>
                 </motion.div>
             </div>
@@ -56,9 +56,9 @@ export const BrandsSection = () => {
                             key={`${brand.id}-${index}`}
                             className="relative w-32 md:w-48 h-16 md:h-24 flex items-center justify-center"
                         >
-                            <Image
+                            <CloudinaryImage
                                 src={brand.src}
-                                alt={brand.name}
+                                alt={brand.alt}
                                 width={180}
                                 height={90}
                                 className={`object-contain w-full h-full ${brand.name === "QMS Medicosmetics" ? "invert" : "grayscale"}`}

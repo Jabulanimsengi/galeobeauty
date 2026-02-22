@@ -5,7 +5,7 @@ import { Header, Footer } from "@/components/layout";
 import { TrustBadge } from "@/components/ui/trust-badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { ArrowRight, ArrowLeft, Phone, MapPin, Clock, Star, Shield, Sparkles } from "lucide-react";
 import { serviceCategories, getCategoryById } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
@@ -21,194 +21,194 @@ const categoryMeta: Record<string, {
     faqs: { q: string; a: string }[];
 }> = {
     "hart-aesthetics": {
-        title: "Hart Aesthetics - Dermal Fillers & Injectables",
-        description: "Professional dermal fillers, lip fillers, cheek fillers, and Botox treatments in Hartbeespoort. Medical-grade injectables by certified practitioners. Book your consultation today.",
-        keywords: ["liquid facelift Hartbeespoort", "Russian lip fillers price South Africa", "Nefertiti lift cost near me", "skin boosters under eye Pretoria", "collagen biostimulator injections", "dermal fillers before and after", "cheek filler for midface lift Hartbeespoort", "cosmetic injectables Gauteng"],
-        h1: "Hart Aesthetics - Professional Injectables",
-        intro: "Transform your appearance with our medical-grade injectable treatments. Our certified practitioners use premium dermal fillers and Botox to deliver natural-looking, rejuvenating results.",
-        benefits: ["Medical-grade products", "Certified practitioners", "Natural-looking results", "Personalized treatment plans"],
+        title: "Medical Aesthetics & Anti-Aging Hartbeespoort | Botox & Fillers",
+        description: "Premier medical aesthetics in Hartbeespoort (Harties). Specializing in Botox, Dermal Fillers, Liquid Facelifts, Threads, and IV Drips. Advanced anti-aging treatments near Hartbeespoort Dam.",
+        keywords: ["medical aesthetics Hartbeespoort", "Botox Harties", "dermal fillers Hartbeespoort", "thread lifts Harties", "IV drip bar Hartbeespoort", "liquid facelift Harties", "anti-aging clinic North West", "skin boosters Pretoria", "aesthetic doctor Hartbeespoort", "Nefertiti lift Harties", "lip fillers Hartbeespoort"],
+        h1: "Medical Aesthetics & Anti-Aging in Hartbeespoort",
+        intro: "Experience world-class medical aesthetics at Galeo Beauty in Hartbeespoort. Our comprehensive range of advanced treatments includes Botulinum Toxin, Dermal Fillers, Thread Lifts, and IV Vitamin Therapy. We combine medical expertise with artistic precision to deliver natural, rejuvenating results for clients from Harties, Pretoria, and Centurion.",
+        benefits: ["Qualified medical professionals", "Comprehensive treatment menu", "Premium FDA-approved products", "Natural-looking results"],
         faqs: [
-            { q: "How long do dermal fillers last?", a: "Dermal fillers typically last 6-18 months depending on the type and treatment area." },
-            { q: "Is the procedure painful?", a: "We use numbing cream and the fillers contain lidocaine for maximum comfort." },
+            { q: "What aesthetic treatments do you offer in Hartbeespoort?", a: "We offer a full range of medical aesthetics including Botox, Dermal Fillers, Thread Lifts, Liquid Facelifts, and IV Vitamin Drips at our Hartbeespoort salon." },
+            { q: "Are your aesthetic practitioners qualified?", a: "Yes, all medical aesthetic treatments at Galeo Beauty are performed by qualified medical professionals specializing in aesthetic medicine." },
         ],
     },
     "fat-freezing": {
-        title: "Fat Freezing Cryolipolysis Treatment",
-        description: "Non-invasive fat freezing (cryolipolysis) treatments in Hartbeespoort. Target stubborn fat on belly, love handles, arms, and thighs. CE approved, safe and effective body contouring.",
-        keywords: ["fat freezing before and after South Africa", "cryolipolysis prices Hartbeespoort", "double chin fat freezing near me", "fat freezing cost per session", "stubborn belly fat treatment results", "love handles removal Pretoria", "non-surgical fat removal Gauteng", "body contouring near me"],
-        h1: "Fat Freezing - Cryolipolysis Body Contouring",
-        intro: "Eliminate stubborn fat without surgery using our CE-approved cryolipolysis treatment. Fat freezing targets and destroys fat cells that diet and exercise can't reach.",
+        title: "Fat Freezing Hartbeespoort | Cryolipolysis Harties Dam Area",
+        description: "Non-invasive fat freezing (cryolipolysis) in Hartbeespoort & Harties. Target stubborn belly fat, love handles & thighs near Hartbeespoort Dam. CE approved. Near Centurion & Pretoria.",
+        keywords: ["fat freezing Hartbeespoort", "cryolipolysis Harties", "fat freezing near Hartbeespoort Dam", "body contouring Harties Dam", "fat freezing near Centurion", "belly fat removal Hartbeespoort", "love handles treatment Harties", "non-surgical fat removal North West", "fat freezing near Pretoria", "body sculpting around Harties", "cryolipolysis prices Hartbeespoort Dam area"],
+        h1: "Fat Freezing in Hartbeespoort & Harties",
+        intro: "Eliminate stubborn fat without surgery at Galeo Beauty in Hartbeespoort (Harties). Our CE-approved cryolipolysis treatment near Hartbeespoort Dam targets fat cells that diet and exercise can't reach. Serving clients from Harties Village, Centurion, Pretoria, and North West.",
         benefits: ["Non-invasive procedure", "No downtime required", "Permanent fat cell reduction", "CE approved equipment"],
         faqs: [
-            { q: "How does fat freezing work?", a: "Cryolipolysis freezes fat cells to -5°C, causing them to die and be naturally eliminated by your body over 2-3 months." },
+            { q: "Where can I get fat freezing near Harties Dam?", a: "Galeo Beauty offers CE-approved fat freezing in Hartbeespoort, conveniently located near Hartbeespoort Dam. We serve Harties, Centurion, and Pretoria." },
             { q: "How many sessions do I need?", a: "Most clients see optimal results after 1-3 sessions per treatment area." },
         ],
     },
     "slimming": {
-        title: "Tesla EMS Slimming & Weight Loss Treatment",
-        description: "Revolutionary Tesla EMS slimming machine in Hartbeespoort. Build muscle and burn fat simultaneously with High-Intensity Focused Electromagnetic technology. No gym required.",
-        keywords: ["Tesla EMS slimming prices Hartbeespoort", "HIFEM body sculpting results near me", "muscle toning treatment cost", "non-invasive weight loss Pretoria", "EMS body sculpting before and after", "HIFEM technology South Africa", "slimming treatment Gauteng", "inch loss treatment near me"],
-        h1: "Tesla EMS Slimming - Build Muscle, Burn Fat",
-        intro: "Experience the revolutionary Tesla EMS Slimming Machine. Using High-Intensity Focused Electromagnetic technology, it induces powerful muscle contractions equivalent to 20,000 sit-ups in 30 minutes.",
-        benefits: ["Builds muscle & burns fat", "30-minute treatments", "No downtime", "Visible results in weeks"],
+        title: "Medical Weight Loss & Body Contouring Hartbeespoort | Slimming Injections",
+        description: "Advanced weight loss & body contouring in Hartbeespoort (Harties). Lemon Bottle fat dissolving, Slimming Injections & Tesla EMS. Effective results near Hartbeespoort Dam. Serving Centurion & Pretoria.",
+        keywords: ["weight loss Hartbeespoort", "slimming injections Harties", "Lemon Bottle fat dissolving Hartbeespoort", "body contouring Harties Dam", "Tesla EMS slimming Hartbeespoort", "medical weight loss North West", "fat loss injections Pretoria", "slimming clinic Harties", "cellulite treatment Hartbeespoort Dam area"],
+        h1: "Medical Weight Loss & Body Contouring in Hartbeespoort",
+        intro: "Achieve your body goals with our medical weight loss and contouring solutions at Galeo Beauty in Hartbeespoort (Harties). We offer advanced treatments including Lemon Bottle fat dissolving injections and Tesla EMS muscle toning. Serving Harties Village, Centurion, Pretoria, and the North West.",
+        benefits: ["Medical-grade solutions", "Targeted fat reduction", "Non-surgical options", "Visible results"],
         faqs: [
-            { q: "How does Tesla EMS work?", a: "HIFEM technology induces supramaximal muscle contractions, building muscle while triggering fat breakdown." },
-            { q: "Is it safe?", a: "Yes, EMS technology is FDA-cleared and CE approved for muscle toning and fat reduction." },
+            { q: "What weight loss treatments do you offer?", a: "We offer medical-grade slimming injections like Lemon Bottle and advanced body contouring technologies." },
+            { q: "Are the treatments safe?", a: "Yes, all our weight loss and body contouring treatments are performed using safe, approved protocols." },
         ],
     },
     "dermalogica": {
-        title: "Dermalogica Facial Treatments & Skincare",
-        description: "Professional Dermalogica facial treatments in Hartbeespoort. Pro skin treatments including microneedling, power peels, dermaplaning, and customized facials. Expert skincare specialists.",
-        keywords: ["Dermalogica Pro Power Peel Hartbeespoort", "chemical peel for pigmentation near me", "microneedling with nanoinfusion prices", "Dermalogica facial for adult acne", "Melanopro peel for dark spots", "deep pore cleansing facial Pretoria", "medical grade facial prices", "Dermalogica skin specialist Gauteng"],
-        h1: "Dermalogica Professional Skincare Treatments",
-        intro: "Experience world-class skincare with our Dermalogica professional treatments. Our trained skin therapists customize each treatment to address your unique skin concerns.",
-        benefits: ["Customized skin analysis", "Professional-grade products", "Trained skin therapists", "Visible results"],
+        title: "Dermalogica Skincare, Peels & Microneedling Hartbeespoort",
+        description: "Advanced Dermalogica skincare in Hartbeespoort (Harties). Chemical peels, microneedling, dermaplaning & pro skin treatments near Hartbeespoort Dam. Expert skin therapists. Near Centurion & Pretoria.",
+        keywords: ["Dermalogica skincare Hartbeespoort", "chemical peels Harties", "microneedling near Hartbeespoort Dam", "dermaplaning Harties Dam area", "pro skin treatments Hartbeespoort", "acne treatment North West", "anti-aging facials Pretoria", "pigmentation treatment Harties", "Dermalogica expert Hartbeespoort Dam area"],
+        h1: "Dermalogica Skincare & Advanced Peels in Hartbeespoort",
+        intro: "Transform your skin with advanced Dermalogica treatments at Galeo Beauty in Hartbeespoort (Harties). Near Hartbeespoort Dam, our expert therapists specialise in chemical peels, microneedling, dermaplaning, and customised Pro Skin facials. Serving Harties Village, Centurion, Pretoria, and the North West.",
+        benefits: ["Expert skin analysis", "Advanced chemical peels", "Clinical microneedling", "Personalized treatment plans"],
         faqs: [
-            { q: "What makes Dermalogica different?", a: "Dermalogica is a professional-grade skincare brand used by skin therapists worldwide, free from common irritants." },
-            { q: "How often should I get a facial?", a: "We recommend professional facials every 4-6 weeks to maintain optimal skin health." },
+            { q: "Do you offer chemical peels in Hartbeespoort?", a: "Yes, we offer a range of professional Dermalogica chemical peels tailored to your skin concerns." },
+            { q: "Is microneedling available?", a: "we offer professional Pro Microneedling to stimulate collagen and refine skin texture." },
         ],
     },
     "ipl": {
-        title: "IPL Laser Hair Removal - Ladies & Gents",
-        description: "CE-approved IPL laser hair removal in Hartbeespoort. Permanent hair reduction for face, body, bikini, and intimate areas. Safe treatments for ladies and gents.",
-        keywords: ["IPL Brazilian and Hollywood prices Hartbeespoort", "laser hair removal cost South Africa", "full leg IPL hair removal near me", "laser hair removal for men Pretoria", "IPL face and neck hair removal prices", "full body laser results near me", "mens beard line laser Gauteng", "is IPL safe for sensitive areas"],
-        h1: "IPL Laser Hair Removal - Permanent Results",
-        intro: "Achieve silky smooth skin with our advanced CE-approved IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
-        benefits: ["CE approved equipment", "Permanent hair reduction", "Suitable for all areas", "Ladies & gents welcome"],
+        title: "IPL Hair Removal & Laser Tattoo Removal Hartbeespoort",
+        description: "Permanent IPL hair removal & laser tattoo removal in Hartbeespoort (Harties). Safe, CE-approved treatments for face & body near Hartbeespoort Dam. Ladies & gents. Near Centurion & Pretoria.",
+        keywords: ["IPL hair removal Hartbeespoort", "laser tattoo removal Harties", "permanent hair reduction Hartbeespoort Dam", "tattoo removal near Centurion", "IPL laser Harties", "hair removal clinic North West", "laser treatments Pretoria", "tattoo fading Hartbeespoort", "mens hair removal Harties"],
+        h1: "IPL Hair Removal & Laser Tattoo Removal in Hartbeespoort",
+        intro: "Achieve smooth, hair-free skin and remove unwanted tattoos at Galeo Beauty in Hartbeespoort (Harties). We use CE-approved IPL technology for permanent hair reduction and laser tattoo removal. Serving Harties Village, Centurion, Pretoria, and the North West.",
+        benefits: ["Permanent hair reduction", "Effective tattoo removal", "CE approved technology", "Safe for most skin types"],
         faqs: [
-            { q: "How many IPL sessions do I need?", a: "Most clients need 6-8 sessions for optimal permanent hair reduction, spaced 4-6 weeks apart." },
-            { q: "Is IPL painful?", a: "IPL feels like a rubber band snap. Most clients find it very tolerable, and we can adjust settings for comfort." },
+            { q: "Do you offer tattoo removal in Hartbeespoort?", a: "Yes, we offer laser tattoo removal sessions using advanced technology." },
+            { q: "Is IPL hair removal permanent?", a: "IPL offers permanent hair reduction, significantly reducing regrowth over a course of treatments." },
         ],
     },
     "makeup": {
-        title: "Professional Make-Up Services",
-        description: "Professional make-up services in Hartbeespoort. Kryolan trained artists for bridal, evening, and special occasion make-up. Flawless looks for your special day.",
-        keywords: ["Kryolan bridal makeup Hartbeespoort", "wedding makeup trial near me", "matric dance makeup and hair prices", "matric farewell glam package Pretoria", "professional evening makeup Gauteng", "bridal makeup artist near me", "wedding day makeup cost"],
-        h1: "Professional Make-Up Artistry",
-        intro: "Look stunning for any occasion with our professional make-up services. Our Kryolan-trained artists create flawless looks from natural day makeup to glamorous bridal transformations.",
+        title: "Professional Make-Up Hartbeespoort | Bridal Makeup Harties",
+        description: "Professional make-up services in Hartbeespoort & Harties. Kryolan trained artists for bridal, evening & matric dance makeup near Hartbeespoort Dam. Near Centurion & Pretoria.",
+        keywords: ["bridal makeup Hartbeespoort", "makeup artist Harties", "wedding makeup near Hartbeespoort Dam", "makeup Harties Dam area", "bridal makeup near Centurion", "matric dance makeup Hartbeespoort", "professional makeup Harties", "evening makeup North West", "makeup artist near Pretoria", "makeup around Harties", "Kryolan makeup Hartbeespoort Dam area"],
+        h1: "Professional Make-Up in Hartbeespoort & Harties",
+        intro: "Look stunning for any occasion with professional make-up at Galeo Beauty in Hartbeespoort (Harties). Our Kryolan-trained artists near Hartbeespoort Dam create flawless bridal, evening, and special occasion looks. Serving Harties Village, Centurion, Pretoria, and North West.",
         benefits: ["Kryolan professional products", "Trained makeup artists", "Long-lasting formulas", "Personalized looks"],
         faqs: [
-            { q: "Do you offer bridal trials?", a: "Yes, we highly recommend a bridal trial 2-4 weeks before your wedding to perfect your look." },
+            { q: "Where can I find a bridal makeup artist near Harties Dam?", a: "Galeo Beauty in Hartbeespoort (Harties) has Kryolan-trained bridal makeup artists. We're located near Hartbeespoort Dam, serving Centurion and Pretoria." },
             { q: "How long does bridal makeup take?", a: "Bridal makeup typically takes 60-90 minutes to ensure a flawless, long-lasting finish." },
         ],
     },
     "medical": {
-        title: "Medical Aesthetic Treatments",
-        description: "Advanced medical aesthetic treatments in Hartbeespoort. Vaginal tightening, fractional laser, and Plasmage treatments by certified practitioners. Medical-grade results.",
-        keywords: ["fractional laser for acne scars Hartbeespoort", "Plasmage skin tightening cost South Africa", "non-surgical vaginal tightening near me", "scar treatment before and after prices", "medical aesthetics results near me", "fractional laser skin rejuvenation Pretoria", "aesthetic clinic Gauteng"],
-        h1: "Medical Aesthetic Treatments",
-        intro: "Advanced medical-grade aesthetic treatments performed by certified practitioners. We offer cutting-edge solutions for skin tightening, rejuvenation, and intimate wellness.",
-        benefits: ["Medical-grade equipment", "Certified practitioners", "Private consultations", "Proven results"],
+        title: "Clinical Skin & Laser Treatments Hartbeespoort | Advanced Aesthetics",
+        description: "Advanced clinical skin treatments in Hartbeespoort (Harties). Fractional laser, Plasmage, Vaginal Tightening & IV Drips near Hartbeespoort Dam. Medical-grade technology. Near Centurion & Pretoria.",
+        keywords: ["clinical skin treatments Hartbeespoort", "fractional laser Harties", "plasmage non-surgical lift Hartbeespoort", "vaginal tightening Harties", "IV drip clinic Hartbeespoort", "laser skin resurfacing North West", "advanced aesthetics Pretoria", "medical skin clinic Harties"],
+        h1: "Advanced Clinical Skin & Laser Treatments in Hartbeespoort",
+        intro: "Experience advanced clinical skin and laser treatments at Galeo Beauty in Hartbeespoort (Harties). Our medical-grade offering includes Fractional Laser resurfacing, Plasmage non-surgical lifting, Vaginal Tightening, and IV Vitamin Therapy. Serving Harties Village, Centurion, Pretoria, and the North West.",
+        benefits: ["Clinical-grade technology", "Non-surgical solutions", "Advanced skin rejuvenation", "Private & professional"],
         faqs: [
-            { q: "Are medical treatments safe?", a: "All our medical treatments use CE-approved equipment and are performed by trained, certified practitioners." },
-            { q: "Is there downtime?", a: "Downtime varies by treatment. We'll discuss expectations during your consultation." },
+            { q: "What clinical treatments do you offer?", a: "We offer Fractional Laser, Plasmage, Vaginal Tightening, and IV Drips using medical-grade technology." },
+            { q: "Is the fractional laser treatment painful?", a: "We use topical anaesthetics to minimise discomfort during fractional laser treatments." },
         ],
     },
     "permanent-makeup": {
-        title: "Permanent Make-Up - Brows, Lips & Eyes",
-        description: "Semi-permanent makeup in Hartbeespoort. Microblading, powder brows, lip contour, and eyeliner. Wake up beautiful every day with long-lasting results.",
-        keywords: ["powder pixel brows Hartbeespoort", "hybrid brows vs microblading South Africa", "lip contour permanent makeup prices", "permanent eyeliner top and bottom near me", "microblading before and after Pretoria", "full lip blush tattoo cost", "semi-permanent brows results Gauteng", "best microblading artist near me"],
-        h1: "Permanent Make-Up - Wake Up Beautiful",
-        intro: "Simplify your beauty routine with our semi-permanent makeup services. From perfectly shaped brows to defined lips and eyes, wake up looking flawless every day.",
+        title: "Permanent Make-Up Hartbeespoort | Microblading Harties",
+        description: "Semi-permanent makeup in Hartbeespoort & Harties. Microblading, powder brows, lip contour & eyeliner near Hartbeespoort Dam. Wake up beautiful. Near Centurion & Pretoria, North West.",
+        keywords: ["permanent makeup Hartbeespoort", "microblading Harties", "powder brows near Hartbeespoort Dam", "lip contour Harties Dam area", "microblading near Centurion", "permanent brows Hartbeespoort", "lip blush Harties", "eyeliner tattoo North West", "microblading near Pretoria", "permanent makeup around Harties", "semi-permanent makeup Hartbeespoort Dam area"],
+        h1: "Permanent Make-Up in Hartbeespoort & Harties",
+        intro: "Simplify your beauty routine with semi-permanent makeup at Galeo Beauty in Hartbeespoort (Harties). Near Hartbeespoort Dam, we offer microblading, powder brows, lip contour, and eyeliner. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["Long-lasting results", "Natural-looking enhancement", "Time-saving beauty", "Certified technicians"],
         faqs: [
-            { q: "How long does permanent makeup last?", a: "Semi-permanent makeup typically lasts 1-3 years depending on skin type and aftercare." },
+            { q: "Where can I get microblading near Harties?", a: "Galeo Beauty in Hartbeespoort (Harties) offers professional microblading near Hartbeespoort Dam. We serve clients from Centurion, Pretoria, and North West." },
             { q: "Is it painful?", a: "We use topical numbing cream to ensure maximum comfort during the procedure." },
         ],
     },
-    "pro-skin": {
-        title: "Pro Skin Treatments - Advanced Skincare",
-        description: "Professional skin treatments in Hartbeespoort. Dermaplaning, microneedling, and high-frequency facials. Advanced solutions for all skin concerns.",
-        keywords: ["microneedling before and after Hartbeespoort", "dermaplaning results South Africa", "chemical peel for acne scars near me", "pigmentation treatment before and after Pretoria", "nanoinfusion facial prices", "microneedling with exosomes cost", "Luminfusion vs Nanoinfusion results"],
-        h1: "Pro Skin - Advanced Skin Treatments",
-        intro: "Transform your skin with our professional-grade treatments. From dermaplaning to microneedling, we offer advanced solutions targeting ageing, acne, scarring, and uneven skin tone.",
-        benefits: ["Advanced techniques", "Visible improvements", "Customized treatments", "Expert therapists"],
+    "massages": {
+        title: "Massage Therapy Hartbeespoort | Relaxation & Deep Tissue Harties",
+        description: "Professional massage therapy in Hartbeespoort & Harties. Swedish, aromatherapy, hot stone & deep tissue massages near Hartbeespoort Dam. Near Centurion & Pretoria, North West.",
+        keywords: ["massage Hartbeespoort", "Swedish massage Harties", "massage near Hartbeespoort Dam", "aromatherapy massage Harties Dam area", "deep tissue massage near Centurion", "hot stone massage Hartbeespoort", "relaxation massage Harties", "sports massage North West", "massage near Pretoria", "massage therapy around Harties", "back massage Hartbeespoort Dam area"],
+        h1: "Massage Therapy in Hartbeespoort & Harties",
+        intro: "Unwind and restore balance with professional massage therapy at Galeo Beauty in Hartbeespoort (Harties). Located near Hartbeespoort Dam, our expert therapists offer Swedish, aromatherapy, hot stone, deep tissue, and sports massages. Serving Harties Village, Centurion, Pretoria, and North West.",
+        benefits: ["Certified massage therapists", "Aromatherapy oils", "Multiple massage styles", "Relaxing environment"],
         faqs: [
-            { q: "What is dermaplaning?", a: "Dermaplaning gently exfoliates dead skin and removes peach fuzz, leaving skin smooth and radiant." },
-            { q: "How often can I do microneedling?", a: "Microneedling is typically done every 4-6 weeks for a series of 3-6 treatments." },
+            { q: "Where can I get a massage near Harties Dam?", a: "Galeo Beauty in Hartbeespoort (Harties) offers professional massage therapy near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
+            { q: "What types of massages do you offer?", a: "We offer Swedish, aromatherapy, hot stone, deep tissue, sports, and back & neck massages." },
         ],
     },
-    "qms-facial": {
-        title: "QMS Medicosmetics Facials",
-        description: "Premium QMS Medicosmetics facials in Hartbeespoort. Medical-grade skincare with collagen treatments, chemical peels, and rejuvenating facials. German precision skincare.",
-        keywords: ["QMS collagen facial Hartbeespoort", "Pro Firm treatment for sagging skin near me", "collagen boosting facial South Africa", "QMS Medicosmetics facial results", "hydraderm facial prices Pretoria", "luxury anti-aging facial near me", "medical grade skincare Gauteng"],
-        h1: "QMS Medicosmetics - Premium Facials",
-        intro: "Experience German precision skincare with QMS Medicosmetics. Our premium facials use medical-grade formulations to deliver visible anti-ageing and rejuvenating results.",
+    "qms": {
+        title: "QMS Medicosmetics Facials Hartbeespoort | Premium Skincare Harties",
+        description: "Premium QMS Medicosmetics facials in Hartbeespoort & Harties. Medical-grade collagen treatments & chemical peels near Hartbeespoort Dam. German precision skincare. Near Centurion & Pretoria.",
+        keywords: ["QMS facial Hartbeespoort", "collagen facial Harties", "premium facial near Hartbeespoort Dam", "QMS Harties Dam area", "luxury facial near Centurion", "anti-aging facial Hartbeespoort", "QMS Medicosmetics Harties", "collagen treatment North West", "skin rejuvenation near Pretoria", "QMS around Harties", "medical grade facial Hartbeespoort Dam area"],
+        h1: "QMS Medicosmetics Facials in Hartbeespoort & Harties",
+        intro: "Experience German precision skincare with QMS Medicosmetics at Galeo Beauty in Hartbeespoort (Harties). Near Hartbeespoort Dam, our premium facials use medical-grade collagen formulations. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["German precision formulas", "Medical-grade ingredients", "Collagen-boosting treatments", "Visible results"],
         faqs: [
-            { q: "What makes QMS special?", a: "QMS Medicosmetics combines German engineering with medical-grade active ingredients for superior results." },
+            { q: "Where can I get a QMS facial near Harties?", a: "Galeo Beauty in Hartbeespoort (Harties) offers premium QMS Medicosmetics facials near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "Which QMS facial is best for me?", a: "Our therapists will assess your skin and recommend the ideal treatment during your consultation." },
         ],
     },
     "sunbed": {
-        title: "Sunbed Tanning & Spray Tan",
-        description: "Safe sunbed tanning and professional spray tan services in Hartbeespoort. Achieve a beautiful golden glow year-round. Package deals available.",
-        keywords: ["sunbed tanning prices Hartbeespoort", "bridal spray tan near me", "tanning salon Pretoria", "sunbed packages and deals", "professional spray tan cost", "safe indoor tanning Gauteng", "pre-wedding tan near me"],
-        h1: "Sunbed & Spray Tan Services",
-        intro: "Achieve a beautiful sun-kissed glow safely with our sunbed and spray tan services. Perfect for special occasions or maintaining your tan year-round.",
+        title: "Sunbed Tanning & Spray Tan Hartbeespoort | Tanning Harties",
+        description: "Safe sunbed tanning & professional spray tan in Hartbeespoort & Harties. Golden glow year-round near Hartbeespoort Dam. Package deals available. Near Centurion & Pretoria, North West.",
+        keywords: ["sunbed Hartbeespoort", "spray tan Harties", "tanning near Hartbeespoort Dam", "sunbed Harties Dam area", "spray tan near Centurion", "tanning salon Hartbeespoort", "indoor tanning Harties", "spray tan North West", "sunbed near Pretoria", "tanning around Harties", "bridal spray tan Hartbeespoort Dam area"],
+        h1: "Sunbed & Spray Tan in Hartbeespoort (Harties)",
+        intro: "Achieve a beautiful sun-kissed glow at Galeo Beauty in Hartbeespoort (Harties). Located near Hartbeespoort Dam, we offer safe sunbed tanning and professional spray tans. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["Controlled UV exposure", "Professional spray tans", "Package savings", "Year-round glow"],
         faqs: [
-            { q: "How long should I tan?", a: "We'll recommend session times based on your skin type, starting with shorter sessions." },
+            { q: "Where can I get a spray tan near Harties Dam?", a: "Galeo Beauty in Hartbeespoort (Harties) offers professional spray tans near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "How long does spray tan last?", a: "A professional spray tan typically lasts 5-7 days with proper care." },
         ],
     },
     "waxing": {
-        title: "Professional Waxing Services",
-        description: "Professional waxing services in Hartbeespoort. Brazilian, Hollywood, full body waxing for ladies and gents. Hygienic, gentle techniques for smooth skin.",
-        keywords: ["Brazilian wax prices Hartbeespoort", "Hollywood wax cost near me", "mens back and chest waxing prices", "full body wax cost South Africa", "painless Brazilian wax near me", "intimate waxing Pretoria", "bikini wax prices Gauteng", "affordable waxing near me"],
-        h1: "Professional Waxing - Smooth & Silky Skin",
-        intro: "Achieve silky smooth skin with our professional waxing services. We use gentle techniques and premium wax for minimal discomfort and long-lasting results.",
+        title: "Professional Waxing Hartbeespoort | Brazilian Wax Harties",
+        description: "Professional waxing in Hartbeespoort & Harties. Brazilian, Hollywood & full body waxing near Hartbeespoort Dam. Ladies & gents. Gentle techniques. Near Centurion & Pretoria, North West.",
+        keywords: ["waxing Hartbeespoort", "Brazilian wax Harties", "waxing near Hartbeespoort Dam", "Hollywood wax Harties Dam area", "waxing near Centurion", "bikini wax Hartbeespoort", "intimate waxing Harties", "full body wax North West", "waxing near Pretoria", "waxing around Harties", "painless wax Hartbeespoort Dam area"],
+        h1: "Professional Waxing in Hartbeespoort & Harties",
+        intro: "Achieve silky smooth skin with professional waxing at Galeo Beauty in Hartbeespoort (Harties). Near Hartbeespoort Dam, we use gentle techniques and premium wax for minimal discomfort. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["Hygienic environment", "Premium quality wax", "Gentle techniques", "Long-lasting smoothness"],
         faqs: [
-            { q: "How long does waxing last?", a: "Waxing results typically last 3-6 weeks depending on your hair growth cycle." },
+            { q: "Where can I get a Brazilian wax near Harties?", a: "Galeo Beauty in Hartbeespoort (Harties) offers professional Brazilian waxing near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "How long should hair be for waxing?", a: "Hair should be at least 5mm (about 2 weeks of growth) for best results." },
         ],
     },
     "hair": {
-        title: "Hair Salon - Cuts, Colour & Styling",
-        description: "Professional hair salon in Hartbeespoort. Haircuts, blow dry, colour, foils, balayage, and Brazilian blow treatments. Expert stylists for all hair types.",
-        keywords: ["balayage stylist Hartbeespoort", "Brazilian blowout price South Africa", "hair botox treatment near me", "full head foils and toner Pretoria", "keratin treatment for frizzy hair cost", "hair colour correction near me", "blow dry bar Gauteng", "best hair salon near me"],
-        h1: "Hair Salon - Expert Cuts & Colour",
-        intro: "Transform your look with our professional hair services. From precision cuts to stunning colour transformations, our expert stylists create beautiful results for all hair types.",
+        title: "Hair & Styling Hartbeespoort | Cuts, Colour & Styling Harties",
+        description: "Professional hair & styling in Hartbeespoort & Harties. Haircuts, balayage, colour, foils & Brazilian blow near Hartbeespoort Dam. Expert stylists. Near Centurion & Pretoria, North West.",
+        keywords: ["hair salon Hartbeespoort", "hairdresser Harties", "haircut near Hartbeespoort Dam", "balayage Harties Dam area", "hair colour near Centurion", "blow dry Hartbeespoort", "Brazilian blowout Harties", "foils and toner North West", "hair stylist near Pretoria", "hair salon around Harties", "best hairdresser Hartbeespoort Dam area"],
+        h1: "Hair & Styling in Hartbeespoort & Harties",
+        intro: "Transform your look at Galeo Beauty hair salon in Hartbeespoort (Harties). Located near Hartbeespoort Dam, our expert stylists create precision cuts, stunning colour, and beautiful styling for all hair types. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["Expert stylists", "Premium products", "All hair types welcome", "Latest techniques"],
         faqs: [
-            { q: "Do I need to book in advance?", a: "Yes, we recommend booking in advance, especially for colour services and weekend appointments." },
+            { q: "Where is the best hair salon near Harties Dam?", a: "Galeo Beauty in Hartbeespoort (Harties) is a premier hair salon near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "What products do you use?", a: "We use professional-grade products to ensure the health and beauty of your hair." },
         ],
     },
     "nails": {
-        title: "Nail Salon - Manicure, Pedicure & Nail Art",
-        description: "Professional nail services in Hartbeespoort. Manicures, pedicures, acrylic nails, gel nails, and nail art. Hygienic nail artistry with premium products.",
-        keywords: ["rubber base gel manicure Hartbeespoort", "acrylic full set prices near me", "gel pedicure with soak off South Africa", "nail art designs and prices", "structured gel manicure near me", "nail salon Pretoria", "gel nails Gauteng", "best nail salon near me"],
-        h1: "Nail Artistry - Manicure & Pedicure",
-        intro: "Pamper your hands and feet with our professional nail services. From classic manicures to stunning nail art and durable acrylics, we create beautiful nails you'll love.",
+        title: "Nail Salon Hartbeespoort | Manicure & Pedicure Harties",
+        description: "Professional nail salon in Hartbeespoort & Harties. Manicures, pedicures, acrylic & gel nails near Hartbeespoort Dam. Hygienic nail artistry. Near Centurion & Pretoria, North West.",
+        keywords: ["nail salon Hartbeespoort", "manicure Harties", "gel nails near Hartbeespoort Dam", "acrylic nails Harties Dam area", "nail salon near Centurion", "pedicure Hartbeespoort", "nail art Harties", "gel manicure North West", "nail technician near Pretoria", "nails around Harties", "acrylic full set Hartbeespoort Dam area"],
+        h1: "Nail Salon in Hartbeespoort & Harties",
+        intro: "Pamper your hands and feet at Galeo Beauty nail salon in Hartbeespoort (Harties). Near Hartbeespoort Dam, we offer manicures, pedicures, acrylics, gel nails, and stunning nail art. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["Hygienic practices", "Premium nail products", "Skilled nail technicians", "Lasting results"],
         faqs: [
-            { q: "How long do acrylic nails last?", a: "Acrylic nails last 2-3 weeks before needing a fill to maintain their appearance." },
+            { q: "Where can I find a nail salon near Harties Dam?", a: "Galeo Beauty in Hartbeespoort (Harties) offers professional nail services near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "Do you sterilize your tools?", a: "Yes, we follow strict hygiene protocols and sterilize all reusable tools between clients." },
         ],
     },
-    "lashes": {
-        title: "Lash Extensions & Brow Services",
-        description: "Professional lash extensions and brow treatments in Hartbeespoort. Russian volume lashes, classic lashes, lash lifts, brow lamination, and tinting. Certified lash technicians.",
-        keywords: ["classic vs volume lashes Hartbeespoort", "silky soft master lashes prices", "lash lift and tint cost South Africa", "brow lamination before and after", "hybrid lash extensions near me", "lash lamination results Pretoria", "eyelash extensions Gauteng", "lash fill near me"],
-        h1: "Lashes & Brows - Eye Enhancement",
-        intro: "Enhance your natural beauty with our professional lash and brow services. From stunning volume lash extensions to perfectly shaped brows, we perfect every detail.",
+    "lashes-brows": {
+        title: "Lash Extensions Hartbeespoort | Brow Services Harties",
+        description: "Professional lash extensions & brow treatments in Hartbeespoort & Harties. Volume lashes, lash lifts & brow lamination near Hartbeespoort Dam. Near Centurion & Pretoria, North West.",
+        keywords: ["lash extensions Hartbeespoort", "eyelash extensions Harties", "lashes near Hartbeespoort Dam", "brow lamination Harties Dam area", "lash lift near Centurion", "volume lashes Hartbeespoort", "classic lashes Harties", "brow tint North West", "lash fill near Pretoria", "lash extensions around Harties", "lash lift Hartbeespoort Dam area"],
+        h1: "Lash Extensions & Brows in Hartbeespoort (Harties)",
+        intro: "Enhance your natural beauty with professional lash and brow services at Galeo Beauty in Hartbeespoort (Harties). Near Hartbeespoort Dam, we offer volume lashes, classic sets, lash lifts, and brow lamination. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["Certified lash technicians", "Premium lash materials", "Customized looks", "Long-lasting results"],
         faqs: [
-            { q: "How long do lash extensions last?", a: "Lash extensions last 2-4 weeks before needing a fill, depending on your natural lash cycle." },
+            { q: "Where can I get lash extensions near Harties?", a: "Galeo Beauty in Hartbeespoort (Harties) offers certified lash extensions near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "Will lash extensions damage my natural lashes?", a: "When applied correctly by certified technicians, extensions won't damage your natural lashes." },
         ],
     },
     "hair-extensions": {
-        title: "Hair Extensions - European Remy Human Hair",
-        description: "Premium European Remy human hair extensions in Hartbeespoort. Tape-in, clip-in, keratin U-tip, micro loop, and halo hair. Double drawn, premium quality.",
-        keywords: ["tape-in hair extensions Hartbeespoort", "keratin bond extensions cost South Africa", "clip-in Remy hair extensions near me", "hair extensions before and after", "best hair extensions Pretoria", "micro loop extensions prices", "hair extension salon Gauteng"],
-        h1: "Hair Extensions - Premium Remy Human Hair",
-        intro: "Add length, volume, and dimension with our premium European Remy human hair extensions. We offer various application methods to suit your lifestyle and desired look.",
+        title: "Hair Extensions Hartbeespoort | Remy Human Hair Harties",
+        description: "Premium European Remy hair extensions in Hartbeespoort & Harties. Tape-in, clip-in, U-tip & micro loop near Hartbeespoort Dam. Double drawn quality. Near Centurion & Pretoria, North West.",
+        keywords: ["hair extensions Hartbeespoort", "tape-in extensions Harties", "hair extensions near Hartbeespoort Dam", "clip-in hair Harties Dam area", "extensions near Centurion", "keratin extensions Hartbeespoort", "Remy hair Harties", "micro loop extensions North West", "hair extensions near Pretoria", "extensions around Harties", "halo hair Hartbeespoort Dam area"],
+        h1: "Hair Extensions in Hartbeespoort & Harties",
+        intro: "Add length, volume, and dimension with premium European Remy hair extensions at Galeo Beauty in Hartbeespoort (Harties). Near Hartbeespoort Dam, we offer tape-in, clip-in, U-tip, micro loop, and halo extensions. Serving Harties Village, Centurion, Pretoria, and the North West.",
         benefits: ["100% Remy human hair", "Double drawn quality", "Multiple methods available", "Expert application"],
         faqs: [
-            { q: "How long do hair extensions last?", a: "With proper care, Remy hair extensions can last 6-12 months or longer." },
+            { q: "Where can I get hair extensions near Harties Dam?", a: "Galeo Beauty in Hartbeespoort (Harties) offers premium Remy hair extensions near Hartbeespoort Dam. Serving Centurion, Pretoria, and North West." },
             { q: "Which extension method is best?", a: "The best method depends on your hair type and lifestyle. We'll help you choose during consultation." },
         ],
     },
@@ -238,15 +238,42 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "Service Not Found" };
     }
 
-    // Use custom meta if available, otherwise generate from category data
-    const title = meta?.title || `${category.title} | Prices & Booking`;
-    const description = meta?.description || `${category.title} treatments at Galeo Beauty Hartbeespoort. ${category.subtitle}. View prices and book your appointment online.`;
-    const keywords = meta?.keywords || [category.title.toLowerCase(), "Hartbeespoort", "beauty salon", "spa"];
+    // 1. Generate Dynamic Service Keywords
+    const serviceKeywords: string[] = [];
+
+    // Add variations for each service
+    category.subcategories.forEach(sub => {
+        sub.items.forEach(item => {
+            // Add raw service name
+            serviceKeywords.push(item.name.toLowerCase());
+            // Add location variations
+            serviceKeywords.push(`${item.name.toLowerCase()} hartbeespoort`);
+            serviceKeywords.push(`${item.name.toLowerCase()} harties`);
+        });
+    });
+
+    // 2. Base Keywords from Category Meta (or default)
+    const baseKeywords = meta?.keywords || [category.title.toLowerCase(), "beauty salon", "spa"];
+
+    // 3. Combine and Deduplicate
+    const allKeywords = Array.from(new Set([
+        ...baseKeywords,
+        ...serviceKeywords
+    ]));
+
+    // 4. Construct Title & Description
+    const title = meta?.title || `${category.title} | Prices & Booking Hartbeespoort`;
+
+    // Ensure Description has location
+    let description = meta?.description || `${category.title} treatments at Galeo Beauty Hartbeespoort. ${category.subtitle}. View prices and book your appointment online.`;
+    if (!description.toLowerCase().includes("hartbeespoort") || !description.toLowerCase().includes("harties")) {
+        description = `${description} Serving Hartbeespoort | Harties.`;
+    }
 
     return {
-        title: `${title} | Galeo Beauty Hartbeespoort`,
+        title: `${title} | Galeo Beauty`,
         description,
-        keywords,
+        keywords: allKeywords, // Now includes every single service + location variants
         openGraph: {
             title: `${title} | Galeo Beauty`,
             description,
@@ -362,7 +389,7 @@ export default async function CategoryPage({ params }: PageProps) {
                 <section className="relative pt-32 pb-12 lg:pt-40 lg:pb-16 overflow-hidden">
                     {/* Background Image */}
                     <div className="absolute inset-0 -z-10">
-                        <Image
+                        <CloudinaryImage
                             src={category.image}
                             alt={category.title}
                             fill

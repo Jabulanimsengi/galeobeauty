@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Share2, Check } from "lucide-react";
 
 interface LightboxProps {
     images: { src: string; alt: string }[];
@@ -14,13 +14,20 @@ interface LightboxProps {
 
 export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: LightboxProps) {
     const [currentIndex, setCurrentIndex] = React.useState(initialIndex);
+    const [copied, setCopied] = React.useState(false);
 
-    // Reset to initial index when opened
-    React.useEffect(() => {
-        if (isOpen) {
-            setCurrentIndex(initialIndex);
-        }
-    }, [isOpen, initialIndex]);
+    // Track previous isOpen state to accurately reset currentIndex when the lightbox opens
+    const [prevIsOpen, setPrevIsOpen] = React.useState(isOpen);
+    if (isOpen && !prevIsOpen) {
+        setPrevIsOpen(true);
+        // Reset index immediately during render to prevent out-of-bounds and flickers
+        setCurrentIndex(initialIndex);
+    } else if (!isOpen && prevIsOpen) {
+        setPrevIsOpen(false);
+    }
+
+    // Safety fallback just in case the images array changes size unexpectedly
+    const validIndex = currentIndex < images.length && currentIndex >= 0 ? currentIndex : 0;
 
     // Keyboard navigation
     React.useEffect(() => {
@@ -59,6 +66,28 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
         setCurrentIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
     };
 
+    const handleShare = async () => {
+        const currentImage = images[validIndex];
+        const urlToShare = `${window.location.origin}${currentImage.src}`;
+
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'Check out this image from Galeo Beauty!',
+                    text: currentImage.alt,
+                    url: urlToShare,
+                });
+            } else {
+                // Fallback: Copy to clipboard
+                await navigator.clipboard.writeText(urlToShare);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            }
+        } catch (error) {
+            console.log('Error sharing:', error);
+        }
+    };
+
     if (!images.length) return null;
 
     return (
@@ -71,13 +100,36 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                     exit={{ opacity: 0 }}
                     onClick={onClose}
                 >
+                    {/* Share Button */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleShare();
+                        }}
+                        className="absolute top-4 right-16 md:right-20 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white flex items-center gap-2 group"
+                        aria-label="Share image"
+                        title="Share image"
+                    >
+                        {copied ? (
+                            <>
+                                <Check className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
+                                <span className="hidden sm:block text-sm font-medium pr-1 text-green-400">Copied!</span>
+                            </>
+                        ) : (
+                            <>
+                                <Share2 className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+                                <span className="hidden sm:block text-sm font-medium pr-1">Share</span>
+                            </>
+                        )}
+                    </button>
+
                     {/* Close Button */}
                     <button
                         onClick={onClose}
                         className="absolute top-4 right-4 z-10 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
                         aria-label="Close lightbox"
                     >
-                        <X className="w-6 h-6" />
+                        <X className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
 
                     {/* Counter */}
@@ -99,7 +151,7 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
 
                     {/* Image */}
                     <motion.div
-                        key={currentIndex}
+                        key={validIndex}
                         className="relative w-full h-full max-w-5xl max-h-[85vh] mx-4"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -108,8 +160,8 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Image
-                            src={images[currentIndex].src}
-                            alt={images[currentIndex].alt}
+                            src={images[validIndex].src}
+                            alt={images[validIndex].alt}
                             fill
                             className="object-contain"
                             sizes="(max-width: 1280px) 100vw, 1280px"
@@ -139,8 +191,8 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                                     setCurrentIndex(index);
                                 }}
                                 className={`relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-all ${index === currentIndex
-                                        ? "border-gold opacity-100"
-                                        : "border-transparent opacity-50 hover:opacity-75"
+                                    ? "border-gold opacity-100"
+                                    : "border-transparent opacity-50 hover:opacity-75"
                                     }`}
                             >
                                 <Image

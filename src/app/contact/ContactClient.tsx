@@ -13,23 +13,22 @@ export function ContactClient() {
             <Header />
             <main className="bg-background">
                 {/* Hero Section - Simple, No Image */}
-                <section className="relative pt-32 pb-8 lg:pt-40 lg:pb-10 px-6 bg-secondary/20">
+                <section className="relative pt-32 pb-8 lg:pt-40 lg:pb-10 px-6 bg-rose-50/30">
                     <div className="container mx-auto text-center max-w-4xl">
                         <span className="text-gold font-medium uppercase tracking-widest text-xs sm:text-sm block mb-4">
-                            Contact Us
+                            Contact Galeo Beauty Hartbeespoort
                         </span>
                         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
-                            <span className="sr-only">Contact Galeo Beauty Hartbeespoort – </span>
-                            Get in <span className="text-gold">Touch</span>
+                            Get in <span className="text-gold">Touch</span> With Us in Hartbeespoort
                         </h1>
                         <p className="text-muted-foreground text-base leading-relaxed font-light max-w-2xl mx-auto">
-                            We'd love to hear from you. Reach out via phone, email, or visit our sanctuary at Hartbeespoort Dam.
+                            We&apos;d love to hear from you. Reach out via phone, email, or visit Galeo Beauty at our Landsmeer salon near Hartbeespoort Dam.
                         </p>
                     </div>
                 </section>
 
                 {/* Quick Contact Cards */}
-                <section className="py-12 lg:py-20">
+                <section className="py-12 lg:py-20 bg-amber-50/20">
                     <div className="container mx-auto px-6">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                             {/* Landline Card */}
@@ -110,7 +109,7 @@ export function ContactClient() {
                 </section>
 
                 {/* Location Section with Enhanced 3D Map */}
-                <section className="py-12 lg:py-20 bg-secondary/20">
+                <section className="py-12 lg:py-20 bg-stone-50/40">
                     <div className="container mx-auto px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                             {/* Location Info Card */}
@@ -124,7 +123,7 @@ export function ContactClient() {
                                 <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mb-6">
                                     <MapPin className="w-7 h-7 text-gold" />
                                 </div>
-                                <h3 className="font-serif text-2xl text-foreground mb-2">Visit Our Salon</h3>
+                                <h3 className="font-serif text-2xl text-foreground mb-2">Visit Our Salon in Hartbeespoort</h3>
                                 <p className="text-muted-foreground mb-1">{businessInfo.address.street}</p>
                                 <p className="text-muted-foreground mb-1">{businessInfo.address.area}</p>
                                 <p className="text-muted-foreground mb-6">{businessInfo.address.city}</p>
@@ -159,7 +158,7 @@ export function ContactClient() {
                 </section>
 
                 {/* Social Footer */}
-                <section className="py-16 text-center">
+                <section className="py-16 text-center bg-rose-50/20">
                     <div className="container mx-auto px-6">
                         <p className="text-muted-foreground uppercase tracking-widest text-xs mb-4">Stay Connected</p>
                         <div className="flex justify-center gap-4 mb-8">

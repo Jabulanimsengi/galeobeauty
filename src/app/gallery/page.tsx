@@ -52,29 +52,27 @@ export default function GalleryPage() {
             <main className="bg-background min-h-screen">
                 {/* Hero Section */}
                 <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 px-6 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-2/3 h-full bg-secondary/10 -z-10 skew-x-12" />
+                    <div className="absolute top-0 right-0 w-2/3 h-full bg-rose-50/20 -z-10 skew-x-12" />
                     <div className="container mx-auto text-center">
                         <div>
                             <span className="text-gold font-bold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4 block">
-                                Portfolio
+                                Galeo Beauty Hartbeespoort Portfolio
                             </span>
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
-                                <span className="sr-only">Galeo Beauty Treatment Gallery Hartbeespoort – </span>
-                                Visual <span className="italic text-gold">Artistry</span>
+                                Our <span className="italic text-gold">Gallery</span> in Hartbeespoort
                             </h1>
                             <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto leading-relaxed">
-                                A curated glimpse into our world of beauty, precision, and
-                                transformative care.
+                                A curated glimpse into Galeo Beauty Harties — transformative beauty results, nail art, and salon moments near Hartbeespoort Dam.
                             </p>
                         </div>
                     </div>
                 </section>
 
                 {/* Masonry Gallery Grid */}
-                <section className="py-16 md:py-24 bg-white/50">
+                <section className="py-16 md:py-24 bg-amber-50/20">
                     <div className="container mx-auto px-4 sm:px-6">
                         <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-12 text-center">
-                            Galeo Life
+                            Life at Galeo Beauty <span className="text-gold">Hartbeespoort</span>
                         </h2>
 
                         {images.length > 0 ? (

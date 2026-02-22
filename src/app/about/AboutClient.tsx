@@ -6,7 +6,7 @@ import { NavLink } from "@/components/ui/nav-link";
 import { Map } from "@/components/ui/map";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, Shield, Award, CheckCircle, MapPin, Clock, Star, Phone, Navigation } from "lucide-react";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 const values = [
     {
@@ -46,22 +46,21 @@ export function AboutClient() {
                             transition={{ duration: 0.8 }}
                         >
                             <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 block">
-                                The Galeo Standard
+                                About Galeo Beauty Hartbeespoort
                             </span>
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
-                                <span className="sr-only">About Galeo Beauty Salon Hartbeespoort – </span>
-                                Defined by <span className="text-gold italic">Science</span>.<br />
-                                Inspired by <span className="text-gold italic">Art</span>.
+                                Your Premier <span className="text-gold italic">Beauty Salon</span><br />
+                                in <span className="text-gold italic">Hartbeespoort</span>
                             </h1>
                             <p className="text-muted-foreground text-lg sm:text-xl font-light max-w-2xl mx-auto leading-relaxed">
-                                We are not just a salon. We are a sanctuary for advanced aesthetics, where medical precision meets the luxury of self-care.
+                                More than a salon — Galeo Beauty is Harties&apos; destination for advanced aesthetics, medical-grade skincare, and luxury self-care near Hartbeespoort Dam.
                             </p>
                         </motion.div>
                     </div>
                 </section>
 
                 {/* The Story - Editorial Split */}
-                <section className="py-20 lg:py-32 border-y border-border/40">
+                <section className="py-20 lg:py-32 border-y border-border/40 bg-amber-50/30">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
                             <motion.div
@@ -72,9 +71,9 @@ export function AboutClient() {
                                 className="relative"
                             >
                                 <div className="aspect-[4/5] relative rounded-lg overflow-hidden">
-                                    <Image
+                                    <CloudinaryImage
                                         src="/images/founder_dandi.jpeg"
-                                        alt="Dandi Meyer - Founder of Galeo Beauty Salon"
+                                        alt="Dandi Meyer - Founder of Galeo Beauty Salon in Hartbeespoort, Harties"
                                         fill
                                         className="object-cover"
                                     />
@@ -94,17 +93,17 @@ export function AboutClient() {
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
                                 <h2 className="font-serif text-4xl lg:text-5xl text-foreground mb-8">
-                                    Our <span className="text-gold">Philosophy</span>
+                                    Our <span className="text-gold">Philosophy</span> at Galeo Beauty Harties
                                 </h2>
                                 <div className="space-y-6 text-muted-foreground text-lg leading-relaxed font-light">
                                     <p>
-                                        At Galeo Beauty, we believe that true radiance is achieved when health and aesthetics align. Our approach is rooted in the understanding that beauty is not superficial—it is biological, structural, and deeply personal.
+                                        At Galeo Beauty in Hartbeespoort, we believe true radiance is achieved when health and aesthetics align. Our approach is rooted in the understanding that beauty is biological, structural, and deeply personal.
                                     </p>
                                     <p>
-                                        Founded on the principles of clinical excellence, we have curated a menu of treatments that deliver visible, tangible results without compromising on the sensory experience of a luxury spa.
+                                        We offer 16 specialist treatment categories — from Dermalogica facials, QMS Medicosmetics, and medical skin treatments to injectables &amp; fillers (Hart Aesthetics), body contouring, permanent makeup, IPL &amp; laser, lash &amp; brow artistry, waxing, tinting, hair salon services, hair extensions, nail artistry, sunbed &amp; tanning, and makeup — all under one roof at our Landsmeer salon.
                                     </p>
                                     <p>
-                                        From our advanced skin diagnostics to our artisanal nail care, every service is a testament to our obsession with quality.
+                                        Every treatment delivers visible, tangible results while offering the sensory experience of a luxury spa near Hartbeespoort Dam.
                                     </p>
                                 </div>
                                 <div className="mt-10">
@@ -118,7 +117,7 @@ export function AboutClient() {
                 </section>
 
                 {/* E-E-A-T Credentials Section */}
-                <section className="py-20 lg:py-28 bg-white">
+                <section className="py-20 lg:py-28 bg-rose-50/40">
                     <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -131,7 +130,7 @@ export function AboutClient() {
                                 Why Trust Galeo Beauty
                             </span>
                             <h2 className="font-serif text-3xl md:text-4xl text-foreground">
-                                Our Qualifications & <span className="text-gold">Expertise</span>
+                                Why Trust Galeo Beauty <span className="text-gold">Hartbeespoort</span>
                             </h2>
                         </motion.div>
 
@@ -149,7 +148,7 @@ export function AboutClient() {
                                     <p className="text-gold text-sm font-medium mb-4">Founder & Lead Practitioner</p>
                                     <div className="space-y-3">
                                         {[
-                                            "Certified aesthetic practitioner with 5+ years of experience",
+                                            "Certified aesthetic practitioner with 15+ years of experience in Hartbeespoort",
                                             "Trained in advanced injectable techniques and medical aesthetics",
                                             "Dermalogica & QMS Medicosmetics certified skin therapist",
                                             "Specialist in permanent makeup and cosmetic tattooing",
@@ -215,14 +214,14 @@ export function AboutClient() {
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-stretch">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                             {/* Map */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6 }}
-                                className="rounded-2xl overflow-hidden shadow-xl min-h-[400px]"
+                                className="rounded-2xl overflow-hidden shadow-xl h-[300px] lg:h-[350px]"
                             >
                                 <Map
                                     latitude={-25.753414}
@@ -310,7 +309,7 @@ export function AboutClient() {
                 </section>
 
                 {/* Values - Icon Grid */}
-                <section className="py-20 bg-secondary/20">
+                <section className="py-20 bg-stone-50/50">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {values.map((value, i) => (
@@ -333,9 +332,9 @@ export function AboutClient() {
                 {/* Final CTA */}
                 <section className="py-20 lg:py-32 text-center bg-foreground text-background">
                     <div className="container mx-auto px-4">
-                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Experience the Difference</h2>
+                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Experience Galeo Beauty in Hartbeespoort</h2>
                         <p className="text-white/70 max-w-xl mx-auto mb-10 text-lg font-light">
-                            Your journey to your best self begins with a single appointment.
+                            Your journey to your best self begins with a single appointment at our Harties salon.
                         </p>
                         <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
                             <NavLink href="/prices">Book Your Visit</NavLink>

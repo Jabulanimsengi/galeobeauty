@@ -5,7 +5,7 @@ import { X, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SelectedTreatment } from "@/lib/booking-types";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface BookingSummaryProps {
   items: SelectedTreatment[];
@@ -33,11 +33,12 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
       <div className="p-6 border-b border-border/30 shrink-0">
         <div className="flex items-start gap-4">
           <div className="relative w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-white border border-border/20">
-            <Image
+            <CloudinaryImage
               src="/images/logo.png"
               alt="Galeo Beauty"
               fill
               className="object-contain p-1"
+              noSpinner
             />
           </div>
           <div className="min-w-0">

@@ -2,7 +2,7 @@
 
 import { Header, Footer } from "@/components/layout";
 
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { motion } from "framer-motion";
@@ -36,7 +36,7 @@ const specials: Special[] = [
         id: "facials",
         title: "Facial Glow Package",
         subtitle: "Premium Treatments",
-        image: "/images/services/facials/Image_facial_03.jpeg",
+        image: "/images/dermalogica/dermalogica-proskin-treatment.jpeg",
         discount: "30% off",
         items: [
             { id: "special-facial-1", service: "Skinovage Moisturising Facial", originalPrice: "R575", price: "R400", duration: "60 mins" },
@@ -48,7 +48,7 @@ const specials: Special[] = [
         id: "lashes",
         title: "Lash & Brow Special",
         subtitle: "Frame Your Beauty",
-        image: "/images/services/lashes.png",
+        image: "/images/lashes-brows/fluffy-eyelash-extensions-brown-eyes.png",
         discount: "25% off",
         items: [
             { id: "special-lash-1", service: "Full Set Hybrid Lashes", originalPrice: "R667", price: "R500", duration: "90 mins" },
@@ -60,7 +60,7 @@ const specials: Special[] = [
         id: "massage",
         title: "Relaxation Escape",
         subtitle: "Therapeutic Wellness",
-        image: "/images/services/massages/Massage_07.jpeg",
+        image: "/images/massages/deep-relaxation-neck-massage.jpeg",
         discount: "20% off",
         items: [
             { id: "special-massage-1", service: "Swedish Full Body Massage", originalPrice: "R650", price: "R520", duration: "60 mins" },
@@ -143,22 +143,22 @@ export default function SpecialsPage() {
             <Header />
             <main className="bg-background min-h-screen">
                 {/* Hero */}
-                <section className="relative pt-32 pb-8 lg:pt-40 lg:pb-10 px-6 bg-secondary/20">
+                <section className="relative pt-32 pb-8 lg:pt-40 lg:pb-10 px-6 bg-rose-50/30">
                     <div className="container mx-auto text-center max-w-4xl">
                         <span className="text-gold font-medium uppercase tracking-widest text-xs sm:text-sm block mb-4">
-                            Limited Time Offers
+                            Galeo Beauty Hartbeespoort Specials
                         </span>
                         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
-                            Our <span className="text-gold">Specials</span>
+                            Beauty <span className="text-gold">Specials</span> in Hartbeespoort
                         </h1>
                         <p className="text-muted-foreground text-base leading-relaxed font-light max-w-2xl mx-auto">
-                            Exclusive beauty deals curated just for you. Book now and save on our most popular treatments.
+                            Exclusive beauty deals at Galeo Beauty Harties. Save on our most popular salon treatments near Hartbeespoort Dam.
                         </p>
                     </div>
                 </section>
 
                 {/* Main Content - Flex Layout with Conditional Sidebar */}
-                <section className="py-12 lg:py-16">
+                <section className="py-12 lg:py-16 bg-amber-50/20">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="flex gap-8 lg:gap-12">
                             {/* Left Column - Specials List */}
@@ -178,9 +178,9 @@ export default function SpecialsPage() {
                                                 {/* Image */}
                                                 <div className="w-full lg:w-1/2">
                                                     <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
-                                                        <Image
+                                                        <CloudinaryImage
                                                             src={special.image}
-                                                            alt={special.title}
+                                                            alt={`${special.title} - Galeo Beauty Salon Hartbeespoort`}
                                                             fill
                                                             className="object-cover"
                                                         />
@@ -290,10 +290,10 @@ export default function SpecialsPage() {
                 <section className="py-16 bg-foreground text-background">
                     <div className="container mx-auto px-4 sm:px-6 text-center">
                         <h2 className="font-serif text-2xl sm:text-3xl text-background mb-4">
-                            Not Sure Which Offer Is Right?
+                            Need Help Choosing? Contact Galeo Beauty Hartbeespoort
                         </h2>
                         <p className="text-background/70 max-w-lg mx-auto mb-6">
-                            Our beauty specialists are here to help you choose the perfect treatment.
+                            Our Harties beauty specialists are here to help you choose the perfect treatment at our salon.
                         </p>
                         <NavLink
                             href="/contact"

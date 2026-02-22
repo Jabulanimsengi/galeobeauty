@@ -1,11 +1,12 @@
 "use client";
 
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Shield, Star, Sparkles, Award } from "lucide-react";
+import { ChevronDown, Shield, Star, Sparkles, Award, ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
+import { businessInfo } from "@/lib/constants";
 
 // Animated counter component
 function AnimatedCounter({ target, suffix = "", duration = 2 }: { target: number; suffix?: string; duration?: number }) {
@@ -124,10 +125,10 @@ export function HeroSection() {
 
     // Array of hero images with descriptive alt text
     const heroImages = [
-        { src: "/images/galeo-beauty-interior-p1.jpg", alt: "Galeo Beauty Salon luxury interior - Reception and Waiting Area" },
-        { src: "/images/galeo-beauty-interior-p2.jpg", alt: "Galeo Beauty Salon luxury interior - Treatment Rooms" },
-        { src: "/images/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon luxury interior - Nail Station" },
-        { src: "/images/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon luxury interior - Spa Lounge" },
+        { src: "/images/interior/galeo-beauty-interior-p1.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Reception and Waiting Area" },
+        { src: "/images/interior/galeo-beauty-interior-p2.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Treatment Rooms" },
+        { src: "/images/interior/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Nail Station near Harties Dam" },
+        { src: "/images/interior/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Spa Lounge" },
     ];
 
     // Auto-slide effect - changes image every 5 seconds
@@ -160,14 +161,13 @@ export function HeroSection() {
                             transition={{ duration: 6, ease: "linear" }}
                             style={{ willChange: "transform" }}
                         >
-                            <Image
+                            <CloudinaryImage
                                 src={heroImages[currentSlide].src}
                                 alt={heroImages[currentSlide].alt}
                                 fill
                                 sizes="100vw"
                                 className="object-cover object-center"
                                 priority={currentSlide === 0}
-                                quality={85}
                             />
                         </motion.div>
                     </motion.div>
@@ -242,11 +242,11 @@ export function HeroSection() {
                             variants={fadeUpVariants}
                             className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-5 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
-                            <span className="sm:hidden">Advanced medical technology meets luxury aesthetics.</span>
-                            <span className="hidden sm:inline">Experience the convergence of advanced medical technology and luxury aesthetics. Results-driven treatments tailored to your unique biology.</span>
+                            <span className="sm:hidden">Hartbeespoort&apos;s premier beauty salon &amp; medical spa. 16 specialist treatments tailored to you.</span>
+                            <span className="hidden sm:inline">Hartbeespoort&apos;s premier beauty salon &amp; medical spa — offering 16 specialist treatment categories from facials and injectables to body contouring and permanent makeup, all tailored to your unique beauty.</span>
                         </motion.p>
 
-                        {/* CTA Group - Hidden on mobile */}
+                        {/* CTA Group */}
                         <motion.div
                             variants={fadeUpVariants}
                             className="hidden sm:flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
@@ -256,21 +256,22 @@ export function HeroSection() {
                                 size="lg"
                                 className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-6 sm:px-10 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20"
                             >
-                                <NavLink href="/prices">
+                                <a href={businessInfo.socials.fresha} target="_blank" rel="noopener noreferrer">
                                     <span className="relative z-10 font-semibold">
-                                        View Treatments
+                                        Book Your Visit
                                     </span>
+                                    <ArrowRight className="w-4 h-4 ml-1 relative z-10" />
                                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                                </NavLink>
+                                </a>
                             </Button>
                             <Button
                                 asChild
                                 size="lg"
                                 className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-6 sm:px-8 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10"
                             >
-                                <NavLink href="/specials">
+                                <NavLink href="/about">
                                     <span className="group-hover:text-gold transition-colors duration-300 font-semibold">
-                                        View Specials
+                                        Learn More
                                     </span>
                                 </NavLink>
                             </Button>

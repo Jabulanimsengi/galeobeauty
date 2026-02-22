@@ -4,7 +4,7 @@ import { NavLink } from "@/components/ui/nav-link";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { BookingSheet } from "@/components/booking/BookingSheet";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 const featuredServices = [
     {
@@ -12,7 +12,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Non-surgical fat reduction & EMS body sculpting",
         href: "/body-contouring",
-        image: "/images/services/fat_freezing/Gallery_image_01(32).png.jpeg",
+        image: "/images/fat-freezing/fat-freezing-stomach-treatment.jpeg",
         color: "from-gold/5 to-gold/10",
         borderColor: "border-gold/20",
         prices: [
@@ -28,7 +28,7 @@ const featuredServices = [
         location: "Near Pretoria",
         description: "Injectable aesthetics & facial rejuvenation",
         href: "/anti-aging",
-        image: "/images/services/anti_ageing/anti_ageing_01.jpeg",
+        image: "/images/gallery/Facials/professional-skin-facial-treatment-in-progress.jpeg",
         color: "from-gold/10 to-gold/5",
         borderColor: "border-gold/20",
         prices: [
@@ -44,7 +44,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Microblading, powder brows & lip blush",
         href: "/permanent-makeup",
-        image: "/images/services/makeup/makeup_01.jpeg",
+        image: "/images/make-up/expert-bridal-makeup-application.jpeg",
         color: "from-foreground/5 to-gold/10",
         borderColor: "border-gold/20",
         prices: [
@@ -60,7 +60,7 @@ const featuredServices = [
         location: "Hartbeespoort Dam",
         description: "Advanced aesthetic treatments & skincare",
         href: "/medical-spa",
-        image: "/images/services/facials/Image_facial_02.jpeg",
+        image: "/images/gallery/Laser-and-IPL/ipl-laser-hair-removal-underarm-treatment.jpeg",
         color: "from-gold/10 to-foreground/5",
         borderColor: "border-gold/20",
         prices: [
@@ -76,7 +76,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Complete wedding day makeup & styling",
         href: "/bridal-beauty",
-        image: "/images/services/bridal/bridal_01.jpeg",
+        image: "/images/make-up/precision-makeup-base-application.jpeg",
         color: "from-foreground/5 to-gold/5",
         borderColor: "border-gold/20",
         prices: [
@@ -92,7 +92,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Permanent IPL hair removal for all areas",
         href: "/laser-hair-removal",
-        image: "/images/services/IPL_Hair_removal/IPL_image_01.jpeg",
+        image: "/images/ipl/ipl-full-leg-hair-removal.jpeg",
         color: "from-gold/5 to-foreground/5",
         borderColor: "border-gold/20",
         prices: [
@@ -110,7 +110,7 @@ function CardFront({ service }: { service: typeof featuredServices[0] }) {
     return (
         <div className={`h-full bg-gradient-to-br ${service.color} bg-white border-2 ${service.borderColor} rounded-2xl overflow-hidden shadow-md transition-shadow duration-300`}>
             <div className="relative w-full aspect-[16/10] overflow-hidden">
-                <Image
+                <CloudinaryImage
                     src={service.image}
                     alt={service.title}
                     fill

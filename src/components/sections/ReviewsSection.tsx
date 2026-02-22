@@ -107,7 +107,7 @@ export function ReviewsSection() {
     };
 
     return (
-        <section className="py-16 md:py-24 bg-secondary/30">
+        <section className="py-16 md:py-24 bg-rose-50/60">
             <div className="container mx-auto px-4 sm:px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -123,10 +123,10 @@ export function ReviewsSection() {
                         <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
                     </div>
                     <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
-                        Client <span className="text-gold">Love</span>
+                        What Clients Say About Galeo Beauty <span className="text-gold">Hartbeespoort</span>
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-                        Don&apos;t just take our word for it. See what our clients are saying about their Galeo Beauty experience.
+                        Real reviews from real clients at our Harties salon. See why we&apos;re the top-rated beauty destination near Hartbeespoort Dam.
                     </p>
                 </motion.div>
 

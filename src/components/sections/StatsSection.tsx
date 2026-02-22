@@ -113,7 +113,7 @@ export function StatsSection() {
                         Why Choose Us
                     </span>
                     <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold">
-                        The Numbers Speak
+                        Why Clients Choose Galeo Beauty in <span className="text-gold">Harties</span>
                     </h2>
                 </motion.div>
 

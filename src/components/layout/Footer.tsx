@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from "lucide-react";
 
 import { navItems, businessInfo } from "@/lib/constants";
@@ -19,16 +19,17 @@ export function Footer() {
                     {/* Brand Column */}
                     <div className="space-y-4 sm:col-span-2 lg:col-span-1">
                         <NavLink href="/">
-                            <Image
+                            <CloudinaryImage
                                 src="/images/logo.png"
-                                alt="Galeo Beauty"
+                                alt="Galeo Beauty Salon Hartbeespoort - Premier Beauty Salon in Harties"
                                 width={180}
                                 height={60}
                                 className="h-16 sm:h-20 md:h-24 w-auto object-contain brightness-0 invert"
+                                noSpinner
                             />
                         </NavLink>
                         <p className="text-background/70 text-sm leading-relaxed max-w-xs">
-                            Your destination for premium skincare and beauty treatments at Hartbeespoort Dam.
+                            Hartbeespoort&apos;s premier beauty salon &amp; medical spa. 16 specialist treatment categories including facials, injectables, body contouring, permanent makeup, nails, hair &amp; more at Landsmeer, near Hartbeespoort Dam.
                         </p>
                         <div className="flex gap-3">
                             <a
@@ -77,7 +78,7 @@ export function Footer() {
                     {/* Top Areas */}
                     <div>
                         <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
-                            Top Areas
+                            Areas We Serve From Harties
                         </h4>
                         <ul className="space-y-3">
                             <li>
@@ -161,7 +162,7 @@ export function Footer() {
                     {/* Popular Services - Internal Linking for SEO */}
                     <div className="lg:hidden xl:block">
                         <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
-                            Services
+                            Popular Services in Hartbeespoort
                         </h4>
                         <ul className="space-y-3">
                             <li>
@@ -258,7 +259,7 @@ export function Footer() {
             <div className="border-t border-background/10">
                 <div className="container mx-auto px-4 sm:px-6 py-6 md:py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <p className="text-background/50 text-xs sm:text-sm text-center sm:text-left">
-                        &copy; {currentYear} Galeo Beauty. All rights reserved.
+                        &copy; {currentYear} Galeo Beauty Hartbeespoort. All rights reserved.
                     </p>
                     <div className="flex gap-6 text-xs sm:text-sm text-background/50">
                         <NavLink href="/privacy-policy" className="hover:text-gold transition-colors">

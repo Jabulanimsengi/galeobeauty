@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, useCallback, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Spinner } from "@/components/ui/spinner";
 
 interface NavigationLoadingContextType {
@@ -58,13 +58,14 @@ export function NavigationLoadingProvider({ children }: { children: React.ReactN
                 <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm">
                     {/* Logo with pulse animation */}
                     <div className="relative mb-8">
-                        <Image
+                        <CloudinaryImage
                             src="/images/logo.png"
                             alt="Galeo Beauty"
                             width={200}
                             height={80}
                             className="h-20 w-auto animate-pulse"
                             priority
+                            noSpinner
                         />
                     </div>
 

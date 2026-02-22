@@ -1,19 +1,20 @@
 "use client";
 
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 export default function Loading() {
     return (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
             {/* Logo with pulse animation */}
             <div className="relative mb-8">
-                <Image
+                <CloudinaryImage
                     src="/images/logo.png"
                     alt="Galeo Beauty"
                     width={200}
                     height={80}
                     className="h-20 w-auto animate-pulse"
                     priority
+                    noSpinner
                 />
             </div>
 

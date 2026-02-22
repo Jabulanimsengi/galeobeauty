@@ -329,7 +329,40 @@ export interface SEOService {
     price: string;
     duration?: string;
     description?: string;
+    seoKeywords?: string[];
 }
+
+// List of high-value services to generate SEO pages for.
+// Filtering out low-value items like "Soak off", "Nail repair", etc.
+export const HERO_SERVICES = [
+    // Medical & Aesthetics
+    "vaginal-tightening", "fractional-laser", "plasmage", "iv-drip",
+    "nefertiti-lift", "liquid-facelift", "russian-lip-1ml", "lip-filler-1ml", "botox-3-areas", "dermal-fillers-1ml", "fat-dissolving-injections",
+
+    // Fat Freezing & Slimming
+    "fat-freezing-1-cup", "fat-freezing-2-cups", "fat-freezing-4-cups", "cavitation-slimming", "tesla-ems",
+
+    // Premium Facials & Peels
+    "dermalogica-pro-power-peel-60", "dermalogica-pro-nanoinfusion-60", "qms-collagen-recovery", "qms-neo-tissue-dermie", "qms-sk-alpha-revital",
+    "pro-microneedling", "dermaplaning-express", "chemical-peel",
+
+    // Laser & IPL
+    "ipl-full-leg", "ipl-brazilian", "ipl-full-face",
+
+    // Hair
+    "half-head-highlights", "full-head-highlights", "balayage", "brazilian-blowout-medium", "brazilian-blowout-long", "ladies-cut-and-blow",
+    "tape-extensions-20-40cm", "tape-extensions-40-50cm", "keratin-bonds",
+
+    // Nails
+    "acrylic-full-set", "gel-overlay-hands", "gel-pedicure", "polygel-full-set", "rubber-base-gel",
+
+    // Lashes & Permanent Makeup
+    "classic-lashes", "hybrid-lashes", "volume-lashes", "lash-lift-and-tint",
+    "microblading", "powder-brows", "lip-blush", "eyeliner-top-and-bottom",
+
+    // Waxing
+    "brazilian-wax", "hollywood-wax", "full-leg-wax", "full-face-wax"
+];
 
 /**
  * Extracts ALL services from the main services-data.ts file
@@ -350,6 +383,7 @@ export function getAllSEOServices(): SEOService[] {
                     price: item.price,
                     duration: item.duration,
                     description: item.description,
+                    seoKeywords: item.seoKeywords,
                 });
             }
         }
@@ -518,18 +552,133 @@ export function getPopularServicesFromOtherCategories(currentCategoryId: string,
     return popularServices;
 }
 
-// ============================================
-// UNIQUE CONTENT GENERATORS
-// ============================================
+/**
+ * Creates a simple 32-bit hash from a string to use as a seed
+ */
+function hashString(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash);
+}
+
+/**
+ * Pseudo-random number generator
+ */
+function createSeededRandom(seed: number) {
+    return function () {
+        let t = seed += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
 
 /**
  * Service-specific benefits for "Why Choose Us" section
- * Generates unique benefits for each of 269 services based on attributes
- * Uses subcategory, duration, and price to create truly unique combinations
+ * Generates unique benefits for each service based on attributes and location seed
  */
-export function getServiceSpecificBenefits(service: SEOService): string[] {
+export function getServiceSpecificBenefits(service: SEOService, locationSlug: string = "default"): string[] {
+    const seed = hashString(`${locationSlug}-${service.slug}`);
+    const random = createSeededRandom(seed);
+
+    // 1. Check for ultra-specific overrides by service slug
+    const serviceBenefitOverrides: Record<string, string[]> = {
+        // --- MEDICAL ---
+        "vaginal-tightening": [
+            "Non-surgical vaginal rejuvenation",
+            "Advanced radiofrequency technology",
+            "Restores tone and sensitivity",
+            "Improves natural lubrication",
+            "No downtime required",
+            "Private, comfortable setting",
+            "Treats stress urinary incontinence",
+            "Boosts intimate confidence",
+        ],
+        "fractional-laser": [
+            "Medical-grade skin resurfacing",
+            "Treats deep acne scars & pits",
+            "Reduces stubborn pigmentation",
+            "Stimulates new collagen growth",
+            "Targeted precision laser",
+            "Improves overall skin texture",
+            "Safe, controlled procedure",
+            "Visible long-term results",
+        ],
+        "plasmage": [
+            "Non-surgical eyelid lifting",
+            "Alternative to blepharoplasty",
+            "Sublimates excess skin instantly",
+            "Treats crow's feet & smoker's lines",
+            "Minimal recovery time",
+            "Long-lasting tightening effect",
+            "Precise plasma energy delivery",
+            "Safe for delicate eye area",
+        ],
+        "iv-drip": [
+            "100% nutrient absorption",
+            "Immediate energy boost",
+            "Customized vitamin cocktails",
+            "Fast-acting hydration",
+            "Supports immune system",
+            "Recovery from burnout/fatigue",
+            "Glowing skin from within",
+            "Administered by professionals",
+        ],
+        // --- AESTHETICS ---
+        "nefertiti-lift": [
+            "Defines jawline & neck contours",
+            "Relaxes neck bands (platysma)",
+            "Non-surgical mini lift effect",
+            "Prevents jowl formation",
+            "Quick 15-minute procedure",
+            "No recovery time needed",
+        ],
+        "liquid-facelift": [
+            "Comprehensive full-face rejuvenation",
+            "Restores lost facial volume",
+            "Lifts and contours features",
+            "Immediate visible results",
+            "Customized filler & toxin blend",
+            "Youthful results without surgery",
+        ],
+        "russian-lip-1ml": [
+            "Signature heart-shaped lift",
+            "Flatter side profile (no duck look)",
+            "Defined Cupid's bow",
+            "Crisp vermillion border",
+            "Volume focused in center",
+            "Doll-like aesthetic",
+        ],
+    };
+
+    if (serviceBenefitOverrides[service.slug]) {
+        // Return overrides mixed with a few universal for length if needed, 
+        // but mostly specific.
+        const specific = serviceBenefitOverrides[service.slug];
+        // Ensure we have at least 6 items
+        return [
+            ...specific,
+            "Experienced practitioners",
+            "Safe clinical environment"
+        ].slice(0, 8); // Return top 8 specific benefits
+    }
+
     // Benefit pools organized by category with multiple options
     const categoryBenefitPools: Record<string, string[]> = {
+        "medical": [ // NEW Category
+            "Medical-grade technology",
+            "Performed by certified professionals",
+            "Clinical safety protocols",
+            "Results-driven treatments",
+            "Private consultation rooms",
+            "Sterile clinical environment",
+            "Advanced non-surgical solutions",
+            "Detailed aftercare support",
+        ],
         "hart-aesthetics": [
             "Administered by qualified medical professionals",
             "Premium FDA-approved injectable products",
@@ -1001,7 +1150,7 @@ export function getLocationInsights(location: SEOLocation): { characteristic: st
         `${location.name} stands out in ${location.region} for its community spirit and residents who value self-care and professional grooming.`,
         `The ${location.name} area within ${location.region} attracts beauty-conscious individuals who seek quality treatments from trusted professionals.`,
         `With its distinct ${location.region} character, ${location.name} fosters a community that values wellness, relaxation, and premium services.`,
-        `${location.name} represents the best of ${location.region} living, combining accessibility with a clientele that appreciates exceptional beauty care.`,
+        `${location.name}'s position in ${location.region} makes it a thriving community where residents prioritize professional self-care services.`,
         `As a growing hub in ${location.region}, ${location.name} residents increasingly seek professional beauty services that match their lifestyle aspirations.`,
         `The unique character of ${location.name} within ${location.region} creates demand for high-quality beauty treatments delivered with expertise.`,
         `${location.name}'s position in ${location.region} makes it a thriving community where residents prioritize professional self-care services.`,
@@ -1047,19 +1196,6 @@ export function getLocationInsights(location: SEOLocation): { characteristic: st
 // ============================================
 // DYNAMIC CONTENT GENERATION FOR UNIQUENESS
 // ============================================
-
-/**
- * Simple hash function for consistent randomization
- */
-function hashString(str: string): number {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash);
-}
 
 /**
  * Get dynamically related services based on current service
@@ -1134,7 +1270,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     const drivingContext = getDrivingContext(location);
 
     // Category-specific FAQ pools — location-aware answers
-    const categoryFAQPools: Record<string, FAQ[]> = {
+    const baseCategoryFAQPools: Record<string, FAQ[]> = {
         "hart-aesthetics": [
             {
                 question: `How long do ${service.keyword} results last for ${location.name} clients?`,
@@ -1249,7 +1385,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
                 answer: `${service.keyword} usually involves minimal downtime. You might experience temporary redness for 30 minutes to 24 hours. ${location.name} clients typically apply makeup and resume activities the next day.`
             },
         ],
-        "hair-care": [
+        "hair": [
             {
                 question: `What products are used in ${service.keyword} at your salon near ${location.name}?`,
                 answer: `${service.keyword} features premium Moroccanoil and Milkshake products enriched with argan oil and natural ingredients. All products are sulfate-free and paraben-free, protecting ${location.name} clients' hair health.`
@@ -1265,6 +1401,118 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
             {
                 question: `Can ${service.keyword} help with damaged hair from ${location.region}'s climate?`,
                 answer: `Absolutely! ${service.keyword} includes intensive repair treatments that restore moisture and strengthen hair bonds. ${location.region}'s sun and dry air can affect hair health, making regular treatments beneficial.`
+            },
+        ],
+        "slimming": [
+            {
+                question: `How effective is ${service.keyword} for body contouring?`,
+                answer: `${service.keyword} is highly effective for targeting stubborn fat pockets that diet and exercise miss. ${location.name} clients typically see measurable inch loss appropriately 4-8 weeks after their course.`
+            },
+            {
+                question: `Is ${service.keyword} safe?`,
+                answer: `Yes, completely. We use non-invasive, medically approved technologies. ${service.keyword} requires no surgery or anesthesia, allowing ${location.name} clients to return to their daily routine immediately.`
+            },
+            {
+                question: `How many sessions of ${service.keyword} are recommended?`,
+                answer: `For best results, we recommend a course of 6-10 sessions. We create a personalized plan for our ${location.name} clients, often combining treatments for maximum impact.`
+            },
+            {
+                question: `Will I lose weight with ${service.keyword}?`,
+                answer: `${service.keyword} is designed for inch loss and body shaping rather than weight loss. However, many ${location.name} clients find it motivates them to maintain a healthier lifestyle.`
+            },
+        ],
+        "ipl": [
+            {
+                question: `What is IPL (Intense Pulsed Light)?`,
+                answer: `IPL stands for Intense Pulsed Light. It involves the use of broad-spectrum light to target the hair pigment (melanin) for permanent hair reduction. It causes the hair root to heat up and become destroyed, stopping regrowth.`
+            },
+            {
+                question: `Is IPL hair removal permanent?`,
+                answer: `IPL significantly reduces hair growth by up to 90%. While considered permanent reduction, some ${location.name} clients may need an annual touch-up session to maintain perfectly smooth skin.`
+            },
+            {
+                question: `Does ${service.keyword} hurt?`,
+                answer: `Most clients describe the sensation as a light snap of a rubber band. Our advanced machines have cooling systems to ensure comfort for our ${location.name} clients.`
+            },
+            {
+                question: `Can I have ${service.keyword} if I have a tan?`,
+                answer: `It's best to avoid sun exposure 2 weeks before treatment. We advise our ${location.region} clients to schedule sessions during winter or use high SPF if treating exposed areas.`
+            },
+            {
+                question: `How many IPL sessions will I need?`,
+                answer: `Typically 6-8 sessions spaced 4-6 weeks apart are needed to catch all hair growth cycles. We offer package deals for our ${location.name} clients to make this journey affordable.`
+            },
+        ],
+        "makeup": [
+            {
+                question: `Do you do trial runs for ${service.keyword}?`,
+                answer: `Yes, we highly recommend a trial for bridal makeup. Ideally 2-4 weeks before your big day. ${location.name} brides often book their trial on the same day as their hair trial.`
+            },
+            {
+                question: `What brand of makeup do you use?`,
+                answer: `We use professional, high-definition brands like MAC, Kryolan, and Estee Lauder. Our kit is stocked with products that photograph beautifully and last all day for our ${location.name} clients.`
+            },
+            {
+                question: `How long will my ${service.keyword} last?`,
+                answer: `Our professional application techniques and setting sprays ensure your look lasts 12+ hours. ${location.name} clients can dance the night away without worrying about their makeup.`
+            },
+            {
+                question: `Do you travel to venues for ${service.keyword}?`,
+                answer: `Yes, we can travel to venues in ${location.region} for bridal parties. Contact us for a custom quote based on your location and party size.`
+            },
+        ],
+        "massages": [
+            {
+                question: `What types of massage do you offer for ${location.name} residents?`,
+                answer: `We offer Swedish, Deep Tissue, Hot Stone, and Aromatherapy massages. Whether you need relaxation or tension relief, our therapists customize the pressure for every ${location.name} client.`
+            },
+            {
+                question: `Can I book a couples massage?`,
+                answer: `Yes! Our dual treatment room is perfect for couples or friends. Many ${location.name} clients book tailored packages for anniversaries or special bonding time.`
+            },
+            {
+                question: `Do you offer pregnancy massage?`,
+                answer: `Yes, we offer specialized pre-natal massage for expectant mothers past their first trimester. It's a favorite among ${location.name} moms-to-be for relieving back pain and swelling.`
+            },
+            {
+                question: `How long is a typical ${service.keyword} session?`,
+                answer: `Sessions range from 30 minutes (back & neck) to 90 minutes (full body indulgence). ${location.name} clients often choose 60 minutes for a balanced treatment.`
+            },
+        ],
+        "permanent-makeup": [
+            {
+                question: `How long does permanent makeup last?`,
+                answer: `Results typically last 1-3 years depending on skin type and lifestyle. We recommend annual color boosts for our ${location.name} clients to keep brows and lips looking fresh.`
+            },
+            {
+                question: `Is the procedure painful?`,
+                answer: `We use highly effective topical anesthetics to numb the area. Most ${location.name} clients report feeling little to no pain, just a scratching sensation.`
+            },
+            {
+                question: `What if I don't like the shape?`,
+                answer: `We map the shape meticulously and get your approval before starting. We don't begin until you are 100% happy with the design. Perfection is our promise to ${location.name} clients.`
+            },
+            {
+                question: `Can I wear makeup after the treatment?`,
+                answer: `You should avoid makeup on the treated area for 7 days while it heals. After that, you can treat it normally. We provide detailed aftercare to all ${location.name} clients.`
+            },
+        ],
+        "sunbed": [
+            {
+                question: `Is sunbed tanning safe?`,
+                answer: `Moderation is key. We adhere to strict safety guidelines and limit session times based on your skin type. We help ${location.name} clients achieve a glow responsibly.`
+            },
+            {
+                question: `How long is a session?`,
+                answer: `Sessions range from 6 to 12 minutes depending on your skin's tolerance. We start new ${location.name} clients with shorter sessions to build a base tan safely.`
+            },
+            {
+                question: `Do I need special lotion?`,
+                answer: `Yes, we recommend professional tanning accelerators which protect skin and enhance results. We stock a range suitable for our ${location.region} clients.`
+            },
+            {
+                question: `How often can I use the sunbed?`,
+                answer: `We recommend waiting 48 hours between sessions. Developing a tan gradually is safer and lasts longer. Most ${location.name} clients visit 1-2 times a week.`
             },
         ],
         "nails": [
@@ -1349,6 +1597,76 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
         ],
     };
 
+    // 1. Check for ultra-specific FAQ overrides by service slug
+    const serviceFAQOverrides: Record<string, FAQ[]> = {
+        // --- MEDICAL ---
+        "vaginal-tightening": [
+            { question: "How does vaginal tightening work?", answer: "We use advanced radiofrequency energy to gently heat the vaginal tissues. This stimulates natural collagen production, tightening the area and improving blood flow without surgery." },
+            { question: "Is the treatment painful?", answer: "Most clients find it comfortable, often describing it as a warm sensation. No anesthesia is required, and there is zero downtime after the procedure." },
+            { question: "How many sessions will I need?", answer: "For optimal results, we typically recommend a course of 3 treatments spaced about 4 weeks apart. Maintenance sessions can be done annually." },
+            { question: "Can it help with bladder leakage?", answer: "Yes, many clients report significant improvement in stress urinary incontinence (mild leakage when laughing or sneezing) due to the strengthening of pelvic support structures." },
+        ],
+        "fractional-laser": [
+            { question: "What does fractional laser treat?", answer: "It is highly effective for reducing deep acne scars, surgical scars, fine lines, and sun damage. It resurfaces the skin by creating micro-channels that trigger healing." },
+            { question: "How much downtime should I expect?", answer: "You will experience redness and potential peeling for 3-5 days. It looks similar to a sunburn. We recommend planning this treatment when you can take a few days of social downtime." },
+            { question: "Is it safe for darker skin tones?", answer: "We use specific settings and preparation protocols to maximize safety. However, a consultation is essential to assess your skin type and minimize pigmentation risks." },
+            { question: "When will I see results?", answer: "You'll see brighter skin after one week, but the deepest collagen remodelling happens over 3-6 months. Results continue to improve long after your session." },
+        ],
+        "plasmage": [
+            { question: "What is Plasmage used for?", answer: "Plasmage is primarily used for non-surgical blepharoplasty (eyelid lifting), removing excess skin, treating crow's feet, and smoothing smoker's lines around the mouth." },
+            { question: "How long do Plasmage results last?", answer: "Results are considered permanent, similar to surgery, though natural aging continues. Most clients enjoy the lifting effect for years with just one or two sessions." },
+            { question: "Will there be scabs?", answer: "Yes, tiny carbon crusts (dots) will form on the treated area. These must fall off naturally over 5-7 days. It is crucial not to pick them to avoid scarring." },
+            { question: "Is it painful?", answer: "We apply a strong topical numbing cream for 30-45 minutes before starting. Most clients feel only mild heat or stinging during the quick procedure." },
+        ],
+        "iv-drip": [
+            { question: "Why choose an IV drip over supplements?", answer: "Oral vitamins have low absorption rates (around 20%). IV therapy delivers nutrients directly into your bloodstream for 100% absorption and immediate cellular availability." },
+            { question: "How long does the infusion take?", answer: "A typical session takes 30-45 minutes. You can relax, read, or work on your phone in our comfortable lounge while the drip runs." },
+            { question: "Which drip is right for me?", answer: "We have specific blends for immunity, energy, skin brightening, and detox. Our nurse will help you choose the best cocktail based on your symptoms and goals." },
+            { question: "Does it hurt?", answer: "You'll feel a tiny pinch when the needle is inserted, similar to a blood test. once the line is secured, the treatment is painless and relaxing." },
+        ],
+        // --- AESTHETICS ---
+        "nefertiti-lift": [
+            { question: "What is the Nefertiti Lift?", answer: "It's a specialized Botox technique that targets the neck bands and jawline muscles. By relaxing these downward-pulling muscles, the lower face looks lifted and more defined." },
+            { question: "Who is the ideal candidate?", answer: "It works best for clients with early signs of jowling or a 'turkey neck' appearance caused by active muscle pulling. It prevents the neck muscles from dragging down facial features." },
+            { question: "How long does it last?", answer: "Results typically last 3-4 months. Regular maintenance treatments can help train the muscles to be less active, potentially extending the duration." },
+            { question: "Is there any recovery time?", answer: "None at all. You can return to work immediately. You might have tiny bumps at the injection sites for 15 minutes, but these disappear quickly." },
+        ],
+        "liquid-facelift": [
+            { question: "What is a liquid facelift?", answer: "It's a non-surgical full-face rejuvenation using a combination of dermal fillers (to restore volume) and Botox (to smooth wrinkles). It restores youthful contours instantly." },
+            { question: "How does it compare to a surgical facelift?", answer: "It offers subtle, natural enhancement with no surgery, scars, or general anesthesia. It's best for volume loss, whereas surgery is needed for significant loose skin." },
+            { question: "Will I look 'done' or fake?", answer: "Our philosophy is 'less is more'. We restore volume where you've lost it (cheeks, temples) to refresh your look, not change your features. You'll look like a rested version of yourself." },
+            { question: "How long do results last?", answer: "Filler results can last 12-18 months, while the Botox component lasts 3-4 months. We recommend a maintenance plan to keep the results looking fresh." },
+        ],
+        "russian-lip-1ml": [
+            { question: "What makes Russian Lips different?", answer: "The Russian technique focuses on lifting the lip vertically rather than projecting it forward. This creates a flatter side profile and a defined 'heart' shape without the 'duck lip' look." },
+            { question: "Will 1ml be enough?", answer: "1ml is perfect for a noticeable but natural foundation. If you desire significant volume, we can build it up safely over multiple sessions." },
+            { question: "Is the Russian technique more painful?", answer: "It involves more injection points to shape the lip precisely, so it can be slightly more sensitive. We use strong numbing cream to ensure your comfort." },
+            { question: "How much swelling will I have?", answer: "Swelling is normal and usually peaks 24-48 hours after treatment. It settles significantly within a week to reveal your beautiful, final result." },
+        ],
+    };
+
+    if (serviceFAQOverrides[service.slug]) {
+        const specificFAQs = serviceFAQOverrides[service.slug]; // Already in correct format now
+
+        // Add one location-specific question to ensure local context
+        const localQ = {
+            question: `Where can I get ${service.keyword} near ${location.name}?`,
+            answer: `Galeo Beauty in Hartbeespoort offers professional ${service.keyword} treatments. We are conveniently located for clients traveling from ${location.name} and surrounding ${location.region} areas.`
+        };
+
+        return [localQ, ...specificFAQs];
+    }
+
+    // Default category-based FAQs
+    const extraCategoryFAQPools: Record<string, FAQ[]> = {
+        "medical": [
+            { question: `Is a consultation required for ${service.keyword}?`, answer: `Yes, a consultation is essential. We need to assess your medical history and skin condition to ensure ${service.keyword} is safe and effective for you.` },
+            { question: `Are your ${service.keyword} practitioners qualified?`, answer: `Absolutely. All our advanced clinical treatments are performed by fully certified and experienced aesthetic professionals.` },
+            { question: `Can I combine ${service.keyword} with other treatments?`, answer: `Often, yes. We can design a bespoke package. For example, IV drips can be done during skin treatments. We'll verify safety during your consult.` },
+            { question: `What payment options do you offer?`, answer: `We accept card and cash. For course packages of ${service.keyword}, we can discuss upfront payment structures.` },
+        ],
+    };
+
     // Location-specific FAQs — unique per location, always included
     const locationFAQs: FAQ[] = [
         {
@@ -1374,7 +1692,8 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     ];
 
     // Get category-specific FAQs
-    const categoryFAQs = categoryFAQPools[service.categoryId] || [];
+    // Get category-specific FAQs
+    const categoryFAQs = extraCategoryFAQPools[service.categoryId] || baseCategoryFAQPools[service.categoryId] || [];
 
     // Use combined hash for location+service variation
     const hash = hashString(service.slug + location.slug);

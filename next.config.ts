@@ -167,6 +167,20 @@ const nextConfig: NextConfig = {
       { source: '/services/:category', destination: '/prices/:category', permanent: true },
       { source: '/services/:category/:service', destination: '/prices/:category/:service', permanent: true },
 
+      // === Category URL corrections (old wrong slugs → correct category IDs) ===
+      { source: '/prices/lashes', destination: '/prices/lashes-brows', permanent: true },
+      { source: '/prices/qms-facial', destination: '/prices/qms', permanent: true },
+      { source: '/prices/pro-skin', destination: '/prices/dermalogica', permanent: true },
+
+      // === Root-level service page consolidation → /prices/ ===
+      { source: '/laser-hair-removal', destination: '/prices/ipl', permanent: true },
+      { source: '/anti-aging', destination: '/prices/hart-aesthetics', permanent: true },
+      { source: '/body-contouring', destination: '/prices/fat-freezing', permanent: true },
+      { source: '/medical-spa', destination: '/prices/medical', permanent: true },
+      { source: '/permanent-makeup', destination: '/prices/permanent-makeup', permanent: true },
+      { source: '/bridal-beauty', destination: '/prices', permanent: true },
+      { source: '/matric-dance', destination: '/prices', permanent: true },
+
       // === Flat /prices/[slug] → /prices/[category]/[slug] or /prices/[category] ===
       ...flatServiceRedirects,
     ];

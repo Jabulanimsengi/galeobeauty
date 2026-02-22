@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+
 import { Header, Footer } from "@/components/layout";
 
 import { getAllBlogPosts } from "@/lib/blog-data";
@@ -77,20 +77,20 @@ export default function BlogPage() {
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="max-w-3xl mx-auto text-center">
                             <span className="inline-block text-gold text-sm font-medium tracking-wider uppercase mb-4">
-                                Beauty Blog
+                                Galeo Beauty Hartbeespoort Blog
                             </span>
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
-                                Expert Beauty <span className="text-gold italic">Tips & Guides</span>
+                                Beauty <span className="text-gold italic">Tips & Guides</span> from Hartbeespoort
                             </h1>
                             <p className="text-muted-foreground text-lg leading-relaxed">
-                                Discover skincare secrets, treatment guides, and beauty trends from our expert team at Galeo Beauty.
+                                Skincare secrets, treatment guides, and beauty trends from our expert team at Galeo Beauty Harties.
                             </p>
                         </div>
                     </div>
                 </section>
 
                 {/* Blog Grid */}
-                <section className="py-16">
+                <section className="py-16 bg-stone-50/30">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {posts.map((post) => (
@@ -156,10 +156,10 @@ export default function BlogPage() {
                 <section className="py-20 bg-foreground text-background text-center">
                     <div className="container mx-auto px-4">
                         <h2 className="font-serif text-3xl md:text-4xl font-semibold mb-4">
-                            Ready to Experience These Treatments?
+                            Ready to Book at Galeo Beauty Hartbeespoort?
                         </h2>
                         <p className="text-background/70 mb-8 max-w-lg mx-auto">
-                            Book your appointment at Galeo Beauty and let our experts take care of you.
+                            Book your appointment at our Harties salon and let our experts take care of you.
                         </p>
                         <Link
                             href="/prices"

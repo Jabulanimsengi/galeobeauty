@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { MoveHorizontal } from "lucide-react";
 
 interface BeforeAfterProps {
@@ -59,7 +59,7 @@ export const BeforeAfterSlider = ({ beforeImage, afterImage, alt, className = ""
         >
             {/* After Image (Background) */}
             <div className="relative w-full h-full aspect-[4/5] md:aspect-square">
-                <Image
+                <CloudinaryImage
                     src={afterImage}
                     alt={`${alt} after`}
                     fill
@@ -76,7 +76,7 @@ export const BeforeAfterSlider = ({ beforeImage, afterImage, alt, className = ""
                 style={{ clipPath: `inset(0 ${100 - sliderSystem}% 0 0)` }}
             >
                 <div className="relative w-full h-full">
-                    <Image
+                    <CloudinaryImage
                         src={beforeImage}
                         alt={`${alt} before`}
                         fill

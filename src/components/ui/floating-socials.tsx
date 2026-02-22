@@ -158,27 +158,30 @@ export function FloatingSocials() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center rounded-full bg-[#25D366] text-white shadow-2xl"
+                        className="relative"
                     >
+                        {/* Dismiss X — corner badge */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsLabelDismissed(true);
+                            }}
+                            className="absolute -top-2 -right-2 z-10 flex items-center justify-center h-6 w-6 rounded-full bg-foreground/80 text-background shadow-md hover:bg-foreground transition-colors"
+                            aria-label="Dismiss label"
+                        >
+                            <X className="h-3.5 w-3.5" />
+                        </button>
+
+                        {/* Pill button */}
                         <button
                             onClick={() => setIsExpanded(true)}
-                            className="flex items-center gap-2 pl-4 sm:pl-5 py-1.5 sm:py-2 pr-1 rounded-l-full transition-colors hover:bg-[#128C7E]"
+                            className="flex items-center gap-2 pl-4 sm:pl-5 py-1.5 sm:py-2 pr-1.5 sm:pr-2 rounded-full bg-[#25D366] text-white shadow-2xl transition-colors hover:bg-[#128C7E]"
                             aria-label="Chat with us on WhatsApp"
                         >
                             <span className="text-sm sm:text-base font-semibold whitespace-nowrap">Chat with us</span>
                             <span className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white/20">
                                 <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
                             </span>
-                        </button>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setIsLabelDismissed(true);
-                            }}
-                            className="flex items-center justify-center h-8 w-8 mr-1.5 rounded-full bg-black/20 hover:bg-black/40 transition-colors"
-                            aria-label="Dismiss label"
-                        >
-                            <X className="h-3.5 w-3.5" />
                         </button>
                     </motion.div>
                 )}

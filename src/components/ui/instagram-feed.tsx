@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Instagram, Heart, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { businessInfo } from "@/lib/constants";
@@ -9,28 +9,28 @@ import { businessInfo } from "@/lib/constants";
 const instagramPosts = [
     {
         id: 1,
-        image: "/images/services/face-care-01.png",
+        image: "/images/gallery/Facials/professional-skin-facial-treatment-in-progress.jpeg",
         likes: 234,
         comments: 18,
         alt: "Facial treatment at Galeo Beauty"
     },
     {
         id: 2,
-        image: "/images/services/lashes.png",
+        image: "/images/lashes-brows/dramatic-volume-eyelash-extensions.png",
         likes: 189,
         comments: 12,
         alt: "Lash extensions showcase"
     },
     {
         id: 3,
-        image: "/images/services/face-care-02.png",
+        image: "/images/dermalogica/dermalogica-microneedling-treatment.png",
         likes: 267,
         comments: 24,
         alt: "Skin treatment results"
     },
     {
         id: 4,
-        image: "/images/founder.jpg",
+        image: "/images/founder_dandi.jpg",
         likes: 312,
         comments: 31,
         alt: "Behind the scenes at Galeo"
@@ -76,7 +76,7 @@ export function InstagramFeed({ className, columns = 4 }: InstagramFeedProps) {
                         rel="noopener noreferrer"
                         className="group relative aspect-square rounded-xl overflow-hidden"
                     >
-                        <Image
+                        <CloudinaryImage
                             src={post.image}
                             alt={post.alt}
                             fill

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TrustBadge } from "@/components/ui/trust-badge";
@@ -25,8 +25,8 @@ export function AboutSection() {
                         <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
                             {/* Main Image */}
                             <div className="relative aspect-[3/4] sm:aspect-[4/5] w-full">
-                                <Image
-                                    src="/images/founder.jpg"
+                                <CloudinaryImage
+                                    src="/images/founder_dandi.jpg"
                                     alt="Dandi Meyer - Founder of Galeo Beauty"
                                     fill
                                     className="object-cover object-top transition-transform duration-700 hover:scale-105"

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
 import {
@@ -151,7 +151,7 @@ export function SEOLandingPage({
                             <div className="relative lg:sticky lg:top-32 self-start">
                                 <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
                                     <div className="relative h-[280px] md:h-[380px] lg:aspect-[3/4] lg:h-auto lg:max-h-[450px] w-full">
-                                        <Image
+                                        <CloudinaryImage
                                             src={heroImage}
                                             alt={heroImageAlt}
                                             fill
@@ -350,7 +350,7 @@ export function SEOLandingPage({
                                 <div className="relative">
                                     <div className="relative rounded-[2rem] overflow-hidden shadow-2xl">
                                         <div className="relative h-[280px] md:h-[380px] lg:aspect-[3/4] lg:h-auto lg:max-h-[450px] w-full">
-                                            <Image
+                                            <CloudinaryImage
                                                 src={secondaryContent.image}
                                                 alt={secondaryContent.imageAlt}
                                                 fill
@@ -393,7 +393,7 @@ export function SEOLandingPage({
                                             <Link href={service.href} className="group block">
                                                 <div className="relative rounded-2xl overflow-hidden shadow-lg border border-border/30 bg-white transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl">
                                                     <div className="relative aspect-[16/10] w-full">
-                                                        <Image
+                                                        <CloudinaryImage
                                                             src={service.image}
                                                             alt={service.title}
                                                             fill

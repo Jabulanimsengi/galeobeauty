@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import { motion } from "framer-motion";
@@ -41,43 +41,68 @@ export function Header() {
             {/* Main Header */}
             <header
                 className={cn(
-                    "sticky top-0 z-50 transition-all duration-300 isolate",
+                    "sticky top-0 z-50 transition-all duration-500 ease-out isolate",
                     isScrolled
-                        ? "bg-background/95 backdrop-blur-md shadow-lg py-2"
-                        : "bg-transparent py-4"
+                        ? "py-2 shadow-lg"
+                        : "py-4"
                 )}
-                style={{ transform: 'translateZ(0)' }}
+                style={{ transform: 'translateZ(0)', willChange: 'padding, box-shadow' }}
             >
+                {/* Background layer — always rendered, opacity transitions smoothly */}
+                <div
+                    className={cn(
+                        "absolute inset-0 -z-10 bg-background backdrop-blur-md transition-opacity duration-500 ease-out",
+                        isScrolled ? "opacity-95" : "opacity-0"
+                    )}
+                    style={{ willChange: 'opacity' }}
+                />
                 <div className="container mx-auto flex justify-between items-center px-4">
                     {/* Logo - Responsive sizing */}
                     <NavLink href="/" className="relative z-10">
-                        <Image
+                        <CloudinaryImage
                             src="/images/logo.png"
                             alt="Galeo Beauty"
                             width={200}
                             height={80}
                             className="h-16 sm:h-20 md:h-24 w-auto transition-all duration-300"
                             priority
+                            noSpinner
                         />
                     </NavLink>
 
                     {/* Desktop Navigation - Nudo-style sliding block */}
                     <nav className="hidden lg:flex items-center gap-0 relative">
-                        {navItems.map((item) => (
-                            <NavLink
-                                key={item.href}
-                                href={item.href}
-                                className="group relative overflow-hidden"
-                            >
-                                {/* Text layer */}
-                                <span className="relative z-10 block px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 text-foreground/70 group-hover:text-white">
-                                    {item.label}
-                                </span>
+                        {navItems.map((item) => {
+                            const isSpecial = item.href === "/specials";
 
-                                {/* Sliding background block - only on hover */}
-                                <span className="absolute inset-0 bg-gold transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0" />
-                            </NavLink>
-                        ))}
+                            return (
+                                <NavLink
+                                    key={item.href}
+                                    href={item.href}
+                                    className="group relative overflow-hidden"
+                                >
+                                    {/* Text layer */}
+                                    <span className={cn(
+                                        "relative z-10 flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 group-hover:text-white",
+                                        isSpecial ? "text-gold" : "text-foreground/70"
+                                    )}>
+                                        {item.label}
+                                        {isSpecial && (
+                                            <span className="relative flex h-2 w-2">
+                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                            </span>
+                                        )}
+                                    </span>
+
+                                    {/* Sliding background block - only on hover */}
+                                    <span className={cn(
+                                        "absolute inset-0 transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0",
+                                        isSpecial ? "bg-gold/90" : "bg-gold"
+                                    )} />
+                                </NavLink>
+                            );
+                        })}
                     </nav>
 
                     {/* Desktop CTA */}
@@ -119,12 +144,13 @@ export function Header() {
                         >
                             <SheetHeader className="p-6 pb-0">
                                 <SheetTitle className="text-left">
-                                    <Image
+                                    <CloudinaryImage
                                         src="/images/logo.png"
                                         alt="Galeo Beauty"
                                         width={200}
                                         height={80}
                                         className="h-20 w-auto brightness-0 invert"
+                                        noSpinner
                                     />
                                 </SheetTitle>
                             </SheetHeader>

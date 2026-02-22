@@ -119,6 +119,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
             // CATEGORY-SPECIFIC (treatment names + problem/solution)
             ...serviceCategoryKeywords.slice(0, 5),
+            ...(service.seoKeywords || []),
         ],
         openGraph: {
             title,
@@ -144,7 +145,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             site: "@galeobeauty",
         },
         alternates: {
-            canonical: `https://www.galeobeauty.com/prices/${service.categoryId}/${serviceSlug}`,
+            canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         },
         robots: {
             index: true,
@@ -190,8 +191,11 @@ export default async function LocationServicePage({ params }: PageProps) {
         category?.title || "Beauty Services",
         ""
     );
-    // Append location context
-    const introText = `${richDescription} ${location.name} residents can now enjoy this premium treatment close to home.`
+    // Append location context and inject an LSI keyword if available to improve uniqueness deterministically
+    const lsiKeyword = service.seoKeywords?.length
+        ? service.seoKeywords[(service.slug.length + location.slug.length) % service.seoKeywords.length]
+        : "treatment";
+    const introText = `${richDescription} ${location.name} residents can now enjoy this premium ${lsiKeyword} close to home.`;
 
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
@@ -210,22 +214,15 @@ export default async function LocationServicePage({ params }: PageProps) {
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "BeautySalon",
-        "@id": "https://www.galeobeauty.com/#salon",
+        "@id": `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}#salon`,
         name: "Galeo Beauty Salon & Spa",
         alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
         description: "Premium beauty salon, spa and day spa in Hartbeespoort offering skincare, facials, nails, hair care, lashes, waxing, body treatments and aesthetic treatments. Top-rated beauty parlour serving Gauteng and North West.",
         additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
         image: "https://www.galeobeauty.com/images/logo.png",
         priceRange: "$$",
-        url: "https://www.galeobeauty.com",
+        url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         telephone: businessInfo.phone,
-        aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.9",
-            reviewCount: "159",
-            bestRating: "5",
-            worstRating: "1",
-        },
         address: {
             "@type": "PostalAddress",
             streetAddress: businessInfo.address.street,
@@ -267,7 +264,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 "@type": "Service",
                 name: `${service.keyword} at Galeo Beauty Salon & Spa`,
                 description: introText,
-                serviceType: [service.keyword, "Beauty Treatment", "Spa Treatment", "Salon Service"],
+                serviceType: [service.keyword, ...(service.seoKeywords || []), "Beauty Treatment", "Spa Treatment", "Salon Service"],
             },
             price: service.price.replace(/[^0-9.]/g, ""),
             priceCurrency: "ZAR",

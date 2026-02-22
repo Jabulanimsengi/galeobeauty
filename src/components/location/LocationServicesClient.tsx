@@ -93,8 +93,8 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.id)}
                                                 className={`w-full flex items-center justify-between px-5 py-3 rounded-full transition-all duration-200 ${isExpanded
-                                                        ? "bg-gold text-white"
-                                                        : "bg-neutral-900 text-white hover:bg-gold"
+                                                    ? "bg-gold text-white"
+                                                    : "bg-neutral-900 text-white hover:bg-gold"
                                                     }`}
                                             >
                                                 <div className="flex items-center gap-3">

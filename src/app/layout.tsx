@@ -8,24 +8,28 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.galeobeauty.com"),
   title: {
-    default: "Galeo Beauty | Premium Skincare & Beauty Salon",
-    template: "%s | Galeo Beauty",
+    default: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
+    template: "%s | Galeo Beauty Hartbeespoort",
   },
   description:
-    "Experience luxury beauty treatments at Galeo Beauty. Premium skincare, facials, nail care, lash extensions, massage therapy and more at Hartbeespoort Dam.",
+    "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Skincare, facials, injectables, IPL, nails, lashes, waxing, hair & more. Serving Harties Village, Centurion & Pretoria, North West.",
 
   keywords: [
     "beauty salon Hartbeespoort",
-    "spa Hartbeespoort Dam",
+    "beauty salon Harties",
+    "spa near Hartbeespoort Dam",
+    "Harties Dam beauty salon",
     "Galeo Beauty",
-    "skoonheidsalon Hartbeespoort",
-    "beauty treatments near me",
-    "day spa Hartbeespoort",
-    "salon Landsmeer Estate",
-    "beauty salon near Pretoria",
+    "beauty treatments Harties Village",
+    "salon near Centurion",
+    "salon near Pretoria",
+    "beauty salon North West",
+    "Hartbeespoort Dam area salon",
+    "beauty treatments around Harties",
     "best beauty salon Hartbeespoort",
-    "facials nails lashes Hartbeespoort",
-    "luxury spa Gauteng",
+    "facials nails lashes Harties",
+    "day spa Hartbeespoort Dam",
+    "skoonheidsalon Hartbeespoort",
   ],
   authors: [{ name: "Galeo Beauty" }],
   creator: "Galeo Beauty",
@@ -44,9 +48,9 @@ export const metadata: Metadata = {
     locale: "en_ZA",
     url: "https://www.galeobeauty.com",
     siteName: "Galeo Beauty",
-    title: "Galeo Beauty | Premium Skincare & Beauty Salon",
+    title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
     description:
-      "Experience luxury beauty treatments at Galeo Beauty. Premium skincare, facials, nail care, and more.",
+      "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Skincare, facials, nails, lashes & more. Serving Centurion & Pretoria.",
     images: [
       {
         url: "/og-image.jpg",
@@ -58,9 +62,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Galeo Beauty | Premium Skincare & Beauty Salon",
+    title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
     description:
-      "Experience luxury beauty treatments at Galeo Beauty. Premium skincare, facials, nail care, and more.",
+      "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Facials, nails, lashes & more.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -113,6 +117,14 @@ export default function RootLayout({
                 },
               ],
               priceRange: "$$",
+              areaServed: [
+                { "@type": "City", name: "Hartbeespoort" },
+                { "@type": "City", name: "Harties" },
+                { "@type": "City", name: "Centurion" },
+                { "@type": "City", name: "Pretoria" },
+                { "@type": "City", name: "Johannesburg" },
+                { "@type": "AdministrativeArea", name: "North West Province" },
+              ],
               aggregateRating: {
                 "@type": "AggregateRating",
                 ...AGGREGATE_RATING,

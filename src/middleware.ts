@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Valid category IDs — keep in sync with services-content.ts
+// Middleware runs in Edge Runtime so we can't import from src/lib directly
+const VALID_CATEGORIES = new Set<string>();
+
+// We can't import from src/lib here since middleware runs in Edge Runtime,
+// so we inline the category IDs. Keep this in sync with services-content.ts.
+const CATEGORY_IDS = [
+  "hart-aesthetics", "fat-freezing", "slimming", "massages", "dermalogica",
+  "ipl", "makeup", "medical", "permanent-makeup", "qms", "sunbed",
+  "waxing", "hair", "nails", "lashes-brows", "hair-extensions",
+];
+CATEGORY_IDS.forEach((id) => VALID_CATEGORIES.add(id));
+
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
@@ -39,6 +52,24 @@ export function middleware(request: NextRequest) {
       new URL('/sitemap.xml', request.url),
       301
     );
+  }
+
+  // 4. Catch-all: Flat /prices/[slug] where slug is NOT a valid category
+  //    Redirects stale indexed URLs like /prices/massage-45min → /prices
+  //    This covers ALL flat URLs that Google has indexed, without needing
+  //    to enumerate every possible slug.
+  const pricesMatch = pathname.match(/^\/prices\/([^/]+)$/);
+  if (pricesMatch) {
+    const segment = pricesMatch[1];
+    if (!VALID_CATEGORIES.has(segment)) {
+      // Not a valid category — redirect to prices hub
+      // (next.config.ts handles known slugs with specific redirects;
+      //  this catches anything that slips through)
+      return NextResponse.redirect(
+        new URL('/prices', request.url),
+        301
+      );
+    }
   }
 
   return NextResponse.next();

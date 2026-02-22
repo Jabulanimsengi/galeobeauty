@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { cn } from "@/lib/utils";
 
 // Placeholder press logos - replace with actual press mention logos
@@ -43,7 +43,7 @@ export function FeaturedIn({
                         key={press.name}
                         className="relative h-6 sm:h-8 w-20 sm:w-28 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                     >
-                        <Image
+                        <CloudinaryImage
                             src={press.logo}
                             alt={press.name}
                             fill
@@ -79,7 +79,7 @@ export function FeaturedInLocal({ className }: { className?: string }) {
                         key={brand.name}
                         className="relative h-10 sm:h-12 w-24 sm:w-32 opacity-60 hover:opacity-100 transition-opacity duration-300"
                     >
-                        <Image
+                        <CloudinaryImage
                             src={brand.src}
                             alt={brand.name}
                             fill
