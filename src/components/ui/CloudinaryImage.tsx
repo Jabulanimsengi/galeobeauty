@@ -13,7 +13,6 @@ interface CloudinaryImageProps extends Omit<ImageProps, "src"> {
 }
 
 export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, width, height, ...props }: CloudinaryImageProps) {
-    const [isLoading, setIsLoading] = useState(true);
 
     // Format the source so it works locally. (We assume most src strings are paths like "/images/...")
     let localSrc = src;
@@ -29,35 +28,15 @@ export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, 
     }
 
     return (
-        <>
-            {!noSpinner && isLoading && (
-                <div
-                    className={cn(
-                        "flex items-center justify-center bg-black/5 z-0",
-                        fill ? "absolute inset-0" : "w-full h-full min-h-[100px]",
-                        className?.includes('rounded') ? className.match(/rounded-[a-z0-9]+/)?.[0] : 'rounded-lg'
-                    )}
-                >
-                    <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-gold border-t-transparent rounded-full animate-spin opacity-70"></div>
-                </div>
-            )}
-            <Image
-                src={localSrc}
-                alt={alt || "Image"}
-                fill={fill}
-                width={width}
-                height={height}
-                className={cn(
-                    "transition-opacity duration-500",
-                    isLoading && !noSpinner ? "opacity-0" : "opacity-100",
-                    className
-                )}
-                onLoad={(e) => {
-                    setIsLoading(false);
-                    if (onLoad) onLoad(e);
-                }}
-                {...props}
-            />
-        </>
+        <Image
+            src={localSrc}
+            alt={alt || "Image"}
+            fill={fill}
+            width={width}
+            height={height}
+            className={cn(className)}
+            onLoad={onLoad}
+            {...props}
+        />
     );
 }
