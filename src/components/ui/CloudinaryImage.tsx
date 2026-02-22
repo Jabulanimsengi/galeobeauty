@@ -1,34 +1,32 @@
 "use client";
 
 import { useState } from 'react';
-import { CldImage, CldImageProps } from 'next-cloudinary';
+import Image, { ImageProps } from 'next/image';
 import { cn } from "@/lib/utils";
 
-interface CloudinaryImageProps extends Omit<CldImageProps, "src"> {
+interface CloudinaryImageProps extends Omit<ImageProps, "src"> {
     src: string;
     noSpinner?: boolean;
+    // We intentionally ignore Cloudinary-specific props that might have been passed
+    width?: number | `${number}`;
+    height?: number | `${number}`;
 }
 
-export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, ...props }: CloudinaryImageProps) {
+export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, width, height, ...props }: CloudinaryImageProps) {
     const [isLoading, setIsLoading] = useState(true);
 
-    // Convert local path to Cloudinary public ID
-    let publicId = src;
-    if (publicId.startsWith('/images/')) {
-        publicId = publicId.replace(/^\/images\//, '');
-        publicId = publicId.replace(/\.[^/.]+$/, '');
-        publicId = publicId.replace(/[^a-zA-Z0-9\/\.\-_]/g, '-').replace(/-+/g, '-');
-        publicId = `galeobeauty/${publicId}`;
-    } else if (!publicId.startsWith('http') && !publicId.startsWith('galeobeauty/')) {
-        // If it's a generic public asset like /founder.jpg, map it
-        publicId = publicId.startsWith('/') ? publicId.substring(1) : publicId;
-        publicId = publicId.replace(/\.[^/.]+$/, '');
-        publicId = publicId.replace(/[^a-zA-Z0-9\/\.\-_]/g, '-').replace(/-+/g, '-');
-        publicId = `galeobeauty/${publicId}`;
+    // Format the source so it works locally. (We assume most src strings are paths like "/images/...")
+    let localSrc = src;
+    if (!localSrc.startsWith('/') && !localSrc.startsWith('http')) {
+        localSrc = `/${localSrc}`;
     }
 
-    // To seamlessly support `fill` without disrupting layouts,
-    // we either wrap in a relative div or just render siblings if we assume the parent is already relative (which next/image with fill requires).
+    // Safety fallback for Cloudinary specific edge cases where maybe .jpg was removed earlier
+    if (localSrc.indexOf('.') === -1 && !localSrc.startsWith('http')) {
+        // Just a catch-all if someone passed a publicId without extension
+        // It's safer to just let the standard Next Image fail gracefully or handle it.
+        // For Galeo, all current images have extensions.
+    }
 
     return (
         <>
@@ -43,10 +41,12 @@ export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, 
                     <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-gold border-t-transparent rounded-full animate-spin opacity-70"></div>
                 </div>
             )}
-            <CldImage
-                src={publicId}
+            <Image
+                src={localSrc}
                 alt={alt || "Image"}
                 fill={fill}
+                width={width}
+                height={height}
                 className={cn(
                     "transition-opacity duration-500",
                     isLoading && !noSpinner ? "opacity-0" : "opacity-100",
