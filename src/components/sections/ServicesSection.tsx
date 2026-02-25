@@ -94,7 +94,7 @@ const services = [
     {
         id: "lashes",
         slug: "lashes-brows", // Links to /prices/lashes-brows
-        title: "Lashes & Brows",
+        title: "Lash Extensions & Brow Styling",
         subtitle: "Eye Enhancement",
         description: "Enhance your natural beauty with our lash extensions and brow tinting services. From Russian volume lashes to precision brow shaping, we perfect every detail.",
         images: [

@@ -39,8 +39,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "hart-aesthetics",
-        title: "Hart Aesthetics",
-        subtitle: "Advanced Injectables",
+        title: "Hart Aesthetics Treatments",
+        subtitle: "Injectables, Fillers & Lifts",
         image: "/images/gallery/Facials/professional-skin-facial-treatment-in-progress.jpeg",
         badge: "Medical Grade",
         badgeVariant: "medical",
@@ -87,8 +87,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "fat-freezing",
-        title: "Fat Freezing",
-        subtitle: "Body Contouring",
+        title: "Fat Freezing & Body Contouring",
+        subtitle: "Non-Invasive Fat Reduction",
         image: "/images/fat-freezing/fat-freezing-stomach-treatment.jpeg",
         subcategories: [
             {
@@ -107,8 +107,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "slimming",
-        title: "Slimming",
-        subtitle: "Weight Loss",
+        title: "Slimming Treatments",
+        subtitle: "Injections & Weight Loss",
         image: "/images/slimming/emsculpt-body-contouring-session.png",
         subcategories: [
             {
@@ -126,8 +126,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "massages",
-        title: "Massages",
-        subtitle: "Relaxation & Therapy",
+        title: "Massage Therapy",
+        subtitle: "Relaxation & Deep Tissue",
         image: "/images/massages/deep-relaxation-neck-massage.jpeg",
         subcategories: [
             {
@@ -150,8 +150,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "dermalogica",
-        title: "Dermalogica",
-        subtitle: "Professional Skincare",
+        title: "Dermalogica Treatments",
+        subtitle: "Professional Facials & Peels",
         image: "/images/gallery/Facials/facial-treatment-room-steamer-dermalogica-products.jpeg",
         subcategories: [
             {
@@ -201,8 +201,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "ipl",
-        title: "IPL (Intense Pulsed Light)",
-        subtitle: "Hair Removal",
+        title: "IPL Hair Removal",
+        subtitle: "Permanent Hair Reduction",
         image: "/images/ipl/ipl-full-leg-hair-removal.jpeg",
         subcategories: [
             {
@@ -245,8 +245,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "makeup",
-        title: "Makeup",
-        subtitle: "Professional Application",
+        title: "Makeup Application",
+        subtitle: "Bridal, Evening & Day",
         image: "/images/make-up/expert-bridal-makeup-application.jpeg",
         subcategories: [
             {
@@ -267,8 +267,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "medical",
-        title: "Medical",
-        subtitle: "Clinical Treatments",
+        title: "Medical Aesthetics",
+        subtitle: "Clinical & Advanced Treatments",
         image: "/images/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
         subcategories: [
             {
@@ -289,8 +289,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "permanent-makeup",
-        title: "Permanent Makeup",
-        subtitle: "Long-lasting Beauty",
+        title: "Permanent Makeup & Microblading",
+        subtitle: "Semi-Permanent Brows, Lips & Liner",
         image: "/images/lashes-brows/dramatic-volume-eyelash-extensions.png",
         subcategories: [
             {
@@ -326,8 +326,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "qms",
-        title: "QMS Medicosmetics",
-        subtitle: "Advanced Collagen",
+        title: "QMS Facials",
+        subtitle: "Advanced Collagen & Anti-Ageing",
         image: "/images/dermalogica/dermalogica-microneedling-treatment.png",
         subcategories: [
             {
@@ -351,8 +351,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "sunbed",
-        title: "Sunbed",
-        subtitle: "Tanning",
+        title: "Sunbed Tanning",
+        subtitle: "UV & Spray Tan",
         image: "/images/gallery/Specials/galeo-beauty-nail-specials-price-list.jpeg",
         subcategories: [
             {
@@ -416,8 +416,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "hair",
-        title: "Hair & Styling",
-        subtitle: "Cut, Colour & Style",
+        title: "Hair Cuts, Colour & Styling",
+        subtitle: "Cut, Colour, Blow Dry & Treatments",
         image: "/images/gallery/Laser-and-IPL/ipl-laser-hair-removal-underarm-treatment.jpeg",
         subcategories: [
             {
@@ -514,8 +514,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "nails",
-        title: "Nails",
-        subtitle: "Manicure & Pedicure",
+        title: "Nail Care & Nail Art",
+        subtitle: "Manicure, Pedicure & Nail Design",
         image: "/images/gallery/Nails/nude-almond-gel-nails-galeo-beauty-salon.jpeg",
         subcategories: [
             {
@@ -547,8 +547,8 @@ export const serviceCategoriesContent: ServiceCategoryContent[] = [
     // ========================================
     {
         id: "lashes-brows",
-        title: "Lashes & Brows",
-        subtitle: "Enhancements",
+        title: "Lash Extensions & Brow Styling",
+        subtitle: "Extensions, Lifts, Tints & Lamination",
         image: "/images/lashes-brows/eyebrow-microblading-hair-strokes-transformation.png",
         subcategories: [
             {

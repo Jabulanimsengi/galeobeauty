@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
       }
     }
 
-    // 2. Category inference for stale slugs (services that were renamed/removed but are still indexed)
+    // 2. Category inference for stale slugs (services renamed/removed but still indexed by Google)
     const staleCategoryMap: Record<string, string> = {
       // Skin / Dermalogica
       "multivitamin-skin": "dermalogica", "pro-dermaplaning-30": "dermalogica", "neurosculpt-30": "dermalogica",
@@ -74,8 +74,9 @@ const nextConfig: NextConfig = {
       "powderpixel-brows": "permanent-makeup", "hybrid-brows": "permanent-makeup",
       "eyeliner-top": "permanent-makeup", "eyeliner-bottom": "permanent-makeup",
       "full-lips-contour": "permanent-makeup", "lip-liner": "permanent-makeup",
-      // Sunbed
+      // Sunbed — old naming conventions
       "sunbed-10-sessions": "sunbed", "sunbed-20-sessions": "sunbed", "spraytan": "sunbed",
+      "sunbed-course-10": "sunbed", "sunbed-course-20": "sunbed",
       // Waxing
       "lip-wax": "waxing", "cheek-wax": "waxing", "nose-wax": "waxing", "ear-wax": "waxing",
       "under-arm-wax": "waxing", "full-tummy-wax": "waxing", "chest-wax": "waxing",
@@ -122,35 +123,131 @@ const nextConfig: NextConfig = {
       "utip-60cm-dark": "hair-extensions", "utip-60cm-light": "hair-extensions",
     };
 
-    // 3. Build redirect rules for ALL indexed slugs
+    // 2b. Precise old-slug → current-slug remaps.
+    //     When known, redirect to the specific service page rather than just the category.
+    const staleSlugRemaps: Record<string, string> = {
+      // Sunbed
+      "sunbed-course-10": "sunbed-10",
+      "sunbed-course-20": "sunbed-20",
+      "sunbed-10-sessions": "sunbed-10",
+      "sunbed-20-sessions": "sunbed-20",
+      "spraytan": "spraytan",
+      // Waxing (old slug → current item id)
+      "brazillian-wax": "wax-brazilian",
+      "hollywood-wax": "wax-hollywood",
+      "lip-wax": "wax-lip",
+      "cheek-wax": "wax-cheek",
+      "nose-wax": "wax-nose",
+      "ear-wax": "wax-ear",
+      "under-arm-wax": "wax-underarm",
+      "full-tummy-wax": "wax-tummy",
+      "chest-wax": "wax-chest",
+      "half-back-wax": "wax-half-back",
+      "full-back-wax": "wax-full-back",
+      "men-back-wax": "wax-men-back",
+      "butt-wax": "wax-butt",
+      "half-arm-wax": "wax-half-arm",
+      "full-arm-wax": "wax-full-arm",
+      "half-leg-wax": "wax-half-leg",
+      "full-leg-wax": "wax-full-leg",
+      // IPL (old slug → current item id)
+      "brazillian-ipl": "ipl-brazilian",
+      "hollywood-ipl": "ipl-hollywood",
+      "full-face-ipl": "ipl-full-face",
+      "full-face-neck-ipl": "ipl-full-face-neck",
+      "under-arm-ipl": "ipl-underarm",
+      "belly-button-ipl": "ipl-belly-button",
+      "stomach-ipl": "ipl-stomach",
+      "toes-feet-ipl": "ipl-toes-feet",
+      "full-buttocks-ipl": "ipl-buttocks",
+      "bikini-sides-ipl": "ipl-bikini-sides",
+      "half-leg-ipl": "ipl-half-leg",
+      "full-leg-ipl": "ipl-full-leg",
+      "half-arm-ipl": "ipl-half-arm",
+      "full-arm-ipl": "ipl-full-arm",
+      "beardline-ipl": "ipl-beardline",
+      "neck-ipl": "ipl-neck",
+      "neck-ipl-men": "ipl-neck-men",
+      "tattoo-removal": "tattoo-removal",
+      // Dermalogica — slugs that still exist unchanged
+      "pro-dermaplaning-30": "pro-dermaplaning-30",
+      "neurosculpt-30": "neurosculpt-30",
+      "luminfusion": "luminfusion",
+      "melanopro-peel": "melanopro-peel",
+      "hydraderm": "hydraderm",
+      "pro-microneedling": "pro-microneedling",
+      "nanoinfusion": "nanoinfusion",
+      "ultra-calming-facial": "ultra-calming-facial",
+      "skin-clearing-facial": "skin-clearing-facial",
+      "age-smart-facial": "age-smart-facial",
+      "power-peel-30": "power-peel-30",
+      "power-peel-60": "power-peel-60",
+      // QMS — slugs that still exist unchanged
+      "activator-treatment": "activator-treatment",
+      "deep-pore-cleansing": "deep-pore-cleansing",
+      "rejuvenating-facial": "rejuvenating-facial",
+      "collagen-facial": "collagen-facial",
+      "sensitive-skin-facial": "sensitive-skin-facial",
+      // Permanent Makeup — unchanged
+      "powderpixel-brows": "powderpixel-brows",
+      "hybrid-brows": "hybrid-brows",
+      "eyeliner-top": "eyeliner-top",
+      "eyeliner-bottom": "eyeliner-bottom",
+      "full-lips-contour": "full-lips-contour",
+      "lip-liner": "lip-liner",
+      // Makeup — unchanged
+      "day-makeup": "day-makeup",
+      "evening-makeup": "evening-makeup",
+      // Lashes — where current id is known
+      "glamour-lashes": "glamour-lashes",
+      "lash-lamination": "lash-lamination",
+      "brow-henna": "brow-henna",
+      // Hair — old slug → current item id
+      "botox-short": "botox",
+      "botox-medium": "botox",
+      "botox-long": "botox",
+      "brazilian-blow-short": "brazilian-short",
+      "brazilian-blow-long": "brazilian-long",
+      "brazilian-blow-extra-long": "brazilian-xl",
+      "short-upstyle": "upstyle-short",
+      "medium-upstyle": "upstyle-medium",
+      "long-upstyle": "upstyle-long",
+      "medium-blow": "blow-medium",
+      "long-blow": "blow-long",
+      "extra-long-blow": "blow-xl",
+    };
+
+    // 3. Build flat /prices/[slug] redirect rules for all previously indexed slugs
     const flatServiceRedirects: Array<{ source: string; destination: string; permanent: boolean }> = [];
     const seen = new Set<string>();
 
-    // Handle all slugs from sitemap-config (previously indexed)
     for (const slug of SERVICE_SLUGS) {
       if (seen.has(slug)) continue;
       seen.add(slug);
 
       const currentCat = slugToCat.get(slug);
       if (currentCat) {
-        // Current service → redirect to exact page
+        // Current service: redirect flat URL to canonical category/slug page
         flatServiceRedirects.push({
           source: `/prices/${slug}`,
           destination: `/prices/${currentCat}/${slug}`,
           permanent: true,
         });
       } else {
-        // Stale slug → redirect to category page
+        // Stale slug: redirect to specific service if remapped, otherwise to category
         const fallbackCat = staleCategoryMap[slug] || null;
+        const remappedSlug = staleSlugRemaps[slug] || null;
         flatServiceRedirects.push({
           source: `/prices/${slug}`,
-          destination: fallbackCat ? `/prices/${fallbackCat}` : `/prices`,
+          destination: fallbackCat
+            ? (remappedSlug ? `/prices/${fallbackCat}/${remappedSlug}` : `/prices/${fallbackCat}`)
+            : `/prices`,
           permanent: true,
         });
       }
     }
 
-    // Also redirect current services not in SERVICE_SLUGS
+    // Also cover any current services not yet in SERVICE_SLUGS
     for (const [slug, cat] of slugToCat) {
       if (!seen.has(slug)) {
         flatServiceRedirects.push({
@@ -159,6 +256,22 @@ const nextConfig: NextConfig = {
           permanent: true,
         });
       }
+    }
+
+    // 4. Generate /prices/[category]/[staleSlug] redirects for ALL stale slugs.
+    //    This is the key fix: Google indexed category/service URLs with old slugs.
+    //    Since dynamicParams=false, any unrecognised slug in the [service] segment 404s.
+    //    We must redirect /prices/[cat]/[oldSlug] → /prices/[cat]/[currentSlug or just /prices/[cat].
+    const staleCategoryServiceRedirects: Array<{ source: string; destination: string; permanent: boolean }> = [];
+    for (const [staleSlug, cat] of Object.entries(staleCategoryMap)) {
+      // If this slug still exists as a current service, no redirect needed — the page still works
+      if (slugToCat.has(staleSlug)) continue;
+      const remappedSlug = staleSlugRemaps[staleSlug] || null;
+      staleCategoryServiceRedirects.push({
+        source: `/prices/${cat}/${staleSlug}`,
+        destination: remappedSlug ? `/prices/${cat}/${remappedSlug}` : `/prices/${cat}`,
+        permanent: true,
+      });
     }
 
     return [
@@ -180,6 +293,9 @@ const nextConfig: NextConfig = {
       { source: '/permanent-makeup', destination: '/prices/permanent-makeup', permanent: true },
       { source: '/bridal-beauty', destination: '/prices', permanent: true },
       { source: '/matric-dance', destination: '/prices', permanent: true },
+
+      // === Programmatically generated: /prices/[category]/[staleSlug] → correct page ===
+      ...staleCategoryServiceRedirects,
 
       // === Flat /prices/[slug] → /prices/[category]/[slug] or /prices/[category] ===
       ...flatServiceRedirects,

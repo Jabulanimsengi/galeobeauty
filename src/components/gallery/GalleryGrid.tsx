@@ -18,7 +18,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
 
     // Get unique categories and sort them by requested order
     const categories = Array.from(new Set(items.map((item) => item.category))).sort((a, b) => {
-        const order = ["Lashes & Brows", "Nails", "Permanent Makeup"];
+        const order = ["Lash Extensions & Brow Styling", "Nails", "Permanent Makeup & Microblading"];
         const indexA = order.indexOf(a);
         const indexB = order.indexOf(b);
 

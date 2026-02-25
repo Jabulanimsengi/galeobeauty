@@ -46,9 +46,9 @@ export function getGalleryImages(): GalleryItem[] {
                             .join(' ');
 
                         if (category.name === "lashes-brows") {
-                            formattedCategory = "Lashes & Brows";
+                            formattedCategory = "Lash Extensions & Brow Styling";
                         } else if (category.name === "laser-ipl") {
-                            formattedCategory = "Laser & IPL";
+                            formattedCategory = "IPL Hair Removal";
                         }
 
                         items.push({
