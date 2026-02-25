@@ -72,7 +72,7 @@ export function AboutClient() {
                             >
                                 <div className="aspect-[4/5] relative rounded-lg overflow-hidden">
                                     <CloudinaryImage
-                                        src="/images/founder_dandi.jpeg"
+                                        src="/images/founder_dandi.jpg"
                                         alt="Dandi Meyer - Founder of Galeo Beauty Salon in Hartbeespoort, Harties"
                                         fill
                                         className="object-cover"

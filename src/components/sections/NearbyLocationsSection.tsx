@@ -47,14 +47,6 @@ export function NearbyLocationsSection({
 
     // Helper to determine the correct link
     const getLocationLink = (slug: string) => {
-        // EXCLUSION STRATEGY:
-        // Hartbeespoort & Harties are the "Home Base".
-        // Instead of linking to a /locations/hartbeespoort/... duplicate page,
-        // we link to the MAIN service page (canonical source of truth).
-        if ((slug === "hartbeespoort" || slug === "harties") && categorySlug && serviceSlug) {
-            return `/prices/${categorySlug}/${serviceSlug}`;
-        }
-        // Fallback or other locations
         return `/locations/${slug}`;
     };
 

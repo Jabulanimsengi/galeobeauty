@@ -83,7 +83,7 @@ export function Footer() {
                         <ul className="space-y-3">
                             <li>
                                 <NavLink
-                                    href="/"
+                                    href="/locations/hartbeespoort"
                                     className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block"
                                 >
                                     Hartbeespoort
@@ -166,27 +166,27 @@ export function Footer() {
                         </h4>
                         <ul className="space-y-3">
                             <li>
-                                <NavLink href="/permanent-makeup" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/prices/permanent-makeup" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Permanent Makeup
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/body-contouring" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/prices/fat-freezing" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Body Contouring
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/anti-aging" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/prices/hart-aesthetics" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Anti-Aging
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/laser-hair-removal" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/prices/ipl" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Laser Hair Removal
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink href="/medical-spa" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
+                                <NavLink href="/prices/medical" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
                                     Medical Spa
                                 </NavLink>
                             </li>

@@ -400,13 +400,6 @@ export function getAllSEOParams(): { location: string; service: string }[] {
     const params: { location: string; service: string }[] = [];
 
     for (const location of TARGET_LOCATIONS) {
-        // EXCLUSION STRATEGY:
-        // Do not generate /locations/hartbeespoort/* pages.
-        // These are duplicates of the main /services/* pages which already target Hartbeespoort.
-        if (location.slug === 'hartbeespoort' || location.slug === 'harties') {
-            continue;
-        }
-
         for (const service of services) {
             params.push({
                 location: location.slug,
@@ -462,12 +455,6 @@ export function getPriorityParams(): { location: string; service: string }[] {
     const params: { location: string; service: string }[] = [];
 
     for (const loc of PRIORITY_LOCATIONS) {
-        // EXCLUSION STRATEGY:
-        // Exclude home base from programmatic generation
-        if (loc === 'hartbeespoort' || loc === 'harties') {
-            continue;
-        }
-
         if (!getLocationBySlug(loc)) continue;
 
         for (const service of services) {
