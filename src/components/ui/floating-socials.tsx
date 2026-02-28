@@ -109,7 +109,7 @@ export function FloatingSocials() {
                                     <span className="hidden sm:block max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium transition-all duration-300 group-hover:max-w-[100px] group-hover:pl-4">
                                         {social.label}
                                     </span>
-                                    <span className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center">
+                                    <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
                                         <Icon className="h-6 w-6" />
                                     </span>
                                 </motion.a>
@@ -129,7 +129,7 @@ export function FloatingSocials() {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ duration: 0.15 }}
-                        className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all duration-300 hover:bg-foreground/80"
+                        className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-all duration-300 hover:bg-foreground/80"
                         whileTap={{ scale: 0.95 }}
                         aria-label="Close social menu"
                     >
@@ -166,7 +166,7 @@ export function FloatingSocials() {
                                 e.stopPropagation();
                                 setIsLabelDismissed(true);
                             }}
-                            className="absolute -top-2 -right-2 z-10 flex items-center justify-center h-6 w-6 rounded-full bg-foreground/80 text-background shadow-md hover:bg-foreground transition-colors"
+                            className="absolute -top-3 -right-3 z-10 flex items-center justify-center h-8 w-8 rounded-full bg-foreground/80 text-background shadow-md hover:bg-foreground transition-colors"
                             aria-label="Dismiss label"
                         >
                             <X className="h-3.5 w-3.5" />
@@ -175,7 +175,7 @@ export function FloatingSocials() {
                         {/* Pill button */}
                         <button
                             onClick={() => setIsExpanded(true)}
-                            className="flex items-center gap-2 pl-4 sm:pl-5 py-1.5 sm:py-2 pr-1.5 sm:pr-2 rounded-full bg-[#25D366] text-white shadow-2xl transition-colors hover:bg-[#128C7E]"
+                            className="flex items-center gap-2 pl-4 sm:pl-5 py-2 sm:py-2.5 pr-2 sm:pr-2.5 rounded-full bg-[#25D366] text-white shadow-2xl transition-colors hover:bg-[#128C7E]"
                             aria-label="Chat with us on WhatsApp"
                         >
                             <span className="text-sm sm:text-base font-semibold whitespace-nowrap">Chat with us</span>

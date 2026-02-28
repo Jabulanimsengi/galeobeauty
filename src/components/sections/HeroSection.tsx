@@ -145,11 +145,24 @@ export function HeroSection() {
 
             {/* Ken Burns Image Carousel */}
             <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>
+                {/* LCP Optimization: Render priority image statically for immediate paint */}
+                <div className="absolute inset-0 w-full h-full z-0">
+                    <CloudinaryImage
+                        src={heroImages[0].src}
+                        alt={heroImages[0].alt}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 100vw"
+                        className="object-cover object-center"
+                        priority={true}
+                    />
+                </div>
+
                 <AnimatePresence initial={false}>
+                    {/* Only animate if it's not the first load, or just layer on top */}
                     <motion.div
                         key={currentSlide}
-                        className="absolute inset-0 w-full h-full"
-                        initial={{ opacity: 0 }}
+                        className="absolute inset-0 w-full h-full z-10"
+                        initial={{ opacity: currentSlide === 0 ? 1 : 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 1.2, ease: "easeInOut" }}
@@ -165,7 +178,7 @@ export function HeroSection() {
                                 src={heroImages[currentSlide].src}
                                 alt={heroImages[currentSlide].alt}
                                 fill
-                                sizes="100vw"
+                                sizes="(max-width: 768px) 100vw, 100vw"
                                 className="object-cover object-center"
                                 priority={currentSlide === 0}
                             />
@@ -175,7 +188,7 @@ export function HeroSection() {
             </div>
 
             {/* Dark overlay for text contrast - All devices */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 sm:bg-gradient-to-r sm:from-black/70 sm:via-black/50 sm:to-black/30 z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 sm:bg-gradient-to-r sm:from-black/70 sm:via-black/50 sm:to-black/30 z-20" />
 
             {/* Floating Decorative Elements - Desktop only */}
             <FloatingShape

@@ -77,9 +77,9 @@ export function Footer() {
 
                     {/* Top Areas */}
                     <div>
-                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                        <h3 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
                             Areas We Serve From Harties
-                        </h4>
+                        </h3>
                         <ul className="space-y-3">
                             <li>
                                 <NavLink
@@ -134,9 +134,9 @@ export function Footer() {
 
                     {/* Quick Links */}
                     <div>
-                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                        <h3 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
                             Quick Links
-                        </h4>
+                        </h3>
                         <ul className="space-y-3">
                             {navItems.map((item) => (
                                 <li key={item.href}>
@@ -161,9 +161,9 @@ export function Footer() {
 
                     {/* Popular Services - Internal Linking for SEO */}
                     <div className="lg:hidden xl:block">
-                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                        <h3 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
                             Popular Services in Hartbeespoort
-                        </h4>
+                        </h3>
                         <ul className="space-y-3">
                             <li>
                                 <NavLink href="/prices/permanent-makeup" className="text-background/70 hover:text-gold transition-colors text-sm hover:translate-x-1 inline-block">
@@ -200,9 +200,9 @@ export function Footer() {
 
                     {/* Contact Info */}
                     <div>
-                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                        <h3 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
                             Contact Us
-                        </h4>
+                        </h3>
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3 text-sm text-background/70">
                                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-gold" />
@@ -235,9 +235,9 @@ export function Footer() {
 
                     {/* Hours */}
                     <div>
-                        <h4 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
+                        <h3 className="text-lg font-bold uppercase tracking-wide mb-5 text-white">
                             Opening Hours
-                        </h4>
+                        </h3>
                         <ul className="space-y-3 text-sm text-background/70">
                             <li className="flex items-center gap-3">
                                 <Clock className="w-5 h-5 text-gold" />

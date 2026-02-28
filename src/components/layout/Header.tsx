@@ -120,9 +120,9 @@ export function Header() {
                         <SheetTrigger asChild className="lg:hidden">
                             <button
                                 aria-label="Toggle menu"
-                                className="relative z-50 p-2 focus:outline-none"
+                                className="relative z-50 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center focus:outline-none"
                             >
-                                <div className="flex flex-col justify-center items-center w-8 h-8 gap-1.5">
+                                <div className="flex flex-col justify-center items-center w-full h-full gap-1.5">
                                     <span className={cn(
                                         "block h-0.5 w-6 bg-foreground transition-transform duration-200",
                                         isMobileMenuOpen && "rotate-45 translate-y-2"

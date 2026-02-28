@@ -25,6 +25,13 @@ export const metadata: Metadata = {
     "IPL hair removal Hartbeespoort",
     "permanent makeup Hartbeespoort",
     "beauty treatments near Pretoria",
+    "best massage spa Harties",
+    "bridal makeup artist Hartbeespoort",
+    "fat freezing clinic North West",
+    "chemical peel near me",
+    "hybrid lashes Hartbeespoort",
+    "gel nails and acrylics Harties",
+    "dermal fillers and injectables Harties"
   ],
   alternates: {
     canonical: "https://www.galeobeauty.com",
