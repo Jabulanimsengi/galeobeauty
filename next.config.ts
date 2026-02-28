@@ -274,6 +274,38 @@ const nextConfig: NextConfig = {
       });
     }
 
+    // 5. Generate /locations/:location/[staleSlug] redirects for ALL stale slugs.
+    //    This prevents old service URLs indexed under specific locations from returning soft 404s.
+    const staleLocationServiceRedirects: Array<{ source: string; destination: string; permanent: boolean }> = [];
+    for (const [staleSlug, cat] of Object.entries(staleCategoryMap)) {
+      // If this slug still exists as a current service, no redirect needed
+      if (slugToCat.has(staleSlug)) {
+        // However, if the slug still exists, we must handle the case where it was
+        // navigated under the wrong location (soft 404s). In Galeo, the location
+        // schema only supports location/services, not categories. So for current slugs
+        // we bounce them back to the /locations/:location/[currentSlug] correctly if needed.
+        // Wait, if it exists, it should work natively in Next.js dynamically UNLESS
+        // it's a category. Categorical URLs shouldn't exist in locations!
+      }
+
+      const remappedSlug = staleSlugRemaps[staleSlug] || null;
+      staleLocationServiceRedirects.push({
+        source: `/locations/:location/${staleSlug}`,
+        destination: remappedSlug ? `/locations/:location/${remappedSlug}` : `/prices/${cat}`,
+        permanent: true,
+      });
+    }
+
+    // 6. Handle categorical locations. e.g. /locations/:location/hart-aesthetics
+    // Galeo does not support category URLs under /locations.
+    for (const cat of Array.from(new Set(Array.from(slugToCat.values())))) {
+      staleLocationServiceRedirects.push({
+        source: `/locations/:location/${cat}`,
+        destination: `/prices/${cat}`,
+        permanent: true,
+      });
+    }
+
     return [
       // === /services → /prices consolidation ===
       { source: '/services', destination: '/prices', permanent: true },
@@ -282,8 +314,11 @@ const nextConfig: NextConfig = {
 
       // === Category URL corrections (old wrong slugs → correct category IDs) ===
       { source: '/prices/lashes', destination: '/prices/lashes-brows', permanent: true },
+      { source: '/prices/lashes/:service', destination: '/prices/lashes-brows/:service', permanent: true },
       { source: '/prices/qms-facial', destination: '/prices/qms', permanent: true },
+      { source: '/prices/qms-facial/:service', destination: '/prices/qms/:service', permanent: true },
       { source: '/prices/pro-skin', destination: '/prices/dermalogica', permanent: true },
+      { source: '/prices/pro-skin/:service', destination: '/prices/dermalogica/:service', permanent: true },
 
       // === Root-level service page consolidation → /prices/ ===
       { source: '/laser-hair-removal', destination: '/prices/ipl', permanent: true },
@@ -296,6 +331,7 @@ const nextConfig: NextConfig = {
 
       // === Programmatically generated: /prices/[category]/[staleSlug] → correct page ===
       ...staleCategoryServiceRedirects,
+      ...staleLocationServiceRedirects,
 
       // === Flat /prices/[slug] → /prices/[category]/[slug] or /prices/[category] ===
       ...flatServiceRedirects,

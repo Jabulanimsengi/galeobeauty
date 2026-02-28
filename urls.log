@@ -1,0 +1,6 @@
+Checking URLs for 369 slugs across 2 locations...
+\n--- SUMMARY ---
+Total checked : 738
+✅ 200 OK      : 570
+↪️  308 Redirect: 168
+❌ 404 Missing : 0
