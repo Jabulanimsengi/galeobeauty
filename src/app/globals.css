@@ -129,10 +129,7 @@
     @apply border-border outline-ring/50;
   }
 
-  html {
-    /* Removed scroll-behavior: smooth to fix page transition jump issue */
-    /* Smooth scrolling is applied via JavaScript for in-page anchor links only */
-  }
+  /* html block removed: scroll-behavior: smooth was causing page transition jump issues. Smooth scrolling is applied via JavaScript for in-page anchor links only. */
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
@@ -315,6 +312,38 @@
 
   .preserve-3d {
     transform-style: preserve-3d;
+  }
+
+  /* ============================================
+     HERO ANIMATIONS FOR ZERO JS HYDRATION DELAY
+     ============================================ */
+  .animate-hero-text {
+    animation: heroFadeUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0;
+  }
+
+  .animate-hero-text-delay-1 {
+    animation-delay: 0.1s;
+  }
+
+  .animate-hero-text-delay-2 {
+    animation-delay: 0.2s;
+  }
+
+  .animate-hero-text-delay-3 {
+    animation-delay: 0.3s;
+  }
+
+  @keyframes heroFadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Hide scrollbar utility */

@@ -72,6 +72,7 @@ const nextConfig: NextConfig = {
       "day-makeup": "makeup", "evening-makeup": "makeup",
       // Permanent Makeup
       "powderpixel-brows": "permanent-makeup", "hybrid-brows": "permanent-makeup",
+      "combo-brows": "permanent-makeup",
       "eyeliner-top": "permanent-makeup", "eyeliner-bottom": "permanent-makeup",
       "full-lips-contour": "permanent-makeup", "lip-liner": "permanent-makeup",
       // Sunbed — old naming conventions
@@ -191,6 +192,7 @@ const nextConfig: NextConfig = {
       // Permanent Makeup — unchanged
       "powderpixel-brows": "powderpixel-brows",
       "hybrid-brows": "hybrid-brows",
+      "combo-brows": "hybrid-brows",
       "eyeliner-top": "eyeliner-top",
       "eyeliner-bottom": "eyeliner-bottom",
       "full-lips-contour": "full-lips-contour",

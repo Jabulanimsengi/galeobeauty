@@ -203,66 +203,46 @@ export function HeroSection() {
             {/* Content Overlay - All Devices */}
             <div className="relative z-30 w-full h-full flex flex-col justify-center px-5 sm:px-12 lg:px-16 xl:px-24 py-16 sm:py-12 lg:py-12">
                 <div className="max-w-3xl">
-                    <motion.div
-                        variants={containerVariants}
-                        initial="hidden"
-                        animate="visible"
-                    >
+                    <div>
                         {/* Trust Label */}
-                        <motion.div
-                            variants={fadeUpVariants}
-                            className="inline-flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-6 lg:mb-8 bg-white/10 border border-white/20 rounded-full px-3 sm:px-4 py-1.5 sm:py-1.5 shadow-lg backdrop-blur-md"
+                        <div
+                            className="animate-hero-text inline-flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-6 lg:mb-8 bg-white/10 border border-white/20 rounded-full px-3 sm:px-4 py-1.5 sm:py-1.5 shadow-lg backdrop-blur-md"
                         >
-                            <motion.span
-                                className="flex h-2 w-2 rounded-full bg-gold"
-                                animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
-                                transition={{ duration: 2, repeat: Infinity }}
+                            <span
+                                className="flex h-2 w-2 rounded-full bg-gold animate-pulse"
                             />
                             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/90">
                                 Premium Beauty & Wellness
                             </span>
-                        </motion.div>
+                        </div>
 
                         {/* Headline with Staggered Animation */}
-                        <h1 className="font-serif text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
+                        <h1 className="animate-hero-text animate-hero-text-delay-1 font-serif text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
                             <span className="sr-only">Galeo Beauty Salon & Spa Hartbeespoort – </span>
-                            <motion.span variants={wordVariants} className="inline-block drop-shadow-lg">Science </motion.span>
-                            <motion.span
-                                variants={wordVariants}
-                                className="inline-block font-light italic text-white/80 drop-shadow-lg"
-                            >
+                            <span className="inline-block drop-shadow-lg">Science </span>
+                            <span className="inline-block font-light italic text-white/80 drop-shadow-lg">
                                 Meets
-                            </motion.span>
+                            </span>
                             <br />
-                            <motion.span
-                                variants={wordVariants}
-                                className="inline-block text-gold relative drop-shadow-lg"
-                            >
+                            <span className="inline-block text-gold relative drop-shadow-lg">
                                 Beauty.
-                                <motion.span
-                                    className="absolute -top-1 -right-5 sm:-top-1 sm:-right-6"
-                                    initial={{ opacity: 0, scale: 0 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: 1.2, duration: 0.5 }}
-                                >
+                                <span className="absolute -top-1 -right-5 sm:-top-1 sm:-right-6 animate-pulse">
                                     <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-gold" />
-                                </motion.span>
-                            </motion.span>
+                                </span>
+                            </span>
                         </h1>
 
                         {/* Description - shorter on mobile, full on larger screens */}
-                        <motion.p
-                            variants={fadeUpVariants}
-                            className="text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-5 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
+                        <p
+                            className="animate-hero-text animate-hero-text-delay-2 text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-5 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
                             <span className="sm:hidden">Hartbeespoort&apos;s premier beauty salon &amp; medical spa. 16 specialist treatments tailored to you.</span>
                             <span className="hidden sm:inline">Hartbeespoort&apos;s premier beauty salon &amp; medical spa — offering 16 specialist treatment categories from facials and injectables to body contouring and permanent makeup, all tailored to your unique beauty.</span>
-                        </motion.p>
+                        </p>
 
                         {/* CTA Group */}
-                        <motion.div
-                            variants={fadeUpVariants}
-                            className="hidden sm:flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
+                        <div
+                            className="animate-hero-text animate-hero-text-delay-3 hidden sm:flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
                         >
                             <Button
                                 asChild
@@ -288,12 +268,11 @@ export function HeroSection() {
                                     </span>
                                 </NavLink>
                             </Button>
-                        </motion.div>
+                        </div>
 
                         {/* Enhanced Trust Badges with Animated Counters */}
-                        <motion.div
-                            variants={fadeUpVariants}
-                            className="flex flex-wrap items-center gap-5 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/20"
+                        <div
+                            className="animate-hero-text animate-hero-text-delay-3 flex flex-wrap items-center gap-5 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/20"
                         >
                             <div className="flex items-center gap-2.5 sm:gap-3 group">
                                 <div className="p-2.5 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
@@ -320,8 +299,8 @@ export function HeroSection() {
                                     </span>
                                 </div>
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
