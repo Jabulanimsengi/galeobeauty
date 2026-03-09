@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -79,7 +79,7 @@ export default async function LocationHubPage({ params }: PageProps) {
     const location = getLocationBySlug(locationSlug);
 
     if (!location) {
-        notFound();
+        redirect("/locations");
     }
 
     const drivingContext = getDrivingContext(location);

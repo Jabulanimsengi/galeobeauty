@@ -17,16 +17,22 @@ CATEGORY_IDS.forEach((id) => VALID_CATEGORIES.add(id));
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
+  const forwardedProto = request.headers.get('x-forwarded-proto') || request.nextUrl.protocol.replace(':', '');
+  const isLocalhost =
+    hostname.startsWith('localhost') ||
+    hostname.includes('127.0.0.1');
+  const isCanonicalHost = hostname === 'www.galeobeauty.com';
 
-  // 1. Redirect non-www to www (for production only)
+  // 1. Force the canonical production origin in a single redirect
   if (
-    hostname.startsWith('galeobeauty.com') &&
-    !hostname.startsWith('www.') &&
-    !hostname.startsWith('localhost') &&
-    !hostname.includes('127.0.0.1')
+    !isLocalhost &&
+    (hostname.endsWith('galeobeauty.com') || hostname === 'www.galeobeauty.com') &&
+    (!isCanonicalHost || forwardedProto !== 'https')
   ) {
     const newUrl = new URL(request.url);
-    newUrl.hostname = `www.${hostname}`;
+    newUrl.protocol = 'https:';
+    newUrl.hostname = 'www.galeobeauty.com';
+    newUrl.port = '';
     return NextResponse.redirect(newUrl, 301);
   }
 
@@ -37,6 +43,7 @@ export function middleware(request: NextRequest) {
     '/sitemap/0.xml',
     '/sitemap/1.xml',
     '/sitemap/2.xml',
+    '/sitemap_index.xml',
   ];
 
   if (oldSitemapPatterns.includes(pathname)) {

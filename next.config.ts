@@ -260,6 +260,12 @@ const nextConfig: NextConfig = {
       }
     }
 
+    const flatServicesRedirects = flatServiceRedirects.map((redirect) => ({
+      source: redirect.source.replace('/prices/', '/services/'),
+      destination: redirect.destination,
+      permanent: redirect.permanent,
+    }));
+
     // 4. Generate /prices/[category]/[staleSlug] redirects for ALL stale slugs.
     //    This is the key fix: Google indexed category/service URLs with old slugs.
     //    Since dynamicParams=false, any unrecognised slug in the [service] segment 404s.
@@ -309,6 +315,7 @@ const nextConfig: NextConfig = {
     }
 
     return [
+      ...flatServicesRedirects,
       // === /services → /prices consolidation ===
       { source: '/services', destination: '/prices', permanent: true },
       { source: '/services/:category', destination: '/prices/:category', permanent: true },

@@ -14,7 +14,7 @@ interface GalleryGridProps {
 export function GalleryGrid({ items }: GalleryGridProps) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [currentLightboxImages, setCurrentLightboxImages] = useState<{ src: string, alt: string }[]>([]);
+    const [currentLightboxImages, setCurrentLightboxImages] = useState<{ src: string, alt: string, title?: string, subtitle?: string }[]>([]);
 
     // Get unique categories and sort them by requested order
     const categories = Array.from(new Set(items.map((item) => item.category))).sort((a, b) => {
@@ -40,7 +40,14 @@ export function GalleryGrid({ items }: GalleryGridProps) {
     };
 
     const openLightbox = (index: number, categoryItems: GalleryItem[]) => {
-        setCurrentLightboxImages(categoryItems.map(item => ({ src: item.src, alt: item.alt })));
+        setCurrentLightboxImages(
+            categoryItems.map((item) => ({
+                src: item.src,
+                alt: item.alt,
+                title: item.title,
+                subtitle: item.category,
+            }))
+        );
         setCurrentIndex(index);
         setLightboxOpen(true);
     };
@@ -55,7 +62,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                 return (
                     <div key={category} className="bg-white rounded-2xl shadow-sm border border-border/40 overflow-hidden">
                         {/* Category Header (Accordion Toggle) */}
-                        <div className="flex justify-start border-b border-border/40 md:border-b-0 md:border-r bg-white">
+                        <div className="flex justify-start border-b border-border/40 bg-white">
                             <button
                                 onClick={() => toggleCategory(category)}
                                 className="w-full flex items-center justify-between gap-4 p-5 sm:p-6 hover:bg-rose-50/30 transition-colors"
@@ -86,7 +93,6 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                     className="overflow-hidden border-t md:border-t-0 border-border/40"
                                 >
                                     <div className="p-4 sm:p-5">
-                                        {/* Uniform Grid Layout */}
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
                                             {categoryItems.map((item, index) => {
                                                 // Mobile: Hide after 2nd item (index 1)
@@ -115,13 +121,15 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                                                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 25vw"
                                                             />
 
-                                                            {/* Standard Gradient Overlay for image details */}
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                                             <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                                 <h4 className="text-white font-serif text-sm md:text-base line-clamp-2">
                                                                     {item.title}
                                                                 </h4>
+                                                                <p className="mt-1 text-xs text-white/75">
+                                                                    Tap to view larger
+                                                                </p>
                                                             </div>
 
                                                             <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:scale-100 scale-75">

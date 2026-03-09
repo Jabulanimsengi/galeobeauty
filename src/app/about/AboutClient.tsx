@@ -31,6 +31,14 @@ const values = [
     }
 ];
 
+const priorityLinks = [
+    { href: "/prices/hair", label: "Hair Salon" },
+    { href: "/prices/nails", label: "Nail Salon" },
+    { href: "/prices/massages", label: "Massage" },
+    { href: "/prices/permanent-makeup", label: "Permanent Makeup" },
+    { href: "/prices/lashes-brows", label: "Lashes & Brows" },
+];
+
 export function AboutClient() {
     return (
         <>
@@ -100,16 +108,30 @@ export function AboutClient() {
                                         At Galeo Beauty in Hartbeespoort, we believe true radiance is achieved when health and aesthetics align. Our approach is rooted in the understanding that beauty is biological, structural, and deeply personal.
                                     </p>
                                     <p>
-                                        We offer 16 specialist treatment categories — from Dermalogica facials, QMS Medicosmetics, and medical skin treatments to injectables &amp; fillers (Hart Aesthetics), body contouring, permanent makeup, IPL &amp; laser, lash &amp; brow artistry, waxing, tinting, hair salon services, hair extensions, nail artistry, sunbed &amp; tanning, and makeup — all under one roof at our Landsmeer salon.
+                                        We offer 16 specialist treatment categories — from Dermalogica facials, QMS Medicosmetics, and medical skin treatments to injectables and fillers through Hart Aesthetics, body contouring, permanent makeup, IPL and laser, lash and brow artistry, waxing, tinting, hair salon services, hair extensions, nail artistry, sunbed and tanning, and makeup — all under one roof at our Landsmeer salon.
                                     </p>
                                     <p>
                                         Every treatment delivers visible, tangible results while offering the sensory experience of a luxury spa near Hartbeespoort Dam.
+                                    </p>
+                                    <p>
+                                        Clients searching for Galeo Beauty reviews consistently find trusted feedback from Google and Fresha, reflecting the quality of care, professionalism and results our Hartbeespoort team is known for.
                                     </p>
                                 </div>
                                 <div className="mt-10">
                                     <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-white rounded-full px-8">
                                         <NavLink href="/prices">Explore Our Treatments</NavLink>
                                     </Button>
+                                </div>
+                                <div className="mt-6 flex flex-wrap gap-3">
+                                    {priorityLinks.map((link) => (
+                                        <NavLink
+                                            key={link.href}
+                                            href={link.href}
+                                            className="rounded-full border border-gold/30 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                        >
+                                            {link.label}
+                                        </NavLink>
+                                    ))}
                                 </div>
                             </motion.div>
                         </div>

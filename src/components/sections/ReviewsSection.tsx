@@ -126,8 +126,19 @@ export function ReviewsSection() {
                         What Clients Say About Galeo Beauty <span className="text-gold">Hartbeespoort</span>
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-                        Real reviews from real clients at our Harties salon. See why we&apos;re the top-rated beauty destination near Hartbeespoort Dam.
+                        Real Galeo Beauty reviews from verified clients at our Harties salon. See why guests book us for hair, nails, beauty, Hart Aesthetics and spa treatments near Hartbeespoort Dam.
                     </p>
+                    <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+                        <div className="rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-sm text-foreground">
+                            <span className="font-semibold text-gold">4.9/5</span> average rating
+                        </div>
+                        <div className="rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-sm text-foreground">
+                            <span className="font-semibold text-gold">159+</span> verified reviews
+                        </div>
+                        <div className="rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-sm text-foreground">
+                            Google and Fresha feedback
+                        </div>
+                    </div>
                 </motion.div>
 
                 <div className="relative group">
@@ -261,7 +272,7 @@ export function ReviewsSection() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-gold hover:text-gold-dark transition-colors font-medium"
                     >
-                        <span>See all reviews on Google</span>
+                        <span>See Galeo Beauty reviews on Google</span>
                         <ExternalLink className="w-4 h-4" />
                     </a>
                 </motion.div>

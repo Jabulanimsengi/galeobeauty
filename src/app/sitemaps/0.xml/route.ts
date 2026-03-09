@@ -91,7 +91,7 @@ export async function GET() {
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
-      <image:loc>https://www.galeobeauty.com/images/og-image.jpg</image:loc>
+      <image:loc>https://www.galeobeauty.com/images/logo.png</image:loc>
       <image:title>${escapeXml(service.keyword + " at Galeo Beauty")}</image:title>
     </image:image>
   </url>`);
@@ -106,11 +106,8 @@ export async function GET() {
     <priority>0.9</priority>
   </url>`);
 
-  // Add location hubs for all SITEMAP_0_LOCATIONS (136 locations)
+  // Add location hubs for all SITEMAP_0_LOCATIONS
   for (const location of SITEMAP_0_LOCATIONS) {
-    // EXCLUSION STRATEGY: Exclude home base from sitemap as pages are disabled
-    if (location === 'hartbeespoort' || location === 'harties') continue;
-
     entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}`)}</loc>
@@ -120,11 +117,8 @@ export async function GET() {
   </url>`);
   }
 
-  // Add location service pages for all SITEMAP_0_LOCATIONS (excluding low-value variants)
+  // Add location service pages for all SITEMAP_0_LOCATIONS
   for (const location of SITEMAP_0_LOCATIONS) {
-    // EXCLUSION STRATEGY: Exclude home base from sitemap as pages are disabled
-    if (location === 'hartbeespoort' || location === 'harties') continue;
-
     for (const service of services) {
       entries.push(`
   <url>

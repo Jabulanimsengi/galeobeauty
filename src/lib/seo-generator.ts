@@ -89,51 +89,51 @@ export function generateServiceDescription(
         const lengthMatch = nameLower.match(/(\d+)cm/);
         const length = lengthMatch ? lengthMatch[1] + "cm" : "";
 
-        template = `{Transform|Instantly elevate|Upgrade} your {look|style|appearance} with our {premium|luxury|top-tier|exclusive} **${item.name}**. ` +
+        template = `{Transform|Instantly elevate|Upgrade} your {look|style|appearance} with our {premium|luxury|top-tier|exclusive} ${item.name}. ` +
             `These {high-quality|professional-grade|salons-quality} extensions are {perfect|ideal|designed} for {adding|creating} {luxurious|stunning|beautiful} {volume|thickness} and {length|body}${length ? ` (${length})` : ""}. ` +
             `{Made|Crafted} from {100%|Double Drawn} {European |}Remy Human Hair, they {ensure|guarantee|deliver} a {seamless|flawless|perfect|natural} {blend|match|integration}. ` +
             `{Whether you want|Perfect for} {everyday glamour|daily wear} or a {special occasion|wedding|matric dance}, these extensions provide a {comfortable|secure} fit. ` +
-            `{Available|Book today|Secure your appointment} from just **${item.price}**.`;
+            `{Available|Book today|Secure your appointment} from just ${item.price}.`;
     }
 
     // -- LASHES & BROWS SPINTAX --
     else if (categoryTitle.includes("Lash") || categoryTitle.includes("Brow") || nameLower.includes("microblading")) {
-        template = `{Enhance|Highlight|Define} your natural {features|beauty|look} with our {expert|professional|precision} **${item.name}**. ` +
+        template = `{Enhance|Highlight|Define} your natural {features|beauty|look} with our {expert|professional|precision} ${item.name}. ` +
             `We focus on {precision|detail|symmetry} to {frame your face perfectly|enhance your eye shape|create a flawless look}. ` +
             `Using {gentle, high-quality products|premium materials|industry-leading techniques}, we ensure a {comfortable experience|relaxing session} and {stunning|beautiful|striking}, {long-lasting|durable} results. ` +
             `{Simplify|Streamline|Cut down} your {daily|morning} {beauty routine|makeup application} with this {transformative|popular|must-have} treatment. ` +
-            `{Prices start at|Available for|Book your session for} **${item.price}**.`;
+            `{Prices start at|Available for|Book your session for} ${item.price}.`;
     }
 
     // -- SKINCARE / FACIALS / AESTHETICS SPINTAX --
     else if (categoryTitle.includes("Skin") || categoryTitle.includes("Facial") || categoryTitle.includes("Medical")) {
-        template = `{Rejuvenate|Revitalize|Refresh|Transform} your {skin|complexion} with our {specialized|advanced|clinical-grade} **${item.name}**. ` +
+        template = `{Rejuvenate|Revitalize|Refresh|Transform} your {skin|complexion} with our {specialized|advanced|clinical-grade} ${item.name}. ` +
             `{Carefully designed|Specifically tailored|Expertly formulated} to target {specific skin concerns|your unique needs|stubborn skin issues}, this {professional|medical-grade} treatment uses {advanced protocols|premium formulations|cutting-edge techniques} to {hydrate|brighten|restore|renew} your {complexion|skin barrier}. ` +
             `{Ideal|Perfect|Excellent} for {maintaining healthy skin|addressing problem areas|anti-aging prevention|achieving that radiant glow} in a {relaxing|clinical, safe|luxurious} spa environment. ` +
-            `{Priced at|Available from|Invest in your skin from} **${item.price}**.`;
+            `{Priced at|Available from|Invest in your skin from} ${item.price}.`;
     }
 
     // -- NAILS SPINTAX --
     else if (categoryTitle.includes("Nail") || nameLower.includes("pedicure") || nameLower.includes("manicure") || nameLower.includes("gel")) {
-        template = `{Treat|Pamper} your hands and feet to our {professional|signature|flawless} **${item.name}**. ` +
+        template = `{Treat|Pamper} your hands and feet to our {professional|signature|flawless} ${item.name}. ` +
             `Using {top-tier products|premium brands|high-quality gels}, our {experienced|skilled} technicians ensure {long-lasting results|chip-free wear|stunning durability} and {pristine cuticle care|perfect prep}. ` +
             `{Whether you need a durability boost|If you are looking for gorgeous everyday wear|Preparing for a special event}, this treatment delivers the {perfect|ultimate|flawless} finish. ` +
-            `{Look polished|Feel put-together|Treat yourself} for **${item.price}**.`;
+            `{Look polished|Feel put-together|Treat yourself} for ${item.price}.`;
     }
 
     // -- BODY / SLIMMING --
     else if (categoryTitle.includes("Fat") || categoryTitle.includes("Slimming")) {
-        template = `{Sculpt|Contour|Reshape} your body with our {advanced|non-invasive|cutting-edge} **${item.name}**. ` +
+        template = `{Sculpt|Contour|Reshape} your body with our {advanced|non-invasive|cutting-edge} ${item.name}. ` +
             `This {targeted|specialized} treatment is {designed|proven} to {reduce stubborn fat|tone muscle|improve body contours} {effectively|safely|without surgery}. ` +
             `{Experience visible results|Achieve your body goals|Target localized problem areas} with {minimal|zero} downtime. ` +
-            `{Start your journey|Book your consultation|Transform your silhouette} from **${item.price}**.`;
+            `{Start your journey|Book your consultation|Transform your silhouette} from ${item.price}.`;
     }
 
     // -- GENERIC FALLBACK SPINTAX --
     else {
-        template = `{Experience|Discover|Enjoy} the {best|ultimate|finest} **${item.name}** at Galeo Beauty. ` +
-            `Part of our {professional|premium|exclusive} **${categoryTitle}** {range|collection}, this {treatment|service} is {carefully designed|tailored} to {enhance your beauty and confidence|make you look and feel your best}. ` +
-            `{Book your appointment today|Secure your spot|Treat yourself today} for {just|only} **${item.price}**.`;
+        template = `{Experience|Discover|Enjoy} the {best|ultimate|finest} ${item.name} at Galeo Beauty. ` +
+            `Part of our {professional|premium|exclusive} ${categoryTitle} {range|collection}, this {treatment|service} is {carefully designed|tailored} to {enhance your beauty and confidence|make you look and feel your best}. ` +
+            `{Book your appointment today|Secure your spot|Treat yourself today} for {just|only} ${item.price}.`;
     }
 
     // If there is a manual description, we can prepend it or mix it in. For highly dynamic SEO, parsing the spintax is better.

@@ -63,7 +63,7 @@ export const metadata: Metadata = {
       "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Skincare, facials, nails, lashes & more. Serving Centurion & Pretoria.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/images/logo.png",
         width: 1200,
         height: 630,
         alt: "Galeo Beauty Salon",
@@ -75,7 +75,7 @@ export const metadata: Metadata = {
     title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
     description:
       "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Facials, nails, lashes & more.",
-    images: ["/og-image.jpg"],
+    images: ["/images/logo.png"],
   },
   robots: {
     index: true,

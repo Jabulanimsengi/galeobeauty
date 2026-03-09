@@ -6,6 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "typecheck": "tsc --noEmit",
+    "validate:seo": "node scripts/validate-seo.js",
+    "audit:routes": "node scripts/audit-routes.js",
     "start": "next start",
     "lint": "eslint"
   },

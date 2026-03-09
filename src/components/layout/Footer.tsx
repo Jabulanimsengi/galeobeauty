@@ -29,7 +29,7 @@ export function Footer() {
                             />
                         </NavLink>
                         <p className="text-background/70 text-sm leading-relaxed max-w-xs">
-                            Hartbeespoort&apos;s premier beauty salon &amp; medical spa. 16 specialist treatment categories including facials, injectables, body contouring, permanent makeup, nails, hair &amp; more at Landsmeer, near Hartbeespoort Dam.
+                            Hartbeespoort hair salon, nail salon, beauty salon and medical spa with trusted Galeo Beauty reviews, Hart Aesthetics services, and 16 specialist treatment categories at Landsmeer near Hartbeespoort Dam.
                         </p>
                         <div className="flex gap-3">
                             <a

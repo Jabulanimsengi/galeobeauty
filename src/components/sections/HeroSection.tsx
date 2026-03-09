@@ -236,8 +236,8 @@ export function HeroSection() {
                         <p
                             className="animate-hero-text animate-hero-text-delay-2 text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-5 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
-                            <span className="sm:hidden">Hartbeespoort&apos;s premier beauty salon &amp; medical spa. 16 specialist treatments tailored to you.</span>
-                            <span className="hidden sm:inline">Hartbeespoort&apos;s premier beauty salon &amp; medical spa — offering 16 specialist treatment categories from facials and injectables to body contouring and permanent makeup, all tailored to your unique beauty.</span>
+                            <span className="sm:hidden">Hartbeespoort&apos;s hair, nails, beauty salon and medical spa for facials, lashes, massage and advanced aesthetics.</span>
+                            <span className="hidden sm:inline">Galeo Beauty is a Hartbeespoort hair salon, nail salon, beauty salon and medical spa offering hair, nails, facials, lashes, massage, permanent makeup and advanced aesthetics near Hartbeespoort Dam.</span>
                         </p>
 
                         {/* CTA Group */}

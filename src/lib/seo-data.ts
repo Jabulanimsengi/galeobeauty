@@ -309,6 +309,15 @@ export const PRIORITY_LOCATIONS = [
     // Key commuter cities (highest search volume)
     'johannesburg',                 // 1hr - Major metro - HIGHEST SEARCH VOLUME
     'pretoria',                     // 45min - Capital city - HIGHEST SEARCH VOLUME
+    'centurion',
+    'brits',
+    'vereeniging',
+    'ratanda',
+    'randfontein',
+    'moreleta-park',
+    'ennerdale',
+    'kempton-park',
+    'midstream',
 
     // Total: 10 locations × ~262 services = ~2,620 pages
     // Removed: landsmeer-estate, the-islands-estate, caribbean-beach-club, xanadu, 
@@ -337,31 +346,33 @@ export interface SEOService {
 export const HERO_SERVICES = [
     // Medical & Aesthetics
     "vaginal-tightening", "fractional-laser", "plasmage", "iv-drip",
-    "nefertiti-lift", "liquid-facelift", "russian-lip-1ml", "lip-filler-1ml", "botox-3-areas", "dermal-fillers-1ml", "fat-dissolving-injections",
+    "nefertiti-lift", "liquid-facelift", "russian-lip-1ml", "lip-filler-1ml", "dermal-filler-1ml", "collagen-biostimulator", "lemon-bottle-10ml",
 
     // Fat Freezing & Slimming
-    "fat-freezing-1-cup", "fat-freezing-2-cups", "fat-freezing-4-cups", "cavitation-slimming", "tesla-ems",
+    "fat-freezing-session", "fat-freezing-2-cups", "fat-freezing-4-cups", "slimming-injection",
 
     // Premium Facials & Peels
-    "dermalogica-pro-power-peel-60", "dermalogica-pro-nanoinfusion-60", "qms-collagen-recovery", "qms-neo-tissue-dermie", "qms-sk-alpha-revital",
-    "pro-microneedling", "dermaplaning-express", "chemical-peel",
+    "pro-power-peel", "nanoinfusion", "collagen-facial", "deep-pore-cleansing", "rejuvenating-facial",
+    "pro-microneedling", "chemical-peel", "luminfusion",
 
     // Laser & IPL
-    "ipl-full-leg", "ipl-brazilian", "ipl-full-face",
+    "ipl-full-leg", "ipl-brazilian", "ipl-full-face", "tattoo-removal",
 
     // Hair
-    "half-head-highlights", "full-head-highlights", "balayage", "brazilian-blowout-medium", "brazilian-blowout-long", "ladies-cut-and-blow",
-    "tape-extensions-20-40cm", "tape-extensions-40-50cm", "keratin-bonds",
+    "highlights-half-long", "highlights-full-long", "balayage", "brazilian-medium", "brazilian-long", "tint-roots",
 
     // Nails
-    "acrylic-full-set", "gel-overlay-hands", "gel-pedicure", "polygel-full-set", "rubber-base-gel",
+    "acrylic-tips", "gel-overlay-hands", "pedicure", "rubber-base",
 
     // Lashes & Permanent Makeup
-    "classic-lashes", "hybrid-lashes", "volume-lashes", "lash-lift-and-tint",
-    "microblading", "powder-brows", "lip-blush", "eyeliner-top-and-bottom",
+    "classic-lashes", "hybrid-lashes", "volume-lashes", "lash-lift-tint", "lash-lamination",
+    "microblading", "powderpixel-brows", "hybrid-brows", "full-lips-contour", "eyeliner-top",
 
     // Waxing
-    "brazilian-wax", "hollywood-wax", "full-leg-wax", "full-face-wax"
+    "wax-brazilian", "wax-hollywood", "wax-full-leg", "wax-full-face",
+
+    // Makeup & Tanning
+    "day-makeup", "spraytan", "sunbed-10", "sunbed-20"
 ];
 
 /**
@@ -463,6 +474,10 @@ export function getPriorityParams(): { location: string; service: string }[] {
     }
 
     return params;
+}
+
+export function isPriorityLocationService(locationSlug: string, serviceSlug: string): boolean {
+    return PRIORITY_LOCATIONS.includes(locationSlug) && HERO_SERVICES.includes(serviceSlug);
 }
 
 // Lazy-load services only when needed (not at module import time)
@@ -1657,30 +1672,126 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     // Location-specific FAQs — unique per location, always included
     const locationFAQs: FAQ[] = [
         {
-            question: `How do I get to Galeo Beauty from ${location.name}?`,
-            answer: `${drivingContext}. Our Hartbeespoort salon is easily accessible from ${location.name}, ${location.region}. We have ample parking and welcome walk-in ${service.keyword} appointments when available.`
+            question: `Is Galeo Beauty worth visiting from ${location.name} for ${service.keyword}?`,
+            answer: `${drivingContext}. Many clients travel from ${location.name} because they want a calmer Hartbeespoort salon experience, specialist treatments, and clear pricing before they book.`
         },
         {
-            question: `Do you serve ${location.name} clients for ${service.keyword}?`,
-            answer: `Yes! We welcome ${service.keyword} clients from ${location.name} and throughout ${location.region}. Many of our regular clients travel from ${location.name} for our professional treatments and personal service.`
+            question: `Do you regularly treat clients from ${location.name}?`,
+            answer: `Yes. We welcome clients from ${location.name} and the wider ${location.region} area for ${service.keyword}, and many return for maintenance appointments or planned treatment days in Hartbeespoort.`
         },
     ];
 
     // Universal FAQs with location context
     const universalFAQs: FAQ[] = [
         {
-            question: `How do I book ${service.keyword} from ${location.name}?`,
-            answer: `Booking ${service.keyword} is easy! Contact us via WhatsApp to schedule your appointment at our Hartbeespoort salon. ${service.keyword} is priced at ${service.price}. ${location.name} clients can also call us directly.`
+            question: `How do I book ${service.keyword}?`,
+            answer: `You can contact us directly to book ${service.keyword}, confirm the right treatment option, and choose a time that suits your schedule. Pricing for this service starts from ${service.price}.`
         },
         {
-            question: `Do you offer consultations for ${service.keyword} for ${location.name} residents?`,
-            answer: `Yes! We offer complimentary ${service.keyword} consultations for ${location.name} clients. This allows us to assess your needs, discuss expectations, and create a personalized treatment plan.`
+            question: `Do I need a consultation before booking ${service.keyword}?`,
+            answer: `For many services, yes. A consultation helps us confirm suitability, explain downtime or maintenance, and recommend the right version of ${service.keyword} for your goal.`
         },
     ];
 
+    const focusedCategoryFAQPools: Record<string, FAQ[]> = {
+        "hart-aesthetics": [
+            { question: `How long do ${service.keyword} results usually last?`, answer: `The answer depends on the product, treatment area and how your body responds. We give you a realistic maintenance timeline during consultation rather than promising a fixed number for everyone.` },
+            { question: `Is ${service.keyword} painful?`, answer: `Most clients describe the treatment as manageable rather than painful. Comfort depends on the exact procedure, and we use careful technique and support where needed.` },
+            { question: `Is there downtime after ${service.keyword}?`, answer: `Most aesthetic injectables have little to no downtime, but mild redness, swelling or bruising can happen. We explain exactly what to expect before you commit.` },
+            { question: `When should I expect to see results from ${service.keyword}?`, answer: `Some treatments show a result quickly, while others settle over days or weeks. We explain the expected timeline for ${service.keyword} during your appointment.` },
+        ],
+        "dermalogica": [
+            { question: `What makes ${service.keyword} different from a basic facial?`, answer: `${service.keyword} is chosen and adjusted around your actual skin concern using professional Dermalogica products rather than applying the same routine to everyone.` },
+            { question: `How often should I book ${service.keyword}?`, answer: `Most clients book every 4 to 6 weeks, but timing depends on your skin condition, home care and whether you are targeting maintenance or correction.` },
+            { question: `Can ${service.keyword} help with acne, pigmentation or dull skin?`, answer: `Often yes, but the right treatment depends on what your skin is doing now. We only recommend stronger corrective options when they fit your barrier and skin history.` },
+            { question: `What should I do after ${service.keyword}?`, answer: `Keep your routine gentle, use sunscreen, and avoid harsher actives if we advise it. Aftercare depends on how intensive the facial or peel was.` },
+        ],
+        "hair": [
+            { question: `Does ${service.keyword} suit all hair types?`, answer: `Most hair services can be adapted, but the technique, formula and timing should match your hair history, density and overall condition.` },
+            { question: `How often should I rebook ${service.keyword}?`, answer: `That depends on whether you are booking a cut, colour, toner, treatment or smoothing service, but many clients rebook hair maintenance every 6 to 8 weeks.` },
+            { question: `Will ${service.keyword} damage my hair?`, answer: `Professional hair services should be planned around the current condition of your hair. We adjust formulas and recommendations to protect compromised or previously processed hair.` },
+            { question: `Can ${service.keyword} help if my hair is dry or damaged?`, answer: `Sometimes, but not every hair service is corrective by itself. If your hair needs repair first, we may adjust the plan or recommend supportive treatments before pushing more chemical work.` },
+        ],
+        "ipl": [
+            { question: `What does IPL actually do?`, answer: `IPL uses targeted light energy to reduce active hair growth over a course of sessions. It works best when treatments are repeated in line with the hair cycle.` },
+            { question: `Is IPL hair removal permanent?`, answer: `IPL is best described as permanent hair reduction rather than guaranteed permanent hair removal. Many clients still need occasional top-up sessions later.` },
+            { question: `Does ${service.keyword} hurt?`, answer: `Most clients describe quick heat or a snapping sensation rather than severe pain. Comfort varies by treatment area and sensitivity.` },
+            { question: `How many IPL sessions will I need?`, answer: `Most plans need multiple sessions because not every hair is active at the same time. We advise the likely number after seeing the treatment area.` },
+        ],
+        "massages": [
+            { question: `Which massage is best for stress relief versus muscle tension?`, answer: `Swedish and aromatherapy usually suit relaxation, while deep tissue or targeted massage works better for tight muscles and recovery needs.` },
+            { question: `How long should I book a massage for?`, answer: `A 60-minute session is the most balanced option for most clients. Shorter sessions suit focused upper-body tension, while longer sessions fit a more indulgent spa experience.` },
+            { question: `Do you offer spa-style massages as well as more targeted treatment massages?`, answer: `Yes. Some bookings are focused on relaxation and others on pressure and tension relief, so we match the style to your goal.` },
+            { question: `Can I book a focused back, neck and shoulder massage instead of full body?`, answer: `Yes. If your tension is concentrated in one area, a shorter focused massage can be more useful than booking a full-body treatment.` },
+        ],
+        "permanent-makeup": [
+            { question: `How long does ${service.keyword} usually last?`, answer: `Most permanent makeup lasts around 1 to 3 years depending on the technique, your skin type, sun exposure, healing and touch-up schedule.` },
+            { question: `Is ${service.keyword} painful?`, answer: `Most clients feel pressure, vibration or a scratching sensation rather than strong pain. We use numbing support where appropriate to make treatment more comfortable.` },
+            { question: `What if I am unsure about shape or colour?`, answer: `We map the area and discuss pigment choice before we begin. We do not start until you have approved the plan and understand the healed look we are aiming for.` },
+            { question: `What is the healing period like after ${service.keyword}?`, answer: `The treated area usually looks stronger at first, then softens as it heals. We provide aftercare guidance so you know what is normal and what to avoid.` },
+        ],
+        "nails": [
+            { question: `How long does ${service.keyword} usually last?`, answer: `That depends on whether you are booking gel, acrylic, a fill or a pedicure, but many nail clients rebook within 2 to 3 weeks for maintenance.` },
+            { question: `Is ${service.keyword} safe for natural nails?`, answer: `It should be when the service is applied, removed and maintained properly. Technique and aftercare matter as much as the product itself.` },
+            { question: `Can I add nail art or custom finishes to ${service.keyword}?`, answer: `Usually yes. Nail art, french finishes, chrome and other extras can often be added depending on the base service and appointment time available.` },
+            { question: `How do I keep ${service.keyword} looking good between appointments?`, answer: `Use cuticle oil, avoid using your nails as tools, and rebook before lifting or breakage becomes worse. Regular maintenance usually protects the result.` },
+        ],
+        "lashes-brows": [
+            { question: `How long does ${service.keyword} usually take?`, answer: `Timing depends on the service. Brow treatments are usually shorter, while full lash sets take much longer than fills, lifts or tinting appointments.` },
+            { question: `How long do ${service.keyword} results last?`, answer: `That depends on the service. Lash extensions usually need fills every 2 to 3 weeks, while lash lifts, tints and brow treatments often last several weeks.` },
+            { question: `Will ${service.keyword} damage my natural lashes or brows?`, answer: `Not when the service is applied correctly and maintained properly. Safe technique and correct aftercare are what protect your natural lashes and brows.` },
+            { question: `What aftercare should I follow after ${service.keyword}?`, answer: `Aftercare varies by the treatment, but usually includes avoiding oil-based products around the area, keeping the area clean, and following our guidance on water, makeup and rubbing.` },
+        ],
+        "waxing": [
+            { question: `How long should hair be before waxing?`, answer: `Hair should usually be around 5 mm long so the wax can grip properly without causing unnecessary irritation.` },
+            { question: `What is the difference between a Brazilian and a Hollywood wax?`, answer: `A Brazilian usually leaves a small strip or shape, while a Hollywood removes everything. We can explain both clearly before treatment starts.` },
+            { question: `How often should I book waxing appointments?`, answer: `Most clients rebook every 3 to 6 weeks depending on the area and how quickly their hair grows back.` },
+            { question: `Is ${service.keyword} very painful if it is my first wax?`, answer: `First-time waxing is usually the most uncomfortable, but the sensation is brief and we work with technique and product choice to make it more manageable.` },
+        ],
+        "medical": [
+            { question: `How much downtime should I expect from ${service.keyword}?`, answer: `Downtime depends entirely on the treatment. Some clinical services have very little recovery, while stronger resurfacing treatments need a few days of healing.` },
+            { question: `Is a consultation required before ${service.keyword}?`, answer: `Usually yes. Advanced or clinical treatments should only be booked after we have checked suitability, expectations and your skin or medical history.` },
+            { question: `Is ${service.keyword} painful?`, answer: `Comfort depends on the treatment intensity and area. Some services feel warm or uncomfortable rather than painful, and stronger treatments may use numbing support.` },
+            { question: `When should I expect to see results from ${service.keyword}?`, answer: `Some clinical treatments improve the skin gradually over several weeks as healing and collagen renewal happen. We set realistic timelines during consultation.` },
+        ],
+        "qms": [
+            { question: `What makes ${service.keyword} different from a standard facial?`, answer: `QMS treatments are positioned as more corrective, anti-aging and product-driven than a basic relaxation facial, with stronger focus on skin quality and collagen support.` },
+            { question: `Who is ${service.keyword} best suited for?`, answer: `It is especially popular for clients focused on anti-aging, dullness, dehydration and skin refinement, but the right QMS facial still depends on your current skin condition.` },
+            { question: `How often should I book ${service.keyword}?`, answer: `Many clients book every 4 to 6 weeks, especially when they are working on firmness, glow or longer-term skin improvement.` },
+            { question: `Will I see results after one ${service.keyword} session?`, answer: `Most clients notice an immediate improvement in glow and skin feel, but stronger anti-aging benefits usually build over a series of treatments.` },
+        ],
+        "slimming": [
+            { question: `Is ${service.keyword} for weight loss or body contouring?`, answer: `Most treatments in this category are better for shaping stubborn areas, inch loss and contouring than for replacing overall weight-loss efforts.` },
+            { question: `How many sessions of ${service.keyword} do most people need?`, answer: `That depends on the treatment and your goal, but body contouring usually works best as a planned course rather than a once-off session.` },
+            { question: `When will I notice changes from ${service.keyword}?`, answer: `Some clients notice early changes quickly, but visible contouring often builds over several weeks as the body responds to the treatment plan.` },
+            { question: `Can ${service.keyword} be combined with other body treatments?`, answer: `Often yes. We can advise whether combining treatments makes sense or whether it is better to focus on one approach first.` },
+        ],
+        "makeup": [
+            { question: `Should I book a trial before ${service.keyword}?`, answer: `For bridal or important-event makeup, yes. A trial helps confirm the look, timing, skin prep and product preferences before the actual event.` },
+            { question: `How long will ${service.keyword} last?`, answer: `Professional makeup is designed to hold for hours, but longevity still depends on skin type, weather, tears, dancing and how much touch-up support you need.` },
+            { question: `Do I need to arrive with makeup-free skin for ${service.keyword}?`, answer: `It is usually best to arrive with clean skin if possible, unless we have advised specific prep for your booking.` },
+            { question: `Can you adapt ${service.keyword} for a natural look or full glam?`, answer: `Yes. We tailor the finish to the event, your features and how soft or dramatic you want the final look to be.` },
+        ],
+        "sunbed": [
+            { question: `Should I choose a spray tan or a sunbed session?`, answer: `A spray tan is the better option if you want fast cosmetic colour without UV exposure, while sunbed tanning is for clients deliberately building a tan over time.` },
+            { question: `How long does a spray tan usually last?`, answer: `Most spray tans last around 5 to 7 days depending on your prep, shower routine, exfoliation and moisturising.` },
+            { question: `How often should I use a sunbed?`, answer: `That depends on your skin type and tanning history. We keep sessions controlled and spaced responsibly rather than recommending overuse.` },
+            { question: `What should I do before a spray tan?`, answer: `Exfoliate ahead of time, avoid heavy lotion or oil on the day, and wear loose clothing after the appointment so the tan can develop evenly.` },
+        ],
+        "fat-freezing": [
+            { question: `How many sessions of ${service.keyword} do I usually need?`, answer: `Most clients need 1 to 3 sessions per area depending on the amount of stubborn fat and how the body responds after the first treatment.` },
+            { question: `When do fat freezing results start showing?`, answer: `You may notice changes within a few weeks, but the clearest results usually show between 8 and 12 weeks as the body processes the treated fat cells.` },
+            { question: `Is ${service.keyword} a weight-loss treatment?`, answer: `No. It is best used for contouring specific areas rather than replacing overall weight loss or lifestyle change.` },
+            { question: `Is there downtime after ${service.keyword}?`, answer: `Most clients return to normal activity straight away, although temporary numbness, tenderness or sensitivity can happen in the treated area.` },
+        ],
+    };
+
     // Get category-specific FAQs
-    // Get category-specific FAQs
-    const categoryFAQs = extraCategoryFAQPools[service.categoryId] || baseCategoryFAQPools[service.categoryId] || [];
+    const categoryFAQs =
+        focusedCategoryFAQPools[service.categoryId] ||
+        extraCategoryFAQPools[service.categoryId] ||
+        baseCategoryFAQPools[service.categoryId] ||
+        [];
 
     // Use combined hash for location+service variation
     const hash = hashString(service.slug + location.slug);
@@ -2303,5 +2414,127 @@ export function getLocationServiceInsight(service: SEOService, location: SEOLoca
 
     const pool = genericInsights[locationType] || genericInsights.local;
     return pool[combinedHash % pool.length];
+}
+
+export function getPriorityLocationServiceContent(service: SEOService, location: SEOLocation): {
+    title: string;
+    intro: string;
+    bullets: string[];
+} | null {
+    if (!isPriorityLocationService(location.slug, service.slug)) {
+        return null;
+    }
+
+    const luxuryKeywords = ['estate', 'pecanwood', 'islands', 'caribbean', 'xanadu', 'ifafi', 'kosmos', 'cove', 'camargue', 'redstone', 'birdwood'];
+    const isLuxuryEstate = luxuryKeywords.some((keyword) => location.slug.includes(keyword));
+    const urbanAreas = ['johannesburg', 'pretoria', 'centurion', 'midrand', 'sandton'];
+    const isUrban = urbanAreas.some((area) => location.slug.includes(area));
+    const audienceType = isLuxuryEstate ? "luxury" : isUrban ? "urban" : "local";
+
+    const categoryPlaybooks: Record<string, Record<string, { title: string; intro: string; bullets: string[] }>> = {
+        "hart-aesthetics": {
+            luxury: {
+                title: `${service.keyword} for ${location.name} Clients Seeking Premium Aesthetic Care`,
+                intro: `${location.name} is one of the strongest catchment areas for our advanced aesthetic treatments. Clients booking ${service.keyword} from this area usually want city-level results, strong practitioner trust, and a quieter Hartbeespoort setting for consultations and follow-up care.`,
+                bullets: [
+                    `${location.name} clients typically value discretion, consistent practitioner care, and natural-looking outcomes.`,
+                    `${service.keyword} is commonly booked as part of a wider anti-aging plan rather than a one-off appointment.`,
+                    `The Hartbeespoort setting gives ${location.name} clients a calmer treatment experience than high-traffic metro clinics.`,
+                ],
+            },
+            urban: {
+                title: `${service.keyword} Worth the Trip from ${location.name}`,
+                intro: `${location.name} is one of our highest-priority commuter markets for aesthetic services. People travelling from ${location.name} for ${service.keyword} are usually comparing us against busier city clinics, so the page needs to reflect planning, trust, and treatment quality clearly.`,
+                bullets: [
+                    `${location.name} clients often schedule consultations and treatment around a dedicated Hartbeespoort visit.`,
+                    `${service.keyword} pages for ${location.name} need stronger reassurance around practitioner quality and follow-up planning.`,
+                    `This combination matters because ${location.name} brings some of the highest search demand in the current SEO model.`,
+                ],
+            },
+            local: {
+                title: `${service.keyword} for Regular Clients in ${location.name}`,
+                intro: `${location.name} is a core local service area, which makes this one of the most commercially important page types in the site. Clients here are close enough for consultations, maintenance visits, and repeat bookings, so the content should reflect ongoing treatment relationships.`,
+                bullets: [
+                    `${location.name} clients can book ${service.keyword} with less travel friction than metro visitors.`,
+                    `Repeat appointments and reviews from ${location.name} strengthen this page's local intent.`,
+                    `This is one of the combinations most likely to convert local searchers into repeat clients.`,
+                ],
+            },
+        },
+        "fat-freezing": {
+            luxury: {
+                title: `${service.keyword} for ${location.name} Body Contouring Clients`,
+                intro: `${location.name} is a high-value market for premium body treatments. The strongest message for ${service.keyword} here is targeted contouring, privacy, and a results-focused treatment plan that fits an image-conscious lifestyle.`,
+                bullets: [
+                    `${location.name} clients often book ${service.keyword} to target specific stubborn areas rather than broad weight-loss goals.`,
+                    `This page needs to emphasize consultation quality, realistic expectations, and treatment planning.`,
+                    `Luxury-estate demand makes this one of the more valuable body-contouring page patterns on the site.`,
+                ],
+            },
+            urban: {
+                title: `${service.keyword} for ${location.name} Clients Looking Beyond City Clinics`,
+                intro: `${location.name} is a high-demand commuter location for non-surgical body contouring. Clients from this area are usually comparing convenience against quality, so the content should lean into visible results, zero-downtime positioning, and easy trip planning.`,
+                bullets: [
+                    `${location.name} clients frequently want weekend-friendly treatment planning and no recovery disruption.`,
+                    `${service.keyword} is one of the hero service lines that can justify a dedicated trip from ${location.name}.`,
+                    `This page pattern is commercially strong because it combines broad search demand with high treatment value.`,
+                ],
+            },
+            local: {
+                title: `${service.keyword} for Nearby Clients in ${location.name}`,
+                intro: `${location.name} is part of the core local market for Galeo Beauty's body services. This makes ${service.keyword} especially important here because nearby clients can return more easily for progress tracking and additional sessions if needed.`,
+                bullets: [
+                    `${location.name} clients have lower travel friction for repeat sessions.`,
+                    `The local audience responds well to practical guidance about timelines and expected results.`,
+                    `This is one of the key local conversion templates in the current SEO stack.`,
+                ],
+            },
+        },
+        "dermalogica": {
+            luxury: {
+                title: `${service.keyword} as a Premium Skincare Routine for ${location.name}`,
+                intro: `${location.name} is a strong market for premium skincare, especially where clients are willing to treat facials and advanced skin work as part of a recurring maintenance routine. That makes this a high-value template for ${service.keyword}.`,
+                bullets: [
+                    `${location.name} clients often view ${service.keyword} as part of long-term skin health, not just occasional pampering.`,
+                    `This page should reinforce consistency, skin planning, and the quality of in-salon professional products.`,
+                    `The combination of affluent catchment and premium skincare makes this page pattern strategically important.`,
+                ],
+            },
+            urban: {
+                title: `${service.keyword} for ${location.name} Clients Seeking Advanced Skin Treatments`,
+                intro: `${location.name} is a priority urban catchment for advanced facials and skin treatments. For ${service.keyword}, the strongest differentiators are treatment quality, calmer surroundings, and the ability to make a Hartbeespoort booking feel worth the drive.`,
+                bullets: [
+                    `${location.name} clients often compare us with city medi-spas and want confidence in product quality.`,
+                    `${service.keyword} works well in SEO for this area because the search intent is often problem-solution driven.`,
+                    `This page type is high value because it pairs urban demand with a premium service line.`,
+                ],
+            },
+            local: {
+                title: `${service.keyword} for Skin-Focused Clients in ${location.name}`,
+                intro: `${location.name} is one of the nearby areas most likely to generate repeat skin-treatment bookings. That makes ${service.keyword} especially important here because local clients can commit to treatment plans and maintenance intervals more easily.`,
+                bullets: [
+                    `Nearby access makes ${location.name} a strong fit for recurring ${service.keyword} bookings.`,
+                    `This page should stress expert skin assessment, treatment consistency, and realistic treatment cadence.`,
+                    `It is one of the more defensible local SEO combinations because repeat demand is plausible.`,
+                ],
+            },
+        },
+    };
+
+    const fallbackPlaybook = {
+        title: `${service.keyword} in ${location.name} Is a Priority SEO Combination`,
+        intro: `${location.name} and ${service.keyword} are both marked as priority targets in the site's current SEO model. That makes this page more commercially important than a generic location-service pairing, and the content should reflect stronger local intent, booking context, and conversion relevance.`,
+        bullets: [
+            `${location.name} is one of the core locations selected for prebuilt SEO coverage.`,
+            `${service.keyword} is one of the hero services selected for stronger search visibility.`,
+            `This page should read like an important local landing page, not a filler variation.`,
+        ],
+    };
+
+    const playbook =
+        categoryPlaybooks[service.categoryId]?.[audienceType] ||
+        fallbackPlaybook;
+
+    return playbook;
 }
 

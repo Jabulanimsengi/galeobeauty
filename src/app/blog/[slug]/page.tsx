@@ -23,6 +23,59 @@ interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
+function getRelevantServiceLinks(slug: string, category: string) {
+    const bySlug: Record<string, { href: string; label: string }[]> = {
+        "microblading-vs-powder-brows": [
+            { href: "/prices/permanent-makeup", label: "Permanent Makeup Prices" },
+            { href: "/prices/lashes-brows", label: "Lashes & Brows Treatments" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+        "lash-extensions-hartbeespoort": [
+            { href: "/prices/lashes-brows", label: "Lash Extensions & Brows" },
+            { href: "/prices/nails", label: "Nail Salon Services" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+        "hair-extensions-guide-south-africa": [
+            { href: "/prices/hair-extensions", label: "Hair Extensions Prices" },
+            { href: "/prices/hair", label: "Hair Salon Services" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+    };
+
+    if (bySlug[slug]) {
+        return bySlug[slug];
+    }
+
+    const byCategory: Record<string, { href: string; label: string }[]> = {
+        Hair: [
+            { href: "/prices/hair", label: "Hair Salon Services" },
+            { href: "/prices/hair-extensions", label: "Hair Extensions" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+        Lashes: [
+            { href: "/prices/lashes-brows", label: "Lashes & Brows Treatments" },
+            { href: "/prices/permanent-makeup", label: "Permanent Makeup" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+        "Permanent Makeup": [
+            { href: "/prices/permanent-makeup", label: "Permanent Makeup Prices" },
+            { href: "/prices/lashes-brows", label: "Lashes & Brows Treatments" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+        Skincare: [
+            { href: "/prices/dermalogica", label: "Dermalogica Treatments" },
+            { href: "/prices/qms", label: "QMS Facials" },
+            { href: "/prices", label: "All Beauty Prices" },
+        ],
+    };
+
+    return byCategory[category] || [
+        { href: "/prices/hair", label: "Hair Salon Services" },
+        { href: "/prices/nails", label: "Nail Salon Services" },
+        { href: "/prices", label: "All Beauty Prices" },
+    ];
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
     const post = getBlogPostBySlug(slug);
@@ -58,6 +111,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     }
 
     const relatedPosts = getRelatedPosts(slug, 3);
+    const relevantServiceLinks = getRelevantServiceLinks(slug, post.category);
 
     // Convert markdown-like content to HTML
     const formatContent = (content: string) => {
@@ -73,6 +127,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 }
                 // Bold text
                 let formatted = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                formatted = formatted.replace(/\[(.*?)\]\((.*?)\)/g, '<a class="text-gold hover:underline" href="$2">$1</a>');
                 // Lists
                 if (line.startsWith('- ')) {
                     return `<li class="ml-4 text-muted-foreground">${formatted.slice(2)}</li>`;
@@ -176,6 +231,25 @@ export default async function BlogPostPage({ params }: PageProps) {
                             className="prose prose-lg max-w-none"
                             dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
                         />
+                        <div className="mt-10 rounded-2xl border border-gold/20 bg-secondary/20 p-6">
+                            <h2 className="font-serif text-2xl text-foreground mb-3">
+                                Explore Related Services
+                            </h2>
+                            <p className="text-muted-foreground mb-5">
+                                Continue from this guide into the main treatment pages most relevant to this topic.
+                            </p>
+                            <div className="flex flex-wrap gap-3">
+                                {relevantServiceLinks.map((link) => (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        className="rounded-full border border-gold/30 bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </section>
 

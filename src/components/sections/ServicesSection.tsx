@@ -485,12 +485,12 @@ export function ServicesSection() {
                     </div>
 
                     <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 text-foreground">
-                        Our Beauty & Wellness <span className="text-gold italic">Treatments</span> in Hartbeespoort
+                        Our Hair, Nails &amp; Beauty <span className="text-gold italic">Services</span> in Hartbeespoort
                     </h2>
 
                     <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-base sm:text-lg font-light leading-relaxed mb-12">
-                        Explore our full treatment menu at Galeo Beauty in Harties.
-                        From medical aesthetics to relaxing spa treatments — all delivered by certified specialists using medical-grade equipment near Hartbeespoort Dam.
+                        Explore Galeo Beauty&apos;s full service menu in Harties, from hair salon and nail salon favourites to facials, lashes, massage and medical aesthetics near Hartbeespoort Dam.
+                        
                     </p>
 
                     {/* Trust Indicators - Unified Gold Theme */}
@@ -558,7 +558,7 @@ export function ServicesSection() {
                         Explore Our Full Menu
                     </h3>
                     <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                        Discover all our treatments including nail artistry, massage therapy, and wellness services.
+                        Discover all our treatments including hair, nails, lashes, massage therapy and wellness services.
                     </p>
                     <Button
                         asChild

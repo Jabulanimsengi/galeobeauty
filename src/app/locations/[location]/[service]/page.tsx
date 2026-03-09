@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
@@ -19,6 +19,8 @@ import {
     getLocationInsights,
     getLocationServiceInsight,
     getServiceFAQs,
+    getPriorityLocationServiceContent,
+    isPriorityLocationService,
     type SEOLocation,
     type SEOService,
     type FAQ,
@@ -26,6 +28,35 @@ import {
 } from "@/lib/seo-data";
 import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
+import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
+
+function getLocationPageHighlights(location: SEOLocation, service: SEOService, nearbyLocations: SEOLocation[]) {
+    const nearbyNames = nearbyLocations.slice(0, 3).map((nearby) => nearby.name);
+    const nearbyLabel =
+        nearbyNames.length > 0
+            ? `${location.name} clients often combine appointments with visits from ${nearbyNames.join(", ")}.`
+            : `${location.name} clients often book this service alongside other treatments for a full salon visit.`;
+
+    const isLocalCatchment = location.region === "Hartbeespoort" || location.region === "North West";
+    const isUrbanCatchment = ["Gauteng", "Johannesburg", "Pretoria", "Centurion", "Midrand"].includes(location.region);
+
+    const accessNote = isLocalCatchment
+        ? `${location.name} residents are close enough for regular maintenance appointments, quick follow-up visits, and weekday bookings.`
+        : isUrbanCatchment
+            ? `${location.name} clients typically book ${service.keyword} as a planned trip to Hartbeespoort, often pairing it with a quieter day away from the city.`
+            : `${location.name} clients usually make a dedicated trip for ${service.keyword}, so we focus on efficient appointments and clear aftercare.`;
+
+    const serviceNote = service.duration
+        ? `${service.keyword} typically takes ${service.duration}, which helps ${location.name} clients plan travel and booking times more confidently.`
+        : `${service.keyword} appointments are scheduled with enough flexibility for ${location.name} clients travelling in from surrounding areas.`;
+
+    return [
+        `${location.name} is one of the areas we actively serve for ${service.keyword}, not just a keyword variation.`,
+        accessNote,
+        serviceNote,
+        nearbyLabel,
+    ];
+}
 
 // ============================================
 // STATIC GENERATION WITH ISR
@@ -57,8 +88,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const { location: locationSlug, service: serviceSlug } = await params;
     const location = getLocationBySlug(locationSlug);
     const service = getServiceBySlug(serviceSlug);
+    const legacyService = resolveLegacyServiceRedirect(serviceSlug);
 
-    if (!location || !service) {
+    if (!location || (!service && !legacyService)) {
+        return { title: "Service Not Found" };
+    }
+
+    if (!service) {
         return { title: "Service Not Found" };
     }
 
@@ -98,7 +134,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         // @ts-ignore - mapping simplified
         { ...service, name: service.keyword },
         categoryTitle,
-        ""
+        location.name
     );
 
     return {
@@ -130,7 +166,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             locale: "en_ZA",
             images: [
                 {
-                    url: "https://www.galeobeauty.com/images/og-image.jpg",
+                    url: "https://www.galeobeauty.com/images/logo.png",
                     width: 1200,
                     height: 630,
                     alt: `${service.keyword} at Galeo Beauty - Professional Beauty Salon in Hartbeespoort`,
@@ -141,7 +177,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             card: "summary_large_image",
             title,
             description,
-            images: ["https://www.galeobeauty.com/images/og-image.jpg"],
+            images: ["https://www.galeobeauty.com/images/logo.png"],
             site: "@galeobeauty",
         },
         alternates: {
@@ -169,42 +205,70 @@ export default async function LocationServicePage({ params }: PageProps) {
     const { location: locationSlug, service: serviceSlug } = await params;
     const location = getLocationBySlug(locationSlug);
     const service = getServiceBySlug(serviceSlug);
-    const category = getCategoryForService(serviceSlug);
+    const legacyService = resolveLegacyServiceRedirect(serviceSlug);
 
-    if (!location || !service) {
+    if (!location && service) {
+        redirect(`/prices/${service.categoryId}/${service.slug}`);
+    }
+
+    if (location && !service && legacyService) {
+        if (legacyService.serviceSlug) {
+            redirect(`/locations/${locationSlug}/${legacyService.serviceSlug}`);
+        }
+        redirect(`/prices/${legacyService.categoryId}`);
+    }
+
+    if (!location && legacyService) {
+        if (legacyService.serviceSlug) {
+            redirect(`/prices/${legacyService.categoryId}/${legacyService.serviceSlug}`);
+        }
+        redirect(`/prices/${legacyService.categoryId}`);
+    }
+
+    if (!location) {
+        redirect("/locations");
+    }
+
+    if (!service) {
         notFound();
     }
+
+    const resolvedService = service;
+    const category = getCategoryForService(resolvedService.slug);
 
     // Get data for internal linking
     const nearbyLocations = getNearbyLocations(locationSlug, 5);
     const relatedServices = getRelatedServices(serviceSlug, 4);
-    const otherCategoryServices = getPopularServicesFromOtherCategories(service.categoryId, 3);
+    const otherCategoryServices = getPopularServicesFromOtherCategories(resolvedService.categoryId, 3);
     const dynamicRelatedServices = getDynamicRelatedServices(serviceSlug, 5);
 
     // Get unique content
-    const benefits = getServiceSpecificBenefits(service);
+    const benefits = getServiceSpecificBenefits(resolvedService, locationSlug);
 
     // Use new generator for rich, attribute-based description
     const richDescription = generateServiceDescription(
         // @ts-ignore
-        { ...service, name: service.keyword },
+        { ...resolvedService, name: resolvedService.keyword },
         category?.title || "Beauty Services",
-        ""
+        location.name
     );
     // Append location context and inject an LSI keyword if available to improve uniqueness deterministically
-    const lsiKeyword = service.seoKeywords?.length
-        ? service.seoKeywords[(service.slug.length + location.slug.length) % service.seoKeywords.length]
+    const lsiKeyword = resolvedService.seoKeywords?.length
+        ? resolvedService.seoKeywords[(resolvedService.slug.length + location.slug.length) % resolvedService.seoKeywords.length]
         : "treatment";
     const introText = `${richDescription} ${location.name} residents can now enjoy this premium ${lsiKeyword} close to home.`;
 
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
-    const locationServiceInsight = getLocationServiceInsight(service, location);
-    const faqs = getServiceFAQs(service, location);
-    const treatmentProcess = getTreatmentProcess(service, location);
+    const locationServiceInsight = getLocationServiceInsight(resolvedService, location);
+    const faqs = getServiceFAQs(resolvedService, location);
+    const treatmentProcess = getTreatmentProcess(resolvedService, location);
+    const locationPageHighlights = getLocationPageHighlights(location, resolvedService, nearbyLocations);
+    const priorityContent = getPriorityLocationServiceContent(resolvedService, location);
+    const isPriorityCombination = isPriorityLocationService(locationSlug, serviceSlug);
 
     const whatsappMessage = encodeURIComponent(
-        `Hi! I found you on www.galeobeauty.com and I'm interested in ${service.keyword}. I'm based in ${location.name}. Can I book an appointment?`
+        `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`
     );
     const whatsappLink = `https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`;
 
@@ -262,11 +326,11 @@ export default async function LocationServicePage({ params }: PageProps) {
             "@type": "Offer",
             itemOffered: {
                 "@type": "Service",
-                name: `${service.keyword} at Galeo Beauty Salon & Spa`,
+                name: `${resolvedService.keyword} at Galeo Beauty Salon & Spa`,
                 description: introText,
-                serviceType: [service.keyword, ...(service.seoKeywords || []), "Beauty Treatment", "Spa Treatment", "Salon Service"],
+                serviceType: [resolvedService.keyword, ...(resolvedService.seoKeywords || []), "Beauty Treatment", "Spa Treatment", "Salon Service"],
             },
-            price: service.price.replace(/[^0-9.]/g, ""),
+            price: resolvedService.price.replace(/[^0-9.]/g, ""),
             priceCurrency: "ZAR",
         },
     };
@@ -439,6 +503,49 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </div>
                 </section>
 
+                <section className="py-16">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-3">
+                            Why {location.name} Clients Book {service.keyword} Here
+                        </h2>
+                        <p className="text-muted-foreground mb-10 max-w-3xl">
+                            This page is tailored for clients in {location.name}, with booking context, travel expectations, and service planning details specific to your area.
+                        </p>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {locationPageHighlights.map((highlight, index) => (
+                                <div key={index} className="rounded-xl border border-border bg-secondary/20 p-5">
+                                    <p className="text-muted-foreground leading-relaxed">{highlight}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {isPriorityCombination && priorityContent && (
+                    <section className="py-16 bg-secondary/20">
+                        <div className="container mx-auto px-6 max-w-4xl">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-sm font-medium text-gold mb-5">
+                                Priority Location + Service Combination
+                            </div>
+                            <h2 className="font-serif text-3xl text-foreground mb-4">
+                                {priorityContent.title}
+                            </h2>
+                            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+                                {priorityContent.intro}
+                            </p>
+                            <div className="space-y-4">
+                                {priorityContent.bullets.map((bullet, index) => (
+                                    <div key={index} className="flex items-start gap-3 rounded-xl border border-border bg-background p-5">
+                                        <Sparkles className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                                        <p className="text-muted-foreground leading-relaxed">{bullet}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {/* Treatment Process - What to Expect */}
                 <section className="py-16">
                     <div className="container mx-auto px-6 max-w-4xl">
@@ -485,6 +592,56 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     Chat with Us on WhatsApp
                                 </a>
                             </Button>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="py-16 bg-secondary/20">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="font-serif text-3xl text-foreground mb-6">
+                            {service.keyword} Quick Facts for {location.name}
+                        </h2>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                            <div className="rounded-xl border border-border bg-background p-5">
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Service</p>
+                                <p className="font-medium text-foreground">{service.keyword}</p>
+                                <p className="text-sm text-muted-foreground mt-2">From {service.price}{service.duration ? ` • ${service.duration}` : ""}</p>
+                            </div>
+                            <div className="rounded-xl border border-border bg-background p-5">
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Best For</p>
+                                <p className="text-muted-foreground leading-relaxed">{locationServiceInsight}</p>
+                            </div>
+                            <div className="rounded-xl border border-border bg-background p-5">
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Travel Context</p>
+                                <p className="text-muted-foreground leading-relaxed">{drivingContext}. {locationInsights.travelNote}</p>
+                            </div>
+                            <div className="rounded-xl border border-border bg-background p-5">
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Useful Links</p>
+                                <div className="flex flex-wrap gap-2 mt-2">
+                                    <Link
+                                        href={`/locations/${locationSlug}`}
+                                        className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                    >
+                                        {location.name} Hub
+                                    </Link>
+                                    {category && (
+                                        <Link
+                                            href={`/prices/${category.id}/${service.slug}`}
+                                            className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                        >
+                                            Main Service Page
+                                        </Link>
+                                    )}
+                                    {category && (
+                                        <Link
+                                            href={`/prices/${category.id}`}
+                                            className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                        >
+                                            More {category.title}
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
