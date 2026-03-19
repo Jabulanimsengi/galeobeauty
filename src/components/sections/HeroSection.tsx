@@ -11,41 +11,48 @@ import { businessInfo } from "@/lib/constants";
 // Animated counter component
 function AnimatedCounter({ target, suffix = "", duration = 2, disabled = false }: { target: number; suffix?: string; duration?: number; disabled?: boolean }) {
     const [count, setCount] = useState(0);
-    const [hasAnimated, setHasAnimated] = useState(false);
+    const hasAnimatedRef = useRef(disabled);
     const ref = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
-        if (disabled) {
-            setCount(target);
-            setHasAnimated(true);
-            return;
-        }
+        if (disabled) return;
+
+        hasAnimatedRef.current = false;
+        const element = ref.current;
+        if (!element) return;
+
+        let timer: ReturnType<typeof setInterval> | null = null;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting && !hasAnimated) {
-                    setHasAnimated(true);
+                if (entry.isIntersecting && !hasAnimatedRef.current) {
+                    hasAnimatedRef.current = true;
                     let start = 0;
                     const increment = target / (duration * 60); // 60fps animation
-                    const timer = setInterval(() => {
+                    timer = setInterval(() => {
                         start += increment;
                         if (start >= target) {
                             setCount(target);
-                            clearInterval(timer);
+                            if (timer) clearInterval(timer);
                         } else {
                             setCount(Math.floor(start));
                         }
                     }, 1000 / 60);
+                    observer.disconnect();
                 }
             },
             { threshold: 0.3 }
         );
 
-        if (ref.current) observer.observe(ref.current);
-        return () => observer.disconnect();
-    }, [target, duration, hasAnimated, disabled]);
+        observer.observe(element);
 
-    return <span ref={ref}>{count}{suffix}</span>;
+        return () => {
+            observer.disconnect();
+            if (timer) clearInterval(timer);
+        };
+    }, [target, duration, disabled]);
+
+    return <span ref={ref}>{disabled ? target : count}{suffix}</span>;
 }
 
 // Floating decorative element - Hidden on mobile for performance
@@ -114,7 +121,7 @@ export function HeroSection() {
     }, [heroImages.length, prefersReducedMotion]);
 
     return (
-        <section className="relative h-[80svh] sm:h-[90dvh] lg:h-[100vh] overflow-hidden">
+        <section className="relative min-h-[calc(100svh-5.5rem)] sm:h-[90dvh] lg:h-[100vh] overflow-hidden">
 
             {/* Ken Burns Image Carousel */}
             <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>
@@ -163,6 +170,9 @@ export function HeroSection() {
             {/* Dark overlay for text contrast - All devices */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30 sm:bg-gradient-to-r sm:from-black/70 sm:via-black/50 sm:to-black/30 z-20" />
 
+            {/* Soft fade into the light section below */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 sm:h-32 bg-gradient-to-b from-white/0 via-stone-50/35 to-stone-50 z-[25]" />
+
             {/* Floating Decorative Elements - Desktop only */}
             <FloatingShape
                 className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 blur-2xl z-20 hidden xl:block"
@@ -176,7 +186,7 @@ export function HeroSection() {
             />
 
             {/* Content Overlay - All Devices */}
-            <div className="relative z-30 w-full h-full flex flex-col justify-center px-5 sm:px-12 lg:px-16 xl:px-24 py-16 sm:py-12 lg:py-12">
+            <div className="relative z-30 w-full h-full flex flex-col justify-start sm:justify-center px-5 sm:px-12 lg:px-16 xl:px-24 pt-6 pb-24 sm:py-12 lg:py-12">
                 <div className="max-w-3xl">
                     <div>
                         {/* Trust Label */}
@@ -192,7 +202,7 @@ export function HeroSection() {
                         </div>
 
                         {/* Headline with Staggered Animation */}
-                        <h1 className="animate-hero-text animate-hero-text-delay-1 font-serif text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
+                        <h1 className="animate-hero-text animate-hero-text-delay-1 font-serif text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
                             <span className="sr-only">Galeo Beauty Salon &amp; Spa Hartbeespoort - </span>
                             <span className="inline-block drop-shadow-lg">Science </span>
                             <span className="inline-block font-light italic text-white/80 drop-shadow-lg">
@@ -209,7 +219,7 @@ export function HeroSection() {
 
                         {/* Description - shorter on mobile, full on larger screens */}
                         <p
-                            className="animate-hero-text animate-hero-text-delay-2 text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-5 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
+                            className="animate-hero-text animate-hero-text-delay-2 text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-4 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
                             <span className="sm:hidden">Hartbeespoort&apos;s hair, nails, beauty salon and medical spa for facials, lashes, massage and advanced aesthetics.</span>
                             <span className="hidden sm:inline">Galeo Beauty is a Hartbeespoort hair salon, nail salon, beauty salon and medical spa offering hair, nails, facials, lashes, massage, permanent makeup and advanced aesthetics near Hartbeespoort Dam.</span>
@@ -217,25 +227,25 @@ export function HeroSection() {
 
                         {/* CTA Group */}
                         <div
-                            className="animate-hero-text animate-hero-text-delay-3 flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
+                            className="animate-hero-text animate-hero-text-delay-3 flex flex-row flex-wrap items-start gap-2 sm:gap-4 mb-4 sm:mb-8 lg:mb-12"
                         >
                             <Button
                                 asChild
                                 size="lg"
-                                className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-6 sm:px-10 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20 w-full sm:w-auto"
+                                className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-4 sm:px-10 h-10 sm:h-14 font-medium text-[13px] sm:text-base shadow-lg sm:shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20 w-auto max-w-full"
                             >
                                 <a href={businessInfo.socials.fresha} target="_blank" rel="noopener noreferrer">
                                     <span className="relative z-10 font-semibold">
                                         Book Your Visit
                                     </span>
-                                    <ArrowRight className="w-4 h-4 ml-1 relative z-10" />
+                                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1 relative z-10" />
                                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                                 </a>
                             </Button>
                             <Button
                                 asChild
                                 size="lg"
-                                className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-6 sm:px-8 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10 w-full sm:w-auto"
+                                className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-4 sm:px-8 h-10 sm:h-14 font-medium text-[13px] sm:text-base shadow-lg sm:shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10 w-auto max-w-full"
                             >
                                 <NavLink href="/about">
                                     <span className="group-hover:text-gold transition-colors duration-300 font-semibold">
@@ -247,14 +257,14 @@ export function HeroSection() {
 
                         {/* Enhanced Trust Badges with Animated Counters */}
                         <div
-                            className="animate-hero-text animate-hero-text-delay-3 flex flex-wrap items-center gap-5 sm:gap-6 lg:gap-8 pt-4 sm:pt-6 border-t border-white/20"
+                            className="animate-hero-text animate-hero-text-delay-3 flex max-w-[calc(100%-5.5rem)] sm:max-w-none flex-wrap items-center gap-4 sm:gap-6 lg:gap-8 pt-3 sm:pt-6 border-t border-white/20"
                         >
                             <div className="flex items-center gap-2.5 sm:gap-3 group">
-                                <div className="p-2.5 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
-                                    <Award className="w-4 h-4 sm:w-4 sm:h-4 text-white" />
+                                <div className="p-2 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
+                                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-xl sm:text-xl font-bold text-white drop-shadow-md">
+                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">
                                         <AnimatedCounter target={500} suffix="+" disabled={prefersReducedMotion} />
                                     </span>
                                     <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
@@ -264,30 +274,45 @@ export function HeroSection() {
                             </div>
 
                             <div className="flex items-center gap-2.5 sm:gap-3 group">
-                                <div className="p-2.5 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
-                                    <Star className="w-4 h-4 sm:w-4 sm:h-4 text-white fill-white" />
+                                <div className="p-2 sm:p-2.5 bg-black/80 rounded-full shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 border border-white/10">
+                                    <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-xl sm:text-xl font-bold text-white drop-shadow-md">5.0</span>
+                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">5.0</span>
                                     <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Star Rating
                                     </span>
                                 </div>
                             </div>
                         </div>
+
+                        <div className="animate-hero-text animate-hero-text-delay-3 mt-5 flex items-center justify-center gap-1.5 sm:hidden">
+                            {heroImages.map((_, index) => (
+                                <button
+                                    type="button"
+                                    key={index}
+                                    onClick={() => setCurrentSlide(index)}
+                                    className={`transition-all duration-300 rounded-full shadow-lg ${currentSlide === index
+                                        ? "w-5 h-1.5 bg-gold"
+                                        : "w-1.5 h-1.5 bg-white/50 hover:bg-white/80"
+                                        }`}
+                                    aria-label={`Go to slide ${index + 1}`}
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Carousel Navigation Dots - Centered */}
-            <div className="absolute bottom-32 sm:bottom-36 lg:bottom-40 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2">
+            <div className="absolute bottom-36 lg:bottom-40 left-1/2 -translate-x-1/2 z-40 hidden sm:flex items-center gap-2">
                 {heroImages.map((_, index) => (
                     <button
                         type="button"
                         key={index}
                         onClick={() => setCurrentSlide(index)}
                         className={`transition-all duration-300 rounded-full shadow-lg ${currentSlide === index
-                            ? "w-6 sm:w-8 h-2 bg-gold"
+                            ? "w-8 h-2 bg-gold"
                             : "w-2 h-2 bg-white/50 hover:bg-white/80"
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
