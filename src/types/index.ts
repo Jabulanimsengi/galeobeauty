@@ -84,7 +84,7 @@ export interface BusinessInfo {
     tiktok?: string;
     fresha?: string;
   };
-  banking?: {
+  banking: {
     companyName: string;
     regNumber: string;
     bank: string;

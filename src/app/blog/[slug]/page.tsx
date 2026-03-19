@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     const formatContent = (content: string) => {
         return content
             .split('\n')
-            .map((line, i) => {
+            .map((line) => {
                 // Headers
                 if (line.startsWith('## ')) {
                     return `<h2 class="font-serif text-2xl text-foreground mt-8 mb-4">${line.slice(3)}</h2>`;

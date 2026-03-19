@@ -2,10 +2,9 @@
 
 import { Header, Footer } from "@/components/layout";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Briefcase, MapPin, Clock, Users, Sparkles, Heart, ChevronRight } from "lucide-react";
+import { Briefcase, MapPin, Users, Sparkles, Heart, ChevronRight } from "lucide-react";
 
 // Job openings data - easily editable
 const jobOpenings = [
@@ -96,7 +95,7 @@ export default function CareersPage() {
                                 With Us
                             </h1>
                             <p className="text-muted-foreground text-lg sm:text-xl font-light max-w-2xl mx-auto leading-relaxed">
-                                Join the Galeo Beauty family and be part of a team that's passionate about transforming lives through beauty and wellness.
+                                Join the Galeo Beauty family and be part of a team that&apos;s passionate about transforming lives through beauty and wellness.
                             </p>
                         </motion.div>
                     </div>
@@ -184,7 +183,7 @@ export default function CareersPage() {
                                             asChild
                                             className="bg-gold hover:bg-gold-dark text-white rounded-full px-6"
                                         >
-                                            <a href="mailto:careers@galeobeauty.com?subject=Application for ${job.title}">
+                                            <a href={`mailto:careers@galeobeauty.com?subject=${encodeURIComponent(`Application for ${job.title}`)}`}>
                                                 Apply Now
                                             </a>
                                         </Button>
@@ -196,7 +195,7 @@ export default function CareersPage() {
                                 <Briefcase className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
                                 <h3 className="font-serif text-2xl text-foreground mb-3">No Open Positions</h3>
                                 <p className="text-muted-foreground max-w-md mx-auto">
-                                    We don't have any open positions right now, but we're always looking for talented individuals. Send us your CV and we'll keep it on file!
+                                    We don&apos;t have any open positions right now, but we&apos;re always looking for talented individuals. Send us your CV and we&apos;ll keep it on file!
                                 </p>
                                 <Button
                                     asChild

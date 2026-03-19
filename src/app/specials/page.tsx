@@ -3,7 +3,6 @@
 import { Header, Footer } from "@/components/layout";
 
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { motion } from "framer-motion";
 import { Tag, ArrowRight, Plus, Check } from "lucide-react";

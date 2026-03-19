@@ -20,6 +20,8 @@ import {
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 import { generateServiceDescription } from "@/lib/seo-generator";
+import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
+import { getIntentPagesForService } from "@/lib/intent-pages";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
@@ -30,6 +32,24 @@ import { generateServiceDescription } from "@/lib/seo-generator";
 export const dynamic = "force-static";
 export const dynamicParams = false;
 export const revalidate = false;
+
+function formatTermList(terms: string[], limit = 4) {
+    const items = terms.slice(0, limit);
+
+    if (items.length === 0) {
+        return "";
+    }
+
+    if (items.length === 1) {
+        return items[0];
+    }
+
+    if (items.length === 2) {
+        return `${items[0]} and ${items[1]}`;
+    }
+
+    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+}
 
 // Generate static pages for all 262 services
 export function generateStaticParams() {
@@ -54,40 +74,26 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
     // Generate a rich description if one is missing
     const description = generateServiceDescription(
-        // @ts-ignore - mapping simplified for this utility
+        // @ts-expect-error - generator expects a service item shape with name
         { ...service, name: service.keyword },
         categoryTitle,
         subcategoryTitle
     );
 
-    const kw = service.keyword.toLowerCase();
+    const keywords = buildServiceKeywords(service, { name: "Hartbeespoort", region: "North West" });
+
+    const metadataDescription = `${description.substring(0, 120)} Based in Hartbeespoort (Harties), near Hartbeespoort Dam.`;
 
     return {
-        title: `${service.keyword} in Hartbeespoort ${service.price} | ${categoryTitle} Harties`,
-        description: `${description.substring(0, 100)} in Hartbeespoort (Harties). Near Hartbeespoort Dam. Serving Centurion & Pretoria, North West.`,
-        keywords: [
-            `${kw} Hartbeespoort`,
-            `${kw} Harties`,
-            `${kw} near Hartbeespoort Dam`,
-            `${kw} Harties Dam`,
-            `${kw} near Centurion`,
-            `${kw} near Pretoria`,
-            `${kw} North West`,
-            `${kw} near me`,
-            `${kw} around Harties`,
-            `${kw} Hartbeespoort Dam area`,
-            `best ${kw} Hartbeespoort`,
-            `affordable ${kw} Harties`,
-            categoryTitle.toLowerCase(),
-            subcategoryTitle.toLowerCase(),
-            "Galeo Beauty Hartbeespoort",
-        ],
+        title: `${service.keyword} in Hartbeespoort | ${categoryTitle} at Galeo Beauty`,
+        description: metadataDescription,
+        keywords,
         alternates: {
             canonical: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
         },
         openGraph: {
-            title: `${service.keyword} Hartbeespoort (Harties) - ${service.price}`,
-            description: `${description.substring(0, 140)} Near Hartbeespoort Dam. Serving Harties, Centurion & Pretoria.`,
+            title: `${service.keyword} in Hartbeespoort | Galeo Beauty`,
+            description: metadataDescription,
             url: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
             type: "website",
         },
@@ -133,6 +139,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     // NEW: Use advanced generators for better uniqueness
     const benefits = getServiceSpecificBenefits(service);
     const intro = generateServiceIntro(service, location);
+    const intentSignals = getServiceIntentSignals(service);
+    const intentCopy = buildServiceIntentCopy(service);
+    const relatedIntentPages = getIntentPagesForService(service.slug);
 
     const faqs = getServiceFAQs(service, location);
     const treatmentProcess = getTreatmentProcess(service, location);
@@ -231,6 +240,11 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 <p className="leading-relaxed">
                                     {richDescription}
                                 </p>
+                                <div className="space-y-2 text-base">
+                                    <p>{intentCopy.problemStatement}</p>
+                                    <p>{intentCopy.resultStatement}</p>
+                                    <p>{intentCopy.reassuranceStatement}</p>
+                                </div>
                             </div>
 
                             {/* Quick Info + Book Button */}
@@ -283,6 +297,92 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                         </div>
                     </div>
                 </section>
+
+                <section className="py-16 bg-secondary/10">
+                    <div className="container mx-auto px-6 max-w-6xl">
+                        <div className="grid gap-6 lg:grid-cols-2">
+                            <div className="rounded-2xl border border-border bg-background p-6">
+                                <h2 className="font-serif text-2xl text-foreground mb-3">What Usually Brings You In</h2>
+                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                                    <p>
+                                        This treatment is often chosen when you want help with{" "}
+                                        {formatTermList(intentSignals.painPoints, 5)}.
+                                    </p>
+                                    <p>
+                                        It is especially helpful when the concern has become repetitive, visible, or frustrating enough
+                                        that you want a more professional and tailored next step.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-border bg-background p-6">
+                                <h2 className="font-serif text-2xl text-foreground mb-3">What You May Be Hoping To See</h2>
+                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                                    <p>
+                                        Most bookings in this category are about results such as{" "}
+                                        {formatTermList(intentSignals.results, 5)}.
+                                    </p>
+                                    <p>
+                                        During your consultation, we focus on what feels realistic for your features, skin, hair, or
+                                        body rather than promising a one-size-fits-all result.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-border bg-background p-6">
+                                <h2 className="font-serif text-2xl text-foreground mb-3">How We Help You Compare Options</h2>
+                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                                    <p>
+                                        It is completely normal to weigh up options such as{" "}
+                                        {formatTermList(intentSignals.comparisons, 3)} before you book.
+                                    </p>
+                                    <p>
+                                        We explain the practical differences clearly, including how each option feels, what recovery
+                                        looks like, and which result each path is best designed to deliver.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-2xl border border-border bg-background p-6">
+                                <h2 className="font-serif text-2xl text-foreground mb-3">What Often Matters Most Before Booking</h2>
+                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                                    <p>
+                                        Clients often want reassurance around {formatTermList(intentSignals.objections, 3)} before they
+                                        commit to a treatment plan.
+                                    </p>
+                                    <p>
+                                        This can be especially relevant for {formatTermList(intentSignals.audiences, 3)}, or whenever
+                                        timing, comfort and maintenance need to fit into an already busy routine.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {relatedIntentPages.length > 0 && (
+                    <section className="py-14 bg-white">
+                        <div className="container mx-auto px-6 max-w-6xl">
+                            <div className="max-w-3xl mb-8">
+                                <h2 className="font-serif text-3xl text-foreground">Explore the Related Treatment Guide</h2>
+                                <p className="text-muted-foreground mt-2">
+                                    If you want a broader view before booking, this guide explains common concerns, your treatment
+                                    options, and how to choose the right path for you.
+                                </p>
+                            </div>
+                            <div className="grid gap-4 md:grid-cols-2">
+                                {relatedIntentPages.map((page) => (
+                                    <Link
+                                        key={page.slug}
+                                        href={`/${page.slug}`}
+                                        className="rounded-2xl border border-border bg-secondary/10 p-5 transition-colors hover:border-gold/40"
+                                    >
+                                        <h3 className="font-medium text-foreground">{page.title}</h3>
+                                        <p className="mt-2 text-sm text-muted-foreground">{page.metaDescription}</p>
+                                        <span className="mt-4 inline-block text-sm font-medium text-gold">View guide</span>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* Service Note (if exists) */}
                 {fullServiceItem.note && (

@@ -3,13 +3,15 @@
 import { Header, Footer } from "@/components/layout";
 import { motion, AnimatePresence } from "framer-motion";
 import { serviceCategories } from "@/lib/services-data";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TreatmentListItem } from "@/components/booking/TreatmentListItem";
 import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 import { useSearchParams } from "next/navigation";
 
@@ -32,54 +34,111 @@ const formatTitle = (title: string): string => {
 export function PricesClient() {
     const searchParams = useSearchParams();
     const categoryParam = searchParams.get("category");
-    const queryParam = searchParams.get("q")?.toLowerCase(); // Support Sitelinks Searchbox
+    const queryParam = searchParams.get("q")?.toLowerCase() ?? ""; // Support Sitelinks Searchbox
 
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
+    const [manualCategoryState, setManualCategoryState] = useState<
+        Record<string, { expanded: string[]; collapsed: string[] }>
+    >({});
 
-    // Track which categories are expanded
-    const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+    const searchQuery = queryParam;
+    const paramsKey = `${categoryParam ?? ""}::${queryParam}`;
 
-    // Derived state for filtering
-    const [searchQuery, setSearchQuery] = useState(queryParam || "");
-
-    // Update state when URL params change
-    useEffect(() => {
-        if (categoryParam) {
-            setExpandedCategories([categoryParam]);
-            setTimeout(() => {
-                const element = document.getElementById(`category-${categoryParam}`);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 100);
+    const categoriesWithMatches = useMemo(() => {
+        if (!queryParam) {
+            return [];
         }
 
-        if (queryParam) {
-            setSearchQuery(queryParam);
-            // If searching, we'll want to expand categories with matches (logic below)
-            const categoriesWithMatches = serviceCategories
-                .filter(cat =>
-                    cat.subcategories.some(sub =>
-                        sub.items.some(item =>
-                            item.name.toLowerCase().includes(queryParam) ||
-                            item.description?.toLowerCase().includes(queryParam)
-                        )
+        return serviceCategories
+            .filter((cat) =>
+                cat.subcategories.some((sub) =>
+                    sub.items.some((item) =>
+                        item.name.toLowerCase().includes(queryParam) ||
+                        item.description?.toLowerCase().includes(queryParam)
                     )
                 )
-                .map(c => c.id);
-            setExpandedCategories(prev => Array.from(new Set([...prev, ...categoriesWithMatches])));
+            )
+            .map((category) => category.id);
+    }, [queryParam]);
+
+    const autoExpandedCategories = useMemo(() => {
+        const expanded = new Set<string>();
+
+        if (categoryParam) {
+            expanded.add(categoryParam);
         }
-    }, [categoryParam, queryParam]);
+
+        for (const categoryId of categoriesWithMatches) {
+            expanded.add(categoryId);
+        }
+
+        return Array.from(expanded);
+    }, [categoriesWithMatches, categoryParam]);
+
+    const currentManualState = useMemo(
+        () => manualCategoryState[paramsKey] ?? { expanded: [], collapsed: [] },
+        [manualCategoryState, paramsKey]
+    );
+
+    const expandedCategories = useMemo(() => {
+        const expanded = new Set(autoExpandedCategories);
+
+        for (const categoryId of currentManualState.expanded) {
+            expanded.add(categoryId);
+        }
+
+        for (const categoryId of currentManualState.collapsed) {
+            expanded.delete(categoryId);
+        }
+
+        return Array.from(expanded);
+    }, [autoExpandedCategories, currentManualState]);
+
+    useEffect(() => {
+        if (!categoryParam) {
+            return;
+        }
+
+        const timeoutId = window.setTimeout(() => {
+            const element = document.getElementById(`category-${categoryParam}`);
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }, 100);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [categoryParam]);
 
     // Toggle category expansion
     const toggleCategoryExpansion = (categoryId: string) => {
-        setExpandedCategories(prev => {
-            if (prev.includes(categoryId)) {
-                return prev.filter(id => id !== categoryId);
+        setManualCategoryState((prev) => {
+            const currentState = prev[paramsKey] ?? { expanded: [], collapsed: [] };
+            const isAutoExpanded = autoExpandedCategories.includes(categoryId);
+            const isExpandedNow = expandedCategories.includes(categoryId);
+
+            let nextExpanded = currentState.expanded;
+            let nextCollapsed = currentState.collapsed;
+
+            if (isExpandedNow) {
+                if (isAutoExpanded) {
+                    nextCollapsed = Array.from(new Set([...currentState.collapsed, categoryId]));
+                } else {
+                    nextExpanded = currentState.expanded.filter((id) => id !== categoryId);
+                }
+            } else if (isAutoExpanded) {
+                nextCollapsed = currentState.collapsed.filter((id) => id !== categoryId);
             } else {
-                return [...prev, categoryId];
+                nextExpanded = Array.from(new Set([...currentState.expanded, categoryId]));
             }
+
+            return {
+                ...prev,
+                [paramsKey]: {
+                    expanded: nextExpanded,
+                    collapsed: nextCollapsed,
+                },
+            };
         });
     };
 
@@ -254,6 +313,14 @@ export function PricesClient() {
                         <p className="text-background/70 mb-8 max-w-lg mx-auto">
                             Our Harties specialists are here to help you choose the perfect treatment.
                         </p>
+                        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground px-8">
+                                <Link href="/contact">Contact the Salon</Link>
+                            </Button>
+                            <Button asChild size="lg" className="border border-background/30 bg-transparent px-8 text-background hover:bg-background/10 hover:text-background">
+                                <a href="tel:0121111730">Call 012 111 1730</a>
+                            </Button>
+                        </div>
                     </div>
                 </section>
             </main>

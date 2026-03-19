@@ -2,20 +2,12 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
 import { MapPin, ArrowRight } from "lucide-react";
+import { buildLocationsIndexKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
     title: "Areas We Serve | Beauty Salon Services Across Hartbeespoort & Gauteng",
     description: "Galeo Beauty serves 60+ locations in Hartbeespoort, Pretoria, Johannesburg, and surrounding areas. Find premium beauty treatments near you - from luxury estates to major metros.",
-    keywords: [
-        "beauty salon Hartbeespoort",
-        "Galeo Beauty locations",
-        "areas we serve Hartbeespoort",
-        "Hartbeespoort estates salon",
-        "Pretoria beauty salon",
-        "Johannesburg beauty services",
-        "salon near me Hartbeespoort Dam",
-        "beauty treatments Gauteng",
-    ],
+    keywords: buildLocationsIndexKeywords(),
     alternates: {
         canonical: "https://www.galeobeauty.com/locations",
     },

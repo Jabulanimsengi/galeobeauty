@@ -21,7 +21,7 @@ import {
   Copy,
   AlertTriangle,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   SelectedTreatment,
   BookingState,
@@ -52,6 +52,7 @@ export function BookingSheet({
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   // Detect mobile viewport
   useEffect(() => {
@@ -199,7 +200,7 @@ Date: ${formatDate(state.appointment.date)}
 Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 
 ---
-📱 *Source:* galeobeauty.com`;
+Source: galeobeauty.com`;
     } else {
       // Treatment booking message format
       if (!state.treatments || state.treatments.length === 0) return;
@@ -243,7 +244,7 @@ Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 ${bankingDetails}
 
 ---
-📱 *Source:* Customer found this service on galeobeauty.com`;
+Source: Customer found this service on galeobeauty.com`;
     }
 
     const encodedMessage = encodeURIComponent(message);
@@ -272,7 +273,7 @@ ${bankingDetails}
             : "w-full sm:max-w-md p-0 flex flex-col overflow-hidden h-auto max-h-[85vh] my-auto rounded-l-2xl sm:rounded-2xl sm:mr-4"
         }
       >
-        {/* Header — drag handle is inside the dark bg on mobile */}
+        {/* Header - drag handle is inside the dark bg on mobile */}
         <SheetHeader className={`p-6 pb-4 border-b bg-foreground text-background ${isMobile ? "pt-0" : ""}`}>
           {isMobile && (
             <div className="flex justify-center pt-3 pb-2">
@@ -296,7 +297,7 @@ ${bankingDetails}
                   <span className="text-gold font-semibold">R {total.toLocaleString()}</span>
                   {totalDuration > 0 && (
                     <>
-                      <span className="text-background/50">·</span>
+                      <span className="text-background/50">|</span>
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {formatDuration(totalDuration)}
@@ -313,6 +314,7 @@ ${bankingDetails}
             {steps.map((step, idx) => (
               <div key={step.number} className="flex items-center">
                 <button
+                  type="button"
                   onClick={() => {
                     if (step.number === 1) goToStep(1);
                     else if (step.number === 2 && isStep1Valid) goToStep(2);
@@ -359,10 +361,10 @@ ${bankingDetails}
             {state.currentStep === 1 && (
               <motion.div
                 key="step1"
-                initial={{ opacity: 0, x: 20 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0, x: -20 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
                 className="space-y-4"
               >
                 <h3 className="font-semibold text-foreground mb-4">Your Details</h3>
@@ -409,10 +411,10 @@ ${bankingDetails}
             {state.currentStep === 2 && (
               <motion.div
                 key="step2"
-                initial={{ opacity: 0, x: 20 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0, x: -20 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
                 className="space-y-6"
               >
                 <div>
@@ -431,6 +433,7 @@ ${bankingDetails}
                   <div className="space-y-2">
                     {timeSlotOptions.map((slot) => (
                       <button
+                        type="button"
                         key={slot.value}
                         onClick={() => updateAppointment("timeSlot", slot.value)}
                         className={`w-full p-4 rounded-xl border text-left transition-all ${state.appointment.timeSlot === slot.value
@@ -451,10 +454,10 @@ ${bankingDetails}
             {state.currentStep === 3 && (
               <motion.div
                 key="step3"
-                initial={{ opacity: 0, x: 20 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0, x: -20 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
                 className="space-y-6"
               >
                 <h3 className="font-semibold text-foreground">
@@ -650,3 +653,4 @@ ${bankingDetails}
     </Sheet>
   );
 }
+

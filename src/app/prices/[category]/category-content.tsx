@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, ChevronDown, Check } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { TreatmentListItem } from "@/components/booking/TreatmentListItem";
 import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";

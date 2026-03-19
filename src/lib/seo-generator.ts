@@ -156,7 +156,7 @@ export function generateServiceDescription(
 // DYNAMIC BENEFITS GENERATOR
 // ==========================================
 
-export function generateServiceBenefits(categoryTitle: string, subcategoryTitle: string): string[] {
+export function generateServiceBenefits(): string[] {
     // This is a simplified fallback if used elsewhere
     return [
         "Professional certified service",

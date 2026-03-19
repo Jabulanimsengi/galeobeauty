@@ -1,21 +1,11 @@
 import { Metadata } from "next";
+import { buildPricesPageKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
   title: "Prices & Treatment Menu | Galeo Beauty Hartbeespoort",
   description:
     "View our full price list for 260+ beauty treatments at Galeo Beauty in Hartbeespoort. Facials from R490, IPL from R270, nails, lashes, permanent makeup, injectables, body contouring & more.",
-  keywords: [
-    "beauty salon prices Hartbeespoort",
-    "facial prices near me",
-    "IPL hair removal cost Hartbeespoort",
-    "nail salon prices Hartbeespoort",
-    "lash extension prices near me",
-    "permanent makeup cost Hartbeespoort",
-    "dermal filler prices South Africa",
-    "body contouring cost near me",
-    "Galeo Beauty price list",
-    "affordable beauty treatments Hartbeespoort",
-  ],
+  keywords: buildPricesPageKeywords(),
   alternates: {
     canonical: "https://www.galeobeauty.com/prices",
   },

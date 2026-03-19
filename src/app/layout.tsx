@@ -3,6 +3,7 @@ import { cormorant, montserrat } from "@/lib/fonts";
 import { FloatingSocials } from "@/components/ui/floating-socials";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
 import { AGGREGATE_RATING } from "@/lib/reviews-data";
+import { buildGlobalKeywords, buildOfferCatalogEntries } from "@/lib/seo-keywords";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,35 +13,9 @@ export const metadata: Metadata = {
     template: "%s | Galeo Beauty Hartbeespoort",
   },
   description:
-    "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Skincare, facials, injectables, IPL, nails, lashes, waxing, hair & more. Serving Harties Village, Centurion & Pretoria, North West.",
+    "Beauty salon, day spa, med spa and aesthetic clinic in Hartbeespoort. Facials, injectables, body contouring, IPL hair removal, hair, nails, lashes, massage and permanent makeup.",
 
-  keywords: [
-    "beauty salon Hartbeespoort",
-    "beauty salon Harties",
-    "spa near Hartbeespoort Dam",
-    "Harties Dam beauty salon",
-    "Galeo Beauty",
-    "beauty treatments Harties Village",
-    "salon near Centurion",
-    "salon near Pretoria",
-    "beauty salon North West",
-    "Hartbeespoort Dam area salon",
-    "beauty treatments around Harties",
-    "best beauty salon Hartbeespoort",
-    "facials nails lashes Harties",
-    "day spa Hartbeespoort Dam",
-    "skoonheidsalon Hartbeespoort",
-    "massage spa Hartbeespoort",
-    "permanent makeup Harties",
-    "fat freezing clinic North West",
-    "chemical peel near me",
-    "laser hair removal Hartbeespoort",
-    "bridal makeup artist Harties",
-    "dermal fillers Hartbeespoort",
-    "anti-aging treatments Harties",
-    "gel nails and acrylics Hartbeespoort",
-    "best lash extensions Harties"
-  ],
+  keywords: buildGlobalKeywords(),
   authors: [{ name: "Galeo Beauty" }],
   creator: "Galeo Beauty",
   icons: {
@@ -60,7 +35,7 @@ export const metadata: Metadata = {
     siteName: "Galeo Beauty",
     title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
     description:
-      "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Skincare, facials, nails, lashes & more. Serving Centurion & Pretoria.",
+      "Beauty salon, day spa and aesthetic clinic in Hartbeespoort for facials, injectables, nails, lashes, massage, hair and body contouring.",
     images: [
       {
         url: "/images/logo.png",
@@ -74,7 +49,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
     description:
-      "Premium beauty salon in Hartbeespoort (Harties), near Hartbeespoort Dam. Facials, nails, lashes & more.",
+      "Beauty salon, day spa and aesthetic clinic in Hartbeespoort for facials, injectables, nails, lashes, massage and hair.",
     images: ["/images/logo.png"],
   },
   robots: {
@@ -154,7 +129,7 @@ export default function RootLayout({
               alternateName: ["Galeo Beauty Salon", "Galeo Spa", "Galeo Beauty Hartbeespoort"],
               url: "https://www.galeobeauty.com",
               logo: "https://www.galeobeauty.com/images/logo.png",
-              description: "Premium beauty salon and spa in Hartbeespoort Dam offering facials, lash extensions, nail care, fat freezing, medical aesthetics, and over 100 beauty treatments. Serving Pretoria, Johannesburg, Centurion, and Gauteng.",
+              description: "Beauty salon, day spa and aesthetic clinic in Hartbeespoort offering facials, injectables, body contouring, IPL hair reduction, hair, nails, lashes, massage and permanent makeup.",
               foundingDate: "2020",
               areaServed: [
                 { "@type": "City", name: "Hartbeespoort" },
@@ -178,17 +153,7 @@ export default function RootLayout({
               hasOfferCatalog: {
                 "@type": "OfferCatalog",
                 name: "Beauty & Spa Services",
-                itemListElement: [
-                  { "@type": "Offer", itemOffered: { "@type": "Service", name: "Fat Freezing Hartbeespoort", url: "https://www.galeobeauty.com/prices/fat-freezing" } },
-                  { "@type": "Offer", itemOffered: { "@type": "Service", name: "Medical Aesthetics Hartbeespoort", url: "https://www.galeobeauty.com/prices/hart-aesthetics" } },
-                  { "@type": "Offer", itemOffered: { "@type": "Service", name: "Permanent Makeup Hartbeespoort", url: "https://www.galeobeauty.com/prices/permanent-makeup" } },
-                  { "@type": "Offer", itemOffered: { "@type": "Service", name: "IPL Hair Removal Hartbeespoort", url: "https://www.galeobeauty.com/prices/ipl" } },
-                  { "@type": "Offer", itemOffered: { "@type": "Service", name: "Clinical Skin Treatments Hartbeespoort", url: "https://www.galeobeauty.com/prices/medical" } },
-                  { "@type": "Offer", itemOffered: { "@type": "Service", name: "Laser Hair Removal Hartbeespoort", url: "https://www.galeobeauty.com/prices/ipl" } },
-                  { "@type": "OfferCatalog", name: "Facials & Skincare", description: "Dermalogica and QMS professional facials" },
-                  { "@type": "OfferCatalog", name: "Lash & Brow Services", description: "Extensions, lifts, tints, and microblading" },
-                  { "@type": "OfferCatalog", name: "Nail Services", description: "Manicures, pedicures, gel, and acrylic nails" },
-                ],
+                itemListElement: buildOfferCatalogEntries(),
               },
             }),
           }}
@@ -202,7 +167,7 @@ export default function RootLayout({
               "@type": "WebSite",
               name: "Galeo Beauty",
               url: "https://www.galeobeauty.com",
-              description: "Top rated beauty salon in Hartbeespoort Dam serving Pretoria, Johannesburg and Gauteng with premium skincare, facials, lashes, nails, and medical aesthetics.",
+              description: "Galeo Beauty is a Hartbeespoort beauty salon and aesthetic clinic for skincare, injectables, body contouring, hair, nails, lashes and massage.",
               publisher: {
                 "@type": "Organization",
                 name: "Galeo Beauty",

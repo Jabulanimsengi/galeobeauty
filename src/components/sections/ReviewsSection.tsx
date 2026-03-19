@@ -1,10 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Star, ChevronRight, ChevronLeft, Quote, ExternalLink } from "lucide-react";
 
-// Real customer testimonials from Fresha (4.9 stars, 159+ reviews)
 const testimonials = [
     {
         id: 1,
@@ -19,7 +18,7 @@ const testimonials = [
         name: "Lelani S.",
         date: "January 2026",
         rating: 5,
-        text: "Dandi and Lindsey are my favorites 🥰 Thank you Galeo Beauty!",
+        text: "Dandi and Lindsey are my favorites. Thank you Galeo Beauty!",
         service: "Beauty Services",
     },
     {
@@ -27,7 +26,7 @@ const testimonials = [
         name: "Morgan",
         date: "January 2026",
         rating: 5,
-        text: "It was absolutely amazing! I love my eyelashes. Angel lashes again by Dandi 😊",
+        text: "It was absolutely amazing! I love my eyelashes. Angel lashes again by Dandi.",
         service: "Lash Extensions",
     },
     {
@@ -43,7 +42,7 @@ const testimonials = [
         name: "Tersia",
         date: "January 2026",
         rating: 5,
-        text: "Elishia does great nails! 💕 Always happy with the results.",
+        text: "Elishia does great nails. Always happy with the results.",
         service: "Nail Services",
     },
     {
@@ -78,11 +77,11 @@ export function ReviewsSection() {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
+    const prefersReducedMotion = useReducedMotion();
 
     const checkScroll = () => {
         if (scrollContainerRef.current) {
             const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-            // Only show left arrow after scrolling past ~half a card width (50px threshold)
             setCanScrollLeft(scrollLeft > 50);
             setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
         }
@@ -96,13 +95,13 @@ export function ReviewsSection() {
 
     const scrollRight = () => {
         if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: 350, behavior: "smooth" });
+            scrollContainerRef.current.scrollBy({ left: 350, behavior: prefersReducedMotion ? "auto" : "smooth" });
         }
     };
 
     const scrollLeft = () => {
         if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: -350, behavior: "smooth" });
+            scrollContainerRef.current.scrollBy({ left: -350, behavior: prefersReducedMotion ? "auto" : "smooth" });
         }
     };
 
@@ -110,7 +109,7 @@ export function ReviewsSection() {
         <section className="py-16 md:py-24 bg-rose-50/60">
             <div className="container mx-auto px-4 sm:px-6">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="text-center mb-10 md:mb-16"
@@ -142,7 +141,6 @@ export function ReviewsSection() {
                 </motion.div>
 
                 <div className="relative group">
-                    {/* Horizontal Scroll Container */}
                     <div
                         ref={scrollContainerRef}
                         onScroll={checkScroll}
@@ -151,31 +149,33 @@ export function ReviewsSection() {
                         {testimonials.map((testimonial, index) => (
                             <motion.div
                                 key={testimonial.id}
-                                initial={{ opacity: 0, x: 50 }}
+                                initial={prefersReducedMotion ? false : { opacity: 0, x: 50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="flex-shrink-0 w-[72vw] sm:w-[55vw] md:w-[300px] snap-center md:snap-start"
+                                transition={{ delay: prefersReducedMotion ? 0 : index * 0.1 }}
+                                className="flex-shrink-0 w-[78vw] sm:w-[55vw] md:w-[320px] snap-center md:snap-start"
                             >
-                                <div className="relative h-full bg-background rounded-xl p-4 sm:p-5 shadow-md border border-border/50 flex flex-col">
-                                    {/* Quote Icon */}
-                                    <div className="absolute top-3 right-3 opacity-10">
+                                <div className="relative h-full bg-background rounded-2xl p-5 sm:p-6 shadow-sm border border-border/60 flex flex-col transition-colors duration-300 hover:border-gold/30">
+                                    <div className="absolute top-4 right-4 opacity-10">
                                         <Quote className="w-8 h-8 text-gold" />
                                     </div>
 
-                                    {/* Stars */}
                                     <div className="flex gap-0.5 mb-3">
                                         {[...Array(testimonial.rating)].map((_, i) => (
                                             <Star key={i} className="w-3.5 h-3.5 text-gold fill-gold" />
                                         ))}
                                     </div>
 
-                                    {/* Review Text */}
-                                    <p className="text-foreground/90 text-xs sm:text-sm leading-relaxed flex-1 mb-4">
+                                    <p className="text-sm leading-relaxed text-foreground/90 flex-1 mb-5">
                                         &ldquo;{testimonial.text}&rdquo;
                                     </p>
 
-                                    {/* Reviewer Info */}
+                                    <div className="mb-4">
+                                        <span className="inline-flex items-center rounded-full bg-gold/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
+                                            {testimonial.service}
+                                        </span>
+                                    </div>
+
                                     <div className="flex items-center gap-2.5 pt-3 border-t border-border/30">
                                         <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
                                             <span className="text-gold font-semibold text-xs">
@@ -186,7 +186,6 @@ export function ReviewsSection() {
                                             <p className="font-medium text-foreground text-xs">{testimonial.name}</p>
                                             <p className="text-muted-foreground text-[10px]">{testimonial.date}</p>
                                         </div>
-                                        {/* Google Icon */}
                                         <div className="ml-auto">
                                             <svg className="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
                                                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -201,35 +200,33 @@ export function ReviewsSection() {
                         ))}
                     </div>
 
-                    {/* Golden Scroll Arrows - Desktop */}
                     <button
+                        type="button"
                         onClick={scrollLeft}
                         className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gold text-background shadow-lg transition-all duration-300 hover:scale-110 hover:bg-gold-light ${canScrollLeft ? "opacity-0 translate-x-[-1rem] group-hover:opacity-100 group-hover:translate-x-[-50%]" : "opacity-0 pointer-events-none scale-0"}`}
                         aria-label="Scroll left"
-                        style={{ left: '-24px' }}
+                        style={{ left: "-24px" }}
                     >
                         <ChevronLeft className="w-6 h-6" />
                     </button>
 
                     <button
+                        type="button"
                         onClick={scrollRight}
                         className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gold text-background shadow-lg transition-all duration-300 hover:scale-110 hover:bg-gold-light ${canScrollRight ? "opacity-0 translate-x-[1rem] group-hover:opacity-100 group-hover:translate-x-[50%]" : "opacity-0 pointer-events-none scale-0"}`}
                         aria-label="Scroll right"
-                        style={{ right: '-24px' }}
+                        style={{ right: "-24px" }}
                     >
                         <ChevronRight className="w-6 h-6" />
                     </button>
 
-                    {/* Mobile Scroll Indicator - Right (visible when can scroll right) */}
                     {canScrollRight && (
                         <div className="md:hidden absolute right-0 top-0 bottom-8 w-16 pointer-events-none flex items-center justify-end">
-                            {/* Gradient fade */}
                             <div className="absolute inset-0 bg-gradient-to-l from-secondary/80 via-secondary/40 to-transparent" />
-                            {/* Animated arrow */}
                             <motion.div
                                 initial={{ x: 0 }}
-                                animate={{ x: [0, 6, 0] }}
-                                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                                animate={prefersReducedMotion ? { x: 0 } : { x: [0, 6, 0] }}
+                                transition={{ repeat: prefersReducedMotion ? 0 : Infinity, duration: 1.5, ease: "easeInOut" }}
                                 className="relative z-10 mr-2"
                             >
                                 <div className="bg-gold/90 rounded-full p-2 shadow-lg">
@@ -239,16 +236,13 @@ export function ReviewsSection() {
                         </div>
                     )}
 
-                    {/* Mobile Scroll Indicator - Left (visible when can scroll left) */}
                     {canScrollLeft && (
                         <div className="md:hidden absolute left-0 top-0 bottom-8 w-16 pointer-events-none flex items-center justify-start">
-                            {/* Gradient fade */}
                             <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/40 to-transparent" />
-                            {/* Animated arrow */}
                             <motion.div
                                 initial={{ x: 0 }}
-                                animate={{ x: [0, -6, 0] }}
-                                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                                animate={prefersReducedMotion ? { x: 0 } : { x: [0, -6, 0] }}
+                                transition={{ repeat: prefersReducedMotion ? 0 : Infinity, duration: 1.5, ease: "easeInOut" }}
                                 className="relative z-10 ml-2"
                             >
                                 <div className="bg-gold/90 rounded-full p-2 shadow-lg">
@@ -259,9 +253,8 @@ export function ReviewsSection() {
                     )}
                 </div>
 
-                {/* Google Reviews CTA */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     className="text-center mt-10"
@@ -280,4 +273,3 @@ export function ReviewsSection() {
         </section>
     );
 }
-

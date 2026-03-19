@@ -1,13 +1,11 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
-import { UrgencyBadge } from "@/components/ui/urgency-badge";
-import { ArrowRight, Sparkles, Heart, Eye, Scissors, Zap, ChevronRight, Shield } from "lucide-react";
+import { ArrowRight, Sparkles, Heart, Eye, Scissors, Zap, ChevronRight } from "lucide-react";
 
 const services = [
     {
@@ -261,19 +259,22 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
     const [isHovered, setIsHovered] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const cardRef = useRef<HTMLDivElement>(null);
+    const prefersReducedMotion = useReducedMotion();
 
     const displayImages = service.images.slice(0, 6);
+    const currentImage = displayImages[currentImageIndex];
+    const currentAlt = service.imageAlts?.[currentImageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`;
 
     // Auto-rotate images every 3.5 seconds
     useEffect(() => {
-        if (displayImages.length <= 1) return;
+        if (displayImages.length <= 1 || prefersReducedMotion) return;
 
         const interval = setInterval(() => {
             setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
         }, 3500);
 
         return () => clearInterval(interval);
-    }, [displayImages.length]);
+    }, [displayImages.length, prefersReducedMotion]);
 
     // Mouse parallax effect
     const x = useMotionValue(0);
@@ -287,6 +288,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
     const rotateY = useTransform(xSpring, [-0.5, 0.5], ["-5deg", "5deg"]);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (prefersReducedMotion) return;
         if (!cardRef.current) return;
         const rect = cardRef.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
@@ -300,8 +302,6 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
         y.set(0);
         setIsHovered(false);
     };
-
-    const IconComponent = service.icon;
 
     return (
         <motion.div
@@ -332,24 +332,27 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                             {/* Background gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
 
-                            {/* Main Image - Crossfade between images */}
-                            {displayImages.map((imgSrc, imgIndex) => (
-                                <CloudinaryImage
-                                    key={imgSrc}
-                                    src={imgSrc}
-                                    alt={service.imageAlts?.[imgIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`}
-                                    fill
-                                    className={`object-cover object-center transition-opacity duration-700 ease-out ${currentImageIndex === imgIndex
-                                        ? 'opacity-100'
-                                        : 'opacity-0'
-                                        }`}
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
-                                    // Eagerly load all images in the carousel so they don't flash when transitioning
-                                    loading="eager"
-                                    priority={index === 0 || imgIndex === 0} // Highest priority to the first service card's images
-                                    noSpinner={true} // spinner would look broken here
-                                />
-                            ))}
+                            {/* Main image - only render the active frame to keep the homepage light */}
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentImage}
+                                    initial={prefersReducedMotion ? false : { opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+                                    transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
+                                    className="absolute inset-0"
+                                >
+                                    <CloudinaryImage
+                                        src={currentImage}
+                                        alt={currentAlt}
+                                        fill
+                                        className="object-cover object-center"
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                        priority={index === 0}
+                                        noSpinner
+                                    />
+                                </motion.div>
+                            </AnimatePresence>
 
                             {/* Overlay gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-500 group-hover:opacity-80" />
@@ -369,6 +372,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5">
                                     {displayImages.map((_, idx) => (
                                         <button
+                                            type="button"
                                             key={idx}
                                             onClick={(e) => {
                                                 e.preventDefault();
@@ -428,7 +432,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                     {/* Features list */}
                     <div className="grid grid-cols-2 gap-3 pt-4">
                         {
-                            service.features.map((feature, i) => (
+                            service.features.map((feature) => (
                                 <div
                                     key={feature}
                                     className="flex items-center gap-2 text-sm text-foreground/80"
@@ -460,6 +464,8 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
 }
 
 export function ServicesSection() {
+    const prefersReducedMotion = useReducedMotion();
+
     return (
         <section className="py-20 md:py-28 lg:py-36 bg-amber-50/50 overflow-hidden relative" id="services">
             {/* Subtle decorative background elements */}
@@ -470,10 +476,10 @@ export function ServicesSection() {
                 {/* Section Header */}
                 <motion.div
                     className="text-center mb-20 md:mb-28 relative"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: prefersReducedMotion ? 0 : 0.5 }}
                 >
                     {/* Decorative line */}
                     <div className="flex items-center justify-center gap-4 mb-6">
@@ -502,10 +508,10 @@ export function ServicesSection() {
                         ].map((badge, index) => (
                             <motion.div
                                 key={badge.label}
-                                initial={{ opacity: 0, y: 10 }}
+                                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.4, delay: index * 0.1 }}
+                                transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : index * 0.1 }}
                                 className="flex items-center gap-2.5 bg-white border border-gold/20 px-5 py-3 rounded-full shadow-sm hover:shadow-md hover:border-gold/40 transition-all duration-300 group"
                             >
                                 <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
@@ -549,10 +555,10 @@ export function ServicesSection() {
                 {/* Bottom CTA */}
                 <motion.div
                     className="text-center mt-24 md:mt-32 pt-16 border-t border-border/30"
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : 0.2 }}
                 >
                     <h3 className="font-serif text-2xl md:text-3xl text-foreground mb-4">
                         Explore Our Full Menu

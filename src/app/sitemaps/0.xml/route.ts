@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAllBlogPosts } from '@/lib/blog-data';
 import { getAllSEOServices } from '@/lib/seo-data';
 import { SITEMAP_0_LOCATIONS } from '@/lib/sitemap-config';
+import { SITEMAP_STATIC_PAGES } from '@/lib/sitemap-static-pages';
 
 const BASE_URL = 'https://www.galeobeauty.com';
 
@@ -11,39 +12,6 @@ const BUILD_DATE = new Date().toISOString();
 // Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
 // BUILD_DATE is already computed above
 
-
-const STATIC_PAGES = [
-  { path: '', priority: 1.0, changefreq: 'weekly' },
-  { path: '/prices', priority: 0.9, changefreq: 'weekly' },
-  { path: '/specials', priority: 0.8, changefreq: 'weekly' },
-  { path: '/gallery', priority: 0.7, changefreq: 'monthly' },
-  { path: '/about', priority: 0.6, changefreq: 'monthly' },
-  { path: '/contact', priority: 0.8, changefreq: 'monthly' },
-  { path: '/blog', priority: 0.85, changefreq: 'weekly' },
-  { path: '/careers', priority: 0.5, changefreq: 'monthly' },
-  { path: '/privacy-policy', priority: 0.3, changefreq: 'yearly' },
-  { path: '/terms-of-service', priority: 0.3, changefreq: 'yearly' },
-  // Note: Root-level service pages (/laser-hair-removal, /anti-aging, /body-contouring,
-  //       /medical-spa, /permanent-makeup, /bridal-beauty, /matric-dance) have been
-  //       permanently redirected to their /prices/ equivalents and removed from sitemap.
-  { path: '/prices/hart-aesthetics', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/fat-freezing', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/slimming', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/massages', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/dermalogica', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/ipl', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/makeup', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/medical', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/permanent-makeup', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/qms', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/sunbed', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/waxing', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/hair', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/nails', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/lashes-brows', priority: 0.85, changefreq: 'weekly' },
-  { path: '/prices/hair-extensions', priority: 0.85, changefreq: 'weekly' },
-  // Note: All 262 service pages are added dynamically below
-];
 
 function escapeXml(unsafe: string): string {
   return unsafe
@@ -59,7 +27,7 @@ export async function GET() {
   const entries: string[] = [];
 
   // Add static pages
-  for (const page of STATIC_PAGES) {
+  for (const page of SITEMAP_STATIC_PAGES) {
     entries.push(`
   <url>
     <loc>${escapeXml(BASE_URL + page.path)}</loc>

@@ -1,20 +1,26 @@
 "use client";
 
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Shield, Star, Sparkles, Award, ArrowRight } from "lucide-react";
+import { ChevronDown, Star, Sparkles, Award, ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { businessInfo } from "@/lib/constants";
 
 // Animated counter component
-function AnimatedCounter({ target, suffix = "", duration = 2 }: { target: number; suffix?: string; duration?: number }) {
+function AnimatedCounter({ target, suffix = "", duration = 2, disabled = false }: { target: number; suffix?: string; duration?: number; disabled?: boolean }) {
     const [count, setCount] = useState(0);
     const [hasAnimated, setHasAnimated] = useState(false);
     const ref = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
+        if (disabled) {
+            setCount(target);
+            setHasAnimated(true);
+            return;
+        }
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting && !hasAnimated) {
@@ -37,34 +43,34 @@ function AnimatedCounter({ target, suffix = "", duration = 2 }: { target: number
 
         if (ref.current) observer.observe(ref.current);
         return () => observer.disconnect();
-    }, [target, duration, hasAnimated]);
+    }, [target, duration, hasAnimated, disabled]);
 
     return <span ref={ref}>{count}{suffix}</span>;
 }
 
 // Floating decorative element - Hidden on mobile for performance
-function FloatingShape({ className, delay = 0 }: { className?: string; delay?: number }) {
+function FloatingShape({ className, delay = 0, reducedMotion = false }: { className?: string; delay?: number; reducedMotion?: boolean }) {
     return (
         <motion.div
             className={className}
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{
+            animate={reducedMotion ? { opacity: 0.35, scale: 1 } : {
                 opacity: [0.3, 0.6, 0.3],
                 scale: [1, 1.1, 1],
                 y: [0, -20, 0],
                 rotate: [0, 5, 0]
             }}
             transition={{
-                duration: 6,
+                duration: reducedMotion ? 0.2 : 6,
                 delay,
-                repeat: Infinity,
+                repeat: reducedMotion ? 0 : Infinity,
                 ease: "easeInOut"
             }}
         />
     );
 }
 
-// Ken Burns animation presets — each slide gets a different zoom/pan direction
+// Ken Burns animation presets - each slide gets a different zoom/pan direction
 const kenBurnsVariants = [
     { // Slow zoom in from center
         initial: { scale: 1, x: "0%", y: "0%" },
@@ -84,44 +90,9 @@ const kenBurnsVariants = [
     },
 ];
 
-// Text animation variants - Simplified for mobile performance
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.08,
-            delayChildren: 0.1
-        }
-    }
-};
-
-const wordVariants = {
-    hidden: {
-        opacity: 0,
-        y: 15
-    },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.4,
-            ease: [0.25, 0.46, 0.45, 0.94] as const
-        }
-    }
-};
-
-const fadeUpVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] as const }
-    }
-};
-
 export function HeroSection() {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const prefersReducedMotion = useReducedMotion();
 
     // Array of hero images with descriptive alt text
     const heroImages = [
@@ -133,12 +104,14 @@ export function HeroSection() {
 
     // Auto-slide effect - changes image every 5 seconds
     useEffect(() => {
+        if (prefersReducedMotion) return;
+
         const timer = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % heroImages.length);
         }, 5000);
 
         return () => clearInterval(timer);
-    }, [heroImages.length]);
+    }, [heroImages.length, prefersReducedMotion]);
 
     return (
         <section className="relative h-[80svh] sm:h-[90dvh] lg:h-[100vh] overflow-hidden">
@@ -194,10 +167,12 @@ export function HeroSection() {
             <FloatingShape
                 className="absolute top-20 left-[10%] w-32 h-32 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 blur-2xl z-20 hidden xl:block"
                 delay={0}
+                reducedMotion={prefersReducedMotion}
             />
             <FloatingShape
                 className="absolute bottom-40 left-[15%] w-24 h-24 rounded-full bg-gradient-to-br from-gold/15 to-transparent blur-xl z-20 hidden xl:block"
                 delay={1.5}
+                reducedMotion={prefersReducedMotion}
             />
 
             {/* Content Overlay - All Devices */}
@@ -218,7 +193,7 @@ export function HeroSection() {
 
                         {/* Headline with Staggered Animation */}
                         <h1 className="animate-hero-text animate-hero-text-delay-1 font-serif text-[2.25rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl leading-[1.1] text-white mb-4 sm:mb-6 lg:mb-8">
-                            <span className="sr-only">Galeo Beauty Salon & Spa Hartbeespoort – </span>
+                            <span className="sr-only">Galeo Beauty Salon &amp; Spa Hartbeespoort - </span>
                             <span className="inline-block drop-shadow-lg">Science </span>
                             <span className="inline-block font-light italic text-white/80 drop-shadow-lg">
                                 Meets
@@ -242,12 +217,12 @@ export function HeroSection() {
 
                         {/* CTA Group */}
                         <div
-                            className="animate-hero-text animate-hero-text-delay-3 hidden sm:flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
+                            className="animate-hero-text animate-hero-text-delay-3 flex flex-col sm:flex-row gap-2.5 sm:gap-4 mb-5 sm:mb-8 lg:mb-12"
                         >
                             <Button
                                 asChild
                                 size="lg"
-                                className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-6 sm:px-10 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20"
+                                className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-6 sm:px-10 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20 w-full sm:w-auto"
                             >
                                 <a href={businessInfo.socials.fresha} target="_blank" rel="noopener noreferrer">
                                     <span className="relative z-10 font-semibold">
@@ -260,7 +235,7 @@ export function HeroSection() {
                             <Button
                                 asChild
                                 size="lg"
-                                className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-6 sm:px-8 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10"
+                                className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-6 sm:px-8 h-11 sm:h-14 font-medium text-sm sm:text-base shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10 w-full sm:w-auto"
                             >
                                 <NavLink href="/about">
                                     <span className="group-hover:text-gold transition-colors duration-300 font-semibold">
@@ -280,7 +255,7 @@ export function HeroSection() {
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-xl sm:text-xl font-bold text-white drop-shadow-md">
-                                        <AnimatedCounter target={500} suffix="+" />
+                                        <AnimatedCounter target={500} suffix="+" disabled={prefersReducedMotion} />
                                     </span>
                                     <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Happy Clients
@@ -306,8 +281,9 @@ export function HeroSection() {
 
             {/* Carousel Navigation Dots - Centered */}
             <div className="absolute bottom-32 sm:bottom-36 lg:bottom-40 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2">
-                {heroImages.map((image, index) => (
+                {heroImages.map((_, index) => (
                     <button
+                        type="button"
                         key={index}
                         onClick={() => setCurrentSlide(index)}
                         className={`transition-all duration-300 rounded-full shadow-lg ${currentSlide === index
@@ -319,24 +295,26 @@ export function HeroSection() {
                 ))}
             </div>
             {/* Scroll Indicator - Desktop & Tablet Only */}
-            <motion.div
+            <motion.button
+                type="button"
                 className="hidden sm:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex-col items-center gap-2 cursor-pointer"
-                initial={{ opacity: 0, y: -20 }}
+                initial={prefersReducedMotion ? false : { opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5, duration: 0.6 }}
-                onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+                transition={{ delay: prefersReducedMotion ? 0 : 1.5, duration: 0.6 }}
+                onClick={() => window.scrollTo({ top: window.innerHeight, behavior: prefersReducedMotion ? "auto" : "smooth" })}
             >
                 <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60 drop-shadow-md">
                     Discover More
                 </span>
                 <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    animate={prefersReducedMotion ? { y: 0 } : { y: [0, 8, 0] }}
+                    transition={{ duration: 1.5, repeat: prefersReducedMotion ? 0 : Infinity, ease: "easeInOut" }}
                 >
                     <ChevronDown className="w-5 h-5 text-gold drop-shadow-lg" />
                 </motion.div>
-            </motion.div>
+            </motion.button>
 
         </section>
     );
 }
+

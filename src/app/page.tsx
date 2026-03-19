@@ -8,48 +8,20 @@ import {
   ReviewsSection,
   BrandsSection,
 } from "@/components/sections";
+import { buildHomepageKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
   title: "Galeo Beauty | Hair, Nails, Beauty Salon & Medical Spa in Hartbeespoort",
   description:
-    "Hair salon, nail salon, beauty salon and medical spa in Hartbeespoort. Visit Galeo Beauty at Shop 6, Landsmeer for hair, nails, facials, lashes, permanent makeup, massage and advanced aesthetics.",
-  keywords: [
-    "beauty salon Hartbeespoort",
-    "hair salon Hartbeespoort",
-    "hairdresser Hartbeespoort",
-    "nail salon Hartbeespoort",
-    "hair salon in Hartbeespoort",
-    "salon Hartbeespoort",
-    "salon in Hartbeespoort",
-    "medical spa Hartbeespoort Dam",
-    "beauty salon near me",
-    "hair salon near me",
-    "nail salon near me",
-    "Galeo Beauty Hartbeespoort",
-    "skincare clinic Hartbeespoort",
-    "facials nails lashes Hartbeespoort",
-    "nails Harties",
-    "nails Hartbeespoort",
-    "salon Landsmeer Estate",
-    "day spa Hartbeespoort Dam",
-    "IPL hair removal Hartbeespoort",
-    "permanent makeup Hartbeespoort",
-    "beauty treatments near Pretoria",
-    "best massage spa Harties",
-    "bridal makeup artist Hartbeespoort",
-    "fat freezing clinic North West",
-    "chemical peel near me",
-    "hybrid lashes Hartbeespoort",
-    "gel nails and acrylics Harties",
-    "dermal fillers and injectables Harties"
-  ],
+    "Hair salon, nail salon, beauty salon, day spa and aesthetic clinic in Hartbeespoort. Visit Galeo Beauty for facials, injectables, body contouring, lashes, massage, permanent makeup and advanced skin treatments.",
+  keywords: buildHomepageKeywords(),
   alternates: {
     canonical: "https://www.galeobeauty.com",
   },
   openGraph: {
     title: "Galeo Beauty | Hair, Nails, Beauty Salon & Medical Spa in Hartbeespoort",
     description:
-      "Hair salon, nail salon, beauty salon and medical spa in Hartbeespoort. Hair, nails, facials, massage, lashes and advanced aesthetics at Galeo Beauty.",
+      "Hair salon, nail salon, beauty salon, day spa and aesthetic clinic in Hartbeespoort for facials, injectables, massage, lashes, nails and hair.",
     url: "https://www.galeobeauty.com",
     type: "website",
   },

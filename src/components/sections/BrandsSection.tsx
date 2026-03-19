@@ -14,9 +14,9 @@ const brands = [
 
 export const BrandsSection = () => {
     return (
-        <section className="py-8 md:py-16 bg-gradient-to-b from-stone-100/60 to-stone-50/50 overflow-hidden">
+        <section className="overflow-hidden bg-gradient-to-b from-stone-100/60 to-stone-50/50 py-10 md:py-16">
             {/* Header */}
-            <div className="container mx-auto px-6 mb-6 md:mb-12 text-center">
+            <div className="container mx-auto mb-8 px-4 text-center sm:px-6 md:mb-12">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -36,14 +36,14 @@ export const BrandsSection = () => {
             </div>
 
             {/* Scrolling Logos */}
-            <div className="relative flex overflow-x-hidden group">
+            <div className="group relative flex overflow-x-hidden">
                 {/* Gradient Masks for smooth fade edges */}
-                <div className="absolute top-0 bottom-0 left-0 w-32 z-10 bg-gradient-to-r from-background to-transparent" />
-                <div className="absolute top-0 bottom-0 right-0 w-32 z-10 bg-gradient-to-l from-background to-transparent" />
+                <div className="absolute top-0 bottom-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent sm:w-32" />
+                <div className="absolute top-0 bottom-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent sm:w-32" />
 
                 {/* Infinite Scroll Wrapper */}
                 <motion.div
-                    className="flex gap-20 items-center whitespace-nowrap py-4"
+                    className="flex items-center gap-12 whitespace-nowrap py-4 sm:gap-20"
                     animate={{ x: [0, -1200] }}
                     transition={{
                         repeat: Infinity,
@@ -54,7 +54,7 @@ export const BrandsSection = () => {
                     {[...brands, ...brands, ...brands, ...brands].map((brand, index) => (
                         <div
                             key={`${brand.id}-${index}`}
-                            className="relative w-32 md:w-48 h-16 md:h-24 flex items-center justify-center"
+                            className="relative flex h-14 w-28 items-center justify-center md:h-24 md:w-48"
                         >
                             <CloudinaryImage
                                 src={brand.src}

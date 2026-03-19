@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Calendar } from "lucide-react";
+import { MessageCircle, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { businessInfo } from "@/lib/constants";
 
 // Custom SVG icons for social platforms
@@ -78,6 +79,20 @@ const socialLinks = [
 export function FloatingSocials() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isLabelDismissed, setIsLabelDismissed] = useState(false);
+    const pathname = usePathname();
+
+    const shouldHide = [
+        "/contact",
+        "/prices",
+        "/blog",
+        "/privacy-policy",
+        "/terms-of-service",
+        "/careers",
+    ].some((path) => pathname === path || pathname.startsWith(`${path}/`));
+
+    if (shouldHide) {
+        return null;
+    }
 
     return (
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col-reverse items-end gap-2 sm:gap-3">

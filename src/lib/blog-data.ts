@@ -135,7 +135,7 @@ Yes! Fat freezing is FDA-cleared and CE-approved. At Galeo Beauty, we use only c
 
 ## Book Your Fat Freezing Session
 
-Ready to freeze away stubborn fat? At R799.20 per session, Galeo Beauty offers the best value for fat freezing near Pretoria.
+Ready to freeze away stubborn fat? At R799.20 per session, Galeo Beauty offers professional fat freezing in Hartbeespoort for clients comparing options from Pretoria and beyond.
 
 Contact us today:
 - Phone: 012 111 1730
@@ -1000,7 +1000,7 @@ Your best skin starts with the right routine.`;
 // NEW: Local SEO Blog Post - Pretoria to Hartbeespoort
 const pretoriaToHartbeespoortContent = `## Why Pretoria Residents Are Choosing Hartbeespoort for Premium Beauty Treatments
 
-If you're searching for the best beauty salon near Pretoria, you might be surprised to learn that many savvy beauty enthusiasts are making the scenic 45-minute drive to Hartbeespoort Dam. Here's why Galeo Beauty has become the go-to destination for discerning clients from Pretoria, Centurion, and across Gauteng.
+If you're comparing beauty salons near Pretoria, you might be surprised to learn that many savvy beauty enthusiasts are making the scenic 45-minute drive to Hartbeespoort Dam. Here's why Galeo Beauty has become the go-to destination for discerning clients from Pretoria, Centurion, and across Gauteng.
 
 ## The Hartbeespoort Advantage
 
@@ -1295,7 +1295,7 @@ If you tell us you want "natural but still visible," hybrid brows are often the 
 
 Powder brows generally last longer than microblading, especially on oily skin. Microblading can fade faster when the skin produces more oil or when aftercare is not followed closely.
 
-That is one reason many clients searching for powder brows near me end up choosing powder or hybrid brows over classic microblading.
+That is one reason many clients comparing powder brows and microblading end up choosing powder or hybrid brows over classic microblading.
 
 ## Treatment Process at Galeo Beauty
 
@@ -1356,31 +1356,31 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-15",
         readTime: "8 min read",
         category: "Skincare",
-        keywords: ["facials Pretoria", "best facial near me", "skincare Hartbeespoort", "anti-aging facial", "Dermalogica facial"],
+        keywords: ["facials Pretoria", "professional facials Hartbeespoort", "anti-aging facial", "acne facial", "pigmentation facial", "Dermalogica facial"],
         featuredImage: "/images/blog/facials-pretoria.jpg",
         content: facialsPretoriaContent,
     },
     {
         slug: "fat-freezing-cost-south-africa",
         title: "Fat Freezing Cost in South Africa 2026: Everything You Need to Know",
-        excerpt: "Complete guide to cryolipolysis pricing in South Africa. Learn about fat freezing costs, what to expect, and where to get the best value.",
+        excerpt: "Complete guide to cryolipolysis pricing in South Africa. Learn about fat freezing costs, what to expect, and how different treatment plans compare.",
         author: "Galeo Beauty Team",
         date: "2026-01-10",
         readTime: "10 min read",
         category: "Body Treatments",
-        keywords: ["fat freezing cost", "cryolipolysis South Africa", "fat freezing Pretoria", "body contouring", "slimming treatment"],
+        keywords: ["fat freezing South Africa", "cryolipolysis South Africa", "stubborn belly fat treatment", "love handles treatment", "body contouring", "non-surgical fat reduction"],
         featuredImage: "/images/blog/fat-freezing-cost.jpg",
         content: fatFreezingContent,
     },
     {
         slug: "lash-extensions-hartbeespoort",
-        title: "Top Lash Extensions Near Hartbeespoort: Styles, Prices & What to Expect",
-        excerpt: "Everything you need to know about lash extensions in the Hartbeespoort area. Compare styles, learn about aftercare, and find the best lash salon.",
+        title: "Lash Extensions Near Hartbeespoort: Styles, Prices & What to Expect",
+        excerpt: "Everything you need to know about lash extensions in the Hartbeespoort area. Compare styles, learn about aftercare, and choose the right lash appointment for your goals.",
         author: "Galeo Beauty Team",
         date: "2026-01-08",
         readTime: "7 min read",
         category: "Lashes",
-        keywords: ["lash extensions Hartbeespoort", "eyelash extensions Pretoria", "volume lashes", "lash lift", "lash salon near me"],
+        keywords: ["lash extensions Hartbeespoort", "natural lash extensions", "volume lashes", "hybrid lashes", "lash lift", "wispy lashes"],
         featuredImage: "/images/blog/lash-extensions.jpg",
         content: lashExtensionsContent,
     },
@@ -1392,7 +1392,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-05",
         readTime: "9 min read",
         category: "Makeup",
-        keywords: ["wedding makeup Hartbeespoort", "bridal makeup Pretoria", "wedding makeup artist", "bridal packages", "matric ball makeup"],
+        keywords: ["wedding makeup Hartbeespoort", "bridal makeup Pretoria", "bridal makeup artist", "soft glam bridal makeup", "matric ball makeup", "wedding day makeup trial"],
         featuredImage: "/images/blog/wedding-makeup.jpg",
         content: weddingMakeupContent,
     },
@@ -1404,7 +1404,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-01",
         readTime: "8 min read",
         category: "Permanent Makeup",
-        keywords: ["microblading", "powder brows", "powder brows vs microblading", "permanent makeup Hartbeespoort", "microblading Hartbeespoort", "powder brows near me"],
+        keywords: ["microblading", "powder brows", "powder brows vs microblading", "permanent makeup Hartbeespoort", "brow tattoo", "semi permanent brows"],
         featuredImage: "/images/blog/microblading-vs-powder.jpg",
         content: microbladingContent,
     },
@@ -1418,15 +1418,14 @@ export const blogPosts: BlogPost[] = [
         readTime: "10 min read",
         category: "Local Guide",
         keywords: [
-            "best beauty salon near Pretoria",
-            "top beauty salon Pretoria",
             "beauty salon Hartbeespoort",
+            "beauty salon Harties",
             "spa near Pretoria",
             "salon near Centurion",
-            "best salon Gauteng",
+            "premium beauty treatments Hartbeespoort",
             "beauty treatments Pretoria",
             "facials near Pretoria",
-            "top rated salon Hartbeespoort",
+            "day spa Hartbeespoort",
         ],
         featuredImage: "/images/blog/pretoria-hartbeespoort-drive.jpg",
         content: pretoriaToHartbeespoortContent,
@@ -1440,7 +1439,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-18",
         readTime: "7 min read",
         category: "Skincare",
-        keywords: ["acne treatment Pretoria", "acne facial", "acne scars", "teenage acne", "adult acne treatment", "skin clinic near me"],
+        keywords: ["acne treatment Pretoria", "adult acne treatment", "acne facial", "acne scars", "breakout treatment", "clogged pores treatment"],
         featuredImage: "/images/blog/acne-treatment.jpg",
         content: acneTreatmentContent,
     },
@@ -1452,7 +1451,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-17",
         readTime: "9 min read",
         category: "Hair",
-        keywords: ["hair extensions South Africa", "tape-in extensions", "Remy human hair", "hair extensions Pretoria", "clip-in extensions"],
+        keywords: ["hair extensions South Africa", "tape-in extensions", "Remy human hair", "clip-in extensions", "hair extensions for volume", "hair extensions for fine hair"],
         featuredImage: "/images/blog/hair-extensions.jpg",
         content: hairExtensionsContent,
     },
@@ -1464,7 +1463,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-16",
         readTime: "8 min read",
         category: "Hair Removal",
-        keywords: ["IPL hair removal", "laser hair removal Pretoria", "permanent hair removal", "Brazilian IPL", "hair removal near me"],
+        keywords: ["IPL hair removal", "permanent hair reduction", "Brazilian IPL", "ingrown hair treatment", "face and body hair removal", "laser hair removal alternative"],
         featuredImage: "/images/blog/ipl-hair-removal.jpg",
         content: iplHairRemovalContent,
     },
@@ -1476,7 +1475,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-14",
         readTime: "6 min read",
         category: "Nails",
-        keywords: ["nail trends 2026", "nail art South Africa", "acrylic nails", "gel nails", "nail salon Hartbeespoort", "SNS nails"],
+        keywords: ["nail trends 2026", "nail art South Africa", "acrylic nails", "gel nails", "builder gel nails", "bridal nails"],
         featuredImage: "/images/blog/nail-trends.jpg",
         content: nailTrendsContent,
     },
@@ -1488,7 +1487,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-12",
         readTime: "9 min read",
         category: "Anti-Aging",
-        keywords: ["anti-aging treatments", "anti-wrinkle facial", "collagen facial", "dermal fillers", "microneedling", "skin tightening"],
+        keywords: ["anti-aging treatments", "wrinkle treatment", "collagen facial", "dermal fillers", "microneedling", "skin tightening"],
         featuredImage: "/images/blog/anti-aging.jpg",
         content: antiAgingContent,
     },
@@ -1500,7 +1499,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-11",
         readTime: "6 min read",
         category: "Spa",
-        keywords: ["spa day Hartbeespoort", "pamper packages", "spa near Pretoria", "couples spa", "spa retreat", "day spa"],
+        keywords: ["spa day Hartbeespoort", "pamper packages", "couples spa", "spa retreat", "day spa", "relaxation treatments"],
         featuredImage: "/images/blog/spa-day.jpg",
         content: spaDayContent,
     },
@@ -1512,7 +1511,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-09",
         readTime: "8 min read",
         category: "Aesthetics",
-        keywords: ["lip fillers South Africa", "lip fillers cost", "Russian lips", "dermal fillers", "lip enhancement Pretoria"],
+        keywords: ["lip fillers South Africa", "Russian lips", "natural lip filler", "dermal fillers", "lip enhancement Pretoria", "lip filler without duck lips"],
         featuredImage: "/images/blog/lip-fillers.jpg",
         content: lipFillersContent,
     },
@@ -1524,7 +1523,7 @@ export const blogPosts: BlogPost[] = [
         date: "2026-01-07",
         readTime: "7 min read",
         category: "Waxing",
-        keywords: ["Brazilian wax", "Hollywood wax", "waxing near me", "bikini wax", "full body wax", "waxing Pretoria"],
+        keywords: ["Brazilian wax", "Hollywood wax", "bikini wax", "full body wax", "intimate waxing", "smooth skin treatment"],
         featuredImage: "/images/blog/waxing-guide.jpg",
         content: waxingGuideContent,
     },

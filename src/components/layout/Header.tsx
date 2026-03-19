@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { usePathname } from "next/navigation";
 import { Phone } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -22,8 +20,6 @@ import { cn } from "@/lib/utils";
 export function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -56,7 +52,7 @@ export function Header() {
                     )}
                     style={{ willChange: 'opacity' }}
                 />
-                <div className="container mx-auto flex justify-between items-center px-4">
+                <div className="container mx-auto flex items-center justify-between px-4 sm:px-6">
                     {/* Logo - Responsive sizing */}
                     <NavLink href="/" className="relative z-10">
                         <CloudinaryImage

@@ -114,7 +114,7 @@ export function AboutClient() {
                                         Every treatment delivers visible, tangible results while offering the sensory experience of a luxury spa near Hartbeespoort Dam.
                                     </p>
                                     <p>
-                                        Clients searching for Galeo Beauty reviews consistently find trusted feedback from Google and Fresha, reflecting the quality of care, professionalism and results our Hartbeespoort team is known for.
+                                        Many of our clients first get to know Galeo Beauty through the trusted feedback we receive on Google and Fresha, which reflects the care, professionalism and results our Hartbeespoort team is known for.
                                     </p>
                                 </div>
                                 <div className="mt-10">
@@ -310,7 +310,7 @@ export function AboutClient() {
                                     {/* About the location - SEO text */}
                                     <div className="bg-white/80 rounded-xl p-6 border border-gold/10">
                                         <p className="text-muted-foreground text-sm leading-relaxed">
-                                            Galeo Beauty is proudly located in <strong className="text-foreground">Hartbeespoort</strong>, conveniently situated on Jan Smuts Road at the Landsmeer centre. As the <strong className="text-foreground">top-rated beauty salon in Hartbeespoort</strong>, we serve clients from across the Hartbeespoort Dam area, including Schoemansville, Melodie, Ifafi, Kosmos, Pecanwood, and surrounding estates. We're also just a scenic 45-minute drive from Pretoria and easily accessible from Johannesburg and Centurion.
+                                            Galeo Beauty is proudly located in <strong className="text-foreground">Hartbeespoort</strong>, conveniently situated on Jan Smuts Road at the Landsmeer centre. As the <strong className="text-foreground">top-rated beauty salon in Hartbeespoort</strong>, we serve clients from across the Hartbeespoort Dam area, including Schoemansville, Melodie, Ifafi, Kosmos, Pecanwood, and surrounding estates. We&apos;re also just a scenic 45-minute drive from Pretoria and easily accessible from Johannesburg and Centurion.
                                         </p>
                                     </div>
 

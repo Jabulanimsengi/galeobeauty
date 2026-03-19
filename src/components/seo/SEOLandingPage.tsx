@@ -97,7 +97,14 @@ export function SEOLandingPage({
     breadcrumbs,
     currentPageHref,
 }: SEOLandingPageProps) {
-    const whatsappLink = "https://wa.me/27824447389?text=Hi%2C%20I%27d%20like%20to%20book%20a%20consultation.%20I%20found%20you%20on%20www.galeobeauty.com";
+    const sectionLinks = [
+        { href: "#overview", label: "Overview", show: true },
+        { href: "#pricing", label: "Pricing", show: Boolean(pricing) },
+        { href: "#services", label: "Treatments", show: Boolean(services) },
+        { href: "#results", label: "Results", show: Boolean(secondaryContent) },
+        { href: "#explore", label: "Explore", show: Boolean(currentPageHref) },
+        { href: "#book", label: "Book", show: true },
+    ].filter((item) => item.show);
 
     // Treatment booking state
     const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -144,7 +151,7 @@ export function SEOLandingPage({
                 )}
 
                 {/* Hero Section - Image Left, Text Right */}
-                <section className={`${breadcrumbs ? 'pt-6 pb-24 lg:pt-8 lg:pb-32' : 'py-24 lg:py-32'} bg-secondary/20`}>
+                <section id="overview" className={`${breadcrumbs ? 'pt-6 pb-24 lg:pt-8 lg:pb-32' : 'py-24 lg:py-32'} bg-secondary/20`}>
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                             {/* Image - Sticky */}
@@ -220,9 +227,27 @@ export function SEOLandingPage({
                     </div>
                 </section>
 
+                {sectionLinks.length > 2 && (
+                    <section className="border-y border-border/40 bg-background/95 backdrop-blur-sm">
+                        <div className="container mx-auto px-4 sm:px-6 py-4">
+                            <div className="flex flex-wrap items-center justify-center gap-3">
+                                {sectionLinks.map((link) => (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        className="rounded-full border border-gold/20 bg-secondary/20 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                    >
+                                        {link.label}
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {/* Pricing Section */}
                 {pricing && (
-                    <section className="py-24 bg-white">
+                    <section id="pricing" className="py-24 bg-white">
                         <div className="container mx-auto px-4 sm:px-6">
                             <div className="text-center mb-16">
                                 <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
@@ -277,7 +302,7 @@ export function SEOLandingPage({
 
                 {/* Services/Treatments Section */}
                 {services && (
-                    <section className="py-24 bg-secondary/10">
+                    <section id="services" className="py-24 bg-secondary/10">
                         <div className="container mx-auto px-4 sm:px-6">
                             <div className="text-center mb-16">
                                 <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
@@ -316,7 +341,7 @@ export function SEOLandingPage({
 
                 {/* Secondary Content - Image Right, Text Left */}
                 {secondaryContent && (
-                    <section className="py-24 bg-white">
+                    <section id="results" className="py-24 bg-white">
                         <div className="container mx-auto px-4 sm:px-6">
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
                                 {/* Text Content */}
@@ -370,7 +395,7 @@ export function SEOLandingPage({
                     const otherServices = serviceLandingPages.filter(s => s.href !== currentPageHref).slice(0, 3);
                     if (otherServices.length === 0) return null;
                     return (
-                        <section className="py-24 bg-secondary/10">
+                        <section id="explore" className="py-24 bg-secondary/10">
                             <div className="container mx-auto px-4 sm:px-6">
                                 <div className="text-center mb-12">
                                     <span className="text-gold font-medium uppercase tracking-widest text-sm block mb-3">
@@ -434,7 +459,7 @@ export function SEOLandingPage({
                 })()}
 
                 {/* Final CTA Section */}
-                <section className="py-24 bg-white">
+                <section id="book" className="py-24 bg-white">
                     <div className="container mx-auto px-4 sm:px-6 text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

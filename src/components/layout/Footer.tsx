@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { NavLink } from "@/components/ui/nav-link";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from "lucide-react";
+import { Phone, Mail, MapPin, Facebook, Instagram, Clock, ArrowRight } from "lucide-react";
 
 import { navItems, businessInfo } from "@/lib/constants";
 import { FeaturedInLocal } from "@/components/ui/featured-in";
@@ -12,7 +11,7 @@ export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="bg-foreground text-background">
+        <footer className="bg-foreground text-background rounded-t-[2rem] overflow-hidden">
             {/* Main Footer Content */}
             <div className="container mx-auto px-4 sm:px-6 py-12 md:py-16">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-8 lg:gap-10">
@@ -29,7 +28,7 @@ export function Footer() {
                             />
                         </NavLink>
                         <p className="text-background/70 text-sm leading-relaxed max-w-xs">
-                            Hartbeespoort hair salon, nail salon, beauty salon and medical spa with trusted Galeo Beauty reviews, Hart Aesthetics services, and 16 specialist treatment categories at Landsmeer near Hartbeespoort Dam.
+                            A calm Hartbeespoort beauty destination for hair, nails, facials, aesthetics, massage and wellness treatments at Landsmeer near Hartbeespoort Dam.
                         </p>
                         <div className="flex gap-3">
                             <a
@@ -124,9 +123,10 @@ export function Footer() {
                             <li>
                                 <NavLink
                                     href="/locations"
-                                    className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium"
+                                    className="inline-flex items-center gap-1 text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 font-medium"
                                 >
-                                    View All Areas →
+                                    <span>View All Areas</span>
+                                    <ArrowRight className="w-3.5 h-3.5" />
                                 </NavLink>
                             </li>
                         </ul>
@@ -192,7 +192,10 @@ export function Footer() {
                             </li>
                             <li>
                                 <NavLink href="/prices" className="text-gold hover:text-gold/80 transition-colors text-sm hover:translate-x-1 inline-block font-medium">
-                                    View All Services →
+                                    <span className="inline-flex items-center gap-1">
+                                        <span>View All Services</span>
+                                        <ArrowRight className="w-3.5 h-3.5" />
+                                    </span>
                                 </NavLink>
                             </li>
                         </ul>

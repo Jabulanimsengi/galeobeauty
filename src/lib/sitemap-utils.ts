@@ -1,12 +1,13 @@
-import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS, SERVICE_SLUGS } from './sitemap-config';
-import { getAllBlogPosts } from './blog-data';
-import { getAllSEOServices } from './seo-data';
+import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from "./sitemap-config";
+import { getAllBlogPosts } from "./blog-data";
+import { getAllSEOServices } from "./seo-data";
+import { SITEMAP_STATIC_PAGES } from "./sitemap-static-pages";
 
 /**
  * Calculate URL counts for sitemap planning
  */
 
-const STATIC_PAGES = 32; // From current sitemap.ts
+const STATIC_PAGES = SITEMAP_STATIC_PAGES.length;
 
 export function calculateSitemapURLCounts() {
     const blogPosts = getAllBlogPosts();

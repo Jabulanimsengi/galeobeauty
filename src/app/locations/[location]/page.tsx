@@ -11,6 +11,7 @@ import {
 import { businessInfo } from "@/lib/constants";
 import { CheckCircle } from "lucide-react";
 import { LocationServicesClient } from "@/components/location/LocationServicesClient";
+import { buildLocationHubKeywords } from "@/lib/seo-keywords";
 
 // Pre-build priority locations
 export const dynamic = "force-static";
@@ -44,17 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title,
         description,
-        keywords: [
-            `beauty salon ${location.name.toLowerCase()}`,
-            `spa near ${location.name.toLowerCase()}`,
-            `best beauty salon ${location.name.toLowerCase()}`,
-            `skoonheidsalon ${location.name.toLowerCase()}`,
-            `lip fillers ${location.name.toLowerCase()}`,
-            `lash extensions ${location.name.toLowerCase()}`,
-            `fat freezing ${location.name.toLowerCase()}`,
-            `microblading ${location.name.toLowerCase()}`,
-            `day spa ${location.region.toLowerCase()}`,
-        ],
+        keywords: buildLocationHubKeywords(location),
         alternates: {
             canonical: `https://www.galeobeauty.com/locations/${locationSlug}`,
         },
@@ -186,7 +177,7 @@ export default async function LocationHubPage({ params }: PageProps) {
                             <div className="bg-white/5 p-6 rounded-xl border border-white/10">
                                 <CheckCircle className="w-8 h-8 text-gold mb-4" />
                                 <h3 className="font-bold mb-2">Luxury Experience</h3>
-                                <p className="text-sm text-white/70">From the moment you arrive, you're treated to 5-star service.</p>
+                                <p className="text-sm text-white/70">From the moment you arrive, you&apos;re treated to 5-star service.</p>
                             </div>
                         </div>
                     </div>
