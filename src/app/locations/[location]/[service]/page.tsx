@@ -8,7 +8,7 @@ import {
     getLocationBySlug,
     getServiceBySlug,
     getCategoryForService,
-    getPriorityParams,
+    getPrebuildLocationServiceParams,
     getNearbyLocations,
     getRelatedServices,
     getPopularServicesFromOtherCategories,
@@ -24,34 +24,52 @@ import {
     type SEOLocation,
     type SEOService,
     type FAQ,
-    type TreatmentStep,
 } from "@/lib/seo-data";
 import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
 import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
+import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
+
+function formatTermList(terms: string[], limit = 4) {
+    const items = terms.slice(0, limit);
+
+    if (items.length === 0) {
+        return "";
+    }
+
+    if (items.length === 1) {
+        return items[0];
+    }
+
+    if (items.length === 2) {
+        return `${items[0]} and ${items[1]}`;
+    }
+
+    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+}
 
 function getLocationPageHighlights(location: SEOLocation, service: SEOService, nearbyLocations: SEOLocation[]) {
     const nearbyNames = nearbyLocations.slice(0, 3).map((nearby) => nearby.name);
     const nearbyLabel =
         nearbyNames.length > 0
-            ? `${location.name} clients often combine appointments with visits from ${nearbyNames.join(", ")}.`
-            : `${location.name} clients often book this service alongside other treatments for a full salon visit.`;
+            ? `If you are coming from ${location.name}, it is easy to pair your appointment with time in ${nearbyNames.join(", ")}.`
+            : `If you are coming from ${location.name}, it is easy to turn this booking into a fuller salon visit with other treatments on the same day.`;
 
     const isLocalCatchment = location.region === "Hartbeespoort" || location.region === "North West";
     const isUrbanCatchment = ["Gauteng", "Johannesburg", "Pretoria", "Centurion", "Midrand"].includes(location.region);
 
     const accessNote = isLocalCatchment
-        ? `${location.name} residents are close enough for regular maintenance appointments, quick follow-up visits, and weekday bookings.`
+        ? `If you are based in ${location.name}, regular maintenance appointments, quick follow-up visits and weekday bookings are usually easy to fit in.`
         : isUrbanCatchment
-            ? `${location.name} clients typically book ${service.keyword} as a planned trip to Hartbeespoort, often pairing it with a quieter day away from the city.`
-            : `${location.name} clients usually make a dedicated trip for ${service.keyword}, so we focus on efficient appointments and clear aftercare.`;
+            ? `If you are travelling from ${location.name}, many bookings for ${service.keyword} are planned as part of a quieter day in Hartbeespoort away from the city pace.`
+            : `If you are travelling from ${location.name}, we keep the appointment flow efficient and aftercare clear so the visit feels well worth the trip.`;
 
     const serviceNote = service.duration
-        ? `${service.keyword} typically takes ${service.duration}, which helps ${location.name} clients plan travel and booking times more confidently.`
-        : `${service.keyword} appointments are scheduled with enough flexibility for ${location.name} clients travelling in from surrounding areas.`;
+        ? `${service.keyword} typically takes ${service.duration}, which helps you plan travel and booking times more confidently.`
+        : `${service.keyword} appointments are scheduled with enough flexibility to make travelling in from surrounding areas feel manageable.`;
 
     return [
-        `${location.name} is one of the areas we actively serve for ${service.keyword}, not just a keyword variation.`,
+        `${location.name} is one of the surrounding areas we regularly welcome for ${service.keyword}.`,
         accessNote,
         serviceNote,
         nearbyLabel,
@@ -69,8 +87,8 @@ export const dynamicParams = true;
 export const revalidate = 43200; // ISR: Revalidate every 12 hours
 
 export function generateStaticParams() {
-    // Only pre-build priority location/service combinations
-    return getPriorityParams();
+    // Pre-build the strongest location-service combinations across all target locations.
+    return getPrebuildLocationServiceParams();
 }
 
 // ============================================
@@ -98,68 +116,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "Service Not Found" };
     }
 
-    const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
-    const description = `Book ${service.keyword} at Galeo Beauty Salon near ${location.name}, ${location.region}. Professional beauty spa & day spa treatments in Hartbeespoort. Walk-in welcome, affordable prices from ${service.price}. Top-rated beauty parlour.`;
-
-    // Category-specific keywords with treatment-specific names, problem/solution, and high-conversion intent
-    const categoryKeywords: Record<string, string[]> = {
-        "hart-aesthetics": [`liquid facelift ${location.name}`, `Russian lip fillers ${location.name}`, `Nefertiti lift cost ${location.name}`, "skin boosters under eye near me", "collagen biostimulator injections"],
-        "fat-freezing": [`fat freezing cost ${location.name}`, `cryolipolysis before and after ${location.name}`, "stubborn belly fat treatment near me", "double chin fat freezing prices", "non-surgical fat removal results"],
-        "slimming": [`Tesla EMS slimming ${location.name}`, `body sculpting ${location.name}`, "HIFEM muscle toning near me", "inch loss treatment results", "non-invasive weight loss near me"],
-        "dermalogica": [`Dermalogica Pro Power Peel ${location.name}`, `chemical peel for pigmentation ${location.name}`, "microneedling with nanoinfusion near me", "deep pore cleansing facial for acne", "medical grade facial near me"],
-        "qms-facial": [`QMS collagen facial ${location.name}`, `anti-aging facial results ${location.name}`, "collagen boosting treatment near me", "fine lines and wrinkle facial prices", "luxury medical facial near me"],
-        "pro-skin": [`microneedling ${location.name}`, `dermaplaning results ${location.name}`, "chemical peel for acne scars near me", "pigmentation treatment before and after", "skin rejuvenation near me"],
-        "ipl": [`IPL Brazilian hair removal ${location.name}`, `full body laser ${location.name}`, "laser hair removal for men near me", "permanent hair removal face and neck", "IPL hair removal results"],
-        "hair": [`balayage stylist ${location.name}`, `Brazilian blowout ${location.name}`, "keratin treatment for frizzy hair near me", "full head foils and toner prices", "hair botox treatment near me"],
-        "nails": [`gel nails ${location.name}`, `acrylic full set ${location.name}`, "rubber base gel manicure near me", "nail art designs prices", "pedicure with gel soak off near me"],
-        "lashes": [`volume lash extensions ${location.name}`, `lash lift and tint ${location.name}`, "classic vs volume lashes near me", "silky soft master lashes prices", "lash lamination results"],
-        "permanent-makeup": [`microblading ${location.name}`, `powder pixel brows ${location.name}`, "hybrid brows vs microblading near me", "lip contour permanent makeup prices", "permanent eyeliner top and bottom"],
-        "waxing": [`Brazilian wax ${location.name}`, `Hollywood wax ${location.name}`, "mens back and chest waxing near me", "full body wax prices", "painless waxing near me"],
-        "makeup": [`bridal makeup artist ${location.name}`, `matric dance makeup ${location.name}`, "wedding makeup trial near me", "Kryolan professional makeup prices", "evening glam makeup near me"],
-        "sunbed": [`sunbed tanning ${location.name}`, `spray tan ${location.name}`, "bridal spray tan near me", "sunbed packages prices", "safe indoor tanning near me"],
-        "medical": [`fractional laser for acne scars ${location.name}`, `Plasmage skin tightening ${location.name}`, "non-surgical vaginal tightening near me", "scar treatment before and after", "medical aesthetics results"],
-        "hair-extensions": [`tape-in hair extensions ${location.name}`, `clip-in extensions ${location.name}`, "Remy human hair extensions prices", "keratin bond extensions near me", "hair extensions before and after"],
-    };
-
-    const serviceCategoryKeywords = categoryKeywords[service.categoryId] || [];
-
-    // Removed lowValuePatterns logic - we now generate unique descriptions for ALL variants
-    // so they are no longer "thin content" and should be indexed.
-
     const category = getCategoryForService(serviceSlug);
     const categoryTitle = category?.title || "Beauty Services";
 
     // Generate unique description
     const richDescription = generateServiceDescription(
-        // @ts-ignore - mapping simplified
+        // @ts-expect-error - generator expects a service item shape with name
         { ...service, name: service.keyword },
         categoryTitle,
         location.name
     );
+    const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
+    const metadataDescription = `${richDescription.substring(0, 150)} Available for ${location.name} clients from our Hartbeespoort salon.`;
+    const socialDescription = `${richDescription.substring(0, 140)} Serving ${location.name} and surrounding Hartbeespoort areas.`;
 
     return {
         title,
-        description: `${richDescription.substring(0, 150)}... Available in ${location.name}.`,
-        keywords: [
-            // PRIMARY: Core service + location
-            `${service.keyword} ${location.name}`,
-            `${service.keyword} near me`,
-
-            // CONVERSION: Price & booking intent
-            `${service.keyword} prices ${location.name}`,
-            `best ${service.keyword} ${location.name}`,
-
-            // DECISION STAGE: Results & before/after
-            `${service.keyword} results`,
-            `${service.keyword} before and after`,
-
-            // CATEGORY-SPECIFIC (treatment names + problem/solution)
-            ...serviceCategoryKeywords.slice(0, 5),
-            ...(service.seoKeywords || []),
-        ],
+        description: metadataDescription,
+        keywords: buildServiceKeywords(service, location),
         openGraph: {
             title,
-            description,
+            description: socialDescription,
             type: "website",
             url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
             siteName: "Galeo Beauty Salon & Spa",
@@ -176,7 +153,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         twitter: {
             card: "summary_large_image",
             title,
-            description,
+            description: socialDescription,
             images: ["https://www.galeobeauty.com/images/logo.png"],
             site: "@galeobeauty",
         },
@@ -243,20 +220,34 @@ export default async function LocationServicePage({ params }: PageProps) {
     const dynamicRelatedServices = getDynamicRelatedServices(serviceSlug, 5);
 
     // Get unique content
-    const benefits = getServiceSpecificBenefits(resolvedService, locationSlug);
+    const benefits = getServiceSpecificBenefits(resolvedService);
 
     // Use new generator for rich, attribute-based description
     const richDescription = generateServiceDescription(
-        // @ts-ignore
+        // @ts-expect-error - generator expects a service item shape with name
         { ...resolvedService, name: resolvedService.keyword },
         category?.title || "Beauty Services",
         location.name
     );
-    // Append location context and inject an LSI keyword if available to improve uniqueness deterministically
-    const lsiKeyword = resolvedService.seoKeywords?.length
-        ? resolvedService.seoKeywords[(resolvedService.slug.length + location.slug.length) % resolvedService.seoKeywords.length]
+    const serviceKeywords = buildServiceKeywords(resolvedService, location);
+    const relatedKeywordPool = serviceKeywords.filter(
+        (keyword) => keyword.toLowerCase() !== resolvedService.keyword.toLowerCase()
+    );
+    const lsiKeyword = relatedKeywordPool.length > 0
+        ? relatedKeywordPool[(resolvedService.slug.length + location.slug.length) % relatedKeywordPool.length]
         : "treatment";
     const introText = `${richDescription} ${location.name} residents can now enjoy this premium ${lsiKeyword} close to home.`;
+    const intentSignals = getServiceIntentSignals(resolvedService);
+    const intentCopy = buildServiceIntentCopy(resolvedService);
+    const serviceTypeKeywords = Array.from(
+        new Set([
+            resolvedService.keyword,
+            ...serviceKeywords.slice(0, 8),
+            "Beauty Treatment",
+            "Spa Treatment",
+            "Salon Service",
+        ])
+    );
 
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
@@ -281,7 +272,7 @@ export default async function LocationServicePage({ params }: PageProps) {
         "@id": `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}#salon`,
         name: "Galeo Beauty Salon & Spa",
         alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
-        description: "Premium beauty salon, spa and day spa in Hartbeespoort offering skincare, facials, nails, hair care, lashes, waxing, body treatments and aesthetic treatments. Top-rated beauty parlour serving Gauteng and North West.",
+        description: `${richDescription.substring(0, 150)} Available for ${location.name} clients from our Hartbeespoort salon.`,
         additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
         image: "https://www.galeobeauty.com/images/logo.png",
         priceRange: "$$",
@@ -328,7 +319,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 "@type": "Service",
                 name: `${resolvedService.keyword} at Galeo Beauty Salon & Spa`,
                 description: introText,
-                serviceType: [resolvedService.keyword, ...(resolvedService.seoKeywords || []), "Beauty Treatment", "Spa Treatment", "Salon Service"],
+                serviceType: serviceTypeKeywords,
             },
             price: resolvedService.price.replace(/[^0-9.]/g, ""),
             priceCurrency: "ZAR",
@@ -447,9 +438,12 @@ export default async function LocationServicePage({ params }: PageProps) {
                         </h1>
 
                         {/* Unique intro paragraph */}
-                        <p className="text-muted-foreground text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl">
-                            {introText}
-                        </p>
+                        <div className="text-muted-foreground text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl space-y-4">
+                            <p>{introText}</p>
+                            <p className="text-base sm:text-lg">{intentCopy.problemStatement}</p>
+                            <p className="text-base sm:text-lg">{intentCopy.resultStatement}</p>
+                            <p className="text-base sm:text-lg">{intentCopy.reassuranceStatement}</p>
+                        </div>
 
                         {/* Price & Duration */}
                         <div className="flex flex-wrap gap-4 mb-8">
@@ -504,12 +498,86 @@ export default async function LocationServicePage({ params }: PageProps) {
                 </section>
 
                 <section className="py-16">
+                    <div className="container mx-auto px-6 max-w-6xl">
+                        <div className="grid gap-6 lg:grid-cols-2">
+                            <div className="rounded-[2rem] border border-border bg-secondary/10 p-7">
+                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
+                                    Common Concerns
+                                </span>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">What {location.name} Clients Often Ask About</h2>
+                                <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                                    <p>
+                                        Appointments usually begin with something you would like to improve, such as{" "}
+                                        {formatTermList(intentSignals.painPoints, 5)}.
+                                    </p>
+                                    <p>
+                                        Sharing that concern gives us a clear starting point so we can recommend the most suitable
+                                        treatment path for you instead of making you guess from the menu.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-[2rem] border border-border bg-secondary/10 p-7">
+                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
+                                    The Results
+                                </span>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">What You Can Expect Afterwards</h2>
+                                <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
+                                    <p>
+                                        The most successful consultations begin with a clear picture of the result you want, whether
+                                        that means {formatTermList(intentSignals.results, 5)}.
+                                    </p>
+                                    <p>
+                                        We shape the recommendation around what feels realistic for your features, schedule and comfort
+                                        level, so the finished result feels beautifully considered.
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="rounded-[2rem] border border-border bg-background p-7">
+                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
+                                    Treatment Guidance
+                                </span>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">How We Help You Decide</h2>
+                                <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-secondary/15 p-5 text-sm leading-relaxed text-foreground">
+                                    <p>
+                                        We help you understand which approach best matches your goals, schedule and comfort level.
+                                    </p>
+                                    <p>
+                                        That may include comparing options such as {formatTermList(intentSignals.comparisons, 3)}, along
+                                        with how each path fits into your routine.
+                                    </p>
+                                    <p>Our priority is to thoughtfully narrow down the choices for you, rather than overwhelming you with endless options.</p>
+                                </div>
+                            </div>
+                            <div className="rounded-[2rem] border border-border bg-background p-7">
+                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
+                                    Booking Confidence
+                                </span>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">What to Know Before Booking</h2>
+                                <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-background p-5 text-sm leading-relaxed text-foreground">
+                                    <p>
+                                        It is natural to want reassurance around {formatTermList(intentSignals.objections, 3)} before
+                                        you commit.
+                                    </p>
+                                    <p>This is especially important before an event, when starting a corrective plan, or when choosing an option that requires manageable downtime.</p>
+                                    <p>
+                                        We provide clear, personalized advice so that whether you are booking for{" "}
+                                        {formatTermList(intentSignals.audiences, 3)}, or simply for yourself, you can feel fully
+                                        confident before you book.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="py-16">
                     <div className="container mx-auto px-6 max-w-4xl">
                         <h2 className="font-serif text-3xl text-foreground mb-3">
                             Why {location.name} Clients Book {service.keyword} Here
                         </h2>
                         <p className="text-muted-foreground mb-10 max-w-3xl">
-                            This page is tailored for clients in {location.name}, with booking context, travel expectations, and service planning details specific to your area.
+                            If you are based in {location.name}, this section gives you the local booking context, travel expectations
+                            and planning details that make your visit feel easier to arrange.
                         </p>
 
                         <div className="grid gap-4 md:grid-cols-2">

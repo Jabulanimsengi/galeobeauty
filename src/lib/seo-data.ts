@@ -375,6 +375,29 @@ export const HERO_SERVICES = [
     "day-makeup", "spraytan", "sunbed-10", "sunbed-20"
 ];
 
+// Second-tier services that still have strong commercial intent and enough unique
+// supporting copy to justify pre-building across the full location set.
+export const SECONDARY_PREBUILD_SERVICES = [
+    // Aesthetics
+    "tox-per-unit", "undereye-2-treatments", "undereye-1-treatment", "cheek-fillers-2ml", "cheek-fillers-1ml",
+
+    // Massage
+    "swedish-massage-60", "aromatherapy-60", "hot-stone-60", "deep-tissue-60", "sports-massage-60", "back-neck-45",
+
+    // Dermalogica
+    "pro-skin-60", "pro-clear", "pro-calm", "pro-firm", "pro-dermaplaning-full", "age-smart-facial", "skin-clearing-facial",
+
+    // Hair removal and waxing
+    "ipl-underarm", "ipl-bikini-sides", "wax-underarm",
+
+    // Beauty maintenance
+    "lip-liner", "full-manicure",
+];
+
+export const PREBUILD_LOCATION_SERVICE_SLUGS = Array.from(
+    new Set([...HERO_SERVICES, ...SECONDARY_PREBUILD_SERVICES])
+);
+
 /**
  * Extracts ALL services from the main services-data.ts file
  * and formats them for SEO page generation.
@@ -476,6 +499,23 @@ export function getPriorityParams(): { location: string; service: string }[] {
     return params;
 }
 
+export function getPrebuildLocationServiceParams(): { location: string; service: string }[] {
+    const prebuildSet = new Set(PREBUILD_LOCATION_SERVICE_SLUGS);
+    const services = getCachedSEOServices().filter((service) => prebuildSet.has(service.slug));
+    const params: { location: string; service: string }[] = [];
+
+    for (const location of TARGET_LOCATIONS) {
+        for (const service of services) {
+            params.push({
+                location: location.slug,
+                service: service.slug,
+            });
+        }
+    }
+
+    return params;
+}
+
 export function isPriorityLocationService(locationSlug: string, serviceSlug: string): boolean {
     return PRIORITY_LOCATIONS.includes(locationSlug) && HERO_SERVICES.includes(serviceSlug);
 }
@@ -568,25 +608,10 @@ function hashString(str: string): number {
 }
 
 /**
- * Pseudo-random number generator
- */
-function createSeededRandom(seed: number) {
-    return function () {
-        let t = seed += 0x6D2B79F5;
-        t = Math.imul(t ^ t >>> 15, t | 1);
-        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    }
-}
-
-/**
  * Service-specific benefits for "Why Choose Us" section
  * Generates unique benefits for each service based on attributes and location seed
  */
-export function getServiceSpecificBenefits(service: SEOService, locationSlug: string = "default"): string[] {
-    const seed = hashString(`${locationSlug}-${service.slug}`);
-    const random = createSeededRandom(seed);
-
+export function getServiceSpecificBenefits(service: SEOService): string[] {
     // 1. Check for ultra-specific overrides by service slug
     const serviceBenefitOverrides: Record<string, string[]> = {
         // --- MEDICAL ---
@@ -2298,7 +2323,6 @@ export function getLocationServiceInsight(service: SEOService, location: SEOLoca
     const isLuxuryEstate = luxuryKeywords.some(keyword => location.slug.includes(keyword));
     const urbanAreas = ['johannesburg', 'pretoria', 'centurion', 'midrand', 'sandton', 'fourways', 'randburg', 'boksburg', 'germiston', 'bedfordview', 'edenvale', 'roodepoort', 'krugersdorp', 'kempton-park', 'benoni'];
     const isUrban = urbanAreas.some(area => location.slug.includes(area));
-    const isLocal = location.region === 'Hartbeespoort' || location.region === 'North West';
 
     // Category-specific insight templates per location type
     const categoryInsights: Record<string, Record<string, string[]>> = {
@@ -2315,7 +2339,7 @@ export function getLocationServiceInsight(service: SEOService, location: SEOLoca
             ],
             local: [
                 `${location.name} locals appreciate having expert ${service.keyword} treatments available in their own community without traveling to Johannesburg or Pretoria.`,
-                `As your neighbourhood salon, we provide ${location.name} residents with the same ${service.keyword} quality you'd find at premium city clinics, at more affordable prices.`,
+                `As your neighbourhood salon, we provide ${location.name} residents with the same ${service.keyword} quality you'd expect from premium city clinics, without leaving the Hartbeespoort area.`,
                 `${location.name} residents trust our ${service.keyword} practitioners for consistent, natural-looking results that enhance their Hartbeespoort lifestyle.`,
             ],
         },
@@ -2444,20 +2468,20 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
             },
             urban: {
                 title: `${service.keyword} Worth the Trip from ${location.name}`,
-                intro: `${location.name} is one of our highest-priority commuter markets for aesthetic services. People travelling from ${location.name} for ${service.keyword} are usually comparing us against busier city clinics, so the page needs to reflect planning, trust, and treatment quality clearly.`,
+                intro: `If you are travelling from ${location.name} for ${service.keyword}, the experience should feel worth the drive, with clear planning, trusted treatment standards and a calmer alternative to busier city clinics.`,
                 bullets: [
-                    `${location.name} clients often schedule consultations and treatment around a dedicated Hartbeespoort visit.`,
-                    `${service.keyword} pages for ${location.name} need stronger reassurance around practitioner quality and follow-up planning.`,
-                    `This combination matters because ${location.name} brings some of the highest search demand in the current SEO model.`,
+                    `Many appointments from ${location.name} are planned as part of a dedicated Hartbeespoort visit.`,
+                    `Clear reassurance around practitioner quality and follow-up planning matters when you are travelling in.`,
+                    `The overall aim is to make the visit feel smooth, worthwhile and easy to trust.`,
                 ],
             },
             local: {
                 title: `${service.keyword} for Regular Clients in ${location.name}`,
-                intro: `${location.name} is a core local service area, which makes this one of the most commercially important page types in the site. Clients here are close enough for consultations, maintenance visits, and repeat bookings, so the content should reflect ongoing treatment relationships.`,
+                intro: `If you are based in ${location.name}, this service is especially easy to work into consultations, maintenance visits and repeat bookings over time.`,
                 bullets: [
-                    `${location.name} clients can book ${service.keyword} with less travel friction than metro visitors.`,
-                    `Repeat appointments and reviews from ${location.name} strengthen this page's local intent.`,
-                    `This is one of the combinations most likely to convert local searchers into repeat clients.`,
+                    `Booking ${service.keyword} from ${location.name} is usually simpler to plan than travelling in from a metro area.`,
+                    `Being nearby makes follow-up visits and treatment continuity feel much easier.`,
+                    `This usually suits anyone who prefers a longer-term treatment relationship rather than a once-off booking.`,
                 ],
             },
         },
@@ -2467,8 +2491,8 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
                 intro: `${location.name} is a high-value market for premium body treatments. The strongest message for ${service.keyword} here is targeted contouring, privacy, and a results-focused treatment plan that fits an image-conscious lifestyle.`,
                 bullets: [
                     `${location.name} clients often book ${service.keyword} to target specific stubborn areas rather than broad weight-loss goals.`,
-                    `This page needs to emphasize consultation quality, realistic expectations, and treatment planning.`,
-                    `Luxury-estate demand makes this one of the more valuable body-contouring page patterns on the site.`,
+                    `Consultation quality, realistic expectations and a thoughtful treatment plan matter just as much as the treatment itself.`,
+                    `This usually suits clients who want contouring to feel private, polished and carefully tailored.`,
                 ],
             },
             urban: {
@@ -2476,8 +2500,8 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
                 intro: `${location.name} is a high-demand commuter location for non-surgical body contouring. Clients from this area are usually comparing convenience against quality, so the content should lean into visible results, zero-downtime positioning, and easy trip planning.`,
                 bullets: [
                     `${location.name} clients frequently want weekend-friendly treatment planning and no recovery disruption.`,
-                    `${service.keyword} is one of the hero service lines that can justify a dedicated trip from ${location.name}.`,
-                    `This page pattern is commercially strong because it combines broad search demand with high treatment value.`,
+                    `${service.keyword} is often the kind of treatment people are willing to travel for when the planning feels simple and the expected results are clear.`,
+                    `The visit tends to work best when it feels efficient, comfortable and easy to fit around the rest of your week.`,
                 ],
             },
             local: {
@@ -2486,7 +2510,7 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
                 bullets: [
                     `${location.name} clients have lower travel friction for repeat sessions.`,
                     `The local audience responds well to practical guidance about timelines and expected results.`,
-                    `This is one of the key local conversion templates in the current SEO stack.`,
+                    `Being nearby makes progress tracking and follow-up sessions much easier to manage.`,
                 ],
             },
         },
@@ -2496,8 +2520,8 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
                 intro: `${location.name} is a strong market for premium skincare, especially where clients are willing to treat facials and advanced skin work as part of a recurring maintenance routine. That makes this a high-value template for ${service.keyword}.`,
                 bullets: [
                     `${location.name} clients often view ${service.keyword} as part of long-term skin health, not just occasional pampering.`,
-                    `This page should reinforce consistency, skin planning, and the quality of in-salon professional products.`,
-                    `The combination of affluent catchment and premium skincare makes this page pattern strategically important.`,
+                    `It helps to approach treatment with consistency, realistic planning and confidence in the professional products being used.`,
+                    `This combination tends to suit clients who want premium skincare to feel like part of an ongoing routine, not a once-off treat.`,
                 ],
             },
             urban: {
@@ -2505,8 +2529,8 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
                 intro: `${location.name} is a priority urban catchment for advanced facials and skin treatments. For ${service.keyword}, the strongest differentiators are treatment quality, calmer surroundings, and the ability to make a Hartbeespoort booking feel worth the drive.`,
                 bullets: [
                     `${location.name} clients often compare us with city medi-spas and want confidence in product quality.`,
-                    `${service.keyword} works well in SEO for this area because the search intent is often problem-solution driven.`,
-                    `This page type is high value because it pairs urban demand with a premium service line.`,
+                    `${service.keyword} is often chosen here by people who want a result-led treatment plan rather than a quick city booking.`,
+                    `The combination of advanced treatments and a calmer salon setting makes the trip feel worthwhile for many clients.`,
                 ],
             },
             local: {
@@ -2514,20 +2538,20 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
                 intro: `${location.name} is one of the nearby areas most likely to generate repeat skin-treatment bookings. That makes ${service.keyword} especially important here because local clients can commit to treatment plans and maintenance intervals more easily.`,
                 bullets: [
                     `Nearby access makes ${location.name} a strong fit for recurring ${service.keyword} bookings.`,
-                    `This page should stress expert skin assessment, treatment consistency, and realistic treatment cadence.`,
-                    `It is one of the more defensible local SEO combinations because repeat demand is plausible.`,
+                    `A thoughtful skin assessment, treatment consistency and realistic spacing between appointments matter just as much as the treatment itself.`,
+                    `Being close by makes it easier to stay consistent when your best results come from a longer-term plan.`,
                 ],
             },
         },
     };
 
     const fallbackPlaybook = {
-        title: `${service.keyword} in ${location.name} Is a Priority SEO Combination`,
-        intro: `${location.name} and ${service.keyword} are both marked as priority targets in the site's current SEO model. That makes this page more commercially important than a generic location-service pairing, and the content should reflect stronger local intent, booking context, and conversion relevance.`,
+        title: `${service.keyword} in ${location.name}`,
+        intro: `If you are based in ${location.name}, this service gives you an easy way to book a Hartbeespoort appointment with clear planning, realistic expectations and a treatment path that fits your routine.`,
         bullets: [
-            `${location.name} is one of the core locations selected for prebuilt SEO coverage.`,
-            `${service.keyword} is one of the hero services selected for stronger search visibility.`,
-            `This page should read like an important local landing page, not a filler variation.`,
+            `${location.name} is close enough to make regular booking and follow-up planning feel manageable.`,
+            `${service.keyword} is a treatment many clients want clear guidance on before they commit.`,
+            `The aim is to make the visit feel thoughtfully planned rather than generic.`,
         ],
     };
 
