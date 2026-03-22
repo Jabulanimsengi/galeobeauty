@@ -29,6 +29,7 @@ import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
 import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
 import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
+import { limitStaticParams } from "@/lib/build-config";
 
 function formatTermList(terms: string[], limit = 4) {
     const items = terms.slice(0, limit);
@@ -88,7 +89,7 @@ export const revalidate = 43200; // ISR: Revalidate every 12 hours
 
 export function generateStaticParams() {
     // Pre-build the strongest location-service combinations across all target locations.
-    return getPrebuildLocationServiceParams();
+    return limitStaticParams(getPrebuildLocationServiceParams(), "locationServices");
 }
 
 // ============================================

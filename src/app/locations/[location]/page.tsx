@@ -12,15 +12,16 @@ import { businessInfo } from "@/lib/constants";
 import { CheckCircle } from "lucide-react";
 import { LocationServicesClient } from "@/components/location/LocationServicesClient";
 import { buildLocationHubKeywords } from "@/lib/seo-keywords";
+import { limitStaticParams } from "@/lib/build-config";
 
 // Pre-build priority locations
 export const dynamic = "force-static";
 export const dynamicParams = true;
 
 export function generateStaticParams() {
-    return TARGET_LOCATIONS.map(loc => ({
+    return limitStaticParams(TARGET_LOCATIONS.map(loc => ({
         location: loc.slug
-    }));
+    })), "locations");
 }
 
 interface PageProps {

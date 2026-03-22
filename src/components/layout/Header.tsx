@@ -52,57 +52,189 @@ export function Header() {
                     )}
                     style={{ willChange: 'opacity' }}
                 />
-                <div className="container mx-auto flex items-center justify-between px-4 sm:px-6">
-                    {/* Logo - Responsive sizing */}
-                    <NavLink href="/" className="relative z-10">
-                        <CloudinaryImage
-                            src="/images/logo.png"
-                            alt="Galeo Beauty"
-                            width={200}
-                            height={80}
-                            className="h-16 sm:h-20 md:h-24 w-auto transition-all duration-300"
-                            priority
-                            noSpinner
-                        />
-                    </NavLink>
-
-                    {/* Desktop Navigation - Nudo-style sliding block */}
-                    <nav className="hidden lg:flex items-center gap-0 relative">
-                        {navItems.map((item) => {
-                            const isSpecial = item.href === "/specials";
-
-                            return (
-                                <NavLink
-                                    key={item.href}
-                                    href={item.href}
-                                    className="group relative overflow-hidden"
+                <div className="container mx-auto px-4 sm:px-6">
+                    <div className="relative flex items-center justify-between lg:hidden">
+                        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                            <SheetTrigger asChild>
+                                <button
+                                    aria-label="Toggle menu"
+                                    className="relative z-50 flex h-12 w-12 items-center justify-center bg-transparent transition-transform duration-300 active:scale-[0.98] focus:outline-none"
                                 >
-                                    {/* Text layer */}
-                                    <span className={cn(
-                                        "relative z-10 flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 group-hover:text-white",
-                                        isSpecial ? "text-gold" : "text-foreground/70"
-                                    )}>
-                                        {item.label}
-                                        {isSpecial && (
-                                            <span className="relative flex h-2 w-2">
-                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                                                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                            </span>
-                                        )}
+                                    <span className="relative flex w-7 flex-col items-start gap-[0.38rem]">
+                                        <span
+                                            className={cn(
+                                                "block h-0.5 w-7 origin-left rounded-full transition-all duration-300",
+                                                isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white",
+                                                isMobileMenuOpen && "translate-y-[7px] rotate-45"
+                                            )}
+                                        />
+                                        <span
+                                            className={cn(
+                                                "block h-0.5 w-5 origin-left rounded-full transition-all duration-300",
+                                                isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white",
+                                                isMobileMenuOpen && "opacity-0"
+                                            )}
+                                        />
+                                        <span
+                                            className={cn(
+                                                "block h-0.5 w-3 origin-left rounded-full transition-all duration-300",
+                                                isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white",
+                                                isMobileMenuOpen && "-translate-y-[7px] w-7 -rotate-45"
+                                            )}
+                                        />
                                     </span>
+                                </button>
+                            </SheetTrigger>
+                            <SheetContent
+                                side="left"
+                                className="safe-left safe-bottom w-[min(88vw,22rem)] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0"
+                            >
+                                <div className="absolute inset-y-0 left-0 w-3 bg-[#223734]" />
+                                <SheetHeader className="relative border-b border-white/10 px-7 pt-7 pb-6">
+                                    <div className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-white/45">
+                                        Galeo Beauty
+                                    </div>
+                                    <SheetTitle className="text-left">
+                                        <CloudinaryImage
+                                            src="/images/logo.png"
+                                            alt="Galeo Beauty"
+                                            width={200}
+                                            height={80}
+                                            className="h-16 w-auto brightness-0 invert"
+                                            noSpinner
+                                        />
+                                    </SheetTitle>
+                                </SheetHeader>
 
-                                    {/* Sliding background block - only on hover */}
-                                    <span className={cn(
-                                        "absolute inset-0 transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0",
-                                        isSpecial ? "bg-gold/90" : "bg-gold"
-                                    )} />
-                                </NavLink>
-                            );
-                        })}
-                    </nav>
+                                <div className="flex flex-1 flex-col overflow-hidden">
+                                    <div className="hide-scrollbar flex-1 overflow-y-auto px-7 py-6">
+                                        <nav className="flex flex-col gap-5 overflow-hidden">
+                                            {navItems.map((item, index) => (
+                                                <motion.div
+                                                    key={item.href}
+                                                    initial={{ opacity: 0, x: -28 }}
+                                                    animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 }}
+                                                    transition={{
+                                                        duration: 0.32,
+                                                        delay: isMobileMenuOpen ? 0.08 + index * 0.06 : 0,
+                                                        ease: [0.25, 0.1, 0.25, 1]
+                                                    }}
+                                                >
+                                                    <NavLink
+                                                        href={item.href}
+                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                        className="group inline-flex w-fit items-center py-1 text-[1.05rem] font-medium uppercase tracking-[0.22em] text-white/72 transition-all duration-300 hover:text-white"
+                                                    >
+                                                        <span>{item.label}</span>
+                                                        <span className="ml-3 h-px w-0 bg-gold/80 transition-all duration-300 group-hover:w-8" />
+                                                        <span className="overflow-hidden text-gold/80 transition-all duration-300 group-hover:translate-x-1">
+                                                            <span className="block opacity-0 group-hover:opacity-100">
+                                                                /
+                                                            </span>
+                                                        </span>
+                                                    </NavLink>
+                                                </motion.div>
+                                            ))}
+                                        </nav>
 
-                    {/* Desktop CTA */}
-                    <div className="hidden lg:block">
+                                        <motion.div
+                                            className="mt-6"
+                                            initial={{ opacity: 0, x: -28 }}
+                                            animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 }}
+                                            transition={{
+                                                duration: 0.32,
+                                                delay: isMobileMenuOpen ? 0.08 + navItems.length * 0.06 : 0,
+                                                ease: [0.25, 0.1, 0.25, 1]
+                                            }}
+                                        >
+                                            <Button
+                                                asChild
+                                                size="lg"
+                                                className="w-full rounded-[1.35rem] bg-gold py-6 text-base font-semibold text-white hover:bg-gold-dark"
+                                            >
+                                                <NavLink
+                                                    href="/prices"
+                                                    onClick={() => setIsMobileMenuOpen(false)}
+                                                >
+                                                    Book Now
+                                                </NavLink>
+                                            </Button>
+                                        </motion.div>
+                                    </div>
+
+                                    <div className="border-t border-white/10 px-7 py-5">
+                                        <a
+                                            href={`tel:${businessInfo.phone}`}
+                                            className="flex items-center gap-3 text-white/65 transition-colors hover:text-gold"
+                                        >
+                                            <Phone className="w-5 h-5" />
+                                            <span className="text-base">012 111 1730</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+
+                        <NavLink href="/" className="absolute left-1/2 z-10 -translate-x-1/2">
+                            <CloudinaryImage
+                                src="/images/logo.png"
+                                alt="Galeo Beauty"
+                                width={170}
+                                height={70}
+                                className="h-14 w-auto"
+                                priority
+                                noSpinner
+                            />
+                        </NavLink>
+
+                        <div className="h-[58px] w-[58px] shrink-0" aria-hidden="true" />
+                    </div>
+
+                    <div className="hidden items-center justify-between lg:flex">
+                        <NavLink href="/" className="relative z-10">
+                            <CloudinaryImage
+                                src="/images/logo.png"
+                                alt="Galeo Beauty"
+                                width={200}
+                                height={80}
+                                className="h-16 sm:h-20 md:h-24 w-auto transition-all duration-300"
+                                priority
+                                noSpinner
+                            />
+                        </NavLink>
+
+                        <nav className="relative flex items-center gap-0">
+                            {navItems.map((item) => {
+                                const isSpecial = item.href === "/specials";
+
+                                return (
+                                    <NavLink
+                                        key={item.href}
+                                        href={item.href}
+                                        className="group relative overflow-hidden"
+                                    >
+                                        <span className={cn(
+                                            "relative z-10 flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 group-hover:text-white",
+                                            isSpecial ? "text-gold" : "text-foreground/70"
+                                        )}>
+                                            {item.label}
+                                            {isSpecial && (
+                                                <span className="relative flex h-2 w-2">
+                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                                                </span>
+                                            )}
+                                        </span>
+
+                                        <span className={cn(
+                                            "absolute inset-0 transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0",
+                                            isSpecial ? "bg-gold/90" : "bg-gold"
+                                        )} />
+                                    </NavLink>
+                                );
+                            })}
+                        </nav>
+
                         <Button
                             asChild
                             className="bg-gold hover:bg-gold-dark text-white font-medium"
@@ -110,116 +242,6 @@ export function Header() {
                             <NavLink href="/prices">Make a Booking</NavLink>
                         </Button>
                     </div>
-
-                    {/* Mobile Menu Trigger - Simple Hamburger */}
-                    <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                        <SheetTrigger asChild className="lg:hidden">
-                            <button
-                                aria-label="Toggle menu"
-                                className="relative z-50 p-3 min-w-[48px] min-h-[48px] flex items-center justify-center focus:outline-none"
-                            >
-                                <div className="flex flex-col justify-center items-center w-full h-full gap-1.5">
-                                    <span className={cn(
-                                        "block h-0.5 w-6 bg-foreground transition-transform duration-200",
-                                        isMobileMenuOpen && "rotate-45 translate-y-2"
-                                    )} />
-                                    <span className={cn(
-                                        "block h-0.5 w-6 bg-foreground transition-opacity duration-200",
-                                        isMobileMenuOpen && "opacity-0"
-                                    )} />
-                                    <span className={cn(
-                                        "block h-0.5 w-6 bg-foreground transition-transform duration-200",
-                                        isMobileMenuOpen && "-rotate-45 -translate-y-2"
-                                    )} />
-                                </div>
-                            </button>
-                        </SheetTrigger>
-                        <SheetContent
-                            side="right"
-                            className="w-[300px] sm:w-[400px] bg-foreground text-background border-none p-0 flex flex-col"
-                        >
-                            <SheetHeader className="p-6 pb-0">
-                                <SheetTitle className="text-left">
-                                    <CloudinaryImage
-                                        src="/images/logo.png"
-                                        alt="Galeo Beauty"
-                                        width={200}
-                                        height={80}
-                                        className="h-20 w-auto brightness-0 invert"
-                                        noSpinner
-                                    />
-                                </SheetTitle>
-                            </SheetHeader>
-
-                            {/* Scrollable content area */}
-                            <div className="flex-1 overflow-y-auto overflow-x-hidden">
-                                {/* Nav Links - Staggered Slide-in Animation (Right to Left) */}
-                                <nav className="flex flex-col mt-8 px-6 overflow-hidden">
-                                    {navItems.map((item, index) => (
-                                        <motion.div
-                                            key={item.href}
-                                            initial={{ opacity: 0, x: 40 }}
-                                            animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
-                                            transition={{
-                                                duration: 0.35,
-                                                delay: isMobileMenuOpen ? 0.1 + index * 0.1 : 0,
-                                                ease: [0.25, 0.1, 0.25, 1]
-                                            }}
-                                        >
-                                            <NavLink
-                                                href={item.href}
-                                                onClick={() => setIsMobileMenuOpen(false)}
-                                                className="group relative overflow-hidden py-4 border-b border-background/10 block"
-                                            >
-                                                <span className="relative z-10 block text-xl font-light uppercase tracking-widest text-background/80 transition-colors duration-200 group-hover:text-white">
-                                                    {item.label}
-                                                </span>
-
-                                                {/* Hover slide effect */}
-                                                <span className="absolute inset-0 bg-gold -translate-x-full group-hover:translate-x-0 transition-transform duration-200" />
-                                            </NavLink>
-                                        </motion.div>
-                                    ))}
-                                </nav>
-
-                                {/* CTA Button - Slides in after nav items */}
-                                <motion.div
-                                    className="px-6 mt-6"
-                                    initial={{ opacity: 0, x: 40 }}
-                                    animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
-                                    transition={{
-                                        duration: 0.35,
-                                        delay: isMobileMenuOpen ? 0.1 + navItems.length * 0.1 : 0,
-                                        ease: [0.25, 0.1, 0.25, 1]
-                                    }}
-                                >
-                                    <Button
-                                        asChild
-                                        size="lg"
-                                        className="w-full bg-gold hover:bg-gold-dark text-white font-semibold text-lg py-6"
-                                    >
-                                        <NavLink
-                                            href="/prices"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                        >
-                                            Book Now
-                                        </NavLink>
-                                    </Button>
-                                </motion.div>
-                            </div>
-
-                            {/* Contact Info - Fixed at bottom */}
-                            <div className="p-6 border-t border-background/10 mt-auto">
-                                <a
-                                    href={`tel:${businessInfo.phone}`}
-                                    className="flex items-center gap-3 text-background/60 hover:text-gold transition-colors"
-                                >
-                                    <Phone className="w-5 h-5" />
-                                    <span className="text-lg">012 111 1730</span>
-                                </a>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
                 </div>
             </header>
         </>

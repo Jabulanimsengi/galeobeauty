@@ -6,16 +6,18 @@ import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { getAllBlogPosts, getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
 import { ArrowLeft, ArrowRight, Clock, Calendar, User } from "lucide-react";
+import { limitStaticParams } from "@/lib/build-config";
 
 // Generate static params for all blog posts
 export function generateStaticParams() {
     const posts = getAllBlogPosts();
-    return posts.map((post) => ({
+    return limitStaticParams(posts.map((post) => ({
         slug: post.slug,
-    }));
+    })), "blogPosts");
 }
 
 // Fully static - no ISR
+export const dynamicParams = true;
 export const dynamic = "force-static";
 export const revalidate = false;
 

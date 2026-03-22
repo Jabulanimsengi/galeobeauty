@@ -22,6 +22,7 @@ import { businessInfo } from "@/lib/constants";
 import { generateServiceDescription } from "@/lib/seo-generator";
 import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
 import { getIntentPagesForService } from "@/lib/intent-pages";
+import { limitStaticParams } from "@/lib/build-config";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
@@ -30,7 +31,7 @@ import { getIntentPagesForService } from "@/lib/intent-pages";
 // Targets generic keywords like "gel nails", "microblading", etc.
 
 export const dynamic = "force-static";
-export const dynamicParams = false;
+export const dynamicParams = true;
 export const revalidate = false;
 
 function formatTermList(terms: string[], limit = 4) {
@@ -53,7 +54,7 @@ function formatTermList(terms: string[], limit = 4) {
 
 // Generate static pages for all 262 services
 export function generateStaticParams() {
-    return getAllServiceParams();
+    return limitStaticParams(getAllServiceParams(), "services");
 }
 
 // Generate metadata for each service page

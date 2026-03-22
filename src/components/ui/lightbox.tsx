@@ -99,7 +99,7 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
         <AnimatePresence>
             {isOpen && (
                 <motion.div
-                    className="fixed inset-0 z-50 bg-[radial-gradient(circle_at_top,rgba(24,24,24,0.5),rgba(0,0,0,0.985))] flex items-center justify-center"
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -163,7 +163,7 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             key={validIndex}
                             ref={imagePanelRef}
                             tabIndex={-1}
-                            className="relative w-full flex-1 overflow-hidden rounded-[28px] border border-white/10 bg-white/5 shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
+                            className="relative w-full flex-1 overflow-hidden rounded-[28px] border border-white/10 bg-black shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
@@ -179,14 +179,11 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             />
                         </motion.div>
 
-                        <div className="w-full rounded-[20px] border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-md md:px-5">
+                        <div className="w-full rounded-[20px] border border-white/10 bg-black px-4 py-3 md:px-5">
                             <div className="max-w-3xl">
                                 <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/90">
                                     {activeImage.subtitle || "Galeo Beauty Gallery"}
                                 </p>
-                                <h3 className="mt-1.5 font-serif text-base text-white md:text-lg">
-                                    {activeImage.title || activeImage.alt}
-                                </h3>
                             </div>
                         </div>
                     </div>

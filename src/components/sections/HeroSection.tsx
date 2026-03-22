@@ -1,7 +1,7 @@
 "use client";
 
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Star, Sparkles, Award, ArrowRight } from "lucide-react";
@@ -97,17 +97,26 @@ const kenBurnsVariants = [
     },
 ];
 
+const heroImages = [
+    { src: "/images/interior/galeo-beauty-interior-p1.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Reception and Waiting Area" },
+    { src: "/images/interior/galeo-beauty-interior-p2.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Treatment Rooms" },
+    { src: "/images/interior/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Nail Station near Harties Dam" },
+    { src: "/images/interior/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Spa Lounge" },
+];
+
 export function HeroSection() {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const prefersReducedMotion = useReducedMotion();
+    const prefersReducedMotion = !!useReducedMotion();
 
-    // Array of hero images with descriptive alt text
-    const heroImages = [
-        { src: "/images/interior/galeo-beauty-interior-p1.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Reception and Waiting Area" },
-        { src: "/images/interior/galeo-beauty-interior-p2.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Treatment Rooms" },
-        { src: "/images/interior/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Nail Station near Harties Dam" },
-        { src: "/images/interior/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Spa Lounge" },
-    ];
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        heroImages.slice(1).forEach(({ src }) => {
+            const image = new window.Image();
+            image.decoding = "async";
+            image.src = src;
+        });
+    }, []);
 
     // Auto-slide effect - changes image every 5 seconds
     useEffect(() => {
@@ -125,46 +134,50 @@ export function HeroSection() {
 
             {/* Ken Burns Image Carousel */}
             <div className="absolute inset-0 w-full h-full" style={{ transform: 'translateZ(0)' }}>
-                {/* LCP Optimization: Render priority image statically for immediate paint */}
-                <div className="absolute inset-0 w-full h-full z-0">
-                    <CloudinaryImage
-                        src={heroImages[0].src}
-                        alt={heroImages[0].alt}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 100vw"
-                        className="object-cover object-center"
-                        priority={true}
-                    />
-                </div>
+                <div className="absolute inset-0 bg-stone-950" />
+                {heroImages.map((image, index) => {
+                    const isActive = index === currentSlide;
+                    const kenBurnsVariant = kenBurnsVariants[index % kenBurnsVariants.length];
 
-                <AnimatePresence initial={false}>
-                    {/* Only animate if it's not the first load, or just layer on top */}
-                    <motion.div
-                        key={currentSlide}
-                        className="absolute inset-0 w-full h-full z-10"
-                        initial={{ opacity: currentSlide === 0 ? 1 : 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1.2, ease: "easeInOut" }}
-                    >
+                    return (
                         <motion.div
-                            className="absolute inset-0 w-full h-full"
-                            initial={kenBurnsVariants[currentSlide % kenBurnsVariants.length].initial}
-                            animate={kenBurnsVariants[currentSlide % kenBurnsVariants.length].animate}
-                            transition={{ duration: 6, ease: "linear" }}
-                            style={{ willChange: "transform" }}
+                            key={image.src}
+                            className="absolute inset-0 w-full h-full z-10"
+                            initial={false}
+                            animate={{ opacity: isActive ? 1 : 0 }}
+                            transition={{ duration: prefersReducedMotion ? 0 : 1.2, ease: "easeInOut" }}
+                            aria-hidden={!isActive}
                         >
-                            <CloudinaryImage
-                                src={heroImages[currentSlide].src}
-                                alt={heroImages[currentSlide].alt}
-                                fill
-                                sizes="(max-width: 768px) 100vw, 100vw"
-                                className="object-cover object-center"
-                                priority={currentSlide === 0}
-                            />
+                            <motion.div
+                                className="absolute inset-0 w-full h-full"
+                                initial={false}
+                                animate={
+                                    prefersReducedMotion
+                                        ? { scale: 1.05, x: "0%", y: "0%" }
+                                        : isActive
+                                            ? kenBurnsVariant.animate
+                                            : kenBurnsVariant.initial
+                                }
+                                transition={{
+                                    duration: prefersReducedMotion ? 0 : isActive ? 6 : 0.6,
+                                    ease: prefersReducedMotion ? "linear" : isActive ? "linear" : "easeOut"
+                                }}
+                                style={{ willChange: "transform" }}
+                            >
+                                <CloudinaryImage
+                                    src={image.src}
+                                    alt={image.alt}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 100vw"
+                                    className="object-cover object-center"
+                                    priority={index === 0}
+                                    loading={index === 0 ? "eager" : "lazy"}
+                                    noSpinner
+                                />
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
-                </AnimatePresence>
+                    );
+                })}
             </div>
 
             {/* Dark overlay for text contrast - All devices */}

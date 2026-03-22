@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
@@ -262,8 +262,16 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
     const prefersReducedMotion = useReducedMotion();
 
     const displayImages = service.images.slice(0, 6);
-    const currentImage = displayImages[currentImageIndex];
-    const currentAlt = service.imageAlts?.[currentImageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`;
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        service.images.forEach((src) => {
+            const image = new window.Image();
+            image.decoding = "async";
+            image.src = src;
+        });
+    }, [service.images]);
 
     // Auto-rotate images every 3.5 seconds
     useEffect(() => {
@@ -329,30 +337,35 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                 >
                     <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`} className="block group">
                         <div className="relative aspect-video sm:aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-2xl">
-                            {/* Background gradient */}
-                            <div className={`absolute inset-0 bg-gradient-to-br ${service.color} z-0`} />
+                            <div className="absolute inset-0 bg-stone-950/10" />
 
-                            {/* Main image - only render the active frame to keep the homepage light */}
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={currentImage}
-                                    initial={prefersReducedMotion ? false : { opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-                                    transition={{ duration: prefersReducedMotion ? 0 : 0.35 }}
-                                    className="absolute inset-0"
-                                >
-                                    <CloudinaryImage
-                                        src={currentImage}
-                                        alt={currentAlt}
-                                        fill
-                                        className="object-cover object-center"
-                                        sizes="(max-width: 1024px) 100vw, 50vw"
-                                        priority={index === 0}
-                                        noSpinner
-                                    />
-                                </motion.div>
-                            </AnimatePresence>
+                            {displayImages.map((imageSrc, imageIndex) => {
+                                const imageAlt = service.imageAlts?.[imageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`;
+
+                                return (
+                                    <motion.div
+                                        key={imageSrc}
+                                        className="absolute inset-0"
+                                        initial={false}
+                                        animate={{ opacity: imageIndex === currentImageIndex ? 1 : 0 }}
+                                        transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: "easeInOut" }}
+                                        aria-hidden={imageIndex !== currentImageIndex}
+                                    >
+                                        <CloudinaryImage
+                                            src={imageSrc}
+                                            alt={imageAlt}
+                                            fill
+                                            className="object-cover object-center"
+                                            sizes="(max-width: 1024px) 100vw, 50vw"
+                                            priority={index === 0 && imageIndex === 0}
+                                            loading={index === 0 && imageIndex === 0 ? "eager" : "lazy"}
+                                            noSpinner
+                                        />
+                                    </motion.div>
+                                );
+                            })}
+
+                            <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-20 transition-opacity duration-500 group-hover:opacity-10`} />
 
                             {/* Overlay gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-500 group-hover:opacity-80" />

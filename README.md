@@ -20,6 +20,17 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Build Scope
+
+Local `next build` runs in a reduced static-generation mode by default so the build finishes much faster on a workstation.
+
+- Local default: reduced prebuild set
+- CI/Vercel/Hetzner default: full prebuild set when the deploy target is marked
+- Manual override: set `GALEO_BUILD_SCOPE=full` or `GALEO_BUILD_SCOPE=reduced`
+- Hetzner recommended: set `GALEO_DEPLOY_TARGET=hetzner` or `HETZNER=1`
+
+This only changes how many static params are pre-generated during build. Routes that use on-demand generation can still render outside the reduced set.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

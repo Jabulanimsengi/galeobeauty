@@ -12,17 +12,21 @@ import {
     getIntentPageBySlug,
     getIntentPageServiceLinks,
 } from "@/lib/intent-pages";
+import { limitStaticParams } from "@/lib/build-config";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
 export const dynamic = "force-static";
-export const dynamicParams = false;
+export const dynamicParams = true;
 export const revalidate = false;
 
 export function generateStaticParams() {
-    return getAllIntentPages().map((page) => ({ slug: page.slug }));
+    return limitStaticParams(
+        getAllIntentPages().map((page) => ({ slug: page.slug })),
+        "intentPages"
+    );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
