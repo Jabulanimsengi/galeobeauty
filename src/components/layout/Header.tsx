@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { startTransition, useCallback, useEffect, useRef, useState } from "react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Phone } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
+import { useNavigationLoading } from "@/components/providers/NavigationLoadingProvider";
 import {
     Sheet,
     SheetContent,
@@ -20,6 +22,10 @@ import { cn } from "@/lib/utils";
 export function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navigationTimerRef = useRef<number | null>(null);
+    const pathname = usePathname();
+    const router = useRouter();
+    const { startNavigation } = useNavigationLoading();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -29,6 +35,34 @@ export function Header() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    useEffect(() => {
+        return () => {
+            if (navigationTimerRef.current) {
+                window.clearTimeout(navigationTimerRef.current);
+            }
+        };
+    }, []);
+
+    const handleMobileNavigation = useCallback((href: string) => {
+        if (navigationTimerRef.current) {
+            window.clearTimeout(navigationTimerRef.current);
+            navigationTimerRef.current = null;
+        }
+
+        setIsMobileMenuOpen(false);
+
+        if (href === pathname) {
+            return;
+        }
+
+        startNavigation();
+        navigationTimerRef.current = window.setTimeout(() => {
+            startTransition(() => {
+                router.push(href);
+            });
+        }, 120);
+    }, [pathname, router, startNavigation]);
 
     return (
         <>
@@ -48,7 +82,7 @@ export function Header() {
                 <div
                     className={cn(
                         "absolute inset-0 -z-10 bg-background backdrop-blur-md transition-opacity duration-500 ease-out",
-                        isScrolled ? "opacity-95" : "opacity-0"
+                        isScrolled ? "opacity-95" : "opacity-95 lg:opacity-0"
                     )}
                     style={{ willChange: 'opacity' }}
                 />
@@ -64,21 +98,21 @@ export function Header() {
                                         <span
                                             className={cn(
                                                 "block h-0.5 w-7 origin-left rounded-full transition-all duration-300",
-                                                isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white",
+                                                "bg-foreground",
                                                 isMobileMenuOpen && "translate-y-[7px] rotate-45"
                                             )}
                                         />
                                         <span
                                             className={cn(
                                                 "block h-0.5 w-5 origin-left rounded-full transition-all duration-300",
-                                                isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white",
+                                                "bg-foreground",
                                                 isMobileMenuOpen && "opacity-0"
                                             )}
                                         />
                                         <span
                                             className={cn(
                                                 "block h-0.5 w-3 origin-left rounded-full transition-all duration-300",
-                                                isScrolled || isMobileMenuOpen ? "bg-foreground" : "bg-white",
+                                                "bg-foreground",
                                                 isMobileMenuOpen && "-translate-y-[7px] w-7 -rotate-45"
                                             )}
                                         />
@@ -87,9 +121,8 @@ export function Header() {
                             </SheetTrigger>
                             <SheetContent
                                 side="left"
-                                className="safe-left safe-bottom w-[min(88vw,22rem)] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0"
+                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0"
                             >
-                                <div className="absolute inset-y-0 left-0 w-3 bg-[#223734]" />
                                 <SheetHeader className="relative border-b border-white/10 px-7 pt-7 pb-6">
                                     <div className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-white/45">
                                         Galeo Beauty
@@ -120,9 +153,9 @@ export function Header() {
                                                         ease: [0.25, 0.1, 0.25, 1]
                                                     }}
                                                 >
-                                                    <NavLink
-                                                        href={item.href}
-                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleMobileNavigation(item.href)}
                                                         className="group inline-flex w-fit items-center py-1 text-[1.05rem] font-medium uppercase tracking-[0.22em] text-white/72 transition-all duration-300 hover:text-white"
                                                     >
                                                         <span>{item.label}</span>
@@ -132,7 +165,7 @@ export function Header() {
                                                                 /
                                                             </span>
                                                         </span>
-                                                    </NavLink>
+                                                    </button>
                                                 </motion.div>
                                             ))}
                                         </nav>
@@ -148,16 +181,11 @@ export function Header() {
                                             }}
                                         >
                                             <Button
-                                                asChild
                                                 size="lg"
                                                 className="w-full rounded-[1.35rem] bg-gold py-6 text-base font-semibold text-white hover:bg-gold-dark"
+                                                onClick={() => handleMobileNavigation("/prices")}
                                             >
-                                                <NavLink
-                                                    href="/prices"
-                                                    onClick={() => setIsMobileMenuOpen(false)}
-                                                >
                                                     Book Now
-                                                </NavLink>
                                             </Button>
                                         </motion.div>
                                     </div>

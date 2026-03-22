@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { cormorant, montserrat } from "@/lib/fonts";
-import { FloatingSocials } from "@/components/ui/floating-socials";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
+import { AppBootLoader } from "@/components/providers/AppBootLoader";
+import { DeferredFloatingSocials } from "@/components/ui/DeferredFloatingSocials";
 import { AGGREGATE_RATING } from "@/lib/reviews-data";
 import { buildGlobalKeywords, buildOfferCatalogEntries } from "@/lib/seo-keywords";
 import "./globals.css";
@@ -204,8 +205,9 @@ export default function RootLayout({
 
 
         <NavigationLoadingProvider>
+          <AppBootLoader />
           {children}
-          <FloatingSocials />
+          <DeferredFloatingSocials />
         </NavigationLoadingProvider>
       </body>
     </html>

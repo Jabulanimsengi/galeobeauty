@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { cn } from "@/lib/utils";
 
@@ -12,7 +9,8 @@ interface CloudinaryImageProps extends Omit<ImageProps, "src"> {
     height?: number | `${number}`;
 }
 
-export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, width, height, ...props }: CloudinaryImageProps) {
+export function CloudinaryImage({ src, alt, className, fill, noSpinner: _noSpinner, onLoad, width, height, ...props }: CloudinaryImageProps) {
+    void _noSpinner;
 
     // Format the source so it works locally. (We assume most src strings are paths like "/images/...")
     let localSrc = src;
@@ -36,6 +34,7 @@ export function CloudinaryImage({ src, alt, className, fill, noSpinner, onLoad, 
             height={height}
             className={cn(className)}
             onLoad={onLoad}
+            decoding={props.decoding ?? "async"}
             {...props}
         />
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
@@ -257,32 +257,72 @@ interface ServiceCardProps {
 
 function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
+    const [incomingImageIndex, setIncomingImageIndex] = useState<number | null>(null);
     const cardRef = useRef<HTMLDivElement>(null);
+    const transitionTimerRef = useRef<number | null>(null);
     const prefersReducedMotion = useReducedMotion();
 
     const displayImages = service.images.slice(0, 6);
 
-    useEffect(() => {
-        if (typeof window === "undefined") return;
+    const activeImageIndex = incomingImageIndex ?? displayedImageIndex;
 
-        service.images.forEach((src) => {
-            const image = new window.Image();
-            image.decoding = "async";
-            image.src = src;
-        });
-    }, [service.images]);
+    const transitionToImage = useCallback((nextIndex: number) => {
+        if (nextIndex === displayedImageIndex || nextIndex === incomingImageIndex) {
+            return;
+        }
+
+        if (typeof window === "undefined" || prefersReducedMotion) {
+            setDisplayedImageIndex(nextIndex);
+            setIncomingImageIndex(null);
+            return;
+        }
+
+        const revealIncomingImage = () => {
+            setIncomingImageIndex(nextIndex);
+
+            if (transitionTimerRef.current) {
+                window.clearTimeout(transitionTimerRef.current);
+            }
+
+            transitionTimerRef.current = window.setTimeout(() => {
+                setDisplayedImageIndex(nextIndex);
+                setIncomingImageIndex(null);
+                transitionTimerRef.current = null;
+            }, 420);
+        };
+
+        const nextImage = new window.Image();
+        nextImage.decoding = "async";
+        nextImage.src = displayImages[nextIndex];
+
+        if (nextImage.complete) {
+            revealIncomingImage();
+            return;
+        }
+
+        nextImage.onload = revealIncomingImage;
+        nextImage.onerror = revealIncomingImage;
+    }, [displayImages, displayedImageIndex, incomingImageIndex, prefersReducedMotion]);
 
     // Auto-rotate images every 3.5 seconds
     useEffect(() => {
         if (displayImages.length <= 1 || prefersReducedMotion) return;
 
         const interval = setInterval(() => {
-            setCurrentImageIndex((prev) => (prev + 1) % displayImages.length);
+            transitionToImage((displayedImageIndex + 1) % displayImages.length);
         }, 3500);
 
         return () => clearInterval(interval);
-    }, [displayImages.length, prefersReducedMotion]);
+    }, [displayImages.length, displayedImageIndex, prefersReducedMotion, transitionToImage]);
+
+    useEffect(() => {
+        return () => {
+            if (transitionTimerRef.current) {
+                window.clearTimeout(transitionTimerRef.current);
+            }
+        };
+    }, []);
 
     // Mouse parallax effect
     const x = useMotionValue(0);
@@ -339,31 +379,38 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         <div className="relative aspect-video sm:aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-2xl">
                             <div className="absolute inset-0 bg-stone-950/10" />
 
-                            {displayImages.map((imageSrc, imageIndex) => {
-                                const imageAlt = service.imageAlts?.[imageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`;
+                            <div className="absolute inset-0">
+                                <CloudinaryImage
+                                    src={displayImages[displayedImageIndex]}
+                                    alt={service.imageAlts?.[displayedImageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`}
+                                    fill
+                                    className="object-cover object-center"
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                    priority={index === 0 && displayedImageIndex === 0}
+                                    loading={index === 0 && displayedImageIndex === 0 ? "eager" : "lazy"}
+                                    noSpinner
+                                />
+                            </div>
 
-                                return (
-                                    <motion.div
-                                        key={imageSrc}
-                                        className="absolute inset-0"
-                                        initial={false}
-                                        animate={{ opacity: imageIndex === currentImageIndex ? 1 : 0 }}
-                                        transition={{ duration: prefersReducedMotion ? 0 : 0.45, ease: "easeInOut" }}
-                                        aria-hidden={imageIndex !== currentImageIndex}
-                                    >
-                                        <CloudinaryImage
-                                            src={imageSrc}
-                                            alt={imageAlt}
-                                            fill
-                                            className="object-cover object-center"
-                                            sizes="(max-width: 1024px) 100vw, 50vw"
-                                            priority={index === 0 && imageIndex === 0}
-                                            loading={index === 0 && imageIndex === 0 ? "eager" : "lazy"}
-                                            noSpinner
-                                        />
-                                    </motion.div>
-                                );
-                            })}
+                            {incomingImageIndex !== null && (
+                                <motion.div
+                                    key={`${service.id}-${incomingImageIndex}`}
+                                    className="absolute inset-0"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ duration: 0.42, ease: "easeInOut" }}
+                                >
+                                    <CloudinaryImage
+                                        src={displayImages[incomingImageIndex]}
+                                        alt={service.imageAlts?.[incomingImageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`}
+                                        fill
+                                        className="object-cover object-center"
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                        loading="eager"
+                                        noSpinner
+                                    />
+                                </motion.div>
+                            )}
 
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-20 transition-opacity duration-500 group-hover:opacity-10`} />
 
@@ -389,9 +436,9 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                             key={idx}
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                setCurrentImageIndex(idx);
+                                                transitionToImage(idx);
                                             }}
-                                            className={`transition-all duration-300 rounded-full shadow-sm ${currentImageIndex === idx
+                                            className={`transition-all duration-300 rounded-full shadow-sm ${activeImageIndex === idx
                                                 ? "w-6 h-1.5 bg-gold"
                                                 : "w-1.5 h-1.5 bg-white/50 hover:bg-white/90"
                                                 }`}

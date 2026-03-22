@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, Suspense, useRef } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { createContext, useContext, useState, useEffect, useEffectEvent, useCallback, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 interface NavigationLoadingContextType {
     isNavigating: boolean;
@@ -17,26 +17,8 @@ export function useNavigationLoading() {
     return useContext(NavigationLoadingContext);
 }
 
-// Inner component that uses useSearchParams (must be wrapped in Suspense)
-function NavigationLoadingProviderInner({
-    children,
-    setIsNavigating
-}: {
-    children: React.ReactNode;
-    setIsNavigating: (value: boolean) => void;
-}) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-
-    // When route changes, hide the loading overlay
-    useEffect(() => {
-        setIsNavigating(false);
-    }, [pathname, searchParams, setIsNavigating]);
-
-    return <>{children}</>;
-}
-
 export function NavigationLoadingProvider({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
     const [isNavigating, setIsNavigating] = useState(false);
     const [showIndicator, setShowIndicator] = useState(false);
     const showTimerRef = useRef<number | null>(null);
@@ -59,24 +41,23 @@ export function NavigationLoadingProvider({ children }: { children: React.ReactN
         };
     }, []);
 
+    const stopNavigation = useEffectEvent(() => {
+        if (showTimerRef.current) {
+            window.clearTimeout(showTimerRef.current);
+            showTimerRef.current = null;
+        }
+
+        setIsNavigating(false);
+        setShowIndicator(false);
+    });
+
+    useEffect(() => {
+        stopNavigation();
+    }, [pathname]);
+
     return (
         <NavigationLoadingContext.Provider value={{ isNavigating, startNavigation }}>
-            <Suspense fallback={children}>
-                <NavigationLoadingProviderInner
-                    setIsNavigating={(value) => {
-                        if (!value && showTimerRef.current) {
-                            window.clearTimeout(showTimerRef.current);
-                            showTimerRef.current = null;
-                        }
-                        setIsNavigating(value);
-                        if (!value) {
-                            setShowIndicator(false);
-                        }
-                    }}
-                >
-                    {children}
-                </NavigationLoadingProviderInner>
-            </Suspense>
+            {children}
 
             {isNavigating && showIndicator && (
                 <div className="pointer-events-none fixed inset-x-0 top-0 z-[100]">

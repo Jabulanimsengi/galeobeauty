@@ -127,7 +127,7 @@ export function HeroSection() {
         }, 5000);
 
         return () => clearInterval(timer);
-    }, [heroImages.length, prefersReducedMotion]);
+    }, [prefersReducedMotion]);
 
     return (
         <section className="relative min-h-[calc(100svh-5.5rem)] sm:h-[90dvh] lg:h-[100vh] overflow-hidden">
@@ -172,6 +172,7 @@ export function HeroSection() {
                                     className="object-cover object-center"
                                     priority={index === 0}
                                     loading={index === 0 ? "eager" : "lazy"}
+                                    fetchPriority={index === 0 ? "high" : "auto"}
                                     noSpinner
                                 />
                             </motion.div>

@@ -1,12 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
-import { Map } from "@/components/ui/map";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, Shield, Award, CheckCircle, MapPin, Clock, Star, Phone, Navigation } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+
+const DeferredMap = dynamic(
+    () => import("@/components/ui/DeferredMap").then((mod) => mod.DeferredMap),
+    {
+        ssr: false,
+        loading: () => <div className="h-full min-h-[300px] w-full animate-pulse bg-stone-100" />,
+    }
+);
 
 const values = [
     {
@@ -245,7 +253,7 @@ export function AboutClient() {
                                 transition={{ duration: 0.6 }}
                                 className="rounded-2xl overflow-hidden shadow-xl h-[300px] lg:h-[350px]"
                             >
-                                <Map
+                                <DeferredMap
                                     latitude={-25.753414}
                                     longitude={27.909252}
                                     zoom={15}

@@ -31,6 +31,17 @@ Local `next build` runs in a reduced static-generation mode by default so the bu
 
 This only changes how many static params are pre-generated during build. Routes that use on-demand generation can still render outside the reduced set.
 
+## Performance Workflow
+
+Use the image scripts before large content updates so oversized assets do not slow down page loads or image optimization on the server.
+
+- Audit current image sizes: `npm run audit:images`
+- Audit duplicate image files: `npm run audit:image-dupes`
+- Optimize large images in place: `npm run optimize:images`
+- Optional overrides: `node scripts/optimize-images.js --max-width=2200 --quality=82 --min-bytes=358400 --write`
+
+The optimizer uses `sharp`, keeps the original filenames, and only replaces a file when the optimized output is smaller.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

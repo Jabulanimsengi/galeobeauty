@@ -1,11 +1,19 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { Map } from "@/components/ui/map";
 import { Phone, Mail, MapPin, Clock, ArrowRight, Instagram, Facebook } from "lucide-react";
 import { businessInfo } from "@/lib/constants";
 import { motion } from "framer-motion";
+
+const DeferredMap = dynamic(
+    () => import("@/components/ui/DeferredMap").then((mod) => mod.DeferredMap),
+    {
+        ssr: false,
+        loading: () => <div className="h-full min-h-[350px] w-full animate-pulse bg-stone-100" />,
+    }
+);
 
 export function ContactClient() {
     return (
@@ -146,7 +154,7 @@ export function ContactClient() {
                                 transition={{ duration: 0.6, delay: 0.1 }}
                                 className="lg:col-span-2 h-[350px] md:h-[400px] lg:h-[450px] rounded-2xl overflow-hidden shadow-lg border border-border/40"
                             >
-                                <Map
+                                <DeferredMap
                                     latitude={-25.753414}
                                     longitude={27.909252}
                                     zoom={18}
