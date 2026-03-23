@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
+import { LocationServiceBookingButton } from "@/components/booking/LocationServiceBookingButton";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import {
@@ -263,6 +264,13 @@ export default async function LocationServicePage({ params }: PageProps) {
         `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`
     );
     const whatsappLink = `https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`;
+    const bookingService = {
+        id: resolvedService.slug,
+        name: resolvedService.keyword,
+        price: resolvedService.price,
+        duration: resolvedService.duration,
+        description: resolvedService.description,
+    };
 
     // Schema.org structured data — BeautySalon as top-level type
     // Google Review Snippets only support aggregateRating on LocalBusiness/BeautySalon,
@@ -457,21 +465,14 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     <span className="text-foreground">{service.duration}</span>
                                 </div>
                             )}
-                            {category && (
-                                <div className="bg-secondary/50 border border-border rounded-full px-6 py-3">
-                                    <span className="text-foreground text-sm">{category.badge}</span>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* CTAs */}
-                        <div className="flex flex-wrap gap-4">
-                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-white rounded-full px-8">
-                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                                    Book via WhatsApp
-                                </a>
-                            </Button>
-                            <Button asChild variant="outline" size="lg" className="rounded-full px-8">
+                            <LocationServiceBookingButton
+                                service={bookingService}
+                                categoryId={resolvedService.categoryId}
+                                categoryTitle={category?.title || "Beauty Services"}
+                                label="Book Now"
+                                className="h-[3.25rem] rounded-full bg-secondary/60 px-6 text-foreground hover:bg-gold hover:text-white"
+                            />
+                            <Button asChild variant="outline" size="lg" className="h-[3.25rem] rounded-full px-8">
                                 <Link href="/prices">
                                     View All Services
                                 </Link>
@@ -960,26 +961,69 @@ export default async function LocationServicePage({ params }: PageProps) {
                 </section>
 
                 {/* Final CTA */}
-                <section className="py-20 text-center bg-foreground text-background">
-                    <div className="container mx-auto px-6">
-                        <h2 className="font-serif text-4xl md:text-5xl mb-6">
-                            Ready for Your <span className="text-gold">{service.keyword}</span>?
-                        </h2>
-                        <p className="text-white/70 max-w-xl mx-auto mb-10 text-lg">
-                            Book your appointment today. {location.name} residents can enjoy premium
-                            beauty treatments at our Hartbeespoort sanctuary.
-                        </p>
-                        <div className="flex flex-wrap justify-center gap-4">
-                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
-                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
-                                    Book Now via WhatsApp
-                                </a>
-                            </Button>
-                            <Button asChild size="lg" className="h-14 px-10 text-lg rounded-full border border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
-                                <Link href="/contact">
-                                    Contact Us
-                                </Link>
-                            </Button>
+                <section className="bg-stone-50/70 px-4 py-14 sm:px-6 lg:py-20">
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="relative overflow-hidden rounded-[2rem] border border-[#2b2b2f] bg-[#171719] px-6 py-10 text-white shadow-[0_30px_90px_-45px_rgba(0,0,0,0.65)] sm:px-8 lg:px-12 lg:py-14">
+                            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
+                            <div className="absolute -top-20 right-[-4rem] h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
+                            <div className="absolute -bottom-24 left-[-3rem] h-52 w-52 rounded-full bg-white/5 blur-3xl" />
+
+                            <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.85fr)] lg:items-end">
+                                <div>
+                                    <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
+                                        Book With Confidence
+                                    </span>
+                                    <h2 className="mt-5 max-w-2xl font-serif text-3xl leading-tight sm:text-4xl lg:text-[2.9rem]">
+                                        Ready for your <span className="text-gold">{service.keyword}</span> near {location.name}?
+                                    </h2>
+                                    <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
+                                        We make it easy for {location.name} clients to book, plan travel time, and get clear
+                                        guidance before the appointment so the whole visit feels smooth from start to finish.
+                                    </p>
+
+                                    <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/70">
+                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                                            Quick WhatsApp booking
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                                            Clear treatment advice
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                                            Easy trip planning from {location.name}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="rounded-[1.75rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm sm:p-6">
+                                    <div className="flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-gold/85">
+                                        <Phone className="h-4 w-4" />
+                                        Speak To The Salon
+                                    </div>
+                                    <p className="mt-4 text-sm leading-relaxed text-white/62">
+                                        Reach out for availability, treatment advice, or help deciding whether {service.keyword}
+                                        is the right fit for you.
+                                    </p>
+
+                                    <div className="mt-6 flex flex-col gap-3">
+                                        <LocationServiceBookingButton
+                                            service={bookingService}
+                                            categoryId={resolvedService.categoryId}
+                                            categoryTitle={category?.title || "Beauty Services"}
+                                            label="Book Now"
+                                            className="h-12 rounded-full bg-gold px-6 text-white hover:bg-gold-dark"
+                                        />
+                                        <Button
+                                            asChild
+                                            size="lg"
+                                            className="h-12 rounded-full border border-white/15 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
+                                        >
+                                            <Link href="/contact">
+                                                Contact Galeo Beauty
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
