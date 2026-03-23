@@ -288,14 +288,11 @@ const nextConfig: NextConfig = {
     //    This prevents old service URLs indexed under specific locations from returning soft 404s.
     const staleLocationServiceRedirects: Array<{ source: string; destination: string; permanent: boolean }> = [];
     for (const [staleSlug, cat] of Object.entries(staleCategoryMap)) {
-      // If this slug still exists as a current service, no redirect needed
+      // If this slug still exists as a current service, let the app route handle it.
+      // Redirecting it here can create self-redirect loops such as:
+      // /locations/fourways/lash-lamination -> /locations/fourways/lash-lamination
       if (slugToCat.has(staleSlug)) {
-        // However, if the slug still exists, we must handle the case where it was
-        // navigated under the wrong location (soft 404s). In Galeo, the location
-        // schema only supports location/services, not categories. So for current slugs
-        // we bounce them back to the /locations/:location/[currentSlug] correctly if needed.
-        // Wait, if it exists, it should work natively in Next.js dynamically UNLESS
-        // it's a category. Categorical URLs shouldn't exist in locations!
+        continue;
       }
 
       const remappedSlug = staleSlugRemaps[staleSlug] || null;

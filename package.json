@@ -11,6 +11,7 @@
     "optimize:images": "node scripts/optimize-images.js --write",
     "validate:seo": "node scripts/validate-seo.js",
     "audit:routes": "node scripts/audit-routes.js",
+    "audit:redirects": "node scripts/audit-redirect-conflicts.mjs",
     "start": "next start",
     "lint": "eslint"
   },
