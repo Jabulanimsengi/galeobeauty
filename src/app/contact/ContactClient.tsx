@@ -117,7 +117,7 @@ export function ContactClient() {
                 </section>
 
                 {/* Location Section with Enhanced 3D Map */}
-                <section className="py-12 lg:py-20 bg-stone-50/40">
+                <section id="location" className="py-12 lg:py-20 bg-stone-50/40">
                     <div className="container mx-auto px-6">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                             {/* Location Info Card */}

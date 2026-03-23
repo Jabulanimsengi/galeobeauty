@@ -51,9 +51,9 @@ export function AboutClient() {
     return (
         <>
             <Header />
-            <main className="bg-background min-h-screen">
+            <main className="min-h-screen overflow-x-hidden bg-background">
                 {/* Hero - Cinematic Typography */}
-                <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 overflow-hidden">
+                <section className="relative overflow-hidden px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-20 lg:pt-48 lg:pb-32">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent -z-10" />
                     <div className="container mx-auto text-center max-w-4xl">
                         <motion.div
@@ -61,14 +61,14 @@ export function AboutClient() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
                         >
-                            <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 block">
+                            <span className="mb-6 block text-xs font-bold uppercase tracking-[0.22em] text-gold sm:tracking-[0.3em]">
                                 About Galeo Beauty Hartbeespoort
                             </span>
-                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
+                            <h1 className="mb-6 font-serif text-[2.55rem] leading-[0.92] text-foreground sm:mb-8 sm:text-5xl lg:text-6xl">
                                 Your Premier <span className="text-gold italic">Beauty Salon</span><br />
                                 in <span className="text-gold italic">Hartbeespoort</span>
                             </h1>
-                            <p className="text-muted-foreground text-lg sm:text-xl font-light max-w-2xl mx-auto leading-relaxed">
+                            <p className="mx-auto max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-xl sm:font-light">
                                 More than a salon — Galeo Beauty is Harties&apos; destination for advanced aesthetics, medical-grade skincare, and luxury self-care near Hartbeespoort Dam.
                             </p>
                         </motion.div>
@@ -76,9 +76,9 @@ export function AboutClient() {
                 </section>
 
                 {/* The Story - Editorial Split */}
-                <section className="py-20 lg:py-32 border-y border-border/40 bg-amber-50/30">
+                <section className="border-y border-border/40 bg-amber-50/30 py-16 lg:py-32">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+                        <div className="grid grid-cols-1 items-center gap-10 sm:gap-14 lg:grid-cols-2 lg:gap-24">
                             <motion.div
                                 initial={{ opacity: 0, x: -30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
@@ -108,10 +108,10 @@ export function AboutClient() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                                <h2 className="font-serif text-4xl lg:text-5xl text-foreground mb-8">
+                                <h2 className="mb-6 font-serif text-3xl text-foreground sm:mb-8 sm:text-4xl lg:text-5xl">
                                     Our <span className="text-gold">Philosophy</span> at Galeo Beauty Harties
                                 </h2>
-                                <div className="space-y-6 text-muted-foreground text-lg leading-relaxed font-light">
+                                <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:space-y-6 sm:text-lg sm:font-light">
                                     <p>
                                         At Galeo Beauty in Hartbeespoort, we believe true radiance is achieved when health and aesthetics align. Our approach is rooted in the understanding that beauty is biological, structural, and deeply personal.
                                     </p>
@@ -126,11 +126,11 @@ export function AboutClient() {
                                     </p>
                                 </div>
                                 <div className="mt-10">
-                                    <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-white rounded-full px-8">
+                                    <Button asChild size="lg" className="w-full rounded-full bg-gold px-8 text-white hover:bg-gold-dark sm:w-auto">
                                         <NavLink href="/prices">Explore Our Treatments</NavLink>
                                     </Button>
                                 </div>
-                                <div className="mt-6 flex flex-wrap gap-3">
+                                <div className="mt-6 flex flex-wrap gap-2.5 sm:gap-3">
                                     {priorityLinks.map((link) => (
                                         <NavLink
                                             key={link.href}
@@ -147,16 +147,16 @@ export function AboutClient() {
                 </section>
 
                 {/* E-E-A-T Credentials Section */}
-                <section className="py-20 lg:py-28 bg-rose-50/40">
+                <section className="bg-rose-50/40 py-16 lg:py-28">
                     <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6 }}
-                            className="text-center mb-16"
+                            className="mb-12 text-center sm:mb-16"
                         >
-                            <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-4 block">
+                            <span className="mb-4 block text-xs font-bold uppercase tracking-[0.22em] text-gold sm:tracking-[0.3em]">
                                 Why Trust Galeo Beauty
                             </span>
                             <h2 className="font-serif text-3xl md:text-4xl text-foreground">
@@ -164,7 +164,7 @@ export function AboutClient() {
                             </h2>
                         </motion.div>
 
-                        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+                        <div className="grid items-start gap-10 md:grid-cols-2 lg:gap-16">
                             {/* Founder Credentials */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -224,16 +224,16 @@ export function AboutClient() {
                 </section>
 
                 {/* Visit Our Salon - Location Section for Local SEO */}
-                <section className="py-20 lg:py-28 bg-secondary/20" id="location">
+                <section className="bg-secondary/20 py-16 lg:py-28" id="location">
                     <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.6 }}
-                            className="text-center mb-16"
+                            className="mb-12 text-center sm:mb-16"
                         >
-                            <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-4 block">
+                            <span className="mb-4 block text-xs font-bold uppercase tracking-[0.22em] text-gold sm:tracking-[0.3em]">
                                 Our Location
                             </span>
                             <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
@@ -244,7 +244,7 @@ export function AboutClient() {
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
                             {/* Map */}
                             <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -270,7 +270,7 @@ export function AboutClient() {
                                 transition={{ duration: 0.6, delay: 0.2 }}
                                 className="flex flex-col justify-center"
                             >
-                                <div className="space-y-8">
+                                <div className="space-y-6 sm:space-y-8">
                                     {/* Address */}
                                     <div className="flex items-start gap-4">
                                         <div className="p-3 bg-gold/10 rounded-full flex-shrink-0">
@@ -327,7 +327,7 @@ export function AboutClient() {
                                         href="https://www.google.com/maps/dir/?api=1&destination=-25.753414,27.909252"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-white px-8 py-4 rounded-full font-semibold transition-colors duration-300 shadow-lg w-fit"
+                                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-4 text-center font-semibold text-white shadow-lg transition-colors duration-300 hover:bg-gold-dark sm:w-fit sm:px-8"
                                     >
                                         <Navigation className="w-5 h-5" />
                                         Get Directions to Galeo Beauty
@@ -339,7 +339,7 @@ export function AboutClient() {
                 </section>
 
                 {/* Values - Icon Grid */}
-                <section className="py-20 bg-stone-50/50">
+                <section className="bg-stone-50/50 py-16 sm:py-20">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {values.map((value, i) => (
@@ -360,13 +360,13 @@ export function AboutClient() {
                 </section>
 
                 {/* Final CTA */}
-                <section className="py-20 lg:py-32 text-center bg-foreground text-background">
+                <section className="bg-foreground py-16 text-center text-background sm:py-20 lg:py-32">
                     <div className="container mx-auto px-4">
-                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Experience Galeo Beauty in Hartbeespoort</h2>
-                        <p className="text-white/70 max-w-xl mx-auto mb-10 text-lg font-light">
+                        <h2 className="mb-6 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Experience Galeo Beauty in Hartbeespoort</h2>
+                        <p className="mx-auto mb-8 max-w-xl text-base font-light text-white/70 sm:mb-10 sm:text-lg">
                             Your journey to your best self begins with a single appointment at our Harties salon.
                         </p>
-                        <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
+                        <Button asChild size="lg" className="h-14 w-full rounded-full bg-gold px-8 text-base text-foreground hover:bg-gold-dark sm:w-auto sm:px-10 sm:text-lg">
                             <NavLink href="/prices">Book Your Visit</NavLink>
                         </Button>
                     </div>

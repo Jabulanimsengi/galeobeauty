@@ -1,7 +1,7 @@
 
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { Header, Footer } from "@/components/layout";
+import { RouteLoadingScreen } from "@/components/ui/RouteLoadingScreen";
 import { PricesClient } from "./PricesClient";
 import { buildPricesPageKeywords } from "@/lib/seo-keywords";
 
@@ -16,15 +16,7 @@ export const metadata: Metadata = {
 
 export default function PricesPage() {
     return (
-        <Suspense fallback={
-            <>
-                <Header />
-                <main className="min-h-screen pt-40 px-6 bg-background flex items-center justify-center">
-                    <div className="text-gold font-medium">Loading treatments...</div>
-                </main>
-                <Footer />
-            </>
-        }>
+        <Suspense fallback={<RouteLoadingScreen message="Loading treatments..." />}>
             <PricesClient />
         </Suspense>
     );

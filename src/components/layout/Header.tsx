@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useCallback, useEffect, useRef, useState } from "react";
+import { startTransition, useCallback, useEffect, useState } from "react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { Phone } from "lucide-react";
 import { motion } from "framer-motion";
@@ -22,34 +22,39 @@ import { cn } from "@/lib/utils";
 export function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const navigationTimerRef = useRef<number | null>(null);
     const pathname = usePathname();
     const router = useRouter();
     const { startNavigation } = useNavigationLoading();
 
     useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+        let animationFrame = 0;
+
+        const updateScrollState = () => {
+            const nextScrolled = window.scrollY > 24;
+            setIsScrolled((prev) => (prev === nextScrolled ? prev : nextScrolled));
+            animationFrame = 0;
         };
 
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+        const handleScroll = () => {
+            if (animationFrame !== 0) {
+                return;
+            }
 
-    useEffect(() => {
+            animationFrame = window.requestAnimationFrame(updateScrollState);
+        };
+
+        updateScrollState();
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
         return () => {
-            if (navigationTimerRef.current) {
-                window.clearTimeout(navigationTimerRef.current);
+            window.removeEventListener("scroll", handleScroll);
+            if (animationFrame !== 0) {
+                window.cancelAnimationFrame(animationFrame);
             }
         };
     }, []);
 
     const handleMobileNavigation = useCallback((href: string) => {
-        if (navigationTimerRef.current) {
-            window.clearTimeout(navigationTimerRef.current);
-            navigationTimerRef.current = null;
-        }
-
         setIsMobileMenuOpen(false);
 
         if (href === pathname) {
@@ -57,11 +62,9 @@ export function Header() {
         }
 
         startNavigation();
-        navigationTimerRef.current = window.setTimeout(() => {
-            startTransition(() => {
-                router.push(href);
-            });
-        }, 120);
+        startTransition(() => {
+            router.push(href);
+        });
     }, [pathname, router, startNavigation]);
 
     return (
@@ -71,23 +74,19 @@ export function Header() {
             {/* Main Header */}
             <header
                 className={cn(
-                    "sticky top-0 z-50 transition-all duration-500 ease-out isolate",
-                    isScrolled
-                        ? "py-2 shadow-lg"
-                        : "py-4"
+                    "sticky top-0 z-50 isolate transition-shadow duration-300 ease-out",
+                    isScrolled && "shadow-lg"
                 )}
-                style={{ transform: 'translateZ(0)', willChange: 'padding, box-shadow' }}
             >
                 {/* Background layer — always rendered, opacity transitions smoothly */}
                 <div
                     className={cn(
-                        "absolute inset-0 -z-10 bg-background backdrop-blur-md transition-opacity duration-500 ease-out",
+                        "absolute inset-0 -z-10 bg-background/95 backdrop-blur-md transition-opacity duration-300 ease-out",
                         isScrolled ? "opacity-95" : "opacity-95 lg:opacity-0"
                     )}
-                    style={{ willChange: 'opacity' }}
                 />
                 <div className="container mx-auto px-4 sm:px-6">
-                    <div className="relative flex items-center justify-between lg:hidden">
+                    <div className="relative flex h-[4.5rem] items-center justify-between lg:hidden">
                         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                             <SheetTrigger asChild>
                                 <button
@@ -146,10 +145,10 @@ export function Header() {
                                                 <motion.div
                                                     key={item.href}
                                                     initial={{ opacity: 0, x: -28 }}
-                                                    animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 }}
+                                                    animate={{ opacity: 1, x: 0 }}
                                                     transition={{
                                                         duration: 0.32,
-                                                        delay: isMobileMenuOpen ? 0.08 + index * 0.06 : 0,
+                                                        delay: 0.08 + index * 0.06,
                                                         ease: [0.25, 0.1, 0.25, 1]
                                                     }}
                                                 >
@@ -173,10 +172,10 @@ export function Header() {
                                         <motion.div
                                             className="mt-6"
                                             initial={{ opacity: 0, x: -28 }}
-                                            animate={isMobileMenuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -28 }}
+                                            animate={{ opacity: 1, x: 0 }}
                                             transition={{
                                                 duration: 0.32,
-                                                delay: isMobileMenuOpen ? 0.08 + navItems.length * 0.06 : 0,
+                                                delay: 0.08 + navItems.length * 0.06,
                                                 ease: [0.25, 0.1, 0.25, 1]
                                             }}
                                         >
@@ -215,10 +214,10 @@ export function Header() {
                             />
                         </NavLink>
 
-                        <div className="h-[58px] w-[58px] shrink-0" aria-hidden="true" />
+                        <div className="h-12 w-12 shrink-0" aria-hidden="true" />
                     </div>
 
-                    <div className="hidden items-center justify-between lg:flex">
+                    <div className="hidden h-[6.5rem] items-center justify-between lg:flex">
                         <NavLink href="/" className="relative z-10">
                             <CloudinaryImage
                                 src="/images/logo.png"
