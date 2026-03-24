@@ -12,24 +12,26 @@ export function DeferredFloatingSocials() {
     const [shouldRender, setShouldRender] = useState(false);
 
     useEffect(() => {
-        let timeoutId: number | null = null;
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
         let idleId: number | null = null;
 
         const enable = () => setShouldRender(true);
+        const requestIdleCallback = window.requestIdleCallback?.bind(window);
+        const cancelIdleCallback = window.cancelIdleCallback?.bind(window);
 
-        if ("requestIdleCallback" in window) {
-            idleId = window.requestIdleCallback(enable, { timeout: 1500 });
+        if (requestIdleCallback) {
+            idleId = requestIdleCallback(enable, { timeout: 1500 });
         } else {
-            timeoutId = window.setTimeout(enable, 800);
+            timeoutId = setTimeout(enable, 800);
         }
 
         return () => {
-            if (idleId !== null && "cancelIdleCallback" in window) {
-                window.cancelIdleCallback(idleId);
+            if (idleId !== null && cancelIdleCallback) {
+                cancelIdleCallback(idleId);
             }
 
             if (timeoutId !== null) {
-                window.clearTimeout(timeoutId);
+                clearTimeout(timeoutId);
             }
         };
     }, []);

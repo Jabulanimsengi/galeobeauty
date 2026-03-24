@@ -12,6 +12,7 @@
 
 # .md files 
 *.md
+!MONITORING_STACK.md
 
 
 
