@@ -4,6 +4,8 @@ import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Phone, Mail, Clock, MapPin, Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { TrustBadge } from "@/components/ui/trust-badge";
 import { businessInfo } from "@/lib/constants";
 
@@ -79,8 +81,11 @@ export function BookingModal({ isOpen, onClose }: BookingModalProps) {
                             {/* Content */}
                             <div className="p-6 space-y-4">
                                 {/* Phone Option */}
-                                <a
+                                <TrackedExternalLink
                                     href={`tel:${businessInfo.phone.replace(/\s/g, "")}`}
+                                    trackingContext="booking_modal_phone"
+                                    linkType="phone"
+                                    linkLabel="Call us directly"
                                     className="flex items-start gap-4 p-4 rounded-xl border border-border hover:border-gold/50 hover:bg-gold/5 transition-all group"
                                 >
                                     <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
@@ -96,11 +101,12 @@ export function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                         <span className="text-gold font-medium">{businessInfo.phone}</span>
                                     </div>
                                     <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
-                                </a>
+                                </TrackedExternalLink>
 
                                 {/* WhatsApp Option */}
-                                <a
-                                    href={`https://wa.me/${businessInfo.phone.replace(/\s/g, "").replace("+", "")}?text=${encodeURIComponent("Hi Galeo Beauty! I found you on www.galeobeauty.com and I'd like to book an appointment.")}`}
+                                <TrackedWhatsAppLink
+                                    message="Hi Galeo Beauty! I found you on www.galeobeauty.com and I'd like to book an appointment."
+                                    trackingContext="booking_modal_whatsapp"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-start gap-4 p-4 rounded-xl border border-border hover:border-green-500/50 hover:bg-green-500/5 transition-all group"
@@ -120,11 +126,14 @@ export function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                         <span className="text-green-600 font-medium">Chat Now</span>
                                     </div>
                                     <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-green-600 group-hover:translate-x-1 transition-all" />
-                                </a>
+                                </TrackedWhatsAppLink>
 
                                 {/* Email Option */}
-                                <a
+                                <TrackedExternalLink
                                     href={`mailto:${businessInfo.email}?subject=Appointment%20Booking%20Request`}
+                                    trackingContext="booking_modal_email"
+                                    linkType="email"
+                                    linkLabel="Email booking request"
                                     className="flex items-start gap-4 p-4 rounded-xl border border-border hover:border-gold/50 hover:bg-gold/5 transition-all group"
                                 >
                                     <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center flex-shrink-0">
@@ -140,7 +149,7 @@ export function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                         <span className="text-gold font-medium">{businessInfo.email}</span>
                                     </div>
                                     <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-gold group-hover:translate-x-1 transition-all" />
-                                </a>
+                                </TrackedExternalLink>
                             </div>
 
                             {/* Footer */}

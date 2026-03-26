@@ -5,7 +5,10 @@ import { Header, Footer } from "@/components/layout";
 import { NearbyLocationsSection } from "@/components/sections/NearbyLocationsSection";
 import { Button } from "@/components/ui/button";
 import { ServiceBookingButton } from "@/components/booking/ServiceBookingButton";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
 import {
@@ -23,6 +26,7 @@ import { generateServiceDescription } from "@/lib/seo-generator";
 import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
 import { getIntentPagesForService } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
+import { toAbsoluteUrl } from "@/lib/site-url";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
@@ -82,6 +86,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     );
 
     const keywords = buildServiceKeywords(service, { name: "Hartbeespoort", region: "North West" });
+    const serviceImageUrl = toAbsoluteUrl(service.image);
 
     const metadataDescription = `${description.substring(0, 120)} Based in Hartbeespoort (Harties), near Hartbeespoort Dam.`;
 
@@ -97,6 +102,29 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
             description: metadataDescription,
             url: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
             type: "website",
+            images: [
+                {
+                    url: serviceImageUrl,
+                    alt: service.imageAlt,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: `${service.keyword} in Hartbeespoort | Galeo Beauty`,
+            description: metadataDescription,
+            images: [serviceImageUrl],
+        },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                "max-video-preview": -1,
+                "max-image-preview": "large",
+                "max-snippet": -1,
+            },
         },
     };
 }
@@ -136,6 +164,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     if (!location) notFound();
 
     const richDescription = generateServiceDescription(fullServiceItem, categoryTitle, subcategoryTitle);
+    const serviceImage = fullServiceItem.image ?? service.image;
+    const serviceImageAlt = fullServiceItem.imageAlt ?? service.imageAlt;
+    const serviceImageUrl = toAbsoluteUrl(serviceImage);
 
     // NEW: Use advanced generators for better uniqueness
     const benefits = getServiceSpecificBenefits(service);
@@ -153,6 +184,8 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         "@type": "Service",
         name: `${service.keyword} at Galeo Beauty`,
         description: intro + " " + richDescription, // Combine for schema
+        url: `https://www.galeobeauty.com/prices/${category.id}/${service.slug}`,
+        image: serviceImageUrl,
         serviceType: [service.keyword, category.title, subcategoryTitle, "Beauty Treatment"].filter(Boolean),
         provider: {
             "@type": "BeautySalon",
@@ -173,6 +206,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         },
         offers: {
             "@type": "Offer",
+            url: `https://www.galeobeauty.com/prices/${category.id}/${service.slug}`,
             price: service.price.replace(/[^0-9.]/g, ""),
             priceCurrency: "ZAR",
             availability: "https://schema.org/InStock",
@@ -211,73 +245,92 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 px-6 overflow-hidden bg-gradient-to-br from-background via-secondary/5 to-background">
                     <div className="absolute top-0 right-0 w-2/3 h-full bg-secondary/10 -z-10 skew-x-12" />
                     <div className="container mx-auto max-w-6xl">
-                        <div className="max-w-3xl">
-                            {/* Breadcrumb */}
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-                                <Link href="/" className="hover:text-gold transition-colors">Home</Link>
-                                <span>/</span>
-                                <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
-                                <span>/</span>
-                                <Link href={`/prices/${category.id}`} className="hover:text-gold transition-colors">{category.title}</Link>
-                                <span>/</span>
-                                <span className="text-foreground">{service.keyword}</span>
-                            </div>
-
-                            {/* Category Badge */}
-                            <span className="inline-block text-gold font-bold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4">
-                                {category.title}
-                            </span>
-
-                            {/* Title */}
-                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
-                                {service.keyword} in Hartbeespoort
-                            </h1>
-
-                            {/* Description - NOW DYNAMICALLY GENERATED WITH INTRO */}
-                            <div className="text-muted-foreground text-lg mb-8 space-y-4">
-                                <p className="font-medium text-foreground/80 leading-relaxed">
-                                    {intro}
-                                </p>
-                                <p className="leading-relaxed">
-                                    {richDescription}
-                                </p>
-                                <div className="space-y-2 text-base">
-                                    <p>{intentCopy.problemStatement}</p>
-                                    <p>{intentCopy.resultStatement}</p>
-                                    <p>{intentCopy.reassuranceStatement}</p>
+                        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:items-start">
+                            <div className="max-w-3xl">
+                                {/* Breadcrumb */}
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+                                    <Link href="/" className="hover:text-gold transition-colors">Home</Link>
+                                    <span>/</span>
+                                    <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
+                                    <span>/</span>
+                                    <Link href={`/prices/${category.id}`} className="hover:text-gold transition-colors">{category.title}</Link>
+                                    <span>/</span>
+                                    <span className="text-foreground">{service.keyword}</span>
                                 </div>
-                            </div>
 
-                            {/* Quick Info + Book Button */}
-                            <div className="flex items-center gap-6 mb-8">
-                                <div className="flex flex-wrap items-center gap-6">
-                                    <span className="text-2xl font-bold text-gold">{service.price}</span>
-                                    {service.duration && (
-                                        <div className="flex items-center gap-2 text-muted-foreground">
-                                            <Clock className="w-5 h-5" />
-                                            <span>{service.duration}</span>
-                                        </div>
-                                    )}
-                                    <div className="flex items-center gap-2 text-muted-foreground">
-                                        <MapPin className="w-5 h-5" />
-                                        <span>Hartbeespoort</span>
+                                {/* Category Badge */}
+                                <span className="inline-block text-gold font-bold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4">
+                                    {category.title}
+                                </span>
+
+                                {/* Title */}
+                                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
+                                    {service.keyword} in Hartbeespoort
+                                </h1>
+
+                                {/* Description - NOW DYNAMICALLY GENERATED WITH INTRO */}
+                                <div className="text-muted-foreground text-lg mb-8 space-y-4">
+                                    <p className="font-medium text-foreground/80 leading-relaxed">
+                                        {intro}
+                                    </p>
+                                    <p className="leading-relaxed">
+                                        {richDescription}
+                                    </p>
+                                    <div className="space-y-2 text-base">
+                                        <p>{intentCopy.problemStatement}</p>
+                                        <p>{intentCopy.resultStatement}</p>
+                                        <p>{intentCopy.reassuranceStatement}</p>
                                     </div>
                                 </div>
-                                <ServiceBookingButton
-                                    item={fullServiceItem}
-                                    categoryId={category.id}
-                                    categoryTitle={category.title}
-                                    subcategoryId={subcategory?.id || ""}
-                                    subcategoryTitle={subcategory?.title || ""}
-                                />
+
+                                {/* Quick Info + Book Button */}
+                                <div className="flex items-center gap-6 mb-8">
+                                    <div className="flex flex-wrap items-center gap-6">
+                                        <span className="text-2xl font-bold text-gold">{service.price}</span>
+                                        {service.duration && (
+                                            <div className="flex items-center gap-2 text-muted-foreground">
+                                                <Clock className="w-5 h-5" />
+                                                <span>{service.duration}</span>
+                                            </div>
+                                        )}
+                                        <div className="flex items-center gap-2 text-muted-foreground">
+                                            <MapPin className="w-5 h-5" />
+                                            <span>Hartbeespoort</span>
+                                        </div>
+                                    </div>
+                                    <ServiceBookingButton
+                                        item={fullServiceItem}
+                                        categoryId={category.id}
+                                        categoryTitle={category.title}
+                                        subcategoryId={subcategory?.id || ""}
+                                        subcategoryTitle={subcategory?.title || ""}
+                                    />
+                                </div>
+
+                                {/* CTAs */}
+                                <div className="flex flex-wrap gap-4">
+                                    <Button asChild size="lg" variant="outline">
+                                        <NavLink href={`/prices/${category.id}`}>View All {category.title}</NavLink>
+                                    </Button>
+                                </div>
                             </div>
 
-                            {/* CTAs */}
-                            <div className="flex flex-wrap gap-4">
-                                <Button asChild size="lg" variant="outline">
-                                    <NavLink href={`/prices/${category.id}`}>View All {category.title}</NavLink>
-                                </Button>
-                            </div>
+                            <figure className="overflow-hidden rounded-[2rem] border border-border/60 bg-background/85 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
+                                <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-[4/5]">
+                                    <CloudinaryImage
+                                        src={serviceImage}
+                                        alt={serviceImageAlt}
+                                        fill
+                                        priority
+                                        className="object-cover"
+                                        sizes="(max-width: 1024px) 100vw, 34vw"
+                                    />
+                                </div>
+                                <figcaption className="border-t border-border/60 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+                                    {service.keyword} at Galeo Beauty in Hartbeespoort. Prices start from {service.price}
+                                    {service.duration ? ` and appointments typically take ${service.duration}.` : "."}
+                                </figcaption>
+                            </figure>
                         </div>
                     </div>
                 </section>
@@ -440,9 +493,14 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 Have questions about the {service.keyword} process?
                             </p>
                             <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
-                                <a href={`https://wa.me/${businessInfo.socials.whatsapp}`} target="_blank" rel="noopener noreferrer">
+                                <TrackedWhatsAppLink
+                                    message={`Hi! I found you on www.galeobeauty.com and I have a question about ${service.keyword}. Can you help me choose the right option?`}
+                                    trackingContext={`service_process_${service.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     Chat with Us on WhatsApp
-                                </a>
+                                </TrackedWhatsAppLink>
                             </Button>
                         </div>
                     </div>
@@ -529,7 +587,14 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 <NavLink href={`/prices?category=${category.id}`}>Book Appointment</NavLink>
                             </Button>
                             <Button asChild size="lg" variant="outline">
-                                <a href={`tel:${businessInfo.phone}`}>Call {businessInfo.phone}</a>
+                                <TrackedExternalLink
+                                    href={`tel:${businessInfo.phone}`}
+                                    trackingContext={`service_cta_phone_${service.slug}`}
+                                    linkType="phone"
+                                    linkLabel="Service page phone"
+                                >
+                                    Call {businessInfo.phone}
+                                </TrackedExternalLink>
                             </Button>
                         </div>
 

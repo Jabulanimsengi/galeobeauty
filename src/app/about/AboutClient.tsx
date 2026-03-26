@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, Shield, Award, CheckCircle, MapPin, Clock, Star, Phone, Navigation } from "lucide-react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
@@ -310,7 +311,7 @@ export function AboutClient() {
                                         <div>
                                             <h3 className="font-serif text-xl text-foreground mb-2">Contact Us</h3>
                                             <p className="text-muted-foreground">
-                                                Call or WhatsApp: <a href="tel:+27121111730" className="text-gold hover:underline font-medium">012 111 1730</a>
+                                                Call or WhatsApp: <TrackedExternalLink href="tel:+27121111730" trackingContext="about_phone" linkType="phone" linkLabel="About page phone" className="text-gold hover:underline font-medium">012 111 1730</TrackedExternalLink>
                                             </p>
                                         </div>
                                     </div>
@@ -323,15 +324,18 @@ export function AboutClient() {
                                     </div>
 
                                     {/* Get Directions CTA */}
-                                    <a
+                                    <TrackedExternalLink
                                         href="https://www.google.com/maps/dir/?api=1&destination=-25.753414,27.909252"
+                                        trackingContext="about_get_directions"
+                                        linkType="maps"
+                                        linkLabel="Get directions to Galeo Beauty"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-4 text-center font-semibold text-white shadow-lg transition-colors duration-300 hover:bg-gold-dark sm:w-fit sm:px-8"
                                     >
                                         <Navigation className="w-5 h-5" />
                                         Get Directions to Galeo Beauty
-                                    </a>
+                                    </TrackedExternalLink>
                                 </div>
                             </motion.div>
                         </div>

@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/ui/nav-link";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { useNavigationLoading } from "@/components/providers/NavigationLoadingProvider";
 import {
     Sheet,
@@ -190,13 +191,16 @@ export function Header() {
                                     </div>
 
                                     <div className="border-t border-white/10 px-7 py-5">
-                                        <a
+                                        <TrackedExternalLink
                                             href={`tel:${businessInfo.phone}`}
+                                            trackingContext="header_mobile_phone"
+                                            linkType="phone"
+                                            linkLabel="Header phone"
                                             className="flex items-center gap-3 text-white/65 transition-colors hover:text-gold"
                                         >
                                             <Phone className="w-5 h-5" />
                                             <span className="text-base">012 111 1730</span>
-                                        </a>
+                                        </TrackedExternalLink>
                                     </div>
                                 </div>
                             </SheetContent>

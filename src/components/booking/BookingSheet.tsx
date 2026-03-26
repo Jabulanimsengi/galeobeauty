@@ -28,6 +28,14 @@ import {
   initialBookingState,
   timeSlotOptions,
 } from "@/lib/booking-types";
+import {
+  buildTrackedWhatsAppUrl,
+  getStoredAttribution,
+  trackBookingSheetOpen,
+  trackBookingStepView,
+  trackBookingSubmit,
+  trackWhatsAppClick,
+} from "@/lib/attribution";
 import { businessInfo } from "@/lib/constants";
 
 interface BookingSheetProps {
@@ -53,7 +61,10 @@ export function BookingSheet({
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const prefersReducedMotion = useReducedMotion();
-
+  const treatmentNames = useMemo(
+    () => state.treatments?.map((t) => t.item.name),
+    [state.treatments]
+  );
   // Detect mobile viewport
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -86,6 +97,47 @@ export function BookingSheet({
       setState((prev) => ({ ...prev, treatments }));
     }
   }, [treatments]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const attribution = getStoredAttribution();
+    const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+
+    trackBookingSheetOpen({
+      attribution,
+      bookingType: state.bookingType,
+      currentPage,
+      treatmentCount: state.treatments?.length,
+      treatmentNames,
+      consultationContext,
+    });
+  }, [consultationContext, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const attribution = getStoredAttribution();
+    const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+
+    trackBookingStepView({
+      attribution,
+      bookingType: state.bookingType,
+      currentPage,
+      step: state.currentStep,
+      treatmentCount: state.treatments?.length,
+      treatmentNames,
+      consultationContext,
+    });
+  }, [
+    consultationContext,
+    isOpen,
+    state.currentStep,
+  ]);
 
   // Reset state when closing
   const handleClose = () => {
@@ -184,6 +236,8 @@ export function BookingSheet({
   // Submit booking via WhatsApp
   const handleSubmit = () => {
     let message = "";
+    let totalValue: number | undefined;
+    let submitTreatmentNames: string[] | undefined;
 
     if (state.bookingType === "consultation") {
       // Consultation message format
@@ -197,10 +251,7 @@ Phone: ${state.userDetails.phone}${state.userDetails.email ? `\nEmail: ${state.u
 
 *Preferred Date & Time*
 Date: ${formatDate(state.appointment.date)}
-Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
-
----
-Source: galeobeauty.com`;
+Time: ${getTimeSlotLabel(state.appointment.timeSlot)}`;
     } else {
       // Treatment booking message format
       if (!state.treatments || state.treatments.length === 0) return;
@@ -215,6 +266,8 @@ Source: galeobeauty.com`;
       const total = calculateTotal();
       const depositAmount = Math.round(total / 2);
       const totalDuration = calculateTotalDuration();
+      totalValue = total;
+      submitTreatmentNames = state.treatments.map((t) => t.item.name);
 
       const bankingDetails = businessInfo.banking
         ? `\n*Banking Details for Deposit:*
@@ -241,14 +294,33 @@ Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 
 *Payment:* 50% Deposit Required (R ${depositAmount.toLocaleString()})
 *Payment Reference:* ${bookingReference}
-${bankingDetails}
-
----
-Source: Customer found this service on galeobeauty.com`;
+${bankingDetails}`;
     }
 
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${businessInfo.socials.whatsapp}?text=${encodedMessage}`;
+    const attribution = getStoredAttribution();
+    const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+    const whatsappUrl = buildTrackedWhatsAppUrl({
+      phone: businessInfo.socials.whatsapp,
+      message,
+      attribution,
+      currentPage,
+    });
+
+    trackWhatsAppClick({
+      attribution,
+      context: state.bookingType === "consultation" ? "booking_sheet_consultation" : "booking_sheet_treatment",
+      currentPage,
+    });
+
+    trackBookingSubmit({
+      attribution,
+      bookingType: state.bookingType,
+      currentPage,
+      treatmentCount: state.bookingType === "treatment" ? state.treatments?.length : undefined,
+      treatmentNames: submitTreatmentNames,
+      totalValue,
+      consultationContext,
+    });
 
     window.open(whatsappUrl, "_blank");
     handleClose();

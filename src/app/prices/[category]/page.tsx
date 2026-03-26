@@ -12,6 +12,7 @@ import { CategoryContent } from "./category-content";
 import { buildCategoryIntentCopy, buildCategoryKeywords, getCategoryIntentSignals } from "@/lib/seo-keywords";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
+import { toAbsoluteUrl } from "@/lib/site-url";
 
 // Comprehensive SEO metadata for each category - optimized for South African search
 const categoryMeta: Record<string, {
@@ -246,6 +247,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!description.toLowerCase().includes("hartbeespoort") || !description.toLowerCase().includes("harties")) {
         description = `${description} Serving Hartbeespoort | Harties.`;
     }
+    const categoryImageUrl = toAbsoluteUrl(category.image);
 
     return {
         title: `${title} | Galeo Beauty`,
@@ -255,12 +257,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title: `${title} | Galeo Beauty`,
             description,
             type: "website",
-            images: [{ url: category.image, alt: category.title }],
+            images: [{ url: categoryImageUrl, alt: `${category.title} treatments at Galeo Beauty` }],
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
+            images: [categoryImageUrl],
         },
         alternates: {
             canonical: `https://www.galeobeauty.com/prices/${categoryId}`,
@@ -284,6 +287,7 @@ export default async function CategoryPage({ params }: PageProps) {
     const intentSignals = getCategoryIntentSignals(category.id);
     const intentCopy = buildCategoryIntentCopy(category.title, category.id);
     const relatedIntentPages = getIntentPagesForCategory(category.id);
+    const categoryImageUrl = toAbsoluteUrl(category.image);
 
     // JSON-LD structured data for SEO
     const jsonLd = {
@@ -291,6 +295,8 @@ export default async function CategoryPage({ params }: PageProps) {
         "@type": "Service",
         "name": category.title,
         "description": meta?.description || category.subtitle,
+        "url": `https://www.galeobeauty.com/prices/${categoryId}`,
+        "image": categoryImageUrl,
         "provider": {
             "@type": "BeautySalon",
             "name": "Galeo Beauty",

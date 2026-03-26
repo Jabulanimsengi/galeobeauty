@@ -12,7 +12,7 @@ const featuredServices = [
         location: "Hartbeespoort",
         description: "Non-surgical fat reduction & EMS body sculpting",
         href: "/body-contouring",
-        image: "/images/fat-freezing/fat-freezing-stomach-treatment.jpg",
+        image: "/images/gallery/body-contouring/fat-freezing-red-light-body-contouring-treatment.jpg",
         color: "from-gold/5 to-gold/10",
         borderColor: "border-gold/20",
         prices: [

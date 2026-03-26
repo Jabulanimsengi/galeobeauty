@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Star, ChevronRight, ChevronLeft, Quote, ExternalLink } from "lucide-react";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 
 const testimonials = [
     {
@@ -259,15 +260,18 @@ export function ReviewsSection() {
                     viewport={{ once: true }}
                     className="text-center mt-10"
                 >
-                    <a
+                    <TrackedExternalLink
                         href={googleReviewUrl}
+                        trackingContext="reviews_google"
+                        linkType="review_platform"
+                        linkLabel="Google reviews"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 text-gold hover:text-gold-dark transition-colors font-medium"
                     >
                         <span>See Galeo Beauty reviews on Google</span>
                         <ExternalLink className="w-4 h-4" />
-                    </a>
+                    </TrackedExternalLink>
                 </motion.div>
             </div>
         </section>

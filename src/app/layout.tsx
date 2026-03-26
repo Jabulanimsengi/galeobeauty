@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { cormorant, montserrat } from "@/lib/fonts";
+import { AttributionTracker } from "@/components/providers/AttributionTracker";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
 import { AppBootLoader } from "@/components/providers/AppBootLoader";
 import { DeferredFloatingSocials } from "@/components/ui/DeferredFloatingSocials";
@@ -59,6 +60,13 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -203,8 +211,8 @@ export default function RootLayout({
           `}
         </Script>
 
-
         <NavigationLoadingProvider>
+          <AttributionTracker />
           <AppBootLoader />
           {children}
           <DeferredFloatingSocials />

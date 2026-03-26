@@ -12,6 +12,7 @@ import { SelectedTreatment } from "@/lib/booking-types";
 import { ArrowRight, ChevronDown, Phone } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 
 import { useSearchParams } from "next/navigation";
 
@@ -361,7 +362,7 @@ export function PricesClient() {
                                             size="lg"
                                             className="h-12 rounded-full border border-white/15 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
                                         >
-                                            <a href="tel:0121111730">Call 012 111 1730</a>
+                                            <TrackedExternalLink href="tel:0121111730" trackingContext="prices_phone" linkType="phone" linkLabel="Prices page phone">Call 012 111 1730</TrackedExternalLink>
                                         </Button>
                                     </div>
                                 </div>

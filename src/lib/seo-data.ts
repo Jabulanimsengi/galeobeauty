@@ -6,6 +6,7 @@
 // ============================================
 
 import { serviceCategories, type ServiceCategory } from "./services-data";
+import { resolveServiceImageMatch } from "./service-image-matcher";
 
 // ============================================
 // TARGET LOCATIONS
@@ -339,6 +340,8 @@ export interface SEOService {
     duration?: string;
     description?: string;
     seoKeywords?: string[];
+    image: string;
+    imageAlt: string;
 }
 
 // List of high-value services to generate SEO pages for.
@@ -408,6 +411,14 @@ export function getAllSEOServices(): SEOService[] {
     for (const category of serviceCategories) {
         for (const subcategory of category.subcategories) {
             for (const item of subcategory.items) {
+                const serviceImage = resolveServiceImageMatch({
+                    categoryId: category.id,
+                    categoryTitle: category.title,
+                    categoryImage: category.image,
+                    subcategoryTitle: subcategory.title,
+                    item,
+                });
+
                 services.push({
                     slug: item.id,
                     keyword: item.name,
@@ -418,6 +429,8 @@ export function getAllSEOServices(): SEOService[] {
                     duration: item.duration,
                     description: item.description,
                     seoKeywords: item.seoKeywords,
+                    image: serviceImage.image,
+                    imageAlt: serviceImage.imageAlt,
                 });
             }
         }
@@ -946,6 +959,8 @@ export function getCategoryBenefits(categoryId: string): string[] {
         itemId: "",
         price: "",
         duration: "",
+        image: "/images/logo.png",
+        imageAlt: `${categoryId} at Galeo Beauty`,
     };
     return getServiceSpecificBenefits(dummyService);
 }

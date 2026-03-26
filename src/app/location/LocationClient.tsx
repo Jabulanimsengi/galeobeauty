@@ -6,6 +6,7 @@ import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { Footer, Header } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { DeferredMap } from "@/components/ui/DeferredMap";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { businessInfo } from "@/lib/constants";
 
 export function LocationClient() {
@@ -64,14 +65,17 @@ export function LocationClient() {
 
                                 <div className="mt-auto">
                                     <Button asChild className="w-full bg-gold text-white hover:bg-gold-dark">
-                                        <a
+                                        <TrackedExternalLink
                                             href="https://maps.app.goo.gl/rheE1Ud1GurDRFzQ8"
+                                            trackingContext="location_page_directions"
+                                            linkType="maps"
+                                            linkLabel="Get directions"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             Get Directions
                                             <ArrowRight className="ml-2 h-4 w-4" />
-                                        </a>
+                                        </TrackedExternalLink>
                                     </Button>
                                 </div>
                             </motion.div>

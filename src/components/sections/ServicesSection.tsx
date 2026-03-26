@@ -96,12 +96,12 @@ const services = [
         subtitle: "Eye Enhancement",
         description: "Enhance your natural beauty with our lash extensions and brow tinting services. From Russian volume lashes to precision brow shaping, we perfect every detail.",
         images: [
-            "/images/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
-            "/images/lashes-brows/dramatic-volume-eyelash-extensions.png",
-            "/images/lashes-brows/eyebrow-microblading-hair-strokes-transformation.png",
-            "/images/lashes-brows/fluffy-eyelash-extensions-brown-eyes.png",
-            "/images/lashes-brows/full-volume-lash-extensions-and-sculpted-brow..jpg",
-            "/images/lashes-brows/hybrid-lashes-with-defined-eyebrows.png"
+            "/images/gallery/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
+            "/images/gallery/lashes-brows/dramatic-volume-eyelash-extensions.png",
+            "/images/gallery/lashes-brows/eyebrow-microblading-hair-strokes-transformation.png",
+            "/images/gallery/lashes-brows/fluffy-eyelash-extensions-brown-eyes.png",
+            "/images/gallery/lashes-brows/full-volume-lash-extensions-and-sculpted-brow..jpg",
+            "/images/gallery/lashes-brows/hybrid-lashes-with-defined-eyebrows.png"
         ],
         imageAlts: ["Russian volume lash extensions at Galeo Beauty Hartbeespoort", "Professional brow lamination and lash lift treatment near Pretoria", "Microblading", "Fluffy eyelash extensions", "Volume lash and brow", "Hybrid lashes"],
         badge: "Premium",
@@ -134,8 +134,8 @@ const services = [
         subtitle: "Cryolipolysis",
         description: "Fat freeze, or cryolipolysis, is a non-invasive cosmetic treatment that uses cold temperatures to reduce stubborn fat in targeted areas like the belly, love handles, arms, back, or thighs. Ideally for body contouring.",
         images: [
-            "/images/fat-freezing/fat-freezing-stomach-treatment.jpg",
-            "/images/fat-freezing/stomach-fat-freezing-procedure.jpg"
+            "/images/gallery/body-contouring/fat-freezing-red-light-body-contouring-treatment.jpg",
+            "/images/gallery/body-contouring/fat-freezing-cryolipolysis-abdomen-treatment.jpg"
         ],
         imageAlts: ["Fat freezing cryolipolysis body contouring treatment in Hartbeespoort", "Non-invasive fat reduction treatment near Pretoria South Africa"],
         badge: "CE Approved",
@@ -189,9 +189,9 @@ const services = [
         subtitle: "Semi-Permanent Beauty",
         description: "Wake up beautiful every day with professional semi-permanent makeup. Expert microblading, powder pixel brows, hybrid brows, permanent eyeliner, lip blush, and full lip contour by certified cosmetic tattoo artists.",
         images: [
-            "/images/permanent-makeup/Hybrid-Brows-Permanent-makeup.png",
-            "/images/permanent-makeup/Shaded-eye-liner-Permanent-Makeup.png",
-            "/images/permanent-makeup/ombre-powder-brows-close-up.png"
+            "/images/gallery/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
+            "/images/gallery/lashes-brows/Shaded-eye-liner-Permanent-Makeup.png",
+            "/images/gallery/lashes-brows/ombre-powder-brows-close-up.png"
         ],
         imageAlts: [
             "Professional lip blush before and after customized look at Galeo Beauty Hartbeespoort",
@@ -214,9 +214,9 @@ const services = [
         subtitle: "Hands & Feet",
         description: "Pamper your hands and feet with our professional nail services. Gel overlays, acrylic nails, gel polish (Bio Sculpture & Gelish), nail art, manicures, pedicures, and luxurious hand and foot treatments.",
         images: [
-            "/images/nails/french-tip-square-gel-nails-galeo.jpg",
-            "/images/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
-            "/images/nails/french-tip-gel-nails-salon-treatment.jpg"
+            "/images/gallery/nails/french-tip-square-gel-nails-galeo.jpg",
+            "/images/gallery/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
+            "/images/gallery/nails/french-tip-gel-nails-salon-treatment.jpg"
         ],
         imageAlts: [
             "French tip square gel nails at Galeo Beauty Hartbeespoort",

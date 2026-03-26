@@ -2,6 +2,96 @@ import type { NextConfig } from "next";
 import { serviceCategoriesContent } from "./src/lib/services-content";
 import { SERVICE_SLUGS } from "./src/lib/sitemap-config";
 
+const LASH_BROW_DUPLICATE_FILES = [
+  "dramatic-volume-eyelash-extensions.png",
+  "eyebrow-microblading-hair-strokes-transformation.png",
+  "fluffy-eyelash-extensions-brown-eyes.png",
+  "full-volume-lash-extensions-and-sculpted-brow..jpg",
+  "glossy-lash-lift-treatment-finish.png",
+  "Hybrid-Brows-Permanent-makeup.png",
+  "hybrid-lashes-with-defined-eyebrows.png",
+  "lash-lift-and-tint-before-and-after-hazel-eyeslash-lift-and-tint-before-and-after-hazel-eyes.png",
+  "lash-lift-and-tint-process-before-after.png",
+  "microblading-hair-stroke-eyebrows.png",
+  "natural-classic-lash-extensions-soft-brow.jpg",
+  "natural-lash-lift-with-brow-lamination.png",
+  "ombre-powder-brows-close-up.png",
+  "ombre-sword-brows-close-up.png",
+  "prepping-eyebrows-for-lamination-treatment.png",
+  "professional-eyebrow-shaping-and-grooming.jpg",
+  "professional-eyelash-extension-process.jpg",
+  "Shaded-eye-liner-Permanent-Makeup.png",
+  "side-profile-voluminous-lash-extensions.jpg",
+  "sleek-brow-lamination-close-up.png",
+  "sleek-brow-lamination-results-close-up.png",
+  "wispy-hybrid-lash-extensions-green-eyes.png",
+];
+
+const PERMANENT_MAKEUP_DUPLICATE_FILES = [
+  "Hybrid-Brows-Permanent-makeup.png",
+  "microblading-hair-stroke-eyebrows.png",
+  "ombre-powder-brows-close-up.png",
+  "ombre-sword-brows-close-up.png",
+  "Shaded-eye-liner-Permanent-Makeup.png",
+];
+
+const NAIL_DUPLICATE_FILES = [
+  "french-tip-gel-nails-curing-uv-lamp.jpg",
+  "french-tip-gel-nails-salon-treatment.jpg",
+  "french-tip-square-gel-nails-galeo.jpg",
+  "nude-almond-gel-nails-galeo-beauty-salon.jpg",
+];
+
+const HERO_INTERIOR_DUPLICATE_FILES = [
+  "galeo-beauty-interior-p1.jpg",
+  "galeo-beauty-interior-p2.jpg",
+  "galeo-beauty-interior-p3.jpg",
+  "galeo-beauty-interior-p4.jpg",
+];
+
+const IMAGE_ASSET_REDIRECTS = [
+  ...LASH_BROW_DUPLICATE_FILES.map((file) => ({
+    source: `/images/lashes-brows/${file}`,
+    destination: `/images/gallery/lashes-brows/${file}`,
+    permanent: true,
+  })),
+  ...PERMANENT_MAKEUP_DUPLICATE_FILES.map((file) => ({
+    source: `/images/permanent-makeup/${file}`,
+    destination: `/images/gallery/lashes-brows/${file}`,
+    permanent: true,
+  })),
+  ...NAIL_DUPLICATE_FILES.map((file) => ({
+    source: `/images/nails/${file}`,
+    destination: `/images/gallery/nails/${file}`,
+    permanent: true,
+  })),
+  ...HERO_INTERIOR_DUPLICATE_FILES.map((file) => ({
+    source: `/images/hero-section/${file}`,
+    destination: `/images/interior/${file}`,
+    permanent: true,
+  })),
+  {
+    source: "/images/fat-freezing/fat-freezing-stomach-treatment.jpg",
+    destination: "/images/gallery/body-contouring/fat-freezing-red-light-body-contouring-treatment.jpg",
+    permanent: true,
+  },
+  {
+    source: "/images/fat-freezing/stomach-fat-freezing-procedure.jpg",
+    destination: "/images/gallery/body-contouring/fat-freezing-cryolipolysis-abdomen-treatment.jpg",
+    permanent: true,
+  },
+  {
+    source: "/images/gallery/nails/french-tip-gel-nails-curing-uv-lamp.jpg",
+    destination: "/images/gallery/nails/french-tip-gel-nails-salon-treatment.jpg",
+    permanent: true,
+  },
+  {
+    source: "/images/logo/logo.png",
+    destination: "/images/logo.png",
+    permanent: true,
+  },
+];
+
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
@@ -314,6 +404,7 @@ const nextConfig: NextConfig = {
     }
 
     return [
+      ...IMAGE_ASSET_REDIRECTS,
       ...flatServicesRedirects,
       // === /services → /prices consolidation ===
       { source: '/services', destination: '/prices', permanent: true },

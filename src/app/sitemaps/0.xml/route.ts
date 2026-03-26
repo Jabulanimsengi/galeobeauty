@@ -3,8 +3,10 @@ import { getAllBlogPosts } from '@/lib/blog-data';
 import { getAllSEOServices } from '@/lib/seo-data';
 import { SITEMAP_0_LOCATIONS } from '@/lib/sitemap-config';
 import { SITEMAP_STATIC_PAGES } from '@/lib/sitemap-static-pages';
+import { toAbsoluteUrl } from '@/lib/site-url';
 
 const BASE_URL = 'https://www.galeobeauty.com';
+const FALLBACK_IMAGE = 'https://www.galeobeauty.com/images/logo.png';
 
 // Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
 const BUILD_DATE = new Date().toISOString();
@@ -52,6 +54,7 @@ export async function GET() {
   // Add ALL service pages (262 total) - targets generic keywords like "gel nails", "microblading"
   // Canonical URL: /prices/[category]/[service]
   for (const service of services) {
+    const serviceImageUrl = toAbsoluteUrl(service.image || FALLBACK_IMAGE);
     entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/prices/${service.categoryId}/${service.slug}`)}</loc>
@@ -59,8 +62,9 @@ export async function GET() {
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
     <image:image>
-      <image:loc>https://www.galeobeauty.com/images/logo.png</image:loc>
+      <image:loc>${escapeXml(serviceImageUrl)}</image:loc>
       <image:title>${escapeXml(service.keyword + " at Galeo Beauty")}</image:title>
+      <image:caption>${escapeXml(service.imageAlt)}</image:caption>
     </image:image>
   </url>`);
   }
@@ -88,12 +92,18 @@ export async function GET() {
   // Add location service pages for all SITEMAP_0_LOCATIONS
   for (const location of SITEMAP_0_LOCATIONS) {
     for (const service of services) {
+      const serviceImageUrl = toAbsoluteUrl(service.image || FALLBACK_IMAGE);
       entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>
     <lastmod>${BUILD_DATE}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>${escapeXml(serviceImageUrl)}</image:loc>
+      <image:title>${escapeXml(`${service.keyword} near ${location}`)}</image:title>
+      <image:caption>${escapeXml(service.imageAlt)}</image:caption>
+    </image:image>
   </url>`);
     }
   }

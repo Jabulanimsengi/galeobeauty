@@ -4,9 +4,11 @@ import { notFound } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 
 import { Button } from "@/components/ui/button";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { getAllBlogPosts, getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
 import { ArrowLeft, ArrowRight, Clock, Calendar, User } from "lucide-react";
 import { limitStaticParams } from "@/lib/build-config";
+import { toAbsoluteUrl } from "@/lib/site-url";
 
 // Generate static params for all blog posts
 export function generateStaticParams() {
@@ -85,6 +87,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!post) {
         return { title: "Post Not Found" };
     }
+    const featuredImageUrl = toAbsoluteUrl(post.featuredImage);
 
     return {
         title: post.title,
@@ -100,6 +103,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             type: "article",
             publishedTime: post.date,
             authors: [post.author],
+            images: [
+                {
+                    url: featuredImageUrl,
+                    alt: post.title,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: post.title,
+            description: post.excerpt,
+            images: [featuredImageUrl],
         },
     };
 }
@@ -114,6 +129,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
     const relatedPosts = getRelatedPosts(slug, 3);
     const relevantServiceLinks = getRelevantServiceLinks(slug, post.category);
+    const featuredImageUrl = toAbsoluteUrl(post.featuredImage);
 
     // Convert markdown-like content to HTML
     const formatContent = (content: string) => {
@@ -154,6 +170,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         "@type": "Article",
         headline: post.title,
         description: post.excerpt,
+        image: featuredImageUrl,
         author: {
             "@type": "Organization",
             name: post.author,
@@ -222,6 +239,19 @@ export default async function BlogPostPage({ params }: PageProps) {
                                 <Clock className="w-4 h-4" />
                                 {post.readTime}
                             </span>
+                        </div>
+
+                        <div className="relative mt-8 overflow-hidden rounded-[2rem] border border-border/60 bg-secondary/20 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
+                            <div className="relative aspect-[16/9]">
+                                <CloudinaryImage
+                                    src={post.featuredImage}
+                                    alt={post.title}
+                                    fill
+                                    priority
+                                    className="object-cover"
+                                    sizes="(max-width: 1280px) 100vw, 896px"
+                                />
+                            </div>
                         </div>
                     </div>
                 </section>

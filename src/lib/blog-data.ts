@@ -1357,7 +1357,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "8 min read",
         category: "Skincare",
         keywords: ["facials Pretoria", "professional facials Hartbeespoort", "anti-aging facial", "acne facial", "pigmentation facial", "Dermalogica facial"],
-        featuredImage: "/images/blog/facials-pretoria.jpg",
+        featuredImage: "/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg",
         content: facialsPretoriaContent,
     },
     {
@@ -1369,7 +1369,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "10 min read",
         category: "Body Treatments",
         keywords: ["fat freezing South Africa", "cryolipolysis South Africa", "stubborn belly fat treatment", "love handles treatment", "body contouring", "non-surgical fat reduction"],
-        featuredImage: "/images/blog/fat-freezing-cost.jpg",
+        featuredImage: "/images/gallery/body-contouring/fat-freezing-red-light-body-contouring-treatment.jpg",
         content: fatFreezingContent,
     },
     {
@@ -1381,7 +1381,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "7 min read",
         category: "Lashes",
         keywords: ["lash extensions Hartbeespoort", "natural lash extensions", "volume lashes", "hybrid lashes", "lash lift", "wispy lashes"],
-        featuredImage: "/images/blog/lash-extensions.jpg",
+        featuredImage: "/images/gallery/lashes-brows/wispy-hybrid-lash-extensions-green-eyes.png",
         content: lashExtensionsContent,
     },
     {
@@ -1393,7 +1393,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "9 min read",
         category: "Makeup",
         keywords: ["wedding makeup Hartbeespoort", "bridal makeup Pretoria", "bridal makeup artist", "soft glam bridal makeup", "matric ball makeup", "wedding day makeup trial"],
-        featuredImage: "/images/blog/wedding-makeup.jpg",
+        featuredImage: "/images/make-up/expert-bridal-makeup-application.jpg",
         content: weddingMakeupContent,
     },
     {
@@ -1405,7 +1405,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "8 min read",
         category: "Permanent Makeup",
         keywords: ["microblading", "powder brows", "powder brows vs microblading", "permanent makeup Hartbeespoort", "brow tattoo", "semi permanent brows"],
-        featuredImage: "/images/blog/microblading-vs-powder.jpg",
+        featuredImage: "/images/gallery/lashes-brows/powder-brows-natural-results-hartbeespoort.jpg",
         content: microbladingContent,
     },
     // NEW: Local SEO Article
@@ -1427,7 +1427,7 @@ export const blogPosts: BlogPost[] = [
             "facials near Pretoria",
             "day spa Hartbeespoort",
         ],
-        featuredImage: "/images/blog/pretoria-hartbeespoort-drive.jpg",
+        featuredImage: "/images/interior/galeo-beauty-interior-p4.jpg",
         content: pretoriaToHartbeespoortContent,
     },
     // New Articles
@@ -1440,7 +1440,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "7 min read",
         category: "Skincare",
         keywords: ["acne treatment Pretoria", "adult acne treatment", "acne facial", "acne scars", "breakout treatment", "clogged pores treatment"],
-        featuredImage: "/images/blog/acne-treatment.jpg",
+        featuredImage: "/images/dermalogica/dermalogica-proskin-treatment.jpg",
         content: acneTreatmentContent,
     },
     {
@@ -1452,7 +1452,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "9 min read",
         category: "Hair",
         keywords: ["hair extensions South Africa", "tape-in extensions", "Remy human hair", "clip-in extensions", "hair extensions for volume", "hair extensions for fine hair"],
-        featuredImage: "/images/blog/hair-extensions.jpg",
+        featuredImage: "/images/hair-extensions/beachy-blonde-waves-extensions.png",
         content: hairExtensionsContent,
     },
     {
@@ -1464,7 +1464,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "8 min read",
         category: "Hair Removal",
         keywords: ["IPL hair removal", "permanent hair reduction", "Brazilian IPL", "ingrown hair treatment", "face and body hair removal", "laser hair removal alternative"],
-        featuredImage: "/images/blog/ipl-hair-removal.jpg",
+        featuredImage: "/images/ipl/ipl-full-leg-hair-removal.jpg",
         content: iplHairRemovalContent,
     },
     {
@@ -1476,7 +1476,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "6 min read",
         category: "Nails",
         keywords: ["nail trends 2026", "nail art South Africa", "acrylic nails", "gel nails", "builder gel nails", "bridal nails"],
-        featuredImage: "/images/blog/nail-trends.jpg",
+        featuredImage: "/images/gallery/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
         content: nailTrendsContent,
     },
     {
@@ -1488,7 +1488,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "9 min read",
         category: "Anti-Aging",
         keywords: ["anti-aging treatments", "wrinkle treatment", "collagen facial", "dermal fillers", "microneedling", "skin tightening"],
-        featuredImage: "/images/blog/anti-aging.jpg",
+        featuredImage: "/images/dermalogica/dermalogica-microneedling-treatment.png",
         content: antiAgingContent,
     },
     {
@@ -1500,7 +1500,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "6 min read",
         category: "Spa",
         keywords: ["spa day Hartbeespoort", "pamper packages", "couples spa", "spa retreat", "day spa", "relaxation treatments"],
-        featuredImage: "/images/blog/spa-day.jpg",
+        featuredImage: "/images/massages/luxury-spa-massage-room-ambience.jpg",
         content: spaDayContent,
     },
     {
@@ -1512,7 +1512,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "8 min read",
         category: "Aesthetics",
         keywords: ["lip fillers South Africa", "Russian lips", "natural lip filler", "dermal fillers", "lip enhancement Pretoria", "lip filler without duck lips"],
-        featuredImage: "/images/blog/lip-fillers.jpg",
+        featuredImage: "/images/gallery/permanent-makeup/nano-lip-colour-before-after-galeo-beauty.jpg",
         content: lipFillersContent,
     },
     {
@@ -1524,7 +1524,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "7 min read",
         category: "Waxing",
         keywords: ["Brazilian wax", "Hollywood wax", "bikini wax", "full body wax", "intimate waxing", "smooth skin treatment"],
-        featuredImage: "/images/blog/waxing-guide.jpg",
+        featuredImage: "/images/waxing/full-leg-wax-salon-service.jpg",
         content: waxingGuideContent,
     },
     {
@@ -1536,7 +1536,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "8 min read",
         category: "Skincare",
         keywords: ["skincare routine", "skincare products", "Dermalogica", "vitamin C serum", "retinol", "skincare tips"],
-        featuredImage: "/images/blog/skincare-routine.jpg",
+        featuredImage: "/images/gallery/facials/facial-treatment-room-steamer-dermalogica-products.jpg",
         content: skincareRoutineContent,
     },
     {
@@ -1548,7 +1548,7 @@ export const blogPosts: BlogPost[] = [
         readTime: "8 min read",
         category: "Events",
         keywords: ["matric ball makeup", "matric ball hair", "matric dance", "matric farewell", "matric ball preparation"],
-        featuredImage: "/images/blog/matric-ball.jpg",
+        featuredImage: "/images/make-up/professional-glamour-makeup-portfolio.jpg",
         content: matricBallContent,
     },
 ];

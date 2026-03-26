@@ -14,6 +14,13 @@ function getArgValue(flag, fallback) {
   return match.slice(flag.length + 1);
 }
 
+function getArgValues(flag) {
+  return process.argv
+    .filter((arg) => arg.startsWith(`${flag}=`))
+    .map((arg) => arg.slice(flag.length + 1))
+    .filter(Boolean);
+}
+
 function hasFlag(flag) {
   return process.argv.includes(flag);
 }
@@ -62,6 +69,7 @@ async function main() {
   const maxWidth = Number(getArgValue("--max-width", DEFAULT_MAX_WIDTH));
   const minBytes = Number(getArgValue("--min-bytes", DEFAULT_MIN_BYTES));
   const quality = Number(getArgValue("--quality", DEFAULT_QUALITY));
+  const matchFilters = getArgValues("--match").map((value) => value.toLowerCase());
   const write = hasFlag("--write");
 
   if (!fs.existsSync(root)) {
@@ -69,7 +77,14 @@ async function main() {
     process.exit(1);
   }
 
-  const files = walk(root);
+  const files = walk(root).filter((file) => {
+    if (matchFilters.length === 0) {
+      return true;
+    }
+
+    const relativePath = path.relative(process.cwd(), file).toLowerCase();
+    return matchFilters.some((filter) => relativePath.includes(filter));
+  });
   let processed = 0;
   let savedBytes = 0;
 

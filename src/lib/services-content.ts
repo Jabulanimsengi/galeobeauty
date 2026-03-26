@@ -13,6 +13,8 @@ export interface ServiceItem {
     note?: string;
     description?: string;
     seoKeywords?: string[];
+    image?: string;
+    imageAlt?: string;
 }
 
 export interface ServiceSubcategory {
@@ -424,7 +426,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "hart-aesthetics",
         title: "Hart Aesthetics Treatments",
         subtitle: "Injectables, Fillers & Lifts",
-        image: "/images/gallery/Facials/professional-skin-facial-treatment-in-progress.jpeg",
+        image: "/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg",
         badge: "Medical Grade",
         badgeVariant: "medical",
         subcategories: [
@@ -472,7 +474,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "fat-freezing",
         title: "Fat Freezing & Body Contouring",
         subtitle: "Non-Invasive Fat Reduction",
-        image: "/images/fat-freezing/fat-freezing-stomach-treatment.jpeg",
+        image: "/images/gallery/body-contouring/fat-freezing-red-light-body-contouring-treatment.jpg",
         subcategories: [
             {
                 id: "cryolipolysis",
@@ -511,7 +513,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "massages",
         title: "Massage Therapy",
         subtitle: "Relaxation & Deep Tissue",
-        image: "/images/massages/deep-relaxation-neck-massage.jpeg",
+        image: "/images/massages/deep-relaxation-neck-massage.jpg",
         subcategories: [
             {
                 id: "body-massage",
@@ -535,7 +537,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "dermalogica",
         title: "Dermalogica Treatments",
         subtitle: "Professional Facials & Peels",
-        image: "/images/gallery/Facials/facial-treatment-room-steamer-dermalogica-products.jpeg",
+        image: "/images/gallery/facials/facial-treatment-room-steamer-dermalogica-products.jpg",
         subcategories: [
             {
                 id: "pro-skin",
@@ -586,7 +588,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "ipl",
         title: "IPL Hair Removal",
         subtitle: "Permanent Hair Reduction",
-        image: "/images/ipl/ipl-full-leg-hair-removal.jpeg",
+        image: "/images/ipl/ipl-full-leg-hair-removal.jpg",
         subcategories: [
             {
                 id: "ipl-face",
@@ -630,7 +632,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "makeup",
         title: "Makeup Application",
         subtitle: "Bridal, Evening & Day",
-        image: "/images/make-up/expert-bridal-makeup-application.jpeg",
+        image: "/images/make-up/expert-bridal-makeup-application.jpg",
         subcategories: [
             {
                 id: "makeup-services",
@@ -652,7 +654,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "medical",
         title: "Medical Aesthetics",
         subtitle: "Clinical & Advanced Treatments",
-        image: "/images/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
+        image: "/images/dermalogica/dermalogica-microneedling-treatment.png",
         subcategories: [
             {
                 id: "medical-treatments",
@@ -674,32 +676,32 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "permanent-makeup",
         title: "Permanent Makeup & Microblading",
         subtitle: "Semi-Permanent Brows, Lips & Liner",
-        image: "/images/lashes-brows/dramatic-volume-eyelash-extensions.png",
+        image: "/images/gallery/lashes-brows/microblading-hair-stroke-eyebrows.png",
         subcategories: [
             {
                 id: "brows",
                 title: "Brows",
                 items: [
-                    { id: "microblading", name: "Microblading", duration: "1hr 30min", price: "R1,350", description: "Ultra-fine hair strokes implanted into the skin to create perfectly natural-looking brows. Ideal for sparse, over-plucked, or uneven brows." },
-                    { id: "powderpixel-brows", name: "Powderpixel Brows", duration: "1hr 30min", price: "R1,710", description: "A soft, powdery brow effect created with tiny dots of pigment. Gives the appearance of filled-in brows without looking drawn-on." },
-                    { id: "hybrid-brows", name: "Hybrid Brows", duration: "2hr", price: "R1,710", description: "The best of both worlds. Hair strokes at the front for a natural look, shading through the body and tail for depth and definition." },
-                    { id: "brow-henna", name: "Brow Henna", duration: "45min", price: "R423", description: "A natural alternative to tinting that tints both the hair and the skin beneath for a fuller, more defined look. Lasts longer than regular tint." },
+                    { id: "microblading", name: "Microblading", duration: "1hr 30min", price: "R1,350", description: "Ultra-fine hair strokes implanted into the skin to create perfectly natural-looking brows. Ideal for sparse, over-plucked, or uneven brows.", image: "/images/gallery/lashes-brows/microblading-hair-stroke-eyebrows.png", imageAlt: "Microblading brows at Galeo Beauty in Hartbeespoort" },
+                    { id: "powderpixel-brows", name: "Powderpixel Brows", duration: "1hr 30min", price: "R1,710", description: "A soft, powdery brow effect created with tiny dots of pigment. Gives the appearance of filled-in brows without looking drawn-on.", image: "/images/gallery/lashes-brows/ombre-powder-brows-close-up.png", imageAlt: "Powder brows at Galeo Beauty in Hartbeespoort" },
+                    { id: "hybrid-brows", name: "Hybrid Brows", duration: "2hr", price: "R1,710", description: "The best of both worlds. Hair strokes at the front for a natural look, shading through the body and tail for depth and definition.", image: "/images/gallery/lashes-brows/hybrid-brows-permanent-makeup-results-galeo-beauty.jpg", imageAlt: "Hybrid permanent makeup brows at Galeo Beauty in Hartbeespoort" },
+                    { id: "brow-henna", name: "Brow Henna", duration: "45min", price: "R423", description: "A natural alternative to tinting that tints both the hair and the skin beneath for a fuller, more defined look. Lasts longer than regular tint.", image: "/images/gallery/lashes-brows/professional-eyebrow-shaping-and-grooming.jpg", imageAlt: "Defined brows at Galeo Beauty in Hartbeespoort" },
                 ],
             },
             {
                 id: "lips",
                 title: "Lips",
                 items: [
-                    { id: "full-lips-contour", name: "Full Lips Contour", duration: "2hr 30min", price: "R2,430", description: "Complete lip colour from liner to full pigmentation. Wake up with perfectly tinted, defined lips every day." },
-                    { id: "lip-liner", name: "Lip Liner", duration: "1hr 30min", price: "R1,710", description: "Define and enhance your lip shape with a permanent liner that makes lips appear fuller and more symmetrical." },
+                    { id: "full-lips-contour", name: "Full Lips Contour", duration: "2hr 30min", price: "R2,430", description: "Complete lip colour from liner to full pigmentation. Wake up with perfectly tinted, defined lips every day.", image: "/images/gallery/permanent-makeup/nano-lip-colour-before-after-galeo-beauty.jpg", imageAlt: "Full lip contour permanent makeup at Galeo Beauty in Hartbeespoort" },
+                    { id: "lip-liner", name: "Lip Liner", duration: "1hr 30min", price: "R1,710", description: "Define and enhance your lip shape with a permanent liner that makes lips appear fuller and more symmetrical.", image: "/images/gallery/permanent-makeup/lip-blush-tattoo-before-after-healed-results.jpg", imageAlt: "Lip liner permanent makeup at Galeo Beauty in Hartbeespoort" },
                 ],
             },
             {
                 id: "eyes",
                 title: "Eyes",
                 items: [
-                    { id: "eyeliner-top", name: "Eyeliner Top", duration: "1hr", price: "R720", description: "A permanent upper lash line that makes eyes appear larger, more defined, and always made-up." },
-                    { id: "eyeliner-bottom", name: "Eyeliner Bottom", duration: "1hr", price: "R720", description: "Define the lower lash line for added depth and intensity without the smudge." },
+                    { id: "eyeliner-top", name: "Eyeliner Top", duration: "1hr", price: "R720", description: "A permanent upper lash line that makes eyes appear larger, more defined, and always made-up.", image: "/images/gallery/permanent-makeup/permanent-eyeliner-healed-blue-eyes-galeo.jpg", imageAlt: "Permanent eyeliner at Galeo Beauty in Hartbeespoort" },
+                    { id: "eyeliner-bottom", name: "Eyeliner Bottom", duration: "1hr", price: "R720", description: "Define the lower lash line for added depth and intensity without the smudge.", image: "/images/gallery/permanent-makeup/permanent-eyeliner-healed-results-galeo-beauty.jpg", imageAlt: "Permanent eyeliner results at Galeo Beauty in Hartbeespoort" },
                 ],
             },
         ],
@@ -736,7 +738,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "sunbed",
         title: "Sunbed Tanning",
         subtitle: "UV & Spray Tan",
-        image: "/images/gallery/Specials/galeo-beauty-nail-specials-price-list.jpeg",
+        image: "/images/gallery/specials/galeo-beauty-nail-specials-price-list.jpg",
         subcategories: [
             {
                 id: "tanning-sessions",
@@ -758,7 +760,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "waxing",
         title: "Waxing",
         subtitle: "Hair Removal",
-        image: "/images/waxing/full-leg-wax-salon-service.jpeg",
+        image: "/images/waxing/full-leg-wax-salon-service.jpg",
         subcategories: [
             {
                 id: "face-wax",
@@ -801,7 +803,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "hair",
         title: "Hair Cuts, Colour & Styling",
         subtitle: "Cut, Colour, Blow Dry & Treatments",
-        image: "/images/gallery/Laser-and-IPL/ipl-laser-hair-removal-underarm-treatment.jpeg",
+        image: "/images/gallery/hair/brunette-curls-hair-styling-blowout-results.jpg",
         subcategories: [
             {
                 id: "hair-cuts-styling",
@@ -899,7 +901,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "nails",
         title: "Nail Care & Nail Art",
         subtitle: "Manicure, Pedicure & Nail Design",
-        image: "/images/gallery/Nails/nude-almond-gel-nails-galeo-beauty-salon.jpeg",
+        image: "/images/gallery/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
         subcategories: [
             {
                 id: "hands-feet",
@@ -932,7 +934,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         id: "lashes-brows",
         title: "Lash Extensions & Brow Styling",
         subtitle: "Extensions, Lifts, Tints & Lamination",
-        image: "/images/lashes-brows/eyebrow-microblading-hair-strokes-transformation.png",
+        image: "/images/gallery/lashes-brows/hybrid-lashes-with-defined-eyebrows.png",
         subcategories: [
             {
                 id: "lashes-brows-all",

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { businessInfo } from "@/lib/constants";
 
 // Custom SVG icons for social platforms
@@ -41,7 +43,7 @@ const FreshaIcon = ({ className }: { className?: string }) => (
 const socialLinks = [
     {
         name: "WhatsApp",
-        href: `https://wa.me/${businessInfo.socials.whatsapp}?text=${encodeURIComponent("Hi, I found you on www.galeobeauty.com and would like to enquire about your services.")}`,
+        href: "#",
         icon: WhatsAppIcon,
         color: "bg-[#25D366] hover:bg-[#128C7E]",
         label: "Chat with us",
@@ -76,6 +78,9 @@ const socialLinks = [
     },
 ];
 
+const MotionTrackedExternalLink = motion(TrackedExternalLink);
+const MotionTrackedWhatsAppLink = motion(TrackedWhatsAppLink);
+
 export function FloatingSocials() {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isLabelDismissed, setIsLabelDismissed] = useState(false);
@@ -102,10 +107,45 @@ export function FloatingSocials() {
                     <>
                         {socialLinks.map((social, index) => {
                             const Icon = social.icon;
+                            const sharedClasses = `group flex items-center gap-3 ${social.color} text-white rounded-full shadow-lg transition-all duration-300`;
+
+                            if (social.name === "WhatsApp") {
+                                return (
+                                    <MotionTrackedWhatsAppLink
+                                        key={social.name}
+                                        message="Hi, I found you on www.galeobeauty.com and would like to enquire about your services."
+                                        trackingContext="floating_socials_whatsapp"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.8, y: 10 }}
+                                        transition={{
+                                            duration: 0.15,
+                                            type: "spring",
+                                            stiffness: 400,
+                                            damping: 25,
+                                        }}
+                                        className={sharedClasses}
+                                        aria-label={social.name}
+                                    >
+                                        <span className="hidden sm:block max-w-0 overflow-hidden whitespace-nowrap text-sm font-medium transition-all duration-300 group-hover:max-w-[100px] group-hover:pl-4">
+                                            {social.label}
+                                        </span>
+                                        <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
+                                            <Icon className="h-6 w-6" />
+                                        </span>
+                                    </MotionTrackedWhatsAppLink>
+                                );
+                            }
+
                             return (
-                                <motion.a
+                                <MotionTrackedExternalLink
                                     key={social.name}
                                     href={social.href}
+                                    trackingContext={`floating_socials_${social.name.toLowerCase()}`}
+                                    linkType={social.name === "Fresha" ? "booking_platform" : "social"}
+                                    linkLabel={social.name}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     initial={{ opacity: 0, scale: 0.8, y: 10 }}
@@ -117,7 +157,7 @@ export function FloatingSocials() {
                                         stiffness: 400,
                                         damping: 25,
                                     }}
-                                    className={`group flex items-center gap-3 ${social.color} text-white rounded-full shadow-lg transition-all duration-300`}
+                                    className={sharedClasses}
                                     aria-label={social.name}
                                 >
                                     {/* Label - shows on hover, hidden on small screens */}
@@ -127,7 +167,7 @@ export function FloatingSocials() {
                                     <span className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center">
                                         <Icon className="h-6 w-6" />
                                     </span>
-                                </motion.a>
+                                </MotionTrackedExternalLink>
                             );
                         })}
                     </>

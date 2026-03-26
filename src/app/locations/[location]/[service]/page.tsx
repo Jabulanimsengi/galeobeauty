@@ -4,6 +4,9 @@ import { notFound, redirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { LocationServiceBookingButton } from "@/components/booking/LocationServiceBookingButton";
 import { Button } from "@/components/ui/button";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import {
     getLocationBySlug,
@@ -31,6 +34,7 @@ import { businessInfo } from "@/lib/constants";
 import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
 import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
 import { limitStaticParams } from "@/lib/build-config";
+import { toAbsoluteUrl } from "@/lib/site-url";
 
 function formatTermList(terms: string[], limit = 4) {
     const items = terms.slice(0, limit);
@@ -131,6 +135,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
     const metadataDescription = `${richDescription.substring(0, 150)} Available for ${location.name} clients from our Hartbeespoort salon.`;
     const socialDescription = `${richDescription.substring(0, 140)} Serving ${location.name} and surrounding Hartbeespoort areas.`;
+    const serviceImageUrl = toAbsoluteUrl(service.image);
 
     return {
         title,
@@ -145,10 +150,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             locale: "en_ZA",
             images: [
                 {
-                    url: "https://www.galeobeauty.com/images/logo.png",
-                    width: 1200,
-                    height: 630,
-                    alt: `${service.keyword} at Galeo Beauty - Professional Beauty Salon in Hartbeespoort`,
+                    url: serviceImageUrl,
+                    alt: service.imageAlt,
                 },
             ],
         },
@@ -156,7 +159,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             card: "summary_large_image",
             title,
             description: socialDescription,
-            images: ["https://www.galeobeauty.com/images/logo.png"],
+            images: [serviceImageUrl],
             site: "@galeobeauty",
         },
         alternates: {
@@ -232,6 +235,9 @@ export default async function LocationServicePage({ params }: PageProps) {
         location.name
     );
     const serviceKeywords = buildServiceKeywords(resolvedService, location);
+    const serviceImage = resolvedService.image;
+    const serviceImageAlt = resolvedService.imageAlt;
+    const serviceImageUrl = toAbsoluteUrl(serviceImage);
     const relatedKeywordPool = serviceKeywords.filter(
         (keyword) => keyword.toLowerCase() !== resolvedService.keyword.toLowerCase()
     );
@@ -260,10 +266,8 @@ export default async function LocationServicePage({ params }: PageProps) {
     const priorityContent = getPriorityLocationServiceContent(resolvedService, location);
     const isPriorityCombination = isPriorityLocationService(locationSlug, serviceSlug);
 
-    const whatsappMessage = encodeURIComponent(
-        `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`
-    );
-    const whatsappLink = `https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`;
+    const whatsappMessage =
+        `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`;
     const bookingService = {
         id: resolvedService.slug,
         name: resolvedService.keyword,
@@ -283,7 +287,8 @@ export default async function LocationServicePage({ params }: PageProps) {
         alternateName: ["Galeo Beauty", "Galeo Beauty Spa", "Galeo Day Spa", "Galeo Beauty Parlour"],
         description: `${richDescription.substring(0, 150)} Available for ${location.name} clients from our Hartbeespoort salon.`,
         additionalType: ["https://schema.org/DaySpa", "https://schema.org/HealthAndBeautyBusiness"],
-        image: "https://www.galeobeauty.com/images/logo.png",
+        image: serviceImageUrl,
+        logo: "https://www.galeobeauty.com/images/logo.png",
         priceRange: "$$",
         url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
         telephone: businessInfo.phone,
@@ -328,10 +333,14 @@ export default async function LocationServicePage({ params }: PageProps) {
                 "@type": "Service",
                 name: `${resolvedService.keyword} at Galeo Beauty Salon & Spa`,
                 description: introText,
+                image: serviceImageUrl,
                 serviceType: serviceTypeKeywords,
+                url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
             },
+            url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
             price: resolvedService.price.replace(/[^0-9.]/g, ""),
             priceCurrency: "ZAR",
+            availability: "https://schema.org/InStock",
         },
     };
 
@@ -414,69 +423,90 @@ export default async function LocationServicePage({ params }: PageProps) {
                 <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 px-6 overflow-hidden">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent -z-10" />
 
-                    <div className="container mx-auto max-w-4xl">
-                        {/* Breadcrumb */}
-                        <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
-                            <ol className="flex flex-wrap items-center gap-2">
-                                <li>
-                                    <Link href="/" className="hover:text-gold transition-colors">Home</Link>
-                                </li>
-                                <li><span className="mx-1">/</span></li>
-                                <li>
-                                    <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
-                                </li>
-                                {category && (
-                                    <>
+                    <div className="container mx-auto max-w-6xl">
+                        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:items-start">
+                            <div className="max-w-4xl">
+                                {/* Breadcrumb */}
+                                <nav className="text-sm text-muted-foreground mb-6" aria-label="Breadcrumb">
+                                    <ol className="flex flex-wrap items-center gap-2">
+                                        <li>
+                                            <Link href="/" className="hover:text-gold transition-colors">Home</Link>
+                                        </li>
                                         <li><span className="mx-1">/</span></li>
                                         <li>
-                                            <Link href={`/prices/${category.id}`} className="hover:text-gold transition-colors">
-                                                {category.title}
-                                            </Link>
+                                            <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
                                         </li>
-                                    </>
-                                )}
-                                <li><span className="mx-1">/</span></li>
-                                <li className="text-foreground">{location.name}</li>
-                            </ol>
-                        </nav>
+                                        {category && (
+                                            <>
+                                                <li><span className="mx-1">/</span></li>
+                                                <li>
+                                                    <Link href={`/prices/${category.id}`} className="hover:text-gold transition-colors">
+                                                        {category.title}
+                                                    </Link>
+                                                </li>
+                                            </>
+                                        )}
+                                        <li><span className="mx-1">/</span></li>
+                                        <li className="text-foreground">{location.name}</li>
+                                    </ol>
+                                </nav>
 
-                        {/* Main Heading */}
-                        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-tight mb-6">
-                            Professional <span className="text-gold italic">{service.keyword}</span>
-                            <br />near <span className="text-gold">{location.name}</span>
-                        </h1>
+                                {/* Main Heading */}
+                                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-tight mb-6">
+                                    Professional <span className="text-gold italic">{service.keyword}</span>
+                                    <br />near <span className="text-gold">{location.name}</span>
+                                </h1>
 
-                        {/* Unique intro paragraph */}
-                        <div className="text-muted-foreground text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl space-y-4">
-                            <p>{introText}</p>
-                            <p className="text-base sm:text-lg">{intentCopy.problemStatement}</p>
-                            <p className="text-base sm:text-lg">{intentCopy.resultStatement}</p>
-                            <p className="text-base sm:text-lg">{intentCopy.reassuranceStatement}</p>
-                        </div>
-
-                        {/* Price & Duration */}
-                        <div className="flex flex-wrap gap-4 mb-8">
-                            <div className="bg-gold/10 border border-gold/20 rounded-full px-6 py-3">
-                                <span className="text-gold font-bold text-lg">{service.price}</span>
-                            </div>
-                            {service.duration && (
-                                <div className="bg-secondary/50 border border-border rounded-full px-6 py-3 flex items-center gap-2">
-                                    <Clock className="w-4 h-4 text-muted-foreground" />
-                                    <span className="text-foreground">{service.duration}</span>
+                                {/* Unique intro paragraph */}
+                                <div className="text-muted-foreground text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl space-y-4">
+                                    <p>{introText}</p>
+                                    <p className="text-base sm:text-lg">{intentCopy.problemStatement}</p>
+                                    <p className="text-base sm:text-lg">{intentCopy.resultStatement}</p>
+                                    <p className="text-base sm:text-lg">{intentCopy.reassuranceStatement}</p>
                                 </div>
-                            )}
-                            <LocationServiceBookingButton
-                                service={bookingService}
-                                categoryId={resolvedService.categoryId}
-                                categoryTitle={category?.title || "Beauty Services"}
-                                label="Book Now"
-                                className="h-[3.25rem] rounded-full bg-secondary/60 px-6 text-foreground hover:bg-gold hover:text-white"
-                            />
-                            <Button asChild variant="outline" size="lg" className="h-[3.25rem] rounded-full px-8">
-                                <Link href="/prices">
-                                    View All Services
-                                </Link>
-                            </Button>
+
+                                {/* Price & Duration */}
+                                <div className="flex flex-wrap gap-4 mb-8">
+                                    <div className="bg-gold/10 border border-gold/20 rounded-full px-6 py-3">
+                                        <span className="text-gold font-bold text-lg">{service.price}</span>
+                                    </div>
+                                    {service.duration && (
+                                        <div className="bg-secondary/50 border border-border rounded-full px-6 py-3 flex items-center gap-2">
+                                            <Clock className="w-4 h-4 text-muted-foreground" />
+                                            <span className="text-foreground">{service.duration}</span>
+                                        </div>
+                                    )}
+                                    <LocationServiceBookingButton
+                                        service={bookingService}
+                                        categoryId={resolvedService.categoryId}
+                                        categoryTitle={category?.title || "Beauty Services"}
+                                        label="Book Now"
+                                        className="h-[3.25rem] rounded-full bg-secondary/60 px-6 text-foreground hover:bg-gold hover:text-white"
+                                    />
+                                    <Button asChild variant="outline" size="lg" className="h-[3.25rem] rounded-full px-8">
+                                        <Link href="/prices">
+                                            View All Services
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <figure className="overflow-hidden rounded-[2rem] border border-border/60 bg-background/90 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
+                                <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-[4/5]">
+                                    <CloudinaryImage
+                                        src={serviceImage}
+                                        alt={serviceImageAlt}
+                                        fill
+                                        priority
+                                        className="object-cover"
+                                        sizes="(max-width: 1024px) 100vw, 34vw"
+                                    />
+                                </div>
+                                <figcaption className="border-t border-border/60 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+                                    {resolvedService.keyword} for clients travelling from {location.name}. Prices start from {resolvedService.price}
+                                    {resolvedService.duration ? ` and appointments typically take ${resolvedService.duration}.` : "."}
+                                </figcaption>
+                            </figure>
                         </div>
                     </div>
                 </section>
@@ -658,9 +688,14 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 Have questions about the {service.keyword} process?
                             </p>
                             <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
-                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                <TrackedWhatsAppLink
+                                    message={whatsappMessage}
+                                    trackingContext={`location_service_process_${location.slug}_${resolvedService.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     Chat with Us on WhatsApp
-                                </a>
+                                </TrackedWhatsAppLink>
                             </Button>
                         </div>
                     </div>
@@ -754,13 +789,23 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 <Phone className="w-6 h-6 text-gold flex-shrink-0" />
                                 <div>
                                     <p className="font-semibold text-foreground mb-1">Call or WhatsApp</p>
-                                    <a href={`tel:${businessInfo.phone}`} className="text-gold hover:underline">
+                                    <TrackedExternalLink
+                                        href={`tel:${businessInfo.phone}`}
+                                        trackingContext={`location_service_phone_${location.slug}_${resolvedService.slug}`}
+                                        linkType="phone"
+                                        linkLabel="Location service phone"
+                                        className="text-gold hover:underline"
+                                    >
                                         012 111 1730
-                                    </a>
+                                    </TrackedExternalLink>
                                     <span className="text-muted-foreground mx-2">|</span>
-                                    <a href={whatsappLink} className="text-gold hover:underline">
+                                    <TrackedWhatsAppLink
+                                        message={whatsappMessage}
+                                        trackingContext={`location_service_contact_${location.slug}_${resolvedService.slug}`}
+                                        className="text-gold hover:underline"
+                                    >
                                         {businessInfo.cell}
-                                    </a>
+                                    </TrackedWhatsAppLink>
                                 </div>
                             </div>
                         </div>
@@ -952,9 +997,14 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 Have more questions about {service.keyword}?
                             </p>
                             <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
-                                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                                <TrackedWhatsAppLink
+                                    message={whatsappMessage}
+                                    trackingContext={`location_service_faq_${location.slug}_${resolvedService.slug}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     Ask Us on WhatsApp
-                                </a>
+                                </TrackedWhatsAppLink>
                             </Button>
                         </div>
                     </div>

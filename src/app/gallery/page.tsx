@@ -30,6 +30,19 @@ export const metadata: Metadata = {
             "Browse real treatment results, nail art, skincare before & afters at Galeo Beauty in Hartbeespoort.",
         url: "https://www.galeobeauty.com/gallery",
         type: "website",
+        images: [
+            {
+                url: "https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg",
+                alt: "Gallery of real treatment results at Galeo Beauty in Hartbeespoort",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Gallery | Galeo Beauty Salon & Spa Hartbeespoort",
+        description:
+            "Browse real treatment results, nail art, skincare before & afters at Galeo Beauty in Hartbeespoort.",
+        images: ["https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg"],
     },
 };
 

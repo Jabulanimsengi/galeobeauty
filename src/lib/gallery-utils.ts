@@ -54,7 +54,7 @@ export function getGalleryImages(): GalleryItem[] {
                         items.push({
                             id: String(idCounter++),
                             src: `/images/gallery/${category.name}/${file.name}`,
-                            alt: `Galeo Beauty - ${title} in Hartbeespoort`,
+                            alt: `${title} - ${formattedCategory} at Galeo Beauty in Hartbeespoort`,
                             title: title,
                             category: formattedCategory,
                             // We default to portrait for gallery masonry. Real aspect ratios could be calculated via an image library if needed.

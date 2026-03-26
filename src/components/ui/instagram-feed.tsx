@@ -1,6 +1,7 @@
 "use client";
 
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { Instagram, Heart, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { businessInfo } from "@/lib/constants";
@@ -9,14 +10,14 @@ import { businessInfo } from "@/lib/constants";
 const instagramPosts = [
     {
         id: 1,
-        image: "/images/gallery/Facials/professional-skin-facial-treatment-in-progress.jpeg",
+        image: "/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg",
         likes: 234,
         comments: 18,
         alt: "Facial treatment at Galeo Beauty"
     },
     {
         id: 2,
-        image: "/images/lashes-brows/dramatic-volume-eyelash-extensions.png",
+        image: "/images/gallery/lashes-brows/dramatic-volume-eyelash-extensions.png",
         likes: 189,
         comments: 12,
         alt: "Lash extensions showcase"
@@ -53,14 +54,17 @@ export function InstagramFeed({ className, columns = 4 }: InstagramFeedProps) {
                         Follow us on Instagram
                     </span>
                 </div>
-                <a
+                <TrackedExternalLink
                     href={businessInfo.socials.instagram}
+                    trackingContext="instagram_feed_profile"
+                    linkType="social"
+                    linkLabel="Instagram profile"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm text-gold hover:underline font-medium"
                 >
                     @galeobeauty
-                </a>
+                </TrackedExternalLink>
             </div>
 
             {/* Grid */}
@@ -69,9 +73,12 @@ export function InstagramFeed({ className, columns = 4 }: InstagramFeedProps) {
                 columns === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4"
             )}>
                 {instagramPosts.slice(0, columns).map((post) => (
-                    <a
+                    <TrackedExternalLink
                         key={post.id}
                         href={businessInfo.socials.instagram}
+                        trackingContext={`instagram_feed_post_${post.id}`}
+                        linkType="social"
+                        linkLabel="Instagram post"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative aspect-square rounded-xl overflow-hidden"
@@ -97,7 +104,7 @@ export function InstagramFeed({ className, columns = 4 }: InstagramFeedProps) {
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </TrackedExternalLink>
                 ))}
             </div>
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Header, Footer } from "@/components/layout";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 import { getAllBlogPosts } from "@/lib/blog-data";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
@@ -32,6 +33,19 @@ export const metadata: Metadata = {
             "Expert beauty tips, treatment guides & skincare advice from Galeo Beauty in Hartbeespoort.",
         url: "https://www.galeobeauty.com/blog",
         type: "website",
+        images: [
+            {
+                url: "https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg",
+                alt: "Beauty blog articles from Galeo Beauty in Hartbeespoort",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Beauty Blog | Expert Tips & Guides | Galeo Beauty",
+        description:
+            "Expert beauty tips, treatment guides & skincare advice from Galeo Beauty in Hartbeespoort.",
+        images: ["https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg"],
     },
 };
 
@@ -100,6 +114,13 @@ export default function BlogPage() {
                                 >
                                     {/* Image */}
                                     <div className="relative h-48 overflow-hidden bg-secondary">
+                                        <CloudinaryImage
+                                            src={post.featuredImage}
+                                            alt={post.title}
+                                            fill
+                                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        />
                                         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10" />
                                         <div className="absolute bottom-4 left-4 z-20">
                                             <span className="bg-gold/90 text-white text-xs font-medium px-3 py-1 rounded-full">

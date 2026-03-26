@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { getStoredAttribution, trackExternalLinkClick } from "@/lib/attribution";
 
 export interface MapProps {
     latitude: number;
@@ -101,6 +103,33 @@ export function Map({
             </div>
         `);
 
+        const handlePopupOpen = () => {
+            const popupElement = popup.getElement();
+
+            if (!popupElement) {
+                return;
+            }
+
+            const directionsLink = popupElement.querySelector("a");
+
+            if (!(directionsLink instanceof HTMLAnchorElement)) {
+                return;
+            }
+
+            directionsLink.onclick = () => {
+                trackExternalLinkClick({
+                    attribution: getStoredAttribution(),
+                    href: directionsLink.href,
+                    currentPage: window.location.pathname,
+                    context: "map_popup_directions",
+                    linkType: "maps",
+                    linkLabel: "Map popup directions",
+                });
+            };
+        };
+
+        popup.on("open", handlePopupOpen);
+
         // Add marker at coordinates (anchor at bottom tip of pin)
         new mapboxgl.Marker({
             element: markerEl,
@@ -112,6 +141,7 @@ export function Map({
 
         // Cleanup
         return () => {
+            popup.off("open", handlePopupOpen);
             if (map.current) {
                 map.current.remove();
                 map.current = null;
@@ -130,8 +160,11 @@ export function Map({
                 style={{ minHeight: "400px" }}
             />
             {/* Get Directions Badge */}
-            <a
+            <TrackedExternalLink
                 href={directionsUrl}
+                trackingContext="map_badge_directions"
+                linkType="maps"
+                linkLabel="Map directions"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-gold text-white px-5 py-3 rounded-lg shadow-xl hover:bg-gold/90 hover:scale-105 transition-all duration-300"
@@ -156,7 +189,7 @@ export function Map({
                     />
                 </svg>
                 <span className="font-semibold text-sm">Get Directions</span>
-            </a>
+            </TrackedExternalLink>
         </div>
     );
 }

@@ -35,7 +35,7 @@ const specials: Special[] = [
         id: "facials",
         title: "Facial Glow Package",
         subtitle: "Premium Treatments",
-        image: "/images/dermalogica/dermalogica-proskin-treatment.jpeg",
+        image: "/images/dermalogica/dermalogica-proskin-treatment.jpg",
         discount: "30% off",
         items: [
             { id: "special-facial-1", service: "Skinovage Moisturising Facial", originalPrice: "R575", price: "R400", duration: "60 mins" },
@@ -47,7 +47,7 @@ const specials: Special[] = [
         id: "lashes",
         title: "Lash & Brow Special",
         subtitle: "Frame Your Beauty",
-        image: "/images/lashes-brows/fluffy-eyelash-extensions-brown-eyes.png",
+        image: "/images/gallery/lashes-brows/fluffy-eyelash-extensions-brown-eyes.png",
         discount: "25% off",
         items: [
             { id: "special-lash-1", service: "Full Set Hybrid Lashes", originalPrice: "R667", price: "R500", duration: "90 mins" },
@@ -59,7 +59,7 @@ const specials: Special[] = [
         id: "massage",
         title: "Relaxation Escape",
         subtitle: "Therapeutic Wellness",
-        image: "/images/massages/deep-relaxation-neck-massage.jpeg",
+        image: "/images/massages/deep-relaxation-neck-massage.jpg",
         discount: "20% off",
         items: [
             { id: "special-massage-1", service: "Swedish Full Body Massage", originalPrice: "R650", price: "R520", duration: "60 mins" },
@@ -71,7 +71,7 @@ const specials: Special[] = [
         id: "makeup",
         title: "Bridal Season Special",
         subtitle: "Your Perfect Day",
-        image: "/images/services/makeup/makeup_01.jpeg",
+        image: "/images/make-up/expert-bridal-makeup-application.jpg",
         discount: "free trial",
         items: [
             { id: "special-makeup-1", service: "Bridal Makeup + Trial", originalPrice: "R1,900", price: "R1,500", duration: "120 mins" },

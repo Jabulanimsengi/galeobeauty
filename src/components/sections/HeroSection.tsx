@@ -4,6 +4,7 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { motion, useReducedMotion } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { ChevronDown, Star, Sparkles, Award, ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { businessInfo } from "@/lib/constants";
@@ -248,13 +249,20 @@ export function HeroSection() {
                                 size="lg"
                                 className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-4 sm:px-10 h-10 sm:h-14 font-medium text-[13px] sm:text-base shadow-lg sm:shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20 w-auto max-w-full"
                             >
-                                <a href={businessInfo.socials.fresha} target="_blank" rel="noopener noreferrer">
+                                <TrackedExternalLink
+                                    href={businessInfo.socials.fresha}
+                                    trackingContext="hero_fresha"
+                                    linkType="booking_platform"
+                                    linkLabel="Book your visit"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
                                     <span className="relative z-10 font-semibold">
                                         Book Your Visit
                                     </span>
                                     <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1 relative z-10" />
                                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                                </a>
+                                </TrackedExternalLink>
                             </Button>
                             <Button
                                 asChild

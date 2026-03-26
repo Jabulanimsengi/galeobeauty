@@ -3,6 +3,8 @@
 import { Header, Footer } from "@/components/layout";
 
 import { Button } from "@/components/ui/button";
+import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { motion } from "framer-motion";
 import { Briefcase, MapPin, Users, Sparkles, Heart, ChevronRight } from "lucide-react";
 
@@ -183,9 +185,14 @@ export default function CareersPage() {
                                             asChild
                                             className="bg-gold hover:bg-gold-dark text-white rounded-full px-6"
                                         >
-                                            <a href={`mailto:careers@galeobeauty.com?subject=${encodeURIComponent(`Application for ${job.title}`)}`}>
+                                            <TrackedExternalLink
+                                                href={`mailto:careers@galeobeauty.com?subject=${encodeURIComponent(`Application for ${job.title}`)}`}
+                                                trackingContext={`careers_apply_${job.id}`}
+                                                linkType="email"
+                                                linkLabel={`Apply for ${job.title}`}
+                                            >
                                                 Apply Now
-                                            </a>
+                                            </TrackedExternalLink>
                                         </Button>
                                     </motion.div>
                                 ))}
@@ -201,13 +208,14 @@ export default function CareersPage() {
                                     asChild
                                     className="bg-gold hover:bg-gold-dark text-white rounded-full px-6 mt-6"
                                 >
-                                    <a
-                                        href={`https://wa.me/27824447389?text=${encodeURIComponent("Hi Galeo Beauty, I found you on www.galeobeauty.com and I would like to send my CV for a potential career opportunity.")}`}
+                                    <TrackedWhatsAppLink
+                                        message="Hi Galeo Beauty, I found you on www.galeobeauty.com and I would like to send my CV for a potential career opportunity."
+                                        trackingContext="careers_whatsapp"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         Send Your CV
-                                    </a>
+                                    </TrackedWhatsAppLink>
                                 </Button>
                             </div>
                         )}
@@ -225,9 +233,14 @@ export default function CareersPage() {
                             Take the first step towards an exciting career in beauty and wellness.
                         </p>
                         <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground h-14 px-10 text-lg rounded-full">
-                            <a href="mailto:careers@galeobeauty.com?subject=Career Inquiry">
+                            <TrackedExternalLink
+                                href="mailto:careers@galeobeauty.com?subject=Career Inquiry"
+                                trackingContext="careers_cta_email"
+                                linkType="email"
+                                linkLabel="Career inquiry"
+                            >
                                 Get in Touch
-                            </a>
+                            </TrackedExternalLink>
                         </Button>
                     </div>
                 </section>

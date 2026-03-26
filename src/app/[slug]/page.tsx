@@ -5,7 +5,7 @@ import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { businessInfo } from "@/lib/constants";
+import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { getCategoryById } from "@/lib/services-data";
 import {
     getAllIntentPages,
@@ -91,9 +91,8 @@ export default async function IntentLandingPage({ params }: PageProps) {
         { href: "#book", label: "Book" },
     ];
 
-    const whatsappMessage = encodeURIComponent(
-        `Hi! I found you on www.galeobeauty.com and I want help with ${page.title}. Can you recommend the right treatment?`
-    );
+    const whatsappMessage =
+        `Hi! I found you on www.galeobeauty.com and I want help with ${page.title}. Can you recommend the right treatment?`;
 
     const faqSchema = {
         "@context": "https://schema.org",
@@ -166,13 +165,14 @@ export default async function IntentLandingPage({ params }: PageProps) {
 
                             <div className="flex flex-wrap gap-3">
                                 <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground">
-                                    <a
-                                        href={`https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`}
+                                    <TrackedWhatsAppLink
+                                        message={whatsappMessage}
+                                        trackingContext={`intent_page_hero_${page.slug}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         Book via WhatsApp
-                                    </a>
+                                    </TrackedWhatsAppLink>
                                 </Button>
                                 <Button asChild size="lg" variant="outline">
                                     <Link href="/contact">Contact the Salon</Link>
@@ -414,13 +414,14 @@ export default async function IntentLandingPage({ params }: PageProps) {
                         </p>
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
                             <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground">
-                                <a
-                                    href={`https://wa.me/${businessInfo.socials.whatsapp}?text=${whatsappMessage}`}
+                                <TrackedWhatsAppLink
+                                    message={whatsappMessage}
+                                    trackingContext={`intent_page_cta_${page.slug}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     Ask on WhatsApp
-                                </a>
+                                </TrackedWhatsAppLink>
                             </Button>
                             <Button asChild size="lg" variant="outline" className="border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background">
                                 <Link href="/prices">Browse All Services</Link>
