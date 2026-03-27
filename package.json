@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
+    "build:local": "node scripts/build-with-scope.js local",
+    "build:production": "node scripts/build-with-scope.js production",
+    "build:full-seo": "node scripts/build-with-scope.js full-seo",
     "typecheck": "tsc --noEmit",
     "audit:images": "node scripts/audit-images.js",
     "audit:image-dupes": "node scripts/audit-image-duplicates.js",

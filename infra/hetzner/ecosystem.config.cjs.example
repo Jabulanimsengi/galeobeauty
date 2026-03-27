@@ -1,0 +1,37 @@
+const path = require("node:path");
+
+const sharedEnv = {
+    NODE_ENV: "production",
+    GALEO_DEPLOY_TARGET: "hetzner",
+};
+
+module.exports = {
+    apps: [
+        {
+            name: "galeobeauty-blue",
+            cwd: "/var/www/galeobeauty-blue",
+            script: "npm",
+            args: "run start",
+            env: {
+                ...sharedEnv,
+                PORT: 3000,
+                GALEO_RELEASE_SLOT: "blue",
+            },
+            out_file: path.join("/root/.pm2/logs", "galeobeauty-blue-out.log"),
+            error_file: path.join("/root/.pm2/logs", "galeobeauty-blue-error.log"),
+        },
+        {
+            name: "galeobeauty-green",
+            cwd: "/var/www/galeobeauty-green",
+            script: "npm",
+            args: "run start",
+            env: {
+                ...sharedEnv,
+                PORT: 3001,
+                GALEO_RELEASE_SLOT: "green",
+            },
+            out_file: path.join("/root/.pm2/logs", "galeobeauty-green-out.log"),
+            error_file: path.join("/root/.pm2/logs", "galeobeauty-green-error.log"),
+        },
+    ],
+};

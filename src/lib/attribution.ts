@@ -207,72 +207,6 @@ function sanitizePhone(phone: string) {
   return phone.replace(/\D/g, "");
 }
 
-function getCurrentPageLabel(currentPage?: string, attribution?: StoredAttribution | null) {
-  const normalizedCurrentPage = normalizePath(currentPage);
-
-  if (!normalizedCurrentPage) {
-    return undefined;
-  }
-
-  if (normalizedCurrentPage === attribution?.lastTouch.landingPage) {
-    return undefined;
-  }
-
-  return normalizedCurrentPage;
-}
-
-function buildAttributionBlock({
-  attribution,
-  currentPage,
-}: {
-  attribution?: StoredAttribution | null;
-  currentPage?: string;
-}) {
-  const source = attribution?.lastTouch.source ?? "direct";
-  const medium = attribution?.lastTouch.medium ?? "none";
-  const lines = [`Lead Attribution`, `Source / Medium: ${source} / ${medium}`];
-
-  if (attribution?.lastTouch.campaign) {
-    lines.push(`Campaign: ${attribution.lastTouch.campaign}`);
-  }
-
-  if (attribution?.lastTouch.content) {
-    lines.push(`Content: ${attribution.lastTouch.content}`);
-  }
-
-  if (attribution?.lastTouch.landingPage) {
-    lines.push(`Landing Page: ${attribution.lastTouch.landingPage}`);
-  }
-
-  const enquiryPage = getCurrentPageLabel(currentPage, attribution);
-
-  if (enquiryPage) {
-    lines.push(`Enquiry Page: ${enquiryPage}`);
-  }
-
-  if (attribution?.firstTouch && attribution.firstTouch.recordedAt !== attribution.lastTouch.recordedAt) {
-    lines.push(`First Touch: ${attribution.firstTouch.source} / ${attribution.firstTouch.medium}`);
-  }
-
-  if (attribution?.lastTouch.referrer) {
-    lines.push(`Referrer: ${attribution.lastTouch.referrer}`);
-  }
-
-  return lines.join("\n");
-}
-
-function appendAttributionToMessage({
-  message,
-  attribution,
-  currentPage,
-}: {
-  message: string;
-  attribution?: StoredAttribution | null;
-  currentPage?: string;
-}) {
-  return `${message.trim()}\n\n---\n${buildAttributionBlock({ attribution, currentPage })}`;
-}
-
 export function getStoredAttribution() {
   if (typeof window === "undefined") {
     return null;
@@ -324,16 +258,8 @@ export function captureAttributionFromCurrentVisit(pathname?: string) {
 export function buildTrackedWhatsAppUrl({
   phone,
   message,
-  attribution,
-  currentPage,
 }: BuildTrackedWhatsAppUrlOptions) {
-  const enrichedMessage = appendAttributionToMessage({
-    message,
-    attribution,
-    currentPage,
-  });
-
-  return `https://wa.me/${sanitizePhone(phone)}?text=${encodeURIComponent(enrichedMessage)}`;
+  return `https://wa.me/${sanitizePhone(phone)}?text=${encodeURIComponent(message.trim())}`;
 }
 
 export function trackWhatsAppClick({

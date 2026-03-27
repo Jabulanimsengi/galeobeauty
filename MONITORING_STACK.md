@@ -30,8 +30,13 @@ Example response:
 ```json
 {
   "ok": true,
-  "service": "galeobeauty-next",
-  "timestamp": "2026-03-24T12:00:00.000Z"
+  "timestamp": "2026-03-24T12:00:00.000Z",
+  "release": {
+    "service": "galeobeauty-next",
+    "releaseId": "96fad5c",
+    "slot": "green",
+    "buildScope": "production"
+  }
 }
 ```
 

@@ -22,14 +22,42 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Build Scope
 
-Local `next build` runs in a reduced static-generation mode by default so the build finishes much faster on a workstation.
+Local `next build` runs in a smaller static-generation mode by default so the build finishes much faster on a workstation.
 
-- Local default: reduced prebuild set
-- CI/Vercel/Hetzner default: full prebuild set when the deploy target is marked
-- Manual override: set `GALEO_BUILD_SCOPE=full` or `GALEO_BUILD_SCOPE=reduced`
+- `local`: fast workstation build with a small prebuild set
+- `production`: deploy-ready build that prebuilds all core pages and a larger SEO subset
+- `full-seo`: prebuild every static param and reserve it for special releases or off-peak deploys
+- Local default: `local`
+- CI/Vercel/Hetzner inferred default: `production`
+- Manual override: set `GALEO_BUILD_SCOPE=local`, `GALEO_BUILD_SCOPE=production`, or `GALEO_BUILD_SCOPE=full-seo`
 - Hetzner recommended: set `GALEO_DEPLOY_TARGET=hetzner` or `HETZNER=1`
 
 This only changes how many static params are pre-generated during build. Routes that use on-demand generation can still render outside the reduced set.
+
+Recommended commands:
+
+- Local dev build: `npm run build:local`
+- Standard server deploy: `npm run build:production`
+- Full SEO sweep: `npm run build:full-seo`
+
+## Release Visibility
+
+The health endpoint now exposes release metadata so blue-green deploys are easy to verify:
+
+- Route: `/api/health`
+- Includes: `slot`, `releaseId`, `gitSha`, `buildScope`, `deployTarget`, `deployedAt`, and `port`
+
+Recommended runtime environment variables for Hetzner:
+
+- `GALEO_RELEASE_SLOT=blue` or `GALEO_RELEASE_SLOT=green`
+- `GALEO_RELEASE_ID=<git-sha-or-release-tag>`
+- `GALEO_GIT_SHA=<commit-sha>`
+- `GALEO_DEPLOYED_AT=<ISO timestamp>`
+- `GALEO_DEPLOY_TARGET=hetzner`
+
+For the full Hetzner blue-green workflow, PM2 naming, and switch scripts, see:
+
+- `docs/hetzner-blue-green.md`
 
 ## Performance Workflow
 

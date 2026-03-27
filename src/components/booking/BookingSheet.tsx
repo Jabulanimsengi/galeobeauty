@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import {
   Sheet,
   SheetContent,
@@ -46,6 +46,68 @@ interface BookingSheetProps {
   consultationContext?: string;
 }
 
+function normalizeSouthAfricanPhone(value: string) {
+  const digits = value.replace(/\D/g, "");
+
+  if (!digits) {
+    return "";
+  }
+
+  let normalizedDigits = digits;
+
+  if (normalizedDigits.startsWith("00")) {
+    normalizedDigits = normalizedDigits.slice(2);
+  }
+
+  if (normalizedDigits.startsWith("0")) {
+    normalizedDigits = `27${normalizedDigits.slice(1)}`;
+  } else if (!normalizedDigits.startsWith("27")) {
+    normalizedDigits = `27${normalizedDigits}`;
+  }
+
+  normalizedDigits = normalizedDigits.slice(0, 11);
+
+  return `+${normalizedDigits}`;
+}
+
+function getSouthAfricanPhoneError(value: string) {
+  if (!value.trim()) {
+    return "Use a South African number in +27 format.";
+  }
+
+  const digits = value.replace(/\D/g, "");
+
+  if (!value.startsWith("+27") || !digits.startsWith("27")) {
+    return "Your number must start with +27.";
+  }
+
+  if (digits.length !== 11) {
+    return "Please insert the correct number. It must have 11 digits including the country code.";
+  }
+
+  return null;
+}
+
+function getFullNameError(value: string) {
+  const normalized = value.trim().replace(/\s+/g, " ");
+
+  if (!normalized) {
+    return "Please enter your name and surname.";
+  }
+
+  const parts = normalized.split(" ").filter(Boolean);
+
+  if (parts.length < 2) {
+    return "Please enter both your name and surname.";
+  }
+
+  if (parts.some((part) => part.length < 2)) {
+    return "Please enter your full name and surname.";
+  }
+
+  return null;
+}
+
 export function BookingSheet({
   isOpen,
   onClose,
@@ -53,6 +115,41 @@ export function BookingSheet({
   bookingType = "treatment",
   consultationContext
 }: BookingSheetProps) {
+  const dateRailRef = useRef<HTMLDivElement | null>(null);
+  const dateOptions = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return Array.from({ length: 21 }, (_, index) => {
+      const nextDate = new Date(today);
+      nextDate.setDate(today.getDate() + index);
+      const dayOfWeek = nextDate.getDay();
+      const isToday = index === 0;
+      const isTomorrow = index === 1;
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+      let badgeLabel = "Weekday";
+      if (isToday) badgeLabel = "Today";
+      else if (isTomorrow) badgeLabel = "Tomorrow";
+      else if (isWeekend) badgeLabel = dayOfWeek === 0 ? "Sunday" : "Weekend";
+
+      return {
+        value: nextDate.toISOString().split("T")[0],
+        shortDay: nextDate.toLocaleDateString("en-ZA", { weekday: "short" }),
+        dayNumber: nextDate.toLocaleDateString("en-ZA", { day: "numeric" }),
+        monthLabel: nextDate.toLocaleDateString("en-ZA", { month: "short" }),
+        fullLabel: nextDate.toLocaleDateString("en-ZA", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        }),
+        isToday,
+        isTomorrow,
+        isWeekend,
+        badgeLabel,
+      };
+    });
+  }, []);
   const [state, setState] = useState<BookingState>({
     ...initialBookingState,
     bookingType,
@@ -60,11 +157,18 @@ export function BookingSheet({
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [showMoreDates, setShowMoreDates] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const treatmentNames = useMemo(
     () => state.treatments?.map((t) => t.item.name),
     [state.treatments]
   );
+  const selectedDateOption = dateOptions.find((option) => option.value === state.appointment.date);
+  const visibleDateOptions = showMoreDates ? dateOptions : dateOptions.slice(0, 7);
+  const fullNameError = getFullNameError(state.userDetails.name);
+  const phoneError = getSouthAfricanPhoneError(state.userDetails.phone);
+  const hasNameInput = state.userDetails.name.trim().length > 0;
+  const hasPhoneInput = state.userDetails.phone.trim().length > 0;
   // Detect mobile viewport
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -139,12 +243,37 @@ export function BookingSheet({
     state.currentStep,
   ]);
 
+  useEffect(() => {
+    if (!isOpen || state.currentStep !== 2 || state.appointment.date) {
+      return;
+    }
+
+    updateAppointment("date", dateOptions[0]?.value ?? "");
+  }, [dateOptions, isOpen, state.appointment.date, state.currentStep]);
+
+  useEffect(() => {
+    if (!showMoreDates || !dateRailRef.current || !selectedDateOption) {
+      return;
+    }
+
+    const selectedButton = dateRailRef.current.querySelector<HTMLButtonElement>(
+      `[data-date="${selectedDateOption.value}"]`
+    );
+
+    selectedButton?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [selectedDateOption, showMoreDates]);
+
   // Reset state when closing
   const handleClose = () => {
     setState({
       ...initialBookingState,
       treatments: [],
     });
+    setShowMoreDates(false);
     onClose();
   };
 
@@ -182,7 +311,7 @@ export function BookingSheet({
   };
 
   // Validation
-  const isStep1Valid = state.userDetails.name.trim() && state.userDetails.phone.trim();
+  const isStep1Valid = !fullNameError && !phoneError;
   const isStep2Valid = state.appointment.date && state.appointment.timeSlot;
 
   // Calculate totals
@@ -446,11 +575,18 @@ ${bankingDetails}`;
                   </label>
                   <input
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder="Nicole Smith"
                     value={state.userDetails.name}
                     onChange={(e) => updateUserDetails("name", e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-secondary/30 border border-transparent focus:bg-background focus:border-gold outline-none transition-all"
+                    className={`w-full px-4 py-3 rounded-xl bg-secondary/30 border outline-none transition-all ${
+                      hasNameInput && fullNameError
+                        ? "border-red-300 bg-red-50/60 focus:border-red-400"
+                        : "border-transparent focus:bg-background focus:border-gold"
+                    }`}
                   />
+                  <p className={`mt-2 text-xs ${hasNameInput && fullNameError ? "text-red-600" : "text-muted-foreground"}`}>
+                    {hasNameInput && fullNameError ? fullNameError : "Enter both your name and surname. This will also be used for your booking reference."}
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm text-muted-foreground mb-1.5">
@@ -458,11 +594,30 @@ ${bankingDetails}`;
                   </label>
                   <input
                     type="tel"
-                    placeholder="Enter your phone number"
+                    placeholder="+27691230520"
                     value={state.userDetails.phone}
-                    onChange={(e) => updateUserDetails("phone", e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-secondary/30 border border-transparent focus:bg-background focus:border-gold outline-none transition-all"
+                    inputMode="numeric"
+                    autoComplete="tel"
+                    onFocus={() => {
+                      if (!state.userDetails.phone.trim()) {
+                        updateUserDetails("phone", "+27");
+                      }
+                    }}
+                    onBlur={() => {
+                      if (state.userDetails.phone === "+27") {
+                        updateUserDetails("phone", "");
+                      }
+                    }}
+                    onChange={(e) => updateUserDetails("phone", normalizeSouthAfricanPhone(e.target.value))}
+                    className={`w-full px-4 py-3 rounded-xl bg-secondary/30 border outline-none transition-all ${
+                      hasPhoneInput && phoneError
+                        ? "border-red-300 bg-red-50/60 focus:border-red-400"
+                        : "border-transparent focus:bg-background focus:border-gold"
+                    }`}
                   />
+                  <p className={`mt-2 text-xs ${hasPhoneInput && phoneError ? "text-red-600" : "text-muted-foreground"}`}>
+                    {hasPhoneInput && phoneError ? phoneError : "Use +27 followed by 9 digits, for example +27691230520."}
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm text-muted-foreground mb-1.5">
@@ -491,13 +646,75 @@ ${bankingDetails}`;
               >
                 <div>
                   <h3 className="font-semibold text-foreground mb-4">Select Date</h3>
-                  <input
-                    type="date"
-                    value={state.appointment.date}
-                    onChange={(e) => updateAppointment("date", e.target.value)}
-                    min={new Date().toISOString().split("T")[0]}
-                    className="w-full px-4 py-3 rounded-xl bg-secondary/30 border border-transparent focus:bg-background focus:border-gold outline-none transition-all"
-                  />
+                  <div className="rounded-[1.6rem] border border-border/50 bg-secondary/10 p-4">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {selectedDateOption ? selectedDateOption.fullLabel : "Choose your preferred day"}
+                        </p>
+                      </div>
+                      <div className="hidden rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold sm:inline-flex">
+                        Next 7 Days
+                      </div>
+                    </div>
+
+                    <div ref={dateRailRef} className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
+                      {visibleDateOptions.map((option) => {
+                        const isSelected = state.appointment.date === option.value;
+
+                        return (
+                          <button
+                            type="button"
+                            key={option.value}
+                            data-date={option.value}
+                            onClick={() => updateAppointment("date", option.value)}
+                            className={`min-w-[76px] shrink-0 rounded-[1.15rem] border px-3 py-3 text-center transition-all ${
+                              isSelected
+                                ? "border-gold bg-gold text-foreground shadow-[0_18px_40px_-26px_rgba(201,165,92,0.9)]"
+                                : "border-border/60 bg-background hover:border-gold/50 hover:bg-gold/5"
+                            }`}
+                          >
+                            <span className={`block text-[10px] font-semibold uppercase tracking-[0.18em] ${isSelected ? "text-foreground/70" : "text-muted-foreground"}`}>
+                              {option.shortDay}
+                            </span>
+                            <span className="mt-2 block text-xl font-semibold leading-none">
+                              {option.dayNumber}
+                            </span>
+                            <span className={`mt-1.5 block text-[11px] ${isSelected ? "text-foreground/75" : "text-muted-foreground"}`}>
+                              {option.monthLabel}
+                            </span>
+                          </button>
+                        );
+                      })}
+
+                      {!showMoreDates && (
+                        <button
+                          type="button"
+                          onClick={() => setShowMoreDates(true)}
+                          className="min-w-[82px] shrink-0 rounded-[1.15rem] border border-dashed border-gold/35 bg-background px-3 py-3 text-center transition-all hover:border-gold hover:bg-gold/5"
+                        >
+                          <span className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-gold/80">
+                            More
+                          </span>
+                          <span className="mt-2 block text-base font-semibold text-foreground">
+                            +14
+                          </span>
+                          <span className="mt-1.5 block text-[11px] text-muted-foreground">days</span>
+                        </button>
+                      )}
+                    </div>
+                    {showMoreDates && (
+                      <div className="mt-3 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => setShowMoreDates(false)}
+                          className="text-xs font-medium text-gold transition-colors hover:text-gold-dark"
+                        >
+                          Show only the next 7 days
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div>

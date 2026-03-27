@@ -6,8 +6,11 @@ type StaticParamGroup =
     | "intentPages"
     | "blogPosts";
 
-const REDUCED_SCOPE_VALUES = new Set(["reduced", "local", "fast"]);
-const FULL_SCOPE_VALUES = new Set(["full", "server", "complete"]);
+export type StaticBuildScope = "local" | "production" | "full-seo";
+
+const LOCAL_SCOPE_VALUES = new Set(["local", "reduced", "fast"]);
+const PRODUCTION_SCOPE_VALUES = new Set(["production", "prod", "server", "deploy", "hetzner"]);
+const FULL_SCOPE_VALUES = new Set(["full", "full-seo", "complete", "all"]);
 
 const EXPLICIT_BUILD_SCOPE = process.env.GALEO_BUILD_SCOPE?.trim().toLowerCase();
 const DEPLOY_TARGET = process.env.GALEO_DEPLOY_TARGET?.trim().toLowerCase();
@@ -22,18 +25,22 @@ const inferredFullBuild =
     process.env.CI === "true" ||
     process.env.GITHUB_ACTIONS === "true";
 
-export const STATIC_BUILD_SCOPE: "full" | "reduced" =
+export const STATIC_BUILD_SCOPE: StaticBuildScope =
     EXPLICIT_BUILD_SCOPE && FULL_SCOPE_VALUES.has(EXPLICIT_BUILD_SCOPE)
-        ? "full"
-        : EXPLICIT_BUILD_SCOPE && REDUCED_SCOPE_VALUES.has(EXPLICIT_BUILD_SCOPE)
-            ? "reduced"
-            : inferredFullBuild
-                ? "full"
-                : "reduced";
+        ? "full-seo"
+        : EXPLICIT_BUILD_SCOPE && PRODUCTION_SCOPE_VALUES.has(EXPLICIT_BUILD_SCOPE)
+            ? "production"
+            : EXPLICIT_BUILD_SCOPE && LOCAL_SCOPE_VALUES.has(EXPLICIT_BUILD_SCOPE)
+                ? "local"
+                : inferredFullBuild
+                    ? "production"
+                    : "local";
 
-export const isReducedStaticBuild = STATIC_BUILD_SCOPE === "reduced";
+export const isLocalStaticBuild = STATIC_BUILD_SCOPE === "local";
+export const isProductionStaticBuild = STATIC_BUILD_SCOPE === "production";
+export const isFullSEOStaticBuild = STATIC_BUILD_SCOPE === "full-seo";
 
-const REDUCED_STATIC_PARAM_LIMITS: Record<StaticParamGroup, number> = {
+const LOCAL_STATIC_PARAM_LIMITS: Record<StaticParamGroup, number> = {
     categories: 6,
     services: 18,
     locations: 8,
@@ -42,15 +49,29 @@ const REDUCED_STATIC_PARAM_LIMITS: Record<StaticParamGroup, number> = {
     blogPosts: 8,
 };
 
+const PRODUCTION_STATIC_PARAM_LIMITS: Record<StaticParamGroup, number> = {
+    categories: 24,
+    services: 400,
+    locations: 32,
+    locationServices: 320,
+    intentPages: 40,
+    blogPosts: 40,
+};
+
 /**
- * Local builds stay intentionally small unless GALEO_BUILD_SCOPE=full
- * (or the build is running in CI/Vercel/Hetzner). This keeps `next build`
- * fast on a workstation while preserving the full SEO build on the server.
+ * Local builds stay intentionally small unless GALEO_BUILD_SCOPE is raised.
+ * Production builds prebuild all core pages plus a larger location-service set.
+ * Full SEO builds return every static param and are best reserved for special releases.
  */
 export function limitStaticParams<T>(params: T[], group: StaticParamGroup): T[] {
-    if (!isReducedStaticBuild) {
+    if (isFullSEOStaticBuild) {
         return params;
     }
 
-    return params.slice(0, REDUCED_STATIC_PARAM_LIMITS[group]);
+    const limit =
+        STATIC_BUILD_SCOPE === "production"
+            ? PRODUCTION_STATIC_PARAM_LIMITS[group]
+            : LOCAL_STATIC_PARAM_LIMITS[group];
+
+    return params.slice(0, limit);
 }
