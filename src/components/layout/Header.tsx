@@ -21,6 +21,7 @@ import { navItems, businessInfo } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 export function Header() {
+    const mobileMenuContentId = "mobile-navigation-sheet";
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
@@ -92,6 +93,7 @@ export function Header() {
                             <SheetTrigger asChild>
                                 <button
                                     aria-label="Toggle menu"
+                                    aria-controls={mobileMenuContentId}
                                     className="relative z-50 flex h-12 w-12 items-center justify-center bg-transparent transition-transform duration-300 active:scale-[0.98] focus:outline-none"
                                 >
                                     <span className="relative flex w-7 flex-col items-start gap-[0.38rem]">
@@ -120,6 +122,7 @@ export function Header() {
                                 </button>
                             </SheetTrigger>
                             <SheetContent
+                                id={mobileMenuContentId}
                                 side="left"
                                 className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0"
                             >
