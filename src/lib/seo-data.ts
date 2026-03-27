@@ -573,6 +573,37 @@ export function getNearbyLocations(currentSlug: string, limit = 5): SEOLocation[
     return unique.slice(0, limit);
 }
 
+export function getLocationClusterLinks(currentSlug: string, limit = 12): SEOLocation[] {
+    const current = getLocationBySlug(currentSlug);
+    if (!current) return [];
+
+    const parentLocation = TARGET_LOCATIONS.find((loc) => loc.name === current.region);
+    const childLocations = TARGET_LOCATIONS.filter(
+        (loc) => loc.region === current.name && loc.slug !== currentSlug
+    );
+    const siblingLocations = TARGET_LOCATIONS.filter(
+        (loc) => loc.region === current.region && loc.slug !== currentSlug
+    );
+    const relatedMetros = TARGET_LOCATIONS.filter((loc) =>
+        ["pretoria", "centurion", "midrand", "johannesburg", "hartbeespoort", "harties"].includes(loc.slug) &&
+        loc.slug !== currentSlug &&
+        loc.slug !== parentLocation?.slug
+    );
+
+    const combined = [
+        ...(parentLocation ? [parentLocation] : []),
+        ...childLocations,
+        ...siblingLocations,
+        ...relatedMetros,
+    ];
+
+    const unique = combined.filter(
+        (loc, index, array) => array.findIndex((candidate) => candidate.slug === loc.slug) === index
+    );
+
+    return unique.slice(0, limit);
+}
+
 /**
  * Get related services from the same category (for internal linking)
  * Returns up to 4 services from same category, excluding current
@@ -2453,6 +2484,42 @@ export function getLocationServiceInsight(service: SEOService, location: SEOLoca
 
     const pool = genericInsights[locationType] || genericInsights.local;
     return pool[combinedHash % pool.length];
+}
+
+export function getFeaturedLocationServices(limit = 6): SEOService[] {
+    const services = getCachedSEOServices();
+    const heroServices = services.filter((service) => HERO_SERVICES.includes(service.slug));
+    const selected: SEOService[] = [];
+    const categories = new Set<string>();
+
+    for (const service of heroServices) {
+        if (selected.length >= limit) {
+            break;
+        }
+
+        if (categories.has(service.categoryId) && selected.length < Math.floor(limit / 2)) {
+            continue;
+        }
+
+        categories.add(service.categoryId);
+        selected.push(service);
+    }
+
+    if (selected.length < limit) {
+        for (const service of heroServices) {
+            if (selected.some((item) => item.slug === service.slug)) {
+                continue;
+            }
+
+            selected.push(service);
+
+            if (selected.length >= limit) {
+                break;
+            }
+        }
+    }
+
+    return selected.slice(0, limit);
 }
 
 export function getPriorityLocationServiceContent(service: SEOService, location: SEOLocation): {
