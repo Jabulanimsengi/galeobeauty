@@ -11,14 +11,15 @@ export function GET() {
         {
             ok: true,
             timestamp: new Date().toISOString(),
-            release,
+            release: {
+                releaseId: release.releaseId,
+                slot: release.slot,
+                buildScope: release.buildScope,
+            },
         },
         {
             headers: {
                 "Cache-Control": "no-store, max-age=0",
-                "X-Galeo-Release": release.releaseId,
-                "X-Galeo-Slot": release.slot,
-                "X-Galeo-Build-Scope": release.buildScope,
             },
         },
     );

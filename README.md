@@ -45,7 +45,7 @@ Recommended commands:
 The health endpoint now exposes release metadata so blue-green deploys are easy to verify:
 
 - Route: `/api/health`
-- Includes: `slot`, `releaseId`, `gitSha`, `buildScope`, `deployTarget`, `deployedAt`, and `port`
+- Public response includes: `slot`, `releaseId`, and `buildScope`
 
 Recommended runtime environment variables for Hetzner:
 
