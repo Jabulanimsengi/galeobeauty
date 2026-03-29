@@ -249,9 +249,6 @@ export function ReviewsSection() {
                 }}
             />
 
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#f7f1e9] via-[#f7f1e9]/90 to-transparent sm:w-16" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#f7f1e9] via-[#f7f1e9]/90 to-transparent sm:w-16" />
-
             <div className="container relative mx-auto px-4 sm:px-6">
                 <motion.div
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
@@ -322,8 +319,13 @@ export function ReviewsSection() {
                         <ArrowRight className="h-4 w-4" />
                     </TrackedExternalLink>
                 </div>
+            </div>
 
-                <div className="hidden space-y-4 sm:block sm:space-y-5">
+            <div className="relative mt-2 hidden sm:block">
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white via-[#f7f1e9]/92 to-transparent lg:w-36" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white via-[#f7f1e9]/92 to-transparent lg:w-36" />
+
+                <div className="relative left-1/2 w-screen -translate-x-1/2 space-y-4 px-0 sm:space-y-5">
                     {reviewRows.map((row, index) => (
                         <motion.div
                             key={`row-${index}`}
