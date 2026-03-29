@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 
@@ -13,6 +14,26 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 export function FloatingSocials() {
     const pathname = usePathname();
+    const [isGalleryLightboxOpen, setIsGalleryLightboxOpen] = useState(false);
+
+    useEffect(() => {
+        const syncLightboxState = () => {
+            setIsGalleryLightboxOpen(document.body.dataset.galleryLightboxOpen === "true");
+        };
+
+        syncLightboxState();
+
+        const handleLightboxToggle = (event: Event) => {
+            const customEvent = event as CustomEvent<{ open?: boolean }>;
+            setIsGalleryLightboxOpen(customEvent.detail?.open === true);
+        };
+
+        window.addEventListener("galeo-gallery-lightbox-toggle", handleLightboxToggle as EventListener);
+
+        return () => {
+            window.removeEventListener("galeo-gallery-lightbox-toggle", handleLightboxToggle as EventListener);
+        };
+    }, []);
 
     const shouldHideBookButton = [
         "/prices",
@@ -26,7 +47,10 @@ export function FloatingSocials() {
                 <div className="fixed bottom-4 left-4 right-24 z-50 lg:hidden">
                     <Link
                         href="/prices"
-                        className="flex h-14 items-center justify-center rounded-full bg-foreground px-6 text-sm font-semibold uppercase tracking-[0.18em] text-background shadow-[0_22px_44px_-22px_rgba(0,0,0,0.55)] transition-all duration-300 hover:bg-gold hover:text-white"
+                        className={`flex h-14 items-center justify-center rounded-full px-6 text-sm font-semibold uppercase tracking-[0.18em] shadow-[0_22px_44px_-22px_rgba(0,0,0,0.55)] transition-all duration-300 ${isGalleryLightboxOpen
+                            ? "bg-white text-black hover:bg-stone-100"
+                            : "bg-foreground text-background hover:bg-gold hover:text-white"
+                            }`}
                         aria-label="Book now"
                     >
                         Book Now

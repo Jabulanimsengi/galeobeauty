@@ -35,6 +35,34 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
         }
     }, [isOpen, validIndex]);
 
+    React.useEffect(() => {
+        if (typeof document !== "undefined") {
+            document.body.dataset.galleryLightboxOpen = isOpen ? "true" : "false";
+        }
+
+        if (typeof window !== "undefined") {
+            window.dispatchEvent(
+                new CustomEvent("galeo-gallery-lightbox-toggle", {
+                    detail: { open: isOpen },
+                })
+            );
+        }
+
+        return () => {
+            if (typeof document !== "undefined") {
+                document.body.dataset.galleryLightboxOpen = "false";
+            }
+
+            if (typeof window !== "undefined") {
+                window.dispatchEvent(
+                    new CustomEvent("galeo-gallery-lightbox-toggle", {
+                        detail: { open: false },
+                    })
+                );
+            }
+        };
+    }, [isOpen]);
+
     // Keyboard navigation
     React.useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {

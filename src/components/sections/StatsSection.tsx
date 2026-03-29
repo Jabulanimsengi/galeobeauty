@@ -68,7 +68,7 @@ function StatItem({ value, suffix, label, description, delay = 0 }: StatItemProp
 export function StatsSection() {
     const stats = [
         {
-            value: 159,
+            value: 190,
             suffix: "+",
             label: "Verified Reviews",
             description: "Across Google and Fresha",

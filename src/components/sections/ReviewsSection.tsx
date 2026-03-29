@@ -321,11 +321,11 @@ export function ReviewsSection() {
                 </div>
             </div>
 
-            <div className="relative mt-2 hidden sm:block">
-                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white via-[#f7f1e9]/92 to-transparent lg:w-36" />
-                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-white via-[#f7f1e9]/92 to-transparent lg:w-36" />
+            <div className="relative mt-2 hidden overflow-hidden sm:block">
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 bg-gradient-to-r from-white via-[#fbf8f4] to-transparent lg:w-44" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 bg-gradient-to-l from-white via-[#fbf8f4] to-transparent lg:w-44" />
 
-                <div className="relative left-1/2 w-screen -translate-x-1/2 space-y-4 px-0 sm:space-y-5">
+                <div className="relative left-1/2 w-[calc(100vw+6rem)] -translate-x-1/2 space-y-4 lg:w-[calc(100vw+10rem)] sm:space-y-5">
                     {reviewRows.map((row, index) => (
                         <motion.div
                             key={`row-${index}`}

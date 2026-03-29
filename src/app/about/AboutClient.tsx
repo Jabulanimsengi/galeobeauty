@@ -198,7 +198,7 @@ export function AboutClient() {
                                 <h3 className="mb-6 font-serif text-2xl text-foreground">Salon Credentials</h3>
                                 <div className="space-y-4">
                                     {[
-                                        { icon: Star, title: "4.9 Star Rating", desc: "Based on 159+ verified client reviews across Google and Fresha" },
+                                        { icon: Star, title: "4.9 Star Rating", desc: "Based on 190+ verified client reviews across Google and Fresha" },
                                         { icon: Shield, title: "CE-Approved Equipment", desc: "All aesthetic devices are medically certified and regularly maintained" },
                                         { icon: Award, title: "Premium Brand Partners", desc: "Official stockist of Dermalogica, QMS Medicosmetics, and Kryolan" },
                                         { icon: MapPin, title: "Established Since 2020", desc: "Proudly serving Hartbeespoort, Pretoria, and greater Gauteng" },

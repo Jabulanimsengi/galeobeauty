@@ -6,7 +6,6 @@ import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Star, Sparkles, Award, ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import { businessInfo } from "@/lib/constants";
 
 // Animated counter component
 function AnimatedCounter({ target, suffix = "", duration = 2, disabled = false }: { target: number; suffix?: string; duration?: number; disabled?: boolean }) {
@@ -239,9 +238,9 @@ export function HeroSection() {
                             <span className="hidden sm:inline">Premium hair, nails, facials, lashes, body treatments, and advanced aesthetics in one polished Hartbeespoort destination near the dam.</span>
                         </p>
 
-                        {/* CTA Group */}
+                        {/* Desktop CTA */}
                         <div
-                            className="animate-hero-text animate-hero-text-delay-3 flex flex-row flex-wrap items-start gap-2 sm:gap-4 mb-4 sm:mb-8 lg:mb-12"
+                            className="animate-hero-text animate-hero-text-delay-3 mb-4 hidden sm:mb-8 sm:flex lg:mb-12"
                         >
                             <Button
                                 asChild
@@ -256,17 +255,6 @@ export function HeroSection() {
                                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                                 </NavLink>
                             </Button>
-                            <Button
-                                asChild
-                                size="lg"
-                                className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-4 sm:px-8 h-10 sm:h-14 font-medium text-[13px] sm:text-base shadow-lg sm:shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10 w-auto max-w-full"
-                            >
-                                <NavLink href="/prices">
-                                    <span className="group-hover:text-gold transition-colors duration-300 font-semibold">
-                                        Explore Treatments
-                                    </span>
-                                </NavLink>
-                            </Button>
                         </div>
 
                         {/* Enhanced Trust Badges with Animated Counters */}
@@ -279,7 +267,7 @@ export function HeroSection() {
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">
-                                        <AnimatedCounter target={159} suffix="+" disabled={prefersReducedMotion} />
+                                        <AnimatedCounter target={190} suffix="+" disabled={prefersReducedMotion} />
                                     </span>
                                     <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
                                         Verified Reviews
