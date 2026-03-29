@@ -587,7 +587,7 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
     {
         id: "ipl",
         title: "IPL Hair Removal",
-        subtitle: "Permanent Hair Reduction",
+        subtitle: "Intense Pulsed Light (IPL)",
         image: "/images/ipl/ipl-full-leg-hair-removal.jpg",
         subcategories: [
             {

@@ -9,10 +9,7 @@ import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
-import { ArrowRight, ChevronDown, Phone } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
+import { ChevronDown } from "lucide-react";
 
 import { useSearchParams } from "next/navigation";
 
@@ -202,7 +199,7 @@ export function PricesClient() {
                             Beauty Treatment <span className="text-gold">Prices</span> in Hartbeespoort
                         </h1>
                         <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-2xl mx-auto">
-                            Browse our full treatment menu and book your visit to Galeo Beauty Harties.
+                            Browse our full treatment menu and plan your next visit to Galeo Beauty in Hartbeespoort.
                         </p>
                     </div>
                 </section>
@@ -296,75 +293,6 @@ export function PricesClient() {
                                         onRemoveItem={handleRemoveTreatment}
                                         onBook={handleOpenBooking}
                                     />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Reviews Section */}
-
-
-                {/* Closing CTA */}
-                <section className="bg-stone-50/70 px-4 py-14 sm:px-6 lg:py-20">
-                    <div className="container mx-auto max-w-6xl">
-                        <div className="relative overflow-hidden rounded-[2rem] border border-[#2b2b2f] bg-[#171719] px-6 py-10 text-white shadow-[0_30px_90px_-45px_rgba(0,0,0,0.65)] sm:px-8 lg:px-12 lg:py-14">
-                            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
-                            <div className="absolute -top-20 right-[-4rem] h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
-                            <div className="absolute -bottom-24 left-[-3rem] h-52 w-52 rounded-full bg-white/5 blur-3xl" />
-
-                            <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.85fr)] lg:items-end">
-                                <div>
-                                    <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
-                                        Treatment Guidance
-                                    </span>
-                                    <h2 className="mt-5 max-w-2xl font-serif text-3xl leading-tight sm:text-4xl lg:text-[2.9rem]">
-                                        Need help narrowing down the right service?
-                                    </h2>
-                                    <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">
-                                        If you are comparing treatments, unsure where to start, or want a
-                                        recommendation based on your goals, our Hartbeespoort team can guide you
-                                        before you book.
-                                    </p>
-
-                                    <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/70">
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
-                                            Quick treatment advice
-                                        </span>
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
-                                            Clear pricing guidance
-                                        </span>
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
-                                            Help choosing combinations
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="rounded-[1.75rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm sm:p-6">
-                                    <div className="flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-gold/85">
-                                        <Phone className="h-4 w-4" />
-                                        Speak To The Salon
-                                    </div>
-                                    <p className="mt-4 text-sm leading-relaxed text-white/62">
-                                        Reach out if you want help choosing a treatment plan or confirming which
-                                        booking fits you best.
-                                    </p>
-
-                                    <div className="mt-6 flex flex-col gap-3">
-                                        <Button asChild size="lg" className="h-12 rounded-full bg-gold px-6 text-white hover:bg-gold-dark">
-                                            <Link href="/contact">
-                                                Contact Galeo Beauty
-                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                            asChild
-                                            size="lg"
-                                            className="h-12 rounded-full border border-white/15 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
-                                        >
-                                            <TrackedExternalLink href="tel:0121111730" trackingContext="prices_phone" linkType="phone" linkLabel="Prices page phone">Call 012 111 1730</TrackedExternalLink>
-                                        </Button>
-                                    </div>
                                 </div>
                             </div>
                         </div>

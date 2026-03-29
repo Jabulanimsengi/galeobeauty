@@ -52,7 +52,6 @@ const breadcrumbSchema = generateBreadcrumbSchema([
 ]);
 
 export default function GalleryPage() {
-    // This runs at build time - automatically reads images from the gallery folder
     const images = getGalleryImages();
 
     return (
@@ -63,28 +62,26 @@ export default function GalleryPage() {
             />
             <Header />
             <main className="bg-background min-h-screen">
-                {/* Hero Section */}
-                <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 px-6 overflow-hidden">
-                    <div className="absolute top-0 right-0 w-2/3 h-full bg-rose-50/20 -z-10 skew-x-12" />
+                <section className="relative overflow-hidden px-6 pt-32 pb-16 lg:pt-40 lg:pb-24">
+                    <div className="absolute top-0 right-0 h-full w-2/3 -z-10 skew-x-12 bg-rose-50/20" />
                     <div className="container mx-auto text-center">
                         <div>
-                            <span className="text-gold font-bold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4 block">
+                            <span className="mb-4 block text-xs font-bold uppercase tracking-[0.2em] text-gold sm:text-sm">
                                 Galeo Beauty Hartbeespoort Portfolio
                             </span>
-                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
+                            <h1 className="mb-6 font-serif text-4xl text-foreground sm:text-5xl lg:text-6xl">
                                 Our <span className="italic text-gold">Gallery</span> in Hartbeespoort
                             </h1>
-                            <p className="text-muted-foreground text-lg font-light max-w-2xl mx-auto leading-relaxed">
-                                A curated glimpse into Galeo Beauty Harties — transformative beauty results, nail art, and salon moments near Hartbeespoort Dam.
+                            <p className="mx-auto max-w-2xl text-lg font-light leading-relaxed text-muted-foreground">
+                                A curated glimpse into Galeo Beauty - treatment results, nail artistry, and salon moments near Hartbeespoort Dam.
                             </p>
                         </div>
                     </div>
                 </section>
 
-                {/* Masonry Gallery Grid */}
-                <section className="py-16 md:py-24 bg-amber-50/20">
+                <section className="bg-amber-50/20 py-16 md:py-24">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-12 text-center">
+                        <h2 className="mb-12 text-center font-serif text-3xl text-foreground md:text-4xl">
                             Life at Galeo Beauty <span className="text-gold">Hartbeespoort</span>
                         </h2>
 
@@ -93,16 +90,13 @@ export default function GalleryPage() {
                         ) : (
                             <p className="text-center text-muted-foreground">
                                 No gallery images found. Add images to{" "}
-                                <code className="bg-secondary px-2 py-1 rounded">
+                                <code className="rounded bg-secondary px-2 py-1">
                                     public/images/gallery/
                                 </code>
                             </p>
                         )}
                     </div>
                 </section>
-
-                {/* Reviews Section */}
-
             </main>
             <Footer />
         </>

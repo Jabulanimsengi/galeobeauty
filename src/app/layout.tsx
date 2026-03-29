@@ -14,11 +14,11 @@ const GA_MEASUREMENT_ID = "G-8JRBY6T1GQ";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.galeobeauty.com"),
   title: {
-    default: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
+    default: "Galeo Beauty | Premium Salon & Medical Aesthetics in Hartbeespoort",
     template: "%s | Galeo Beauty Hartbeespoort",
   },
   description:
-    "Beauty salon, day spa, med spa and aesthetic clinic in Hartbeespoort. Facials, injectables, body contouring, IPL hair removal, hair, nails, lashes, massage and permanent makeup.",
+    "Premium hair, nails, facials, massage, body treatments, and medical aesthetics in Hartbeespoort at Galeo Beauty.",
 
   keywords: buildGlobalKeywords(),
   authors: [{ name: "Galeo Beauty" }],
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     locale: "en_ZA",
     url: "https://www.galeobeauty.com",
     siteName: "Galeo Beauty",
-    title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
+    title: "Galeo Beauty | Premium Salon & Medical Aesthetics in Hartbeespoort",
     description:
-      "Beauty salon, day spa and aesthetic clinic in Hartbeespoort for facials, injectables, nails, lashes, massage, hair and body contouring.",
+      "A refined Hartbeespoort beauty destination for hair, nails, facials, massage, body treatments, and advanced aesthetics.",
     images: [
       {
         url: "/images/logo.png",
@@ -52,9 +52,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Galeo Beauty Hartbeespoort | Beauty Salon & Spa Harties",
+    title: "Galeo Beauty | Premium Salon & Medical Aesthetics in Hartbeespoort",
     description:
-      "Beauty salon, day spa and aesthetic clinic in Hartbeespoort for facials, injectables, nails, lashes, massage and hair.",
+      "A refined Hartbeespoort beauty destination for hair, nails, facials, massage, body treatments, and advanced aesthetics.",
     images: ["/images/logo.png"],
   },
   robots: {
@@ -116,7 +116,6 @@ export default function RootLayout({
               priceRange: "$$",
               areaServed: [
                 { "@type": "City", name: "Hartbeespoort" },
-                { "@type": "City", name: "Harties" },
                 { "@type": "City", name: "Centurion" },
                 { "@type": "City", name: "Pretoria" },
                 { "@type": "City", name: "Johannesburg" },
@@ -141,7 +140,7 @@ export default function RootLayout({
               alternateName: ["Galeo Beauty Salon", "Galeo Spa", "Galeo Beauty Hartbeespoort"],
               url: "https://www.galeobeauty.com",
               logo: "https://www.galeobeauty.com/images/logo.png",
-              description: "Beauty salon, day spa and aesthetic clinic in Hartbeespoort offering facials, injectables, body contouring, IPL hair reduction, hair, nails, lashes, massage and permanent makeup.",
+              description: "Galeo Beauty is a premium Hartbeespoort salon offering hair, nails, facials, massage, body treatments, and medical aesthetics.",
               foundingDate: "2020",
               areaServed: [
                 { "@type": "City", name: "Hartbeespoort" },
@@ -179,7 +178,7 @@ export default function RootLayout({
               "@type": "WebSite",
               name: "Galeo Beauty",
               url: "https://www.galeobeauty.com",
-              description: "Galeo Beauty is a Hartbeespoort beauty salon and aesthetic clinic for skincare, injectables, body contouring, hair, nails, lashes and massage.",
+              description: "Galeo Beauty is a premium Hartbeespoort salon for skincare, hair, nails, massage, body treatments, and advanced aesthetics.",
               publisher: {
                 "@type": "Organization",
                 name: "Galeo Beauty",

@@ -4,7 +4,6 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { motion, useReducedMotion } from "framer-motion";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
-import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { ChevronDown, Star, Sparkles, Award, ArrowRight } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { businessInfo } from "@/lib/constants";
@@ -101,7 +100,7 @@ const kenBurnsVariants = [
 const heroImages = [
     { src: "/images/interior/galeo-beauty-interior-p1.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Reception and Waiting Area" },
     { src: "/images/interior/galeo-beauty-interior-p2.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Treatment Rooms" },
-    { src: "/images/interior/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Nail Station near Harties Dam" },
+    { src: "/images/interior/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Nail station near Hartbeespoort Dam" },
     { src: "/images/interior/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Spa Lounge" },
 ];
 
@@ -212,7 +211,7 @@ export function HeroSection() {
                                 className="flex h-2 w-2 rounded-full bg-gold animate-pulse"
                             />
                             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-white/90">
-                                Premium Beauty & Wellness
+                                Hartbeespoort Salon & Medical Spa
                             </span>
                         </div>
 
@@ -236,8 +235,8 @@ export function HeroSection() {
                         <p
                             className="animate-hero-text animate-hero-text-delay-2 text-sm sm:text-base lg:text-lg xl:text-xl text-white/85 leading-relaxed mb-4 sm:mb-8 lg:mb-10 font-light max-w-2xl drop-shadow-md"
                         >
-                            <span className="sm:hidden">Hartbeespoort&apos;s hair, nails, beauty salon and medical spa for facials, lashes, massage and advanced aesthetics.</span>
-                            <span className="hidden sm:inline">Galeo Beauty is a Hartbeespoort hair salon, nail salon, beauty salon and medical spa offering hair, nails, facials, lashes, massage, permanent makeup and advanced aesthetics near Hartbeespoort Dam.</span>
+                            <span className="sm:hidden">Premium hair, nails, facials, lashes, body treatments, and advanced aesthetics in one Hartbeespoort destination.</span>
+                            <span className="hidden sm:inline">Premium hair, nails, facials, lashes, body treatments, and advanced aesthetics in one polished Hartbeespoort destination near the dam.</span>
                         </p>
 
                         {/* CTA Group */}
@@ -249,29 +248,22 @@ export function HeroSection() {
                                 size="lg"
                                 className="group bg-black hover:bg-black/80 text-white transition-all duration-300 rounded-full px-4 sm:px-10 h-10 sm:h-14 font-medium text-[13px] sm:text-base shadow-lg sm:shadow-xl hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden border border-white/20 w-auto max-w-full"
                             >
-                                <TrackedExternalLink
-                                    href={businessInfo.socials.fresha}
-                                    trackingContext="hero_fresha"
-                                    linkType="booking_platform"
-                                    linkLabel="Book your visit"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
+                                <NavLink href="/prices">
                                     <span className="relative z-10 font-semibold">
                                         Book Your Visit
                                     </span>
                                     <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1 relative z-10" />
                                     <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                                </TrackedExternalLink>
+                                </NavLink>
                             </Button>
                             <Button
                                 asChild
                                 size="lg"
                                 className="group bg-white hover:bg-white/90 text-black transition-all duration-300 rounded-full px-4 sm:px-8 h-10 sm:h-14 font-medium text-[13px] sm:text-base shadow-lg sm:shadow-xl hover:shadow-2xl hover:-translate-y-1 border-2 border-black/10 w-auto max-w-full"
                             >
-                                <NavLink href="/about">
+                                <NavLink href="/prices">
                                     <span className="group-hover:text-gold transition-colors duration-300 font-semibold">
-                                        Learn More
+                                        Explore Treatments
                                     </span>
                                 </NavLink>
                             </Button>
@@ -287,10 +279,10 @@ export function HeroSection() {
                                 </div>
                                 <div className="flex flex-col">
                                     <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">
-                                        <AnimatedCounter target={500} suffix="+" disabled={prefersReducedMotion} />
+                                        <AnimatedCounter target={159} suffix="+" disabled={prefersReducedMotion} />
                                     </span>
                                     <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
-                                        Happy Clients
+                                        Verified Reviews
                                     </span>
                                 </div>
                             </div>
@@ -300,9 +292,9 @@ export function HeroSection() {
                                     <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-white" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">5.0</span>
+                                    <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">15+</span>
                                     <span className="text-[10px] sm:text-[10px] font-medium uppercase tracking-wider text-white/70">
-                                        Star Rating
+                                        Years Experience
                                     </span>
                                 </div>
                             </div>

@@ -188,7 +188,7 @@ export function Header() {
                                                 className="w-full rounded-[1.35rem] bg-gold py-6 text-base font-semibold text-white hover:bg-gold-dark"
                                                 onClick={() => handleMobileNavigation("/prices")}
                                             >
-                                                    Book Now
+                                                    Book Your Visit
                                             </Button>
                                         </motion.div>
                                     </div>

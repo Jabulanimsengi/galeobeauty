@@ -16,6 +16,7 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
     const [currentIndex, setCurrentIndex] = React.useState(initialIndex);
     const [copied, setCopied] = React.useState(false);
     const imagePanelRef = React.useRef<HTMLDivElement | null>(null);
+    const swipeThreshold = 80;
 
     // Safety fallback just in case the images array changes size unexpectedly
     const validIndex = currentIndex < images.length && currentIndex >= 0 ? currentIndex : 0;
@@ -168,6 +169,16 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
+                            drag={images.length > 1 ? "x" : false}
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={0.12}
+                            onDragEnd={(_, info) => {
+                                if (info.offset.x <= -swipeThreshold || info.velocity.x <= -500) {
+                                    goToNext();
+                                } else if (info.offset.x >= swipeThreshold || info.velocity.x >= 500) {
+                                    goToPrevious();
+                                }
+                            }}
                         >
                             <Image
                                 src={activeImage.src}

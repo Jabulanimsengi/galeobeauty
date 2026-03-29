@@ -97,7 +97,7 @@ export default function BlogPage() {
                                 Beauty <span className="text-gold italic">Tips & Guides</span> from Hartbeespoort
                             </h1>
                             <p className="text-muted-foreground text-lg leading-relaxed">
-                                Skincare secrets, treatment guides, and beauty trends from our expert team at Galeo Beauty Harties.
+                                Skincare guidance, treatment insights, and beauty inspiration from the Galeo Beauty team in Hartbeespoort.
                             </p>
                         </div>
                     </div>
@@ -180,7 +180,7 @@ export default function BlogPage() {
                             Ready to Book at Galeo Beauty Hartbeespoort?
                         </h2>
                         <p className="text-background/70 mb-8 max-w-lg mx-auto">
-                            Book your appointment at our Harties salon and let our experts take care of you.
+                            Book your appointment and enjoy thoughtful care at our Hartbeespoort salon.
                         </p>
                         <Link
                             href="/prices"

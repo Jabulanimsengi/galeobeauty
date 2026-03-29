@@ -296,7 +296,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
                             <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full px-8">
-                                <Link href="/prices">View Prices</Link>
+                                <Link href="/prices">Explore Treatments</Link>
                             </Button>
                             <Button asChild variant="outline" className="rounded-full px-8">
                                 <Link href="/contact">Contact Us</Link>

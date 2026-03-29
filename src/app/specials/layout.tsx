@@ -4,10 +4,10 @@ import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 export const metadata: Metadata = {
     title: "Specials & Promotions | Galeo Beauty Hartbeespoort",
     description:
-        "Don't miss our latest beauty specials & promotions at Galeo Beauty in Hartbeespoort. Discounted facials, IPL packages, nail deals, lash specials & seasonal offers. Limited availability.",
+        "Explore the latest specials at Galeo Beauty in Hartbeespoort, including curated savings on facials, lashes, massage, and seasonal treatment offers.",
     keywords: [
         "beauty specials Hartbeespoort",
-        "beauty promotions Harties",
+        "beauty promotions Hartbeespoort",
         "facial specials Hartbeespoort",
         "IPL package deals Hartbeespoort",
         "nail specials Hartbeespoort",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
         "Galeo Beauty specials",
         "beauty vouchers Hartbeespoort",
         "seasonal salon offers Hartbeespoort",
-        "treatment packages Harties",
+        "treatment packages Hartbeespoort",
     ],
     alternates: {
         canonical: "https://www.galeobeauty.com/specials",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Specials & Promotions | Galeo Beauty Hartbeespoort",
         description:
-            "Latest beauty specials & promotions at Galeo Beauty. Discounted treatments, seasonal offers & package deals in Hartbeespoort.",
+            "Latest curated treatment offers from Galeo Beauty in Hartbeespoort.",
         url: "https://www.galeobeauty.com/specials",
         type: "website",
     },

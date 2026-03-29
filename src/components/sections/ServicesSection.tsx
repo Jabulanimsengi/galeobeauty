@@ -11,9 +11,9 @@ const services = [
     {
         id: "facials",
         slug: "dermalogica", // Links to /prices/dermalogica
-        title: "Facials",
+                        title: "Facials",
         subtitle: "Premium Skincare",
-        description: "Indulge in our premium facial treatments. From moisturising and anti-ageing facials to advanced skin renewal peels, our certified specialists deliver visible results using medical-grade products.",
+        description: "From deep hydration to advanced skin renewal, our facial treatments are designed to leave skin visibly fresher, calmer, and more refined.",
         images: [
             "/images/dermalogica/dermalogica-microneedling-treatment.png",
             "/images/dermalogica/dermalogica-microneedling-with-led-therapy.png",
@@ -32,7 +32,7 @@ const services = [
         slug: "makeup", // Links to /prices/makeup
         title: "Make-up",
         subtitle: "Kryolan Professional",
-        description: "Look stunning for any occasion with our professional make-up services. From bridal looks to permanent make-up, Phi-Brows, and Phi-Contour, we create flawless beauty that lasts.",
+        description: "From occasion makeup to permanent artistry, our team creates polished, lasting looks with precision and care.",
         images: [
             "/images/make-up/blending-sponge-makeup-application.jpg",
             "/images/make-up/expert-bridal-makeup-application.jpg",
@@ -51,7 +51,7 @@ const services = [
         slug: "ipl", // Links to /prices/ipl
         title: "IPL Hair Removal",
         subtitle: "Ladies & Gents",
-        description: "Achieve silky smooth skin with our advanced IPL laser hair removal. Safe, effective treatments for all body areas including face, arms, legs, and intimate areas for both ladies and gents.",
+        description: "Advanced Intense Pulsed Light (IPL) hair removal treatments for smoother skin, with targeted sessions for face and body in a professional, comfortable setting.",
         images: [
             "/images/ipl/ipl-cooling-gel-application-legs.jpg",
             "/images/ipl/ipl-full-leg-hair-removal.jpg",
@@ -71,7 +71,7 @@ const services = [
         slug: "massages", // Links to /prices/massages
         title: "Massages",
         subtitle: "Therapeutic & Relaxing",
-        description: "Unwind with our therapeutic massage treatments using Lillian Terry aromatherapy oils. From Swedish relaxation to deep tissue therapy, our expert therapists melt away tension and stress.",
+        description: "Relaxing and restorative massage treatments designed to ease tension, support recovery, and create a deeper sense of calm.",
         images: [
             "/images/massages/deep-relaxation-neck-massage.jpg",
             "/images/massages/deep-tissue-back-massage-therapy.jpg",
@@ -94,7 +94,7 @@ const services = [
         slug: "lashes-brows", // Links to /prices/lashes-brows
         title: "Lash Extensions & Brow Styling",
         subtitle: "Eye Enhancement",
-        description: "Enhance your natural beauty with our lash extensions and brow tinting services. From Russian volume lashes to precision brow shaping, we perfect every detail.",
+        description: "Soft enhancement or bold definition, with lash and brow treatments that frame the face beautifully and feel expertly finished.",
         images: [
             "/images/gallery/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
             "/images/gallery/lashes-brows/dramatic-volume-eyelash-extensions.png",
@@ -115,7 +115,7 @@ const services = [
         slug: "waxing", // Links to /prices/waxing
         title: "Waxing",
         subtitle: "Smooth Skin",
-        description: "Achieve silky smooth skin with our professional waxing services. We offer full body waxing, including Hollywood and Brazilian, using gentle techniques for minimal discomfort.",
+        description: "Professional face and body waxing with careful technique, clean prep, and beautifully smooth results.",
         images: [
             "/images/waxing/full-leg-wax-salon-service.jpg",
             "/images/waxing/professional-leg-waxing-service.jpg"
@@ -132,7 +132,7 @@ const services = [
         slug: "fat-freezing", // Links to /prices/fat-freezing
         title: "Fat Freezing",
         subtitle: "Cryolipolysis",
-        description: "Fat freeze, or cryolipolysis, is a non-invasive cosmetic treatment that uses cold temperatures to reduce stubborn fat in targeted areas like the belly, love handles, arms, back, or thighs. Ideally for body contouring.",
+        description: "Non-invasive cryolipolysis designed to target stubborn areas and support a more sculpted body contour over time.",
         images: [
             "/images/gallery/body-contouring/fat-freezing-red-light-body-contouring-treatment.jpg",
             "/images/gallery/body-contouring/fat-freezing-cryolipolysis-abdomen-treatment.jpg"
@@ -149,7 +149,7 @@ const services = [
         slug: "slimming", // Links to /prices/slimming
         title: "Tesla EMS Slimming",
         subtitle: "Max Muscle, Min Fat",
-        description: "Experience the revolutionary Tesla EMS Slimming Machine. Using High-Intensity Focused Electromagnetic technology, it induces powerful muscle contractions to build muscle and burn fat simultaneously. No gym required.",
+        description: "High-intensity muscle stimulation technology that supports toning, contouring, and a stronger-feeling silhouette without downtime.",
         images: [
             "/images/slimming/emsculpt-body-contouring-session.png",
             "/images/slimming/non-invasive-butt-lift-technology.png"
@@ -166,7 +166,7 @@ const services = [
         slug: "hair-extensions", // Links to /prices/hair-extensions
         title: "Hair Extensions",
         subtitle: "European Remy Human Hair",
-        description: "Add length, volume, and dimension with our premium European Remy human hair extensions. We offer tape-in, clip-in, keratin U-tip, micro loop, and halo hair extensions. Double drawn, premium quality for lasting beauty.",
+        description: "Premium extension services for fuller, longer, more dimensional hair with a polished salon finish.",
         images: [
             "/images/hair-extensions/beachy-blonde-waves-extensions.png",
             "/images/hair-extensions/luxury-balayage-hair-extension-makeover.png",
@@ -187,7 +187,7 @@ const services = [
         slug: "permanent-makeup",
         title: "Permanent Makeup",
         subtitle: "Semi-Permanent Beauty",
-        description: "Wake up beautiful every day with professional semi-permanent makeup. Expert microblading, powder pixel brows, hybrid brows, permanent eyeliner, lip blush, and full lip contour by certified cosmetic tattoo artists.",
+        description: "Semi-permanent beauty treatments designed to add definition, symmetry, and everyday confidence with an expert touch.",
         images: [
             "/images/gallery/lashes-brows/Hybrid-Brows-Permanent-makeup.png",
             "/images/gallery/lashes-brows/Shaded-eye-liner-Permanent-Makeup.png",
@@ -212,7 +212,7 @@ const services = [
         slug: "nails",
         title: "Nail Artistry",
         subtitle: "Hands & Feet",
-        description: "Pamper your hands and feet with our professional nail services. Gel overlays, acrylic nails, gel polish (Bio Sculpture & Gelish), nail art, manicures, pedicures, and luxurious hand and foot treatments.",
+        description: "Refined manicures, pedicures, and nail enhancements that feel polished, premium, and beautifully maintained.",
         images: [
             "/images/gallery/nails/french-tip-square-gel-nails-galeo.jpg",
             "/images/gallery/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
@@ -357,15 +357,15 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.4 }}
-            className="relative"
+            className="relative overflow-visible"
         >
             <div
-                className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-8 lg:gap-16 items-center`}
+                className={`flex flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-8 lg:justify-center lg:gap-0`}
             >
                 {/* Image Side */}
                 <motion.div
                     ref={cardRef}
-                    className="lg:w-1/2 w-full perspective-1000"
+                    className="w-full perspective-1000 lg:w-[58%] lg:max-w-[42rem] lg:shrink-0 xl:w-[54%] xl:max-w-[44rem] 2xl:w-[50%]"
                     onMouseMove={handleMouseMove}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={handleMouseLeave}
@@ -376,7 +376,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                     }}
                 >
                     <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`} className="block group">
-                        <div className="relative aspect-video sm:aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-2xl">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-2xl sm:aspect-[4/3] lg:aspect-[6/5] xl:aspect-[5/4]">
                             <div className="absolute inset-0 bg-stone-950/10" />
 
                             <div className="absolute inset-0">
@@ -385,7 +385,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                     alt={service.imageAlts?.[displayedImageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`}
                                     fill
                                     className="object-cover object-center"
-                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                    sizes="(max-width: 1024px) 100vw, (max-width: 1536px) 42rem, 44rem"
                                     priority={index === 0 && displayedImageIndex === 0}
                                     loading={index === 0 && displayedImageIndex === 0 ? "eager" : "lazy"}
                                     noSpinner
@@ -405,7 +405,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                         alt={service.imageAlts?.[incomingImageIndex] || `${service.title} treatment at Galeo Beauty salon Hartbeespoort`}
                                         fill
                                         className="object-cover object-center"
-                                        sizes="(max-width: 1024px) 100vw, 50vw"
+                                        sizes="(max-width: 1024px) 100vw, (max-width: 1536px) 42rem, 44rem"
                                         loading="eager"
                                         noSpinner
                                     />
@@ -416,16 +416,6 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
 
                             {/* Overlay gradient */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent transition-opacity duration-500 group-hover:opacity-80" />
-
-                            {/* Category Badge - Visible on all screens */}
-                            <div className="absolute top-4 right-4 md:top-6 md:right-6 z-20">
-                                <div className="bg-gold text-white text-xs md:text-sm font-bold uppercase tracking-wider py-2 px-4 rounded-full shadow-lg flex items-center gap-1.5 pt-[0.625rem] pb-[0.625rem]">
-                                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                    </svg>
-                                    {service.title}
-                                </div>
-                            </div>
 
                             {/* Carousel Navigation Dots */}
                             {displayImages.length > 1 && (
@@ -473,49 +463,53 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                 </motion.div>
 
                 {/* Content Side */}
-                <div className="lg:w-1/2 w-full space-y-6">
-                    {/* Subtitle */}
-                    <span className="text-gold font-medium uppercase tracking-widest text-sm block">
-                        {service.subtitle}
-                    </span>
+                <div
+                    className={`relative z-20 flex w-full lg:w-[36%] ${isReversed ? "lg:justify-end lg:-mr-18 lg:pl-0 lg:pr-4" : "lg:justify-start lg:-ml-18 lg:pl-4 lg:pr-0"}`}
+                >
+                    <div className="w-full max-w-[28rem] space-y-5 rounded-[1.75rem] border border-stone-300/85 bg-[#e4e0da] p-6 shadow-[0_28px_60px_-42px_rgba(31,24,20,0.42)] sm:p-7 lg:p-7 xl:p-8">
+                        <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/75 to-transparent" />
 
-                    {/* Title */}
-                    <h3 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight">
-                        {service.title}
-                    </h3>
+                        {/* Subtitle */}
+                        <span className="block text-sm font-medium uppercase tracking-widest text-gold">
+                            {service.subtitle}
+                        </span>
 
-                    {/* Description */}
-                    <p className="text-muted-foreground text-lg leading-relaxed">
-                        {service.description}
-                    </p>
+                        {/* Title */}
+                        <h3 className="font-serif text-4xl leading-[0.98] text-foreground md:text-5xl lg:text-[3.35rem] xl:text-[3.6rem]">
+                            {service.title}
+                        </h3>
 
-                    {/* Features list */}
-                    <div className="grid grid-cols-2 gap-3 pt-4">
-                        {
-                            service.features.map((feature) => (
+                        {/* Description */}
+                        <p className="text-base leading-relaxed text-foreground/78 lg:text-[1.02rem]">
+                            {service.description}
+                        </p>
+
+                        {/* Features list */}
+                        <div className="grid grid-cols-1 gap-x-6 gap-y-2 pt-1 sm:grid-cols-2">
+                            {service.features.map((feature) => (
                                 <div
                                     key={feature}
-                                    className="flex items-center gap-2 text-sm text-foreground/80"
+                                    className="flex items-center gap-2 text-sm text-foreground/85"
                                 >
-                                    <ChevronRight className="w-4 h-4 text-gold flex-shrink-0" />
+                                    <ChevronRight className="h-4 w-4 flex-shrink-0 text-gold" />
                                     <span>{feature}</span>
                                 </div>
-                            ))
-                        }
-                    </div>
+                            ))}
+                        </div>
 
-                    {/* CTA Button */}
-                    <div className="pt-4">
-                        <Button
-                            asChild
-                            size="lg"
-                            className="bg-foreground hover:bg-gold text-background hover:text-white font-medium px-8 transition-all duration-300 group"
-                        >
-                            <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`}>
-                                View Prices
-                                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                            </NavLink>
-                        </Button>
+                        {/* CTA Button */}
+                        <div className="pt-2">
+                            <Button
+                                asChild
+                                size="lg"
+                                className="group bg-foreground px-7 font-medium text-background transition-all duration-300 hover:bg-gold hover:text-white"
+                            >
+                                <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`}>
+                                    Explore Treatment
+                                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                </NavLink>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -545,26 +539,26 @@ export function ServicesSection() {
                     <div className="flex items-center justify-center gap-4 mb-6">
                         <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/50" />
                         <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] font-sans">
-                            Treatment Menu
+                            Signature Services
                         </span>
                         <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/50" />
                     </div>
 
                     <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 text-foreground">
-                        Our Hair, Nails &amp; Beauty <span className="text-gold italic">Services</span> in Hartbeespoort
+                        Explore Galeo Beauty&apos;s <span className="text-gold italic">Signature Treatments</span>
                     </h2>
 
                     <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-base sm:text-lg font-light leading-relaxed mb-12">
-                        Explore Galeo Beauty&apos;s full service menu in Harties, from hair salon and nail salon favourites to facials, lashes, massage and medical aesthetics near Hartbeespoort Dam.
+                        From everyday beauty appointments to advanced aesthetics, explore the treatments clients return for most often at Galeo Beauty.
                         
                     </p>
 
                     {/* Trust Indicators - Unified Gold Theme */}
                     <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
                         {[
-                            { icon: "shield", label: "CE Certified" },
-                            { icon: "check", label: "Sterile Environment" },
-                            { icon: "star", label: "15+ Years" },
+                            { icon: "shield", label: "Medical-grade care" },
+                            { icon: "check", label: "Clean, professional setup" },
+                            { icon: "star", label: "15+ years experience" },
                         ].map((badge, index) => (
                             <motion.div
                                 key={badge.label}
@@ -614,29 +608,52 @@ export function ServicesSection() {
 
                 {/* Bottom CTA */}
                 <motion.div
-                    className="text-center mt-24 md:mt-32 pt-16 border-t border-border/30"
+                    className="mt-24 border-t border-border/30 pt-16 md:mt-32"
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : 0.2 }}
                 >
-                    <h3 className="font-serif text-2xl md:text-3xl text-foreground mb-4">
-                        Explore Our Full Menu
-                    </h3>
-                    <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                        Discover all our treatments including hair, nails, lashes, massage therapy and wellness services.
-                    </p>
-                    <Button
-                        asChild
-                        size="lg"
-                        variant="outline"
-                        className="border-2 border-foreground text-foreground hover:bg-foreground hover:text-background font-medium px-10"
-                    >
-                        <NavLink href="/prices">
-                            View All Services
-                            <ArrowRight className="w-4 h-4 ml-2" />
-                        </NavLink>
-                    </Button>
+                    <div className="overflow-hidden rounded-[2rem] border border-border/40 bg-secondary/10">
+                        <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+                            <div className="relative min-h-[18rem] sm:min-h-[22rem] lg:min-h-[28rem]">
+                                <CloudinaryImage
+                                    src="/images/interior/galeo-beauty-interior-p1.jpg"
+                                    alt="Interior of Galeo Beauty salon in Hartbeespoort"
+                                    fill
+                                    className="object-cover"
+                                    sizes="(min-width: 1024px) 52vw, 100vw"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-black/5 to-transparent" />
+                            </div>
+
+                            <div className="flex items-center px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
+                                <div className="max-w-xl">
+                                    <span className="mb-4 inline-flex rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
+                                        Inside Galeo Beauty
+                                    </span>
+                                    <h3 className="font-serif text-3xl text-foreground sm:text-4xl lg:max-w-[11ch]">
+                                        Explore the full treatment menu
+                                    </h3>
+                                    <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+                                        Browse every treatment category, current pricing page, and bookable service available at Galeo Beauty,
+                                        from advanced aesthetics and facials to nails, lashes, body treatments, and more.
+                                    </p>
+                                    <Button
+                                        asChild
+                                        size="lg"
+                                        variant="outline"
+                                        className="mt-8 border-2 border-foreground px-10 font-medium text-foreground hover:bg-foreground hover:text-background"
+                                    >
+                                        <NavLink href="/prices">
+                                            Explore Full Menu
+                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                        </NavLink>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </motion.div>
             </div>
         </section>

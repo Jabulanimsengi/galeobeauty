@@ -6,7 +6,7 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 // Real brand logos from public/images/brands
 const brands = [
     { name: "Dermalogica", src: "/images/brands/dermalogica.png", id: 1, alt: "Dermalogica professional skincare products used at Galeo Beauty Hartbeespoort" },
-    { name: "QMS Medicosmetics", src: "/images/brands/qms.png", id: 2, alt: "QMS Medicosmetics medical-grade skincare at Galeo Beauty salon Harties" },
+    { name: "QMS Medicosmetics", src: "/images/brands/qms.png", id: 2, alt: "QMS Medicosmetics medical-grade skincare at Galeo Beauty salon in Hartbeespoort" },
     { name: "Moroccanoil", src: "/images/brands/moroccanoil.png", id: 3, alt: "Moroccanoil hair care products at Galeo Beauty Hartbeespoort" },
     { name: "Milkshake", src: "/images/brands/milkshake.png", id: 4, alt: "Milkshake hair products at Galeo Beauty salon near Hartbeespoort Dam" },
     { name: "Lola Lee", src: "/images/brands/lola-lee.png", id: 5, alt: "Lola Lee nail products at Galeo Beauty Hartbeespoort" },
@@ -24,13 +24,13 @@ export const BrandsSection = () => {
                     transition={{ duration: 0.6 }}
                 >
                     <span className="text-gold text-xs font-bold tracking-[0.3em] uppercase block mb-3">
-                        Premium Brands We Trust
+                        Trusted Product Partners
                     </span>
                     <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-4">
-                        Premium Brands at Our <span className="text-gold italic">Hartbeespoort Salon</span>
+                        Professional Brands Chosen for <span className="text-gold italic">Results</span>
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
-                        We use only the finest professional-grade products from world-renowned beauty brands at Galeo Beauty in Harties.
+                        Galeo works with respected professional brands across skin, hair, and beauty so every treatment feels refined and considered.
                     </p>
                 </motion.div>
             </div>

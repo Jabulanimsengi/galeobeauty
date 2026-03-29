@@ -88,7 +88,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     const keywords = buildServiceKeywords(service, { name: "Hartbeespoort", region: "North West" });
     const serviceImageUrl = toAbsoluteUrl(service.image);
 
-    const metadataDescription = `${description.substring(0, 120)} Based in Hartbeespoort (Harties), near Hartbeespoort Dam.`;
+    const metadataDescription = `${description.substring(0, 120)} Based in Hartbeespoort near Hartbeespoort Dam.`;
 
     return {
         title: `${service.keyword} in Hartbeespoort | ${categoryTitle} at Galeo Beauty`,
@@ -213,7 +213,6 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
         },
         areaServed: [
             { "@type": "City", name: "Hartbeespoort" },
-            { "@type": "City", name: "Harties" },
             { "@type": "City", name: "Centurion" },
             { "@type": "City", name: "Pretoria" },
             { "@type": "City", name: "Johannesburg" },

@@ -90,7 +90,7 @@ const featuredServices = [
     {
         title: "Laser Hair Removal",
         location: "Hartbeespoort",
-        description: "Permanent IPL hair removal for all areas",
+        description: "Permanent Intense Pulsed Light (IPL) hair removal for all areas",
         href: "/laser-hair-removal",
         image: "/images/ipl/ipl-full-leg-hair-removal.jpg",
         color: "from-gold/5 to-foreground/5",

@@ -1,278 +1,346 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Star, ChevronRight, ChevronLeft, Quote, ExternalLink } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 
-const testimonials = [
+type Testimonial = {
+    id: number;
+    name: string;
+    date: string;
+    text: string;
+    service: string;
+};
+
+const testimonials: Testimonial[] = [
     {
         id: 1,
-        name: "Lynmari",
+        name: "Belinda",
         date: "January 2026",
-        rating: 5,
-        text: "Absolutely amazing! I had my eyebrows done, eyeliner and had tattoo removal done, all at the same time. They were so kind, caring and professional. The lady that attended to me had more than 20 years of experience and it shows.",
-        service: "Permanent Makeup",
+        text: "I had the most amazing experience. Everyone was friendly, gentle, and gave the right recommendations to keep my hair healthy and beautiful.",
+        service: "Hair Styling",
     },
     {
         id: 2,
-        name: "Lelani S.",
-        date: "January 2026",
-        rating: 5,
-        text: "Dandi and Lindsey are my favorites. Thank you Galeo Beauty!",
+        name: "Chantelle B",
+        date: "March 2026",
+        text: "Best service, quality and price in Harties.",
         service: "Beauty Services",
     },
     {
         id: 3,
-        name: "Morgan",
-        date: "January 2026",
-        rating: 5,
-        text: "It was absolutely amazing! I love my eyelashes. Angel lashes again by Dandi.",
+        name: "Yvonne",
+        date: "February 2026",
+        text: "Top notch. Definitely recommend Dandi a 100%.",
         service: "Lash Extensions",
     },
     {
         id: 4,
-        name: "Corinne C.",
-        date: "January 2026",
-        rating: 5,
-        text: "Lindzi is very professional. Always a great experience!",
-        service: "Beauty Treatment",
+        name: "Lesego M",
+        date: "March 2026",
+        text: "Always a pleasure, always getting out more than expected.",
+        service: "Salon Services",
     },
     {
         id: 5,
-        name: "Tersia",
-        date: "January 2026",
-        rating: 5,
-        text: "Elishia does great nails. Always happy with the results.",
+        name: "Charlene",
+        date: "February 2026",
+        text: "Lovely and excellent work.",
         service: "Nail Services",
     },
     {
         id: 6,
-        name: "Mariaan",
-        date: "January 2026",
-        rating: 5,
-        text: "Excellent service! The team really knows what they're doing. Highly recommend Galeo Beauty to everyone.",
-        service: "Salon Services",
+        name: "Emelia F",
+        date: "March 2026",
+        text: "My experience at Galeo was perfect. Staff were friendly and helpful, my nails looked amazing, and the massage was relaxing and comfortable.",
+        service: "Nails & Massage",
     },
     {
         id: 7,
-        name: "Morgan",
-        date: "January 2026",
-        rating: 5,
-        text: "Awesome experience! The salon is beautiful and the staff are so welcoming. Will definitely be back!",
-        service: "Beauty Services",
+        name: "Hailey",
+        date: "March 2026",
+        text: "They were organized and attentive the whole time. My hair and nails look absolutely amazing and I am officially hooked.",
+        service: "Hair & Nails",
     },
     {
         id: 8,
-        name: "Petunia",
+        name: "Mandie",
+        date: "February 2026",
+        text: "Maria was quick, professional and experienced. The salon was clean, welcoming, and very high standard.",
+        service: "Nail Services",
+    },
+    {
+        id: 9,
+        name: "Meredith K",
+        date: "March 2026",
+        text: "Dandi is the best honestly.",
+        service: "Lash Extensions",
+    },
+    {
+        id: 10,
+        name: "Rona",
+        date: "March 2026",
+        text: "Maria is always very professional. Her work is very precise.",
+        service: "Nail Services",
+    },
+    {
+        id: 11,
+        name: "Tanya N",
+        date: "March 2026",
+        text: "Thanks for my nails Maria, always the best.",
+        service: "Nail Services",
+    },
+    {
+        id: 12,
+        name: "Lounita V",
+        date: "March 2026",
+        text: "Thank you for the best experience. I love my new lashes. Dandi works very gently and really cares about what you want.",
+        service: "Lash Extensions",
+    },
+    {
+        id: 13,
+        name: "Corinne C",
         date: "January 2026",
-        rating: 5,
-        text: "Very professional, happy with the results. Great attention to detail!",
-        service: "Beauty Treatment",
+        text: "Lindzi is very professional.",
+        service: "Hair Styling",
+    },
+    {
+        id: 14,
+        name: "Telize S",
+        date: "January 2026",
+        text: "Ek is baie happy dankie Dandi.",
+        service: "Lash Extensions",
+    },
+    {
+        id: 15,
+        name: "Marinda B",
+        date: "January 2026",
+        text: "Absolutely love the new hair.",
+        service: "Hair Styling",
+    },
+    {
+        id: 16,
+        name: "Jessica M",
+        date: "December 2025",
+        text: "Lindsey helped so much. She cut my daughter's hair perfectly and colored my hair perfectly.",
+        service: "Hair Colour",
     },
 ];
 
-const googleReviewUrl = "https://www.google.com/search?q=galeobeauty#lrd=0x1ebe2ad913eb2603:0x4436dd6ff1d06e0c,1";
+const reviewRows: Testimonial[][] = [
+    testimonials.slice(0, 8),
+    testimonials.slice(8),
+];
 
-export function ReviewsSection() {
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [canScrollLeft, setCanScrollLeft] = useState(false);
-    const [canScrollRight, setCanScrollRight] = useState(true);
-    const prefersReducedMotion = useReducedMotion();
+const freshaReviewUrl = "https://www.fresha.com/a/galeo-beauty-hartbeespoort-galeo-beauty-landsmeer-equestrian-estate-sb28s52l";
 
-    const checkScroll = () => {
-        if (scrollContainerRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-            setCanScrollLeft(scrollLeft > 50);
-            setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-        }
-    };
-
-    useEffect(() => {
-        checkScroll();
-        window.addEventListener("resize", checkScroll);
-        return () => window.removeEventListener("resize", checkScroll);
-    }, []);
-
-    const scrollRight = () => {
-        if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: 350, behavior: prefersReducedMotion ? "auto" : "smooth" });
-        }
-    };
-
-    const scrollLeft = () => {
-        if (scrollContainerRef.current) {
-            scrollContainerRef.current.scrollBy({ left: -350, behavior: prefersReducedMotion ? "auto" : "smooth" });
-        }
-    };
+function ReviewAvatar({ name }: { name: string }) {
+    const initials = name
+        .split(" ")
+        .map((part) => part.charAt(0))
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
 
     return (
-        <section className="py-16 md:py-24 bg-rose-50/60">
-            <div className="container mx-auto px-4 sm:px-6">
-                <motion.div
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-10 md:mb-16"
-                >
-                    <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-4">
-                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
-                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
-                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
-                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
-                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold" />
-                    </div>
-                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
-                        What Clients Say About Galeo Beauty <span className="text-gold">Hartbeespoort</span>
-                    </h2>
-                    <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-2xl mx-auto">
-                        Real Galeo Beauty reviews from verified clients at our Harties salon. See why guests book us for hair, nails, beauty, Hart Aesthetics and spa treatments near Hartbeespoort Dam.
+        <div
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/12 text-sm font-semibold text-white/90 sm:h-12 sm:w-12"
+            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06))" }}
+        >
+            {initials}
+        </div>
+    );
+}
+
+function ReviewCard({
+    testimonial,
+    ariaHidden = false,
+    className = "",
+}: {
+    testimonial: Testimonial;
+    ariaHidden?: boolean;
+    className?: string;
+}) {
+    return (
+        <article
+            aria-hidden={ariaHidden}
+            className={`w-[18rem] shrink-0 rounded-[1.5rem] border border-stone-200/90 bg-white p-5 shadow-[0_24px_50px_-38px_rgba(28,20,16,0.2)] sm:w-[21rem] sm:p-6 lg:w-[22.5rem] xl:w-[23rem] ${className}`}
+        >
+            <div className="flex items-start gap-4">
+                <ReviewAvatar name={testimonial.name} />
+                <div className="min-w-0 flex-1">
+                    <p className="text-[0.98rem] leading-7 text-foreground/72 sm:text-[1.02rem] sm:leading-8">
+                        &ldquo;{testimonial.text}&rdquo;
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
-                        <div className="rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-sm text-foreground">
-                            <span className="font-semibold text-gold">4.9/5</span> average rating
-                        </div>
-                        <div className="rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-sm text-foreground">
-                            <span className="font-semibold text-gold">159+</span> verified reviews
-                        </div>
-                        <div className="rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-sm text-foreground">
-                            Google and Fresha feedback
-                        </div>
+                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <span className="text-sm font-semibold uppercase tracking-[0.08em] text-foreground sm:text-base">
+                            {testimonial.name}
+                        </span>
+                        <span className="text-xs uppercase tracking-[0.12em] text-foreground/40 sm:text-sm">
+                            {testimonial.date}
+                        </span>
+                        <span className="text-xs uppercase tracking-[0.12em] text-foreground/50 sm:text-sm">
+                            {testimonial.service}
+                        </span>
                     </div>
-                </motion.div>
-
-                <div className="relative group">
-                    <div
-                        ref={scrollContainerRef}
-                        onScroll={checkScroll}
-                        className="flex overflow-x-auto pb-6 gap-3 px-4 md:gap-4 md:px-0 snap-x snap-mandatory scrollbar-hide [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                    >
-                        {testimonials.map((testimonial, index) => (
-                            <motion.div
-                                key={testimonial.id}
-                                initial={prefersReducedMotion ? false : { opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: prefersReducedMotion ? 0 : index * 0.1 }}
-                                className="flex-shrink-0 w-[78vw] sm:w-[55vw] md:w-[320px] snap-center md:snap-start"
-                            >
-                                <div className="relative h-full bg-background rounded-2xl p-5 sm:p-6 shadow-sm border border-border/60 flex flex-col transition-colors duration-300 hover:border-gold/30">
-                                    <div className="absolute top-4 right-4 opacity-10">
-                                        <Quote className="w-8 h-8 text-gold" />
-                                    </div>
-
-                                    <div className="flex gap-0.5 mb-3">
-                                        {[...Array(testimonial.rating)].map((_, i) => (
-                                            <Star key={i} className="w-3.5 h-3.5 text-gold fill-gold" />
-                                        ))}
-                                    </div>
-
-                                    <p className="text-sm leading-relaxed text-foreground/90 flex-1 mb-5">
-                                        &ldquo;{testimonial.text}&rdquo;
-                                    </p>
-
-                                    <div className="mb-4">
-                                        <span className="inline-flex items-center rounded-full bg-gold/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold">
-                                            {testimonial.service}
-                                        </span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2.5 pt-3 border-t border-border/30">
-                                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
-                                            <span className="text-gold font-semibold text-xs">
-                                                {testimonial.name.charAt(0)}
-                                            </span>
-                                        </div>
-                                        <div>
-                                            <p className="font-medium text-foreground text-xs">{testimonial.name}</p>
-                                            <p className="text-muted-foreground text-[10px]">{testimonial.date}</p>
-                                        </div>
-                                        <div className="ml-auto">
-                                            <svg className="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={scrollLeft}
-                        className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gold text-background shadow-lg transition-all duration-300 hover:scale-110 hover:bg-gold-light ${canScrollLeft ? "opacity-0 translate-x-[-1rem] group-hover:opacity-100 group-hover:translate-x-[-50%]" : "opacity-0 pointer-events-none scale-0"}`}
-                        aria-label="Scroll left"
-                        style={{ left: "-24px" }}
-                    >
-                        <ChevronLeft className="w-6 h-6" />
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={scrollRight}
-                        className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gold text-background shadow-lg transition-all duration-300 hover:scale-110 hover:bg-gold-light ${canScrollRight ? "opacity-0 translate-x-[1rem] group-hover:opacity-100 group-hover:translate-x-[50%]" : "opacity-0 pointer-events-none scale-0"}`}
-                        aria-label="Scroll right"
-                        style={{ right: "-24px" }}
-                    >
-                        <ChevronRight className="w-6 h-6" />
-                    </button>
-
-                    {canScrollRight && (
-                        <div className="md:hidden absolute right-0 top-0 bottom-8 w-16 pointer-events-none flex items-center justify-end">
-                            <div className="absolute inset-0 bg-gradient-to-l from-secondary/80 via-secondary/40 to-transparent" />
-                            <motion.div
-                                initial={{ x: 0 }}
-                                animate={prefersReducedMotion ? { x: 0 } : { x: [0, 6, 0] }}
-                                transition={{ repeat: prefersReducedMotion ? 0 : Infinity, duration: 1.5, ease: "easeInOut" }}
-                                className="relative z-10 mr-2"
-                            >
-                                <div className="bg-gold/90 rounded-full p-2 shadow-lg">
-                                    <ChevronRight className="w-4 h-4 text-white" />
-                                </div>
-                            </motion.div>
-                        </div>
-                    )}
-
-                    {canScrollLeft && (
-                        <div className="md:hidden absolute left-0 top-0 bottom-8 w-16 pointer-events-none flex items-center justify-start">
-                            <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/40 to-transparent" />
-                            <motion.div
-                                initial={{ x: 0 }}
-                                animate={prefersReducedMotion ? { x: 0 } : { x: [0, -6, 0] }}
-                                transition={{ repeat: prefersReducedMotion ? 0 : Infinity, duration: 1.5, ease: "easeInOut" }}
-                                className="relative z-10 ml-2"
-                            >
-                                <div className="bg-gold/90 rounded-full p-2 shadow-lg">
-                                    <ChevronLeft className="w-4 h-4 text-white" />
-                                </div>
-                            </motion.div>
-                        </div>
-                    )}
                 </div>
+            </div>
+        </article>
+    );
+}
 
+function ReviewMarqueeRow({
+    items,
+    direction,
+    duration,
+    prefersReducedMotion,
+}: {
+    items: Testimonial[];
+    direction: "left" | "right";
+    duration: number;
+    prefersReducedMotion: boolean | null;
+}) {
+    const animatedItems = [...items, ...items];
+
+    return (
+        <div className="relative overflow-hidden">
+            <motion.div
+                className="flex w-max gap-4 sm:gap-5"
+                animate={
+                    prefersReducedMotion
+                        ? { x: 0 }
+                        : { x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"] }
+                }
+                transition={
+                    prefersReducedMotion
+                        ? undefined
+                        : { duration, repeat: Infinity, ease: "linear", repeatType: "loop" }
+                }
+            >
+                {animatedItems.map((testimonial, index) => (
+                    <ReviewCard
+                        key={`${direction}-${testimonial.id}-${index}`}
+                        testimonial={testimonial}
+                        ariaHidden={index >= items.length}
+                    />
+                ))}
+            </motion.div>
+        </div>
+    );
+}
+
+export function ReviewsSection() {
+    const prefersReducedMotion = useReducedMotion();
+
+    return (
+        <section className="relative overflow-hidden bg-[#f7f1e9] py-14 text-foreground sm:py-16 md:py-24">
+            <div
+                className="absolute inset-0"
+                style={{
+                    background:
+                        "radial-gradient(circle at top left, rgba(196,165,119,0.16), transparent 28%), radial-gradient(circle at top right, rgba(214,198,170,0.18), transparent 30%)",
+                }}
+            />
+            <div
+                className="absolute inset-0 opacity-[0.08]"
+                style={{
+                    backgroundImage: "radial-gradient(circle at center, rgba(28,20,16,0.16) 1px, transparent 1px)",
+                    backgroundSize: "42px 42px",
+                }}
+            />
+
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#f7f1e9] via-[#f7f1e9]/90 to-transparent sm:w-16" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#f7f1e9] via-[#f7f1e9]/90 to-transparent sm:w-16" />
+
+            <div className="container relative mx-auto px-4 sm:px-6">
                 <motion.div
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mt-10"
+                    className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between"
                 >
+                    <div className="max-w-2xl">
+                        <div className="mb-3 flex items-center gap-3">
+                            <span className="text-2xl font-light text-gold">&rsaquo;</span>
+                            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground/45">
+                                Fresha Reviews
+                            </span>
+                        </div>
+                        <h2 className="font-sans text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl md:text-[3rem]">
+                            What People Say
+                        </h2>
+                        <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/62 sm:text-base sm:leading-7">
+                            Verified client feedback from Fresha, highlighting the service, consistency, and care people mention most often at Galeo Beauty.
+                        </p>
+                        <div className="mt-4 flex flex-wrap gap-2.5">
+                            <span className="inline-flex items-center rounded-full border border-gold/20 bg-white/80 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/70 sm:px-4">
+                                5.0 rating on Fresha
+                            </span>
+                            <span className="inline-flex items-center rounded-full border border-gold/20 bg-white/80 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/70 sm:px-4">
+                                190+ client votes
+                            </span>
+                        </div>
+                    </div>
+
                     <TrackedExternalLink
-                        href={googleReviewUrl}
-                        trackingContext="reviews_google"
+                        href={freshaReviewUrl}
+                        trackingContext="reviews_fresha"
                         linkType="review_platform"
-                        linkLabel="Google reviews"
+                        linkLabel="Fresha reviews"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-gold hover:text-gold-dark transition-colors font-medium"
+                        className="inline-flex w-fit items-center gap-2 text-sm font-medium text-gold-dark transition-colors hover:text-gold sm:text-base"
                     >
-                        <span>See Galeo Beauty reviews on Google</span>
-                        <ExternalLink className="w-4 h-4" />
+                        <span>View on Fresha</span>
+                        <ArrowRight className="h-4 w-4" />
                     </TrackedExternalLink>
                 </motion.div>
+
+                <div className="space-y-4 sm:hidden">
+                    {testimonials.slice(0, 4).map((testimonial, index) => (
+                        <motion.div
+                            key={`mobile-${testimonial.id}`}
+                            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: prefersReducedMotion ? 0 : index * 0.06 }}
+                        >
+                            <ReviewCard testimonial={testimonial} className="w-full" />
+                        </motion.div>
+                    ))}
+
+                    <TrackedExternalLink
+                        href={freshaReviewUrl}
+                        trackingContext="reviews_fresha_mobile"
+                        linkType="review_platform"
+                        linkLabel="Fresha reviews mobile"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold/25 bg-white px-5 py-3 text-sm font-medium text-gold-dark transition-colors hover:border-gold hover:text-gold"
+                    >
+                        <span>View More Reviews on Fresha</span>
+                        <ArrowRight className="h-4 w-4" />
+                    </TrackedExternalLink>
+                </div>
+
+                <div className="hidden space-y-4 sm:block sm:space-y-5">
+                    {reviewRows.map((row, index) => (
+                        <motion.div
+                            key={`row-${index}`}
+                            initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: prefersReducedMotion ? 0 : index * 0.08 }}
+                        >
+                            <ReviewMarqueeRow
+                                items={row}
+                                direction={index % 2 === 0 ? "left" : "right"}
+                                duration={index % 2 === 0 ? 72 : 78}
+                                prefersReducedMotion={prefersReducedMotion}
+                            />
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </section>
     );

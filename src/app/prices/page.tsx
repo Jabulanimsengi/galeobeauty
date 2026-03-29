@@ -6,8 +6,8 @@ import { PricesClient } from "./PricesClient";
 import { buildPricesPageKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
-    title: "Beauty Treatment Prices Hartbeespoort & Harties | Galeo Beauty Salon",
-    description: "Full price list for beauty treatments in Hartbeespoort (Harties). Facials, injectables, IPL, nails, lashes, waxing, hair & more near Hartbeespoort Dam. Serving Centurion & Pretoria, North West.",
+    title: "Beauty Treatment Prices | Galeo Beauty Hartbeespoort",
+    description: "Explore Galeo Beauty's treatment prices in Hartbeespoort, from facials and injectables to hair, nails, massage, lashes, and body treatments.",
     keywords: buildPricesPageKeywords(),
     alternates: {
         canonical: "https://www.galeobeauty.com/prices",

@@ -10,10 +10,9 @@ interface StatItemProps {
     label: string;
     description: string;
     delay?: number;
-    icon: React.ElementType;
 }
 
-function StatItem({ value, suffix, label, description, delay = 0, icon: Icon }: StatItemProps) {
+function StatItem({ value, suffix, label, description, delay = 0 }: StatItemProps) {
     const ref = useRef<HTMLDivElement>(null);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
     const [count, setCount] = useState(0);
@@ -69,24 +68,24 @@ function StatItem({ value, suffix, label, description, delay = 0, icon: Icon }: 
 export function StatsSection() {
     const stats = [
         {
-            value: 500,
+            value: 159,
             suffix: "+",
-            label: "Clients",
-            description: "Satisfied customers",
+            label: "Verified Reviews",
+            description: "Across Google and Fresha",
             icon: Users
         },
         {
             value: 15,
             suffix: "+",
             label: "Years Experience",
-            description: "In medical aesthetics",
+            description: "Across beauty and aesthetics",
             icon: Award
         },
         {
             value: 100,
             suffix: "+",
             label: "Treatments",
-            description: "From facials to body",
+            description: "Across beauty, wellness and advanced care",
             icon: Sparkles
         },
         {
@@ -110,10 +109,10 @@ export function StatsSection() {
                     transition={{ duration: 0.5 }}
                 >
                     <span className="text-gold text-xs uppercase tracking-[0.3em] mb-3 block font-sans font-semibold">
-                        Why Choose Us
+                        At a Glance
                     </span>
                     <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold">
-                        Why Clients Choose Galeo Beauty in <span className="text-gold">Harties</span>
+                        Trusted Beauty &amp; Aesthetic Care in <span className="text-gold">Hartbeespoort</span>
                     </h2>
                 </motion.div>
 
@@ -125,7 +124,6 @@ export function StatsSection() {
                             suffix={stat.suffix}
                             label={stat.label}
                             description={stat.description}
-                            icon={stat.icon}
                             delay={index * 0.1}
                         />
                     ))}

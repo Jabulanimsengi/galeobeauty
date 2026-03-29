@@ -9,7 +9,7 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { ArrowRight, ArrowLeft, Phone, Sparkles } from "lucide-react";
 import { serviceCategories, getCategoryById } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
-import { buildCategoryIntentCopy, buildCategoryKeywords, getCategoryIntentSignals } from "@/lib/seo-keywords";
+import { buildCategoryKeywords, getCategoryIntentSignals } from "@/lib/seo-keywords";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
@@ -27,7 +27,7 @@ const categoryMeta: Record<string, {
         title: "Medical Aesthetics & Anti-Aging Hartbeespoort | Botox & Fillers",
         description: "Medical aesthetics in Hartbeespoort for wrinkles, tired-looking eyes, volume loss and non-surgical facial rejuvenation. Explore Botox, fillers and skin boosters at Galeo Beauty.",
         h1: "Medical Aesthetics & Anti-Aging in Hartbeespoort",
-        intro: "If you want to look fresher, less tired or more lifted without losing what makes your face yours, our Hartbeespoort medical aesthetics offering is built around the result you want to see in the mirror. We combine anti-wrinkle injections, fillers, skin boosters and non-surgical rejuvenation with a natural-looking approach for clients from Harties, Pretoria and Centurion.",
+        intro: "If you want to look fresher, less tired or more lifted without losing what makes your face yours, our Hartbeespoort medical aesthetics offering is built around the result you want to see in the mirror. We combine anti-wrinkle injections, fillers, skin boosters and non-surgical rejuvenation with a natural-looking approach for clients from Hartbeespoort, Pretoria, and Centurion.",
         benefits: ["Qualified medical professionals", "Comprehensive treatment menu", "Premium FDA-approved products", "Natural-looking results"],
         faqs: [
             { q: "Which Hart Aesthetics treatments can I book in Hartbeespoort?", a: "You can book Botox, dermal fillers, Russian lips, skin boosters, liquid facelifts, Nefertiti lifts and selected advanced injectable treatments through our Hart Aesthetics offering at Galeo Beauty." },
@@ -36,10 +36,10 @@ const categoryMeta: Record<string, {
         ],
     },
     "fat-freezing": {
-        title: "Fat Freezing Hartbeespoort | Cryolipolysis Harties Dam Area",
-        description: "Fat freezing in Hartbeespoort for stubborn belly fat, love handles and other gym-resistant areas. Explore non-surgical body contouring at Galeo Beauty in Harties.",
-        h1: "Fat Freezing in Hartbeespoort & Harties",
-        intro: "This category is for clients who feel close to their goal weight but still feel bothered by a few stubborn areas that refuse to shift. Our Hartbeespoort fat-freezing treatments focus on non-surgical contouring for targeted pockets like the tummy, waistline and thighs, helping clients from Harties, Pretoria and Centurion refine shape without downtime.",
+        title: "Fat Freezing Hartbeespoort | Cryolipolysis & Body Contouring",
+        description: "Fat freezing in Hartbeespoort for stubborn belly fat, love handles and other gym-resistant areas. Explore non-surgical body contouring at Galeo Beauty.",
+        h1: "Fat Freezing in Hartbeespoort",
+        intro: "This category is for clients who feel close to their goal weight but still feel bothered by a few stubborn areas that refuse to shift. Our Hartbeespoort fat-freezing treatments focus on non-surgical contouring for targeted pockets like the tummy, waistline and thighs, helping clients from Hartbeespoort, Pretoria, and Centurion refine shape without downtime.",
         benefits: ["Non-invasive procedure", "No downtime required", "Permanent fat cell reduction", "CE approved equipment"],
         faqs: [
             { q: "How many fat freezing sessions do I usually need?", a: "Most clients need 1 to 3 sessions per area depending on how much stubborn fat they want to reduce and how their body responds after the first treatment." },
@@ -63,7 +63,7 @@ const categoryMeta: Record<string, {
         title: "Dermalogica Skincare, Peels & Microneedling Hartbeespoort",
         description: "Dermalogica facials, peels and microneedling in Hartbeespoort for breakouts, pigmentation, dull skin and uneven texture. Professional skin treatments at Galeo Beauty.",
         h1: "Dermalogica Skincare & Advanced Peels in Hartbeespoort",
-        intro: "If your skin feels congested, breakout-prone, dull or uneven, our Hartbeespoort Dermalogica treatments are designed to match the concern you actually want solved. From peels and microneedling to deep-cleansing and glow-focused facials, we help clients from Harties, Pretoria and Centurion choose the right level of correction for their skin.",
+        intro: "If your skin feels congested, breakout-prone, dull or uneven, our Hartbeespoort Dermalogica treatments are designed to match the concern you actually want solved. From peels and microneedling to deep-cleansing and glow-focused facials, we help clients from Hartbeespoort, Pretoria, and Centurion choose the right level of correction for their skin.",
         benefits: ["Expert skin analysis", "Advanced chemical peels", "Clinical microneedling", "Personalized treatment plans"],
         faqs: [
             { q: "Do you offer chemical peels and microneedling in Hartbeespoort?", a: "Yes. Our Dermalogica category includes professional peels, Pro Microneedling, dermaplaning and customized skin treatments based on your concern." },
@@ -73,9 +73,9 @@ const categoryMeta: Record<string, {
     },
     "ipl": {
         title: "IPL Hair Removal & Laser Tattoo Removal Hartbeespoort",
-        description: "IPL hair removal in Hartbeespoort for unwanted facial and body hair, shaving rash and ingrowns. Explore long-term hair reduction and tattoo removal at Galeo Beauty.",
+        description: "Intense Pulsed Light (IPL) hair removal in Hartbeespoort for unwanted facial and body hair, shaving rash and ingrowns. Explore long-term hair reduction and tattoo removal at Galeo Beauty.",
         h1: "IPL Hair Removal & Laser Tattoo Removal in Hartbeespoort",
-        intro: "This category suits clients who are tired of constant shaving, fast regrowth, bumps or ingrowns and want a lower-maintenance way to stay smoother for longer. Our Hartbeespoort IPL treatments support long-term hair reduction for face and body, with tattoo-removal options available for clients who want to fade unwanted ink.",
+        intro: "This category suits clients who are tired of constant shaving, fast regrowth, bumps or ingrowns and want a lower-maintenance way to stay smoother for longer. Our Hartbeespoort Intense Pulsed Light (IPL) treatments support long-term hair reduction for face and body, with tattoo-removal options available for clients who want to fade unwanted ink.",
         benefits: ["Permanent hair reduction", "Effective tattoo removal", "CE approved technology", "Safe for most skin types"],
         faqs: [
             { q: "Do you offer both IPL hair removal and tattoo removal in Hartbeespoort?", a: "Yes. This category covers both IPL hair reduction for unwanted hair and laser-style tattoo removal services for fading unwanted ink." },
@@ -84,9 +84,9 @@ const categoryMeta: Record<string, {
         ],
     },
     "makeup": {
-        title: "Professional Make-Up Hartbeespoort | Bridal Makeup Harties",
-        description: "Professional makeup in Hartbeespoort for bridal, evening and event glam that lasts, photographs beautifully and still feels like you. Book with Galeo Beauty in Harties.",
-        h1: "Professional Make-Up in Hartbeespoort & Harties",
+        title: "Professional Make-Up Hartbeespoort | Bridal & Event Makeup",
+        description: "Professional makeup in Hartbeespoort for bridal, evening and event glam that lasts, photographs beautifully and still feels like you.",
+        h1: "Professional Make-Up in Hartbeespoort",
         intro: "If you want makeup that survives the full event, looks beautiful in photos and still feels true to your features, our Hartbeespoort makeup bookings are built around that outcome. We create bridal, occasion and event looks for clients who want to feel polished, confident and camera-ready without looking overdone.",
         benefits: ["Kryolan professional products", "Trained makeup artists", "Long-lasting formulas", "Personalized looks"],
         faqs: [
@@ -108,22 +108,22 @@ const categoryMeta: Record<string, {
         ],
     },
     "permanent-makeup": {
-        title: "Permanent Makeup Hartbeespoort | Microblading & Powder Brows Harties",
+        title: "Permanent Makeup Hartbeespoort | Microblading & Powder Brows",
         description: "Permanent makeup in Hartbeespoort for brows, lips and eyeliner that cut down daily makeup time and still look soft and natural. Book semi-permanent beauty at Galeo Beauty.",
         h1: "Permanent Makeup, Microblading & Powder Brows in Hartbeespoort",
         intro: "If you spend too much time filling in brows, reapplying liner or wishing your lip colour looked more even, our Hartbeespoort permanent makeup services are designed to make mornings easier. We offer brow, lip and eyeliner options for clients who want a put-together look that stays soft, flattering and low maintenance.",
         benefits: ["Long-lasting results", "Natural-looking enhancement", "Time-saving beauty", "Certified technicians"],
         faqs: [
-            { q: "Where can I book microblading or powder brows in Hartbeespoort?", a: "Galeo Beauty offers microblading, powder brows, hybrid brows, lip blush and eyeliner near Hartbeespoort Dam for clients from Harties, Centurion and Pretoria." },
+            { q: "Where can I book microblading or powder brows in Hartbeespoort?", a: "Galeo Beauty offers microblading, powder brows, hybrid brows, lip blush and eyeliner near Hartbeespoort Dam for clients from Hartbeespoort, Centurion, and Pretoria." },
             { q: "What is the difference between microblading and powder brows?", a: "Microblading creates finer hair-like strokes, while powder brows create a softer shaded finish that often suits oily skin and clients who like a more defined brow." },
             { q: "How long does permanent makeup last?", a: "Most permanent makeup results last around 1 to 3 years depending on the treatment, your skin type, sun exposure and whether you maintain touch-up appointments." },
         ],
     },
     "massages": {
-        title: "Massage Hartbeespoort | Relaxing & Deep Tissue Massage in Harties",
+        title: "Massage Hartbeespoort | Relaxing & Deep Tissue Massage",
         description: "Massage therapy in Hartbeespoort for stress, tight shoulders, muscle knots and full-body relaxation. Book Swedish, deep tissue, hot stone and aromatherapy massage at Galeo Beauty.",
-        h1: "Massage Therapy in Hartbeespoort & Harties",
-        intro: "Whether your body feels tight and overworked or you simply need a proper reset, our Hartbeespoort massage therapy offering is built around relief, recovery and real relaxation. We offer Swedish, deep tissue, hot stone and aromatherapy massage for clients from Harties, Pretoria and Centurion who want to leave feeling lighter than they arrived.",
+        h1: "Massage Therapy in Hartbeespoort",
+        intro: "Whether your body feels tight and overworked or you simply need a proper reset, our Hartbeespoort massage therapy offering is built around relief, recovery and real relaxation. We offer Swedish, deep tissue, hot stone and aromatherapy massage for clients from Hartbeespoort, Pretoria, and Centurion who want to leave feeling lighter than they arrived.",
         benefits: ["Certified massage therapists", "Aromatherapy oils", "Multiple massage styles", "Relaxing environment"],
         faqs: [
             { q: "Where can I get a massage in Hartbeespoort?", a: "Galeo Beauty offers massage therapy near Hartbeespoort Dam, including relaxation, deep tissue, aromatherapy and hot stone options." },
@@ -132,9 +132,9 @@ const categoryMeta: Record<string, {
         ],
     },
     "qms": {
-        title: "QMS Medicosmetics Facials Hartbeespoort | Premium Skincare Harties",
+        title: "QMS Medicosmetics Facials Hartbeespoort | Premium Skincare",
         description: "QMS facials in Hartbeespoort for dehydrated, tired and mature skin that needs firmer, fresher-looking results. Explore collagen-focused facials at Galeo Beauty.",
-        h1: "QMS Medicosmetics Facials in Hartbeespoort & Harties",
+        h1: "QMS Medicosmetics Facials in Hartbeespoort",
         intro: "If your skin feels dry, dull, depleted or less firm than it used to, our Hartbeespoort QMS facials are designed to bring back comfort, bounce and a healthier glow. These treatments are especially popular for clients who want a more polished, collagen-focused facial experience with visible skin-renewing benefits.",
         benefits: ["German precision formulas", "Medical-grade ingredients", "Collagen-boosting treatments", "Visible results"],
         faqs: [
@@ -144,9 +144,9 @@ const categoryMeta: Record<string, {
         ],
     },
     "sunbed": {
-        title: "Sunbed Tanning & Spray Tan Hartbeespoort | Tanning Harties",
-        description: "Spray tan and sunbed tanning in Hartbeespoort for an even glow before holidays, weddings and events. Get a natural-looking tan at Galeo Beauty in Harties.",
-        h1: "Sunbed & Spray Tan in Hartbeespoort (Harties)",
+        title: "Sunbed Tanning & Spray Tan Hartbeespoort | Tanning",
+        description: "Spray tan and sunbed tanning in Hartbeespoort for an even glow before holidays, weddings and events. Get a natural-looking tan at Galeo Beauty.",
+        h1: "Sunbed & Spray Tan in Hartbeespoort",
         intro: "If you want to look warmer, fresher and more confident in photos or open outfits, our Hartbeespoort tanning services are designed around that result. We offer spray tans and sunbed options for clients who want believable colour without streaks, patchiness or a rushed last-minute finish.",
         benefits: ["Controlled UV exposure", "Professional spray tans", "Package savings", "Year-round glow"],
         faqs: [
@@ -156,9 +156,9 @@ const categoryMeta: Record<string, {
         ],
     },
     "waxing": {
-        title: "Professional Waxing Hartbeespoort | Brazilian Wax Harties",
+        title: "Professional Waxing Hartbeespoort | Brazilian Wax & Body Waxing",
         description: "Professional waxing in Hartbeespoort for smoother skin, longer-lasting hair removal and less daily shaving hassle. Book Brazilian, Hollywood and body waxing at Galeo Beauty.",
-        h1: "Professional Waxing in Hartbeespoort & Harties",
+        h1: "Professional Waxing in Hartbeespoort",
         intro: "This category is for clients who are tired of shaving, fast regrowth and the constant effort of keeping everything neat. Our Hartbeespoort waxing services cover face, body and intimate areas with a focus on smoother skin, slower regrowth and a gentler, more comfortable experience.",
         benefits: ["Hygienic environment", "Premium quality wax", "Gentle techniques", "Long-lasting smoothness"],
         faqs: [
@@ -168,8 +168,8 @@ const categoryMeta: Record<string, {
         ],
     },
     "hair": {
-        title: "Hair Salon Hartbeespoort | Hairdresser, Colour & Styling in Harties",
-        description: "Hair salon in Hartbeespoort for brassy blonde correction, grey coverage, colour refresh, smoothing and polished styling. Book your Galeo Beauty hair appointment in Harties.",
+        title: "Hair Salon Hartbeespoort | Hairdresser, Colour & Styling",
+        description: "Hair salon in Hartbeespoort for brassy blonde correction, grey coverage, colour refresh, smoothing and polished styling. Book your Galeo Beauty hair appointment.",
         h1: "Hair Salon & Styling in Hartbeespoort",
         intro: "If your hair feels flat, brassy, frizzy or simply overdue for a proper refresh, our Hartbeespoort salon services are designed around the problem you want fixed first. We help clients choose between colour, blonding, smoothing, repair and styling services that bring hair back to a more polished, healthy-looking finish.",
         benefits: ["Expert stylists", "Premium products", "All hair types welcome", "Latest techniques"],
@@ -180,20 +180,20 @@ const categoryMeta: Record<string, {
         ],
     },
     "nails": {
-        title: "Nail Salon Hartbeespoort | Gel Nails, Acrylics & Pedicures in Harties",
+        title: "Nail Salon Hartbeespoort | Gel Nails, Acrylics & Pedicures",
         description: "Nail salon in Hartbeespoort for long-lasting manicures, stronger natural nails, acrylics, gel and polished pedicures. Book your nail appointment at Galeo Beauty.",
-        h1: "Nail Salon in Hartbeespoort & Harties",
+        h1: "Nail Salon in Hartbeespoort",
         intro: "If your manicures chip too quickly, your natural nails feel weak, or you just want hands and feet to look more refined, our Hartbeespoort nail services are built around durability and finish. We offer gel, acrylic, builder support and pedicure care for clients who want polished results that actually hold up.",
         benefits: ["Hygienic practices", "Premium nail products", "Skilled nail technicians", "Lasting results"],
         faqs: [
             { q: "Where can I find a nail salon in Hartbeespoort for gel and acrylic nails?", a: "Galeo Beauty offers gel nails, acrylic nails, manicures, pedicures and nail art from our Hartbeespoort salon near Hartbeespoort Dam." },
-            { q: "Do you do both gel nails and acrylic nails in Harties?", a: "Yes. We offer gel overlays, acrylic full sets, fills, manicures and pedicures with strict hygiene protocols and professional nail products." },
+            { q: "Do you do both gel nails and acrylic nails in Hartbeespoort?", a: "Yes. We offer gel overlays, acrylic full sets, fills, manicures and pedicures with strict hygiene protocols and professional nail products." },
             { q: "How often should I book a fill or maintenance appointment?", a: "Most nail clients rebook every 2 to 3 weeks for fills, rebalancing or soak-offs depending on growth, wear and the system they are wearing." },
         ],
     },
     "lashes-brows": {
-        title: "Lash Extensions Hartbeespoort | Eyelash Extensions & Brows in Harties",
-        description: "Lash extensions and brow treatments in Hartbeespoort for fuller-looking lashes, better brow shape and easier everyday beauty. Book at Galeo Beauty in Harties.",
+        title: "Lash Extensions Hartbeespoort | Eyelash Extensions & Brows",
+        description: "Lash extensions and brow treatments in Hartbeespoort for fuller-looking lashes, better brow shape and easier everyday beauty. Book at Galeo Beauty.",
         h1: "Lash Extensions & Brows in Hartbeespoort",
         intro: "If you want to wake up looking more put together without doing a full makeup routine, our Hartbeespoort lash and brow services are designed for that exact goal. We offer lash extensions, lifts and brow styling for clients who want more eye definition, softer features and a lower-maintenance beauty routine.",
         benefits: ["Certified lash technicians", "Premium lash materials", "Customized looks", "Long-lasting results"],
@@ -204,9 +204,9 @@ const categoryMeta: Record<string, {
         ],
     },
     "hair-extensions": {
-        title: "Hair Extensions Hartbeespoort | Remy Human Hair Harties",
+        title: "Hair Extensions Hartbeespoort | Remy Human Hair",
         description: "Hair extensions in Hartbeespoort for instant length, fuller volume and better thickness through fine or short hair. Explore tape-ins, clip-ins and Remy hair at Galeo Beauty.",
-        h1: "Hair Extensions in Hartbeespoort & Harties",
+        h1: "Hair Extensions in Hartbeespoort",
         intro: "If your hair feels too fine, too short or too flat to create the look you want, our Hartbeespoort hair extensions are designed to add length and fullness without sacrificing a natural blend. We offer multiple extension methods for clients who want thicker styling, a fuller ponytail or instant transformation with premium Remy hair.",
         benefits: ["100% Remy human hair", "Double drawn quality", "Multiple methods available", "Expert application"],
         faqs: [
@@ -244,8 +244,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const title = meta?.title || `${category.title} | Prices & Booking Hartbeespoort`;
     let description = meta?.description || `${category.title} treatments at Galeo Beauty Hartbeespoort. ${category.subtitle}. View prices and book your appointment online.`;
-    if (!description.toLowerCase().includes("hartbeespoort") || !description.toLowerCase().includes("harties")) {
-        description = `${description} Serving Hartbeespoort | Harties.`;
+    if (!description.toLowerCase().includes("hartbeespoort")) {
+        description = `${description} Serving Hartbeespoort and nearby Pretoria, Centurion, and Johannesburg.`;
     }
     const categoryImageUrl = toAbsoluteUrl(category.image);
 
@@ -285,7 +285,6 @@ export default async function CategoryPage({ params }: PageProps) {
     const benefits = meta?.benefits || [];
     const faqs = meta?.faqs || [];
     const intentSignals = getCategoryIntentSignals(category.id);
-    const intentCopy = buildCategoryIntentCopy(category.title, category.id);
     const relatedIntentPages = getIntentPagesForCategory(category.id);
     const categoryImageUrl = toAbsoluteUrl(category.image);
 
@@ -407,10 +406,14 @@ export default async function CategoryPage({ params }: PageProps) {
                             <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-2xl">
                                 {intro}
                             </p>
-                            <div className="mt-5 max-w-3xl space-y-3 text-sm sm:text-base text-muted-foreground">
-                                <p>{intentCopy.problemStatement}</p>
-                                <p>{intentCopy.resultStatement}</p>
-                                <p>{intentCopy.reassuranceStatement}</p>
+                            <div className="mt-6 max-w-3xl rounded-[1.5rem] border border-border/50 bg-secondary/15 p-5 text-sm text-muted-foreground sm:text-base">
+                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
+                                    What You&apos;ll Find Here
+                                </span>
+                                <p className="mt-3 leading-relaxed">
+                                    Explore the treatments in this category, compare common concerns and likely results,
+                                    and browse current pricing before you book.
+                                </p>
                             </div>
 
                             {/* Benefits */}
@@ -438,10 +441,12 @@ export default async function CategoryPage({ params }: PageProps) {
                                 <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
                                     Common Concerns
                                 </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What Brings You Here</h2>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">
+                                    What Clients Usually Want Help With
+                                </h2>
                                 <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
                                     Most journeys in this category start with a visible concern, a recurring frustration, or something
-                                    that no longer feels right. Let us know what you'd like to address, and we'll guide you toward
+                                    that no longer feels right. Let us know what you&apos;d like to address, and we&apos;ll guide you toward
                                     the treatment path that fits best.
                                 </p>
                                 <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -457,11 +462,13 @@ export default async function CategoryPage({ params }: PageProps) {
                             </div>
                             <div className="rounded-[2rem] border border-border/50 bg-background p-7">
                                 <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    The Results
+                                    Desired Results
                                 </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What to Expect Afterwards</h2>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">
+                                    What Clients Usually Hope To Improve
+                                </h2>
                                 <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    You likely already know the result you're looking for—whether it's clearer,
+                                    You likely already know the result you&apos;re looking for - whether it&apos;s clearer,
                                     smoother, brighter, or more refined results. Our goal is to help you compare the options that will truly get you there.
                                 </p>
                                 <ul className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -477,11 +484,13 @@ export default async function CategoryPage({ params }: PageProps) {
                             </div>
                             <div className="rounded-[2rem] border border-border/50 bg-background p-7">
                                 <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Weighing Your Options
+                                    Comparing Treatments
                                 </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">How We Help You Decide</h2>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">
+                                    How We Help You Compare Options
+                                </h2>
                                 <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    Before booking, it's natural to want to compare approaches side by side. We skip the jargon
+                                    Before booking, it&apos;s natural to want to compare approaches side by side. We skip the jargon
                                     and help you understand which option truly fits your skin, goals, downtime, and budget.
                                 </p>
                                 <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-secondary/15 p-5 text-sm leading-relaxed text-foreground">
@@ -492,16 +501,18 @@ export default async function CategoryPage({ params }: PageProps) {
                             </div>
                             <div className="rounded-[2rem] border border-border/50 bg-background p-7">
                                 <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Peace of Mind
+                                    Before You Book
                                 </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What to Know Before Booking</h2>
+                                <h2 className="mt-3 font-serif text-2xl text-foreground">
+                                    Questions Clients Often Have Before Booking
+                                </h2>
                                 <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    It's completely normal to want full confidence before you commit. We're here to explain whether a treatment
+                                    It&apos;s completely normal to want full confidence before you commit. We&apos;re here to explain whether a treatment
                                     is suitable, gentle enough, worth the downtime, and appropriate for your specific situation.
                                 </p>
                                 <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-background p-5 text-sm leading-relaxed text-foreground">
                                     <p>We gently talk you through suitability, sensitivity, aftercare, and exactly what to expect before you commit to any treatment path.</p>
-                                    <p>This is especially helpful when timing matters—like booking before an event, starting a skin reset, or choosing an option with manageable downtime.</p>
+                                    <p>This is especially helpful when timing matters - like booking before an event, starting a skin reset, or choosing an option with manageable downtime.</p>
                                     <p>Our focus is on absolute clarity, so you know exactly why a recommendation makes sense for you personally.</p>
                                 </div>
                             </div>
@@ -539,16 +550,22 @@ export default async function CategoryPage({ params }: PageProps) {
                 {/* Booking Instructions */}
                 <section className="py-6 border-b border-border/30">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="bg-secondary/30 rounded-2xl p-4 sm:p-6">
-                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <div className="bg-secondary/30 rounded-2xl p-5 sm:p-7">
+                            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                                 <div className="flex-1">
-                                    <h2 className="font-medium text-foreground mb-1">How to Book</h2>
-                                    <p className="text-sm text-muted-foreground">
-                                        Select the treatments you want, then click &quot;Book Now&quot; to complete your reservation. You can select multiple treatments.
+                                    <h2 className="mb-2 font-serif text-2xl text-foreground">
+                                        How to Book
+                                    </h2>
+                                    <p className="max-w-4xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+                                        Choose the treatments you want from this page, then click
+                                        {" "}
+                                        <span className="font-semibold text-foreground">&quot;Book Your Visit&quot;</span>
+                                        {" "}
+                                        to send your booking request. You can add more than one treatment before you continue.
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm text-gold">
-                                    <Phone className="w-4 h-4" />
+                                <div className="flex items-center gap-2 text-base font-medium text-gold sm:text-lg">
+                                    <Phone className="h-5 w-5" />
                                     <span>Or call: 012 253 9850</span>
                                 </div>
                             </div>

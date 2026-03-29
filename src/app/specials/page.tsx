@@ -151,7 +151,7 @@ export default function SpecialsPage() {
                             Beauty <span className="text-gold">Specials</span> in Hartbeespoort
                         </h1>
                         <p className="text-muted-foreground text-base leading-relaxed font-light max-w-2xl mx-auto">
-                            Exclusive beauty deals at Galeo Beauty Harties. Save on our most popular salon treatments near Hartbeespoort Dam.
+                            Discover curated offers on some of Galeo Beauty&apos;s most requested treatments in Hartbeespoort.
                         </p>
                     </div>
                 </section>
@@ -292,7 +292,7 @@ export default function SpecialsPage() {
                             Need Help Choosing? Contact Galeo Beauty Hartbeespoort
                         </h2>
                         <p className="text-background/70 max-w-lg mx-auto mb-6">
-                            Our Harties beauty specialists are here to help you choose the perfect treatment at our salon.
+                            Our team is here to help you choose the right treatment, offer, or package for your next visit.
                         </p>
                         <NavLink
                             href="/contact"
