@@ -59,6 +59,11 @@ For the full Hetzner blue-green workflow, PM2 naming, and switch scripts, see:
 
 - `docs/hetzner-blue-green.md`
 
+Normal Hetzner releases can now be run as a single command:
+
+- `bash infra/hetzner/release.sh`
+- optional explicit target: `bash infra/hetzner/release.sh blue production`
+
 ## Performance Workflow
 
 Use the image scripts before large content updates so oversized assets do not slow down page loads or image optimization on the server.
