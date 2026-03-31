@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs";
@@ -8,8 +8,9 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { getCategoryById } from "@/lib/services-data";
 import {
-    getAllIntentPages,
+    getPublishedIntentPages,
     getIntentPageBySlug,
+    getIntentPageRedirectPath,
     getIntentPageServiceLinks,
 } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
@@ -24,13 +25,25 @@ export const revalidate = false;
 
 export function generateStaticParams() {
     return limitStaticParams(
-        getAllIntentPages().map((page) => ({ slug: page.slug })),
+        getPublishedIntentPages().map((page) => ({ slug: page.slug })),
         "intentPages"
     );
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
+    const redirectPath = getIntentPageRedirectPath(slug);
+
+    if (redirectPath) {
+        return {
+            title: "Redirecting...",
+            robots: {
+                index: false,
+                follow: true,
+            },
+        };
+    }
+
     const page = getIntentPageBySlug(slug);
 
     if (!page) {
@@ -38,14 +51,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     }
 
     return {
-        title: `${page.metaTitle} | Galeo Beauty`,
+        title: page.metaTitle,
         description: page.metaDescription,
         keywords: [...page.primaryKeywords, ...page.supportingKeywords],
         alternates: {
             canonical: `https://www.galeobeauty.com/${page.slug}`,
         },
         openGraph: {
-            title: `${page.metaTitle} | Galeo Beauty`,
+            title: page.metaTitle,
             description: page.metaDescription,
             url: `https://www.galeobeauty.com/${page.slug}`,
             type: "website",
@@ -62,6 +75,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function IntentLandingPage({ params }: PageProps) {
     const { slug } = await params;
+    const redirectPath = getIntentPageRedirectPath(slug);
+
+    if (redirectPath) {
+        permanentRedirect(redirectPath);
+    }
+
     const page = getIntentPageBySlug(slug);
 
     if (!page) {
@@ -93,7 +112,6 @@ export default async function IntentLandingPage({ params }: PageProps) {
 
     const whatsappMessage =
         `Hi! I found you on www.galeobeauty.com and I want help with ${page.title}. Can you recommend the right treatment?`;
-
     const faqSchema = {
         "@context": "https://schema.org",
         "@type": "FAQPage",
@@ -179,48 +197,6 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                 </Button>
                             </div>
 
-                            <div className="grid gap-4 sm:grid-cols-2">
-                                <div className="rounded-[2rem] border border-border bg-secondary/10 p-6">
-                                    <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                        Common Concerns
-                                    </span>
-                                    <h2 className="mt-3 font-serif text-2xl text-foreground">What You Might Be Noticing</h2>
-                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                        Most journeys don&apos;t begin with a treatment name. They start with something you notice in the mirror,
-                                        feel in your body, or simply want to improve.
-                                    </p>
-                                    <ul className="mt-5 space-y-3">
-                                        {page.symptoms.map((item) => (
-                                            <li
-                                                key={item}
-                                                className="rounded-2xl border border-border/60 bg-background px-4 py-3 text-sm leading-relaxed text-foreground"
-                                            >
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                                <div className="rounded-[2rem] border border-border bg-secondary/10 p-6">
-                                    <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                        The Expected Result
-                                    </span>
-                                    <h2 className="mt-3 font-serif text-2xl text-foreground">What You Can Look Forward To</h2>
-                                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                        This is the finished look, feeling, or improvement you can hope to walk away with
-                                        after the right treatment plan.
-                                    </p>
-                                    <ul className="mt-5 space-y-3">
-                                        {page.results.map((item) => (
-                                            <li
-                                                key={item}
-                                                className="rounded-2xl border border-gold/20 bg-gold/10 px-4 py-3 text-sm leading-relaxed text-foreground"
-                                            >
-                                                {item}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
 
                         <div className="lg:sticky lg:top-28 lg:self-start">
@@ -252,57 +228,6 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                     {link.label}
                                 </a>
                             ))}
-                        </div>
-                    </div>
-                </section>
-
-                <section className="border-y border-border/30 bg-white py-16">
-                    <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-                        <div className="grid gap-6 lg:grid-cols-3">
-                            <div className="rounded-[2rem] border border-border bg-background p-6">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Exploring Your Options
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">How to Choose the Right Path for You</h2>
-                                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                    Once you know what you want to address, the next step is determining the best approach. It helps to
-                                    understand the tradeoffs, what heals faster, and which route matches your goals.
-                                </p>
-                                <div className="mt-5 space-y-3 rounded-2xl border border-border/60 bg-secondary/15 p-5 text-sm leading-relaxed text-foreground">
-                                    <p>We&apos;ll help you compare the realistic options between different treatment paths.</p>
-                                    <p>That includes understanding what each option is designed to improve, how healing fits into your schedule, and which route best suits your desired result.</p>
-                                    <p>We treat this as a collaborative decision-making step, not a push toward a single treatment.</p>
-                                </div>
-                            </div>
-                            <div className="rounded-[2rem] border border-border bg-background p-6">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Peace of Mind
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What to Know Before You Commit</h2>
-                                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                    It&apos;s normal to have questions before committing. You might want clarity around suitability,
-                                    comfort, healing, maintenance, and whether the treatment fits your timeline.
-                                </p>
-                                <div className="mt-5 space-y-3 rounded-2xl border border-border/60 bg-background p-5 text-sm leading-relaxed text-foreground">
-                                    <p>We provide clear guidance about comfort, suitability, aftercare, and how visible your recovery might be.</p>
-                                    <p>We also help you determine if the treatment fits your specific needs right now, like event prep, maintenance, or a more corrective plan.</p>
-                                    <p>This guidance matters just as much as the treatment itself, as it builds your confidence before booking.</p>
-                                </div>
-                            </div>
-                            <div className="rounded-[2rem] border border-border bg-background p-6">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    The Perfect Fit
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">When This Treatment Makes Sense</h2>
-                                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                                    These are some of the real-life moments and situations where this treatment is often the most suitable choice.
-                                </p>
-                                <div className="mt-5 space-y-3 rounded-2xl border border-gold/20 bg-gold/5 p-5 text-sm leading-relaxed text-foreground">
-                                    <p>This path is perfect if you&apos;re ready for a more personalized recommendation rather than browsing a generic menu.</p>
-                                    <p>It could be before a special event, during a maintenance phase, or when an ongoing concern needs a carefully considered plan.</p>
-                                    <p>Our consultation ensures we match the right treatment to you and your timing.</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>

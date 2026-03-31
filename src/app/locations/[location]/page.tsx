@@ -9,7 +9,7 @@ import {
     TARGET_LOCATIONS,
     getLocationInsights,
     getLocationClusterLinks,
-    getFeaturedLocationServices,
+    getLocationPopularTreatmentGroups,
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 import { CheckCircle, ArrowRight, MapPin } from "lucide-react";
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const relatedAreas = getLocationClusterLinks(locationSlug, 4);
     const relatedAreaLabel = relatedAreas.map((area) => area.name).join(", ");
-    const title = `Beauty Services in ${location.name} | Galeo Beauty`;
+    const title = `Beauty Services in ${location.name}`;
     const description = relatedAreaLabel.length > 0
         ? `Professional beauty treatments for ${location.name} residents and nearby areas like ${relatedAreaLabel}. Facials, injectables, nails, body treatments and more from our Hartbeespoort salon.`
         : `Professional beauty treatments for ${location.name} residents. Facials, lash extensions, nails, fat freezing, permanent makeup & more at our Hartbeespoort salon near ${location.region}.`;
@@ -84,7 +84,7 @@ export default async function LocationHubPage({ params }: PageProps) {
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
     const nearbyAreas = getLocationClusterLinks(locationSlug, 12);
-    const featuredServices = getFeaturedLocationServices(6);
+    const popularTreatmentGroups = getLocationPopularTreatmentGroups(location);
 
     // JSON-LD Structured Data
     const localBusinessSchema = {
@@ -229,45 +229,73 @@ export default async function LocationHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {featuredServices.length > 0 && (
+                {popularTreatmentGroups.length > 0 && (
                     <section className="py-16 bg-stone-50/70">
                         <div className="container mx-auto max-w-5xl px-6">
                             <div className="max-w-3xl">
                                 <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                    Popular Search Paths
+                                    Popular Treatment Areas
                                 </span>
                                 <h2 className="mt-3 font-serif text-3xl text-foreground">
-                                    Popular treatments for {location.name} searches
+                                    Popular beauty services near {location.name}
                                 </h2>
                                 <p className="mt-3 text-muted-foreground">
-                                    These are the location-specific treatment pages most likely to matter for broader searches
-                                    around {location.name}, {location.region}, and the Hartbeespoort catchment.
+                                    These grouped links help you explore the services people most often search for around{" "}
+                                    {location.name}, from nails and hair extensions to facial treatments, eyelash
+                                    extensions and smoothing-focused hair treatments.
                                 </p>
                             </div>
 
-                            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                                {featuredServices.map((service) => (
-                                    <Link
-                                        key={service.slug}
-                                        href={`/locations/${locationSlug}/${service.slug}`}
-                                        className="group rounded-[1.5rem] border border-border bg-background p-5 transition-all duration-300 hover:border-gold/40 hover:shadow-[0_18px_55px_-35px_rgba(0,0,0,0.35)]"
+                            <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                {popularTreatmentGroups.map((group) => (
+                                    <article
+                                        key={group.id}
+                                        className="rounded-[1.5rem] border border-border bg-background p-5 transition-all duration-300 hover:border-gold/40 hover:shadow-[0_18px_55px_-35px_rgba(0,0,0,0.35)]"
                                     >
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
                                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold/80">
-                                                    {service.categoryId.replace(/-/g, " ")}
+                                                    {group.title}
                                                 </p>
-                                                <h3 className="mt-2 text-lg font-semibold text-foreground group-hover:text-gold">
-                                                    {service.keyword}
+                                                <h3 className="mt-2 text-lg font-semibold text-foreground">
+                                                    {group.headline}
                                                 </h3>
                                             </div>
-                                            <ArrowRight className="mt-1 h-4 w-4 text-muted-foreground transition-colors group-hover:text-gold" />
                                         </div>
-                                        <div className="mt-4 flex items-center justify-between gap-3 text-sm text-muted-foreground">
-                                            <span>{service.price}</span>
-                                            {service.duration && <span>{service.duration}</span>}
+
+                                        <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                                            {group.description}
+                                        </p>
+
+                                        <div className="mt-5 space-y-2">
+                                            {group.services.map((service) => (
+                                                <Link
+                                                    key={service.slug}
+                                                    href={`/locations/${locationSlug}/${service.slug}`}
+                                                    className="group flex items-center justify-between gap-4 rounded-2xl border border-border/70 bg-secondary/10 px-4 py-3 text-sm transition-colors hover:border-gold/30 hover:bg-secondary/20"
+                                                >
+                                                    <div>
+                                                        <p className="font-medium text-foreground group-hover:text-gold">
+                                                            {service.keyword}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {service.price}
+                                                            {service.duration ? ` · ${service.duration}` : ""}
+                                                        </p>
+                                                    </div>
+                                                    <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-gold" />
+                                                </Link>
+                                            ))}
                                         </div>
-                                    </Link>
+
+                                        <Link
+                                            href={group.categoryHref}
+                                            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-foreground transition-colors hover:text-gold"
+                                        >
+                                            {group.categoryLabel}
+                                            <ArrowRight className="h-4 w-4" />
+                                        </Link>
+                                    </article>
                                 ))}
                             </div>
                         </div>

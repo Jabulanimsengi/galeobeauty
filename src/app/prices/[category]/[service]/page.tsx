@@ -23,7 +23,7 @@ import {
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 import { generateServiceDescription } from "@/lib/seo-generator";
-import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
+import { buildServiceKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForService } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
@@ -37,24 +37,6 @@ import { toAbsoluteUrl } from "@/lib/site-url";
 export const dynamic = "force-static";
 export const dynamicParams = true;
 export const revalidate = false;
-
-function formatTermList(terms: string[], limit = 4) {
-    const items = terms.slice(0, limit);
-
-    if (items.length === 0) {
-        return "";
-    }
-
-    if (items.length === 1) {
-        return items[0];
-    }
-
-    if (items.length === 2) {
-        return `${items[0]} and ${items[1]}`;
-    }
-
-    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
-}
 
 // Generate static pages for all 262 services
 export function generateStaticParams() {
@@ -87,18 +69,18 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
     const keywords = buildServiceKeywords(service, { name: "Hartbeespoort", region: "North West" });
     const serviceImageUrl = toAbsoluteUrl(service.image);
-
-    const metadataDescription = `${description.substring(0, 120)} Based in Hartbeespoort near Hartbeespoort Dam.`;
+    const title = `${service.keyword} in Hartbeespoort`;
+    const metadataDescription = `${description.substring(0, 120)} Available at Galeo Beauty in Hartbeespoort near Hartbeespoort Dam.`;
 
     return {
-        title: `${service.keyword} in Hartbeespoort | ${categoryTitle} at Galeo Beauty`,
+        title,
         description: metadataDescription,
         keywords,
         alternates: {
             canonical: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
         },
         openGraph: {
-            title: `${service.keyword} in Hartbeespoort | Galeo Beauty`,
+            title,
             description: metadataDescription,
             url: `https://www.galeobeauty.com/prices/${categoryId}/${service.slug}`,
             type: "website",
@@ -111,7 +93,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
         },
         twitter: {
             card: "summary_large_image",
-            title: `${service.keyword} in Hartbeespoort | Galeo Beauty`,
+            title,
             description: metadataDescription,
             images: [serviceImageUrl],
         },
@@ -171,8 +153,6 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     // NEW: Use advanced generators for better uniqueness
     const benefits = getServiceSpecificBenefits(service);
     const intro = generateServiceIntro(service, location);
-    const intentSignals = getServiceIntentSignals(service);
-    const intentCopy = buildServiceIntentCopy(service);
     const relatedIntentPages = getIntentPagesForService(service.slug);
 
     const faqs = getServiceFAQs(service, location);
@@ -275,11 +255,6 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                     <p className="leading-relaxed">
                                         {richDescription}
                                     </p>
-                                    <div className="space-y-2 text-base">
-                                        <p>{intentCopy.problemStatement}</p>
-                                        <p>{intentCopy.resultStatement}</p>
-                                        <p>{intentCopy.reassuranceStatement}</p>
-                                    </div>
                                 </div>
 
                                 {/* Quick Info + Book Button */}
@@ -347,65 +322,6 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                     <span className="text-foreground">{benefit}</span>
                                 </div>
                             ))}
-                        </div>
-                    </div>
-                </section>
-
-                <section className="py-16 bg-secondary/10">
-                    <div className="container mx-auto px-6 max-w-6xl">
-                        <div className="grid gap-6 lg:grid-cols-2">
-                            <div className="rounded-2xl border border-border bg-background p-6">
-                                <h2 className="font-serif text-2xl text-foreground mb-3">What Usually Brings You In</h2>
-                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-                                    <p>
-                                        This treatment is often chosen when you want help with{" "}
-                                        {formatTermList(intentSignals.painPoints, 5)}.
-                                    </p>
-                                    <p>
-                                        It is especially helpful when the concern has become repetitive, visible, or frustrating enough
-                                        that you want a more professional and tailored next step.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-2xl border border-border bg-background p-6">
-                                <h2 className="font-serif text-2xl text-foreground mb-3">What You May Be Hoping To See</h2>
-                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-                                    <p>
-                                        Most bookings in this category are about results such as{" "}
-                                        {formatTermList(intentSignals.results, 5)}.
-                                    </p>
-                                    <p>
-                                        During your consultation, we focus on what feels realistic for your features, skin, hair, or
-                                        body rather than promising a one-size-fits-all result.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-2xl border border-border bg-background p-6">
-                                <h2 className="font-serif text-2xl text-foreground mb-3">How We Help You Compare Options</h2>
-                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-                                    <p>
-                                        It is completely normal to weigh up options such as{" "}
-                                        {formatTermList(intentSignals.comparisons, 3)} before you book.
-                                    </p>
-                                    <p>
-                                        We explain the practical differences clearly, including how each option feels, what recovery
-                                        looks like, and which result each path is best designed to deliver.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-2xl border border-border bg-background p-6">
-                                <h2 className="font-serif text-2xl text-foreground mb-3">What Often Matters Most Before Booking</h2>
-                                <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
-                                    <p>
-                                        Clients often want reassurance around {formatTermList(intentSignals.objections, 3)} before they
-                                        commit to a treatment plan.
-                                    </p>
-                                    <p>
-                                        This can be especially relevant for {formatTermList(intentSignals.audiences, 3)}, or whenever
-                                        timing, comfort and maintenance need to fit into an already busy routine.
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -565,11 +481,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                     </section>
                 )}
 
-                {/* Nearby Locations - Internal Linking for SEO */}
+                {/* Visiting Us */}
                 <NearbyLocationsSection
                     serviceName={service.keyword}
-                    categorySlug={category.id}
-                    serviceSlug={service.slug}
                 />
 
                 {/* CTA Section */}

@@ -9,7 +9,7 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { ArrowRight, ArrowLeft, Phone, Sparkles } from "lucide-react";
 import { serviceCategories, getCategoryById } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
-import { buildCategoryKeywords, getCategoryIntentSignals } from "@/lib/seo-keywords";
+import { buildCategoryKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
@@ -67,7 +67,7 @@ const categoryMeta: Record<string, {
         benefits: ["Expert skin analysis", "Advanced chemical peels", "Clinical microneedling", "Personalized treatment plans"],
         faqs: [
             { q: "Do you offer chemical peels and microneedling in Hartbeespoort?", a: "Yes. Our Dermalogica category includes professional peels, Pro Microneedling, dermaplaning and customized skin treatments based on your concern." },
-            { q: "Which Dermalogica treatment is best for acne, pigmentation or dull skin?", a: "That depends on your skin barrier, sensitivity and goals. We usually recommend a peel, microneedling or Pro Skin treatment only after assessing your skin properly." },
+            { q: "Which Dermalogica treatment is best for acne, pigmentation or dull skin?", a: "The right option comes down to your skin barrier, sensitivity and goals. We usually recommend a peel, microneedling or Pro Skin treatment only after assessing your skin properly." },
             { q: "Is Dermalogica suitable for sensitive skin?", a: "Yes, many Dermalogica treatments can be adapted for sensitive skin, but the exact products and intensity should be customized to your tolerance level." },
         ],
     },
@@ -114,7 +114,7 @@ const categoryMeta: Record<string, {
         intro: "If you spend too much time filling in brows, reapplying liner or wishing your lip colour looked more even, our Hartbeespoort permanent makeup services are designed to make mornings easier. We offer brow, lip and eyeliner options for clients who want a put-together look that stays soft, flattering and low maintenance.",
         benefits: ["Long-lasting results", "Natural-looking enhancement", "Time-saving beauty", "Certified technicians"],
         faqs: [
-            { q: "Where can I book microblading or powder brows in Hartbeespoort?", a: "Galeo Beauty offers microblading, powder brows, hybrid brows, lip blush and eyeliner near Hartbeespoort Dam for clients from Hartbeespoort, Centurion, and Pretoria." },
+            { q: "Where can I book microblading or powder brows in Hartbeespoort?", a: "Galeo Beauty offers microblading, powder brows and hybrid brows near Hartbeespoort Dam for clients who want fuller, more defined brows with less daily makeup." },
             { q: "What is the difference between microblading and powder brows?", a: "Microblading creates finer hair-like strokes, while powder brows create a softer shaded finish that often suits oily skin and clients who like a more defined brow." },
             { q: "How long does permanent makeup last?", a: "Most permanent makeup results last around 1 to 3 years depending on the treatment, your skin type, sun exposure and whether you maintain touch-up appointments." },
         ],
@@ -139,7 +139,7 @@ const categoryMeta: Record<string, {
         benefits: ["German precision formulas", "Medical-grade ingredients", "Collagen-boosting treatments", "Visible results"],
         faqs: [
             { q: "What makes QMS different from a standard facial?", a: "QMS focuses on premium medical-grade skincare, collagen support and more corrective anti-aging results than a basic relaxation facial." },
-            { q: "Which QMS facial is best for me?", a: "That depends on whether you are targeting dehydration, dullness, fine lines or firmness. We match the facial to your skin goals after assessment." },
+            { q: "Which QMS facial is best for me?", a: "The best fit depends on whether you are targeting dehydration, dullness, fine lines or firmness. We match the facial to your skin goals after assessment." },
             { q: "Are QMS facials mainly for mature skin?", a: "They are especially popular for anti-aging concerns, but they can also suit younger clients who want stronger corrective skincare and visible skin-refining results." },
         ],
     },
@@ -150,9 +150,9 @@ const categoryMeta: Record<string, {
         intro: "If you want to look warmer, fresher and more confident in photos or open outfits, our Hartbeespoort tanning services are designed around that result. We offer spray tans and sunbed options for clients who want believable colour without streaks, patchiness or a rushed last-minute finish.",
         benefits: ["Controlled UV exposure", "Professional spray tans", "Package savings", "Year-round glow"],
         faqs: [
-            { q: "Can I book both sunbed tanning and spray tanning in Hartbeespoort?", a: "Yes. We offer both sunbed sessions and professional spray tanning, depending on whether you want a UV tan or a quicker cosmetic glow." },
+            { q: "Can I book both sunbed tanning and spray tanning in Hartbeespoort?", a: "Yes. We offer both spray tans and controlled sunbed sessions, so you can choose either an immediate cosmetic glow or a more gradual tanning route." },
             { q: "How long does a spray tan last?", a: "A spray tan usually lasts around 5 to 7 days with proper prep and aftercare, including gentle showering and moisturising." },
-            { q: "How often should I use a sunbed?", a: "That depends on your skin type and tanning history. We keep sessions controlled and spaced responsibly rather than recommending overuse." },
+            { q: "How often should I use a sunbed?", a: "That should be guided by your skin type and tanning history. We keep sessions controlled and spaced responsibly rather than recommending overuse." },
         ],
     },
     "waxing": {
@@ -168,37 +168,38 @@ const categoryMeta: Record<string, {
         ],
     },
     "hair": {
-        title: "Hair Salon Hartbeespoort | Hairdresser, Colour & Styling",
-        description: "Hair salon in Hartbeespoort for brassy blonde correction, grey coverage, colour refresh, smoothing and polished styling. Book your Galeo Beauty hair appointment.",
+        title: "Hair Salon Hartbeespoort | Hairdresser, Colour, Blowouts & Keratin",
+        description: "Hair salon and hairdresser in Hartbeespoort for cuts, blow-dries, balayage, grey coverage, keratin and polished styling. Book your Galeo Beauty hair appointment.",
         h1: "Hair Salon & Styling in Hartbeespoort",
-        intro: "If your hair feels flat, brassy, frizzy or simply overdue for a proper refresh, our Hartbeespoort salon services are designed around the problem you want fixed first. We help clients choose between colour, blonding, smoothing, repair and styling services that bring hair back to a more polished, healthy-looking finish.",
+        intro: "If your hair feels flat, brassy, frizzy or simply overdue for a proper refresh, our Hartbeespoort hair appointments are designed around the problem you want fixed first. We help clients choose between cuts, blow-dries, colour, blonding, smoothing, repair and styling services that bring hair back to a more polished, healthy-looking finish.",
         benefits: ["Expert stylists", "Premium products", "All hair types welcome", "Latest techniques"],
         faqs: [
-            { q: "Where can I find a hair salon in Hartbeespoort for colour and styling?", a: "Galeo Beauty offers cuts, blow-dries, balayage, foils, toner and Brazilian treatments from our Hartbeespoort salon near Hartbeespoort Dam." },
-            { q: "Do you offer colour, foils and Brazilian blowouts?", a: "Yes. We offer colour services, foils, toner, balayage and Brazilian smoothing treatments using professional salon products." },
-            { q: "How often should I book cuts or colour maintenance?", a: "That depends on your service, but many clients rebook cuts every 6 to 8 weeks and colour or toner maintenance based on fading, regrowth and the look they want to maintain." },
+            { q: "Where can I find a hairdresser in Hartbeespoort for colour and styling?", a: "Galeo Beauty offers hairdresser services in Hartbeespoort including cuts, blow-dries, balayage, foils, toner and Brazilian treatments from our salon near Hartbeespoort Dam." },
+            { q: "Do you offer cuts, blow-dries, colour and keratin treatments?", a: "Yes. We offer cuts, blow-dries, colour services, foils, toner, balayage, keratin and Brazilian smoothing treatments using professional salon products." },
+            { q: "How often should I book cuts or colour maintenance?", a: "Rebooking depends on your service, but many clients book cuts every 6 to 8 weeks and schedule colour or toner maintenance around fading, regrowth and the look they want to maintain." },
         ],
     },
     "nails": {
-        title: "Nail Salon Hartbeespoort | Gel Nails, Acrylics & Pedicures",
-        description: "Nail salon in Hartbeespoort for long-lasting manicures, stronger natural nails, acrylics, gel and polished pedicures. Book your nail appointment at Galeo Beauty.",
+        title: "Nail Salon Hartbeespoort | Gel Nails, Acrylics, Manicures & Pedicures",
+        description: "Nail salon in Hartbeespoort for long-lasting manicures, gel nails, acrylics, stronger natural nails and polished pedicures. Book your nail appointment at Galeo Beauty.",
         h1: "Nail Salon in Hartbeespoort",
         intro: "If your manicures chip too quickly, your natural nails feel weak, or you just want hands and feet to look more refined, our Hartbeespoort nail services are built around durability and finish. We offer gel, acrylic, builder support and pedicure care for clients who want polished results that actually hold up.",
         benefits: ["Hygienic practices", "Premium nail products", "Skilled nail technicians", "Lasting results"],
         faqs: [
-            { q: "Where can I find a nail salon in Hartbeespoort for gel and acrylic nails?", a: "Galeo Beauty offers gel nails, acrylic nails, manicures, pedicures and nail art from our Hartbeespoort salon near Hartbeespoort Dam." },
+            { q: "Where can I get my nails done in Hartbeespoort for gel and acrylic nails?", a: "Galeo Beauty offers gel nails, acrylic nails, manicures, pedicures and nail art from our Hartbeespoort salon near Hartbeespoort Dam." },
             { q: "Do you do both gel nails and acrylic nails in Hartbeespoort?", a: "Yes. We offer gel overlays, acrylic full sets, fills, manicures and pedicures with strict hygiene protocols and professional nail products." },
             { q: "How often should I book a fill or maintenance appointment?", a: "Most nail clients rebook every 2 to 3 weeks for fills, rebalancing or soak-offs depending on growth, wear and the system they are wearing." },
         ],
     },
     "lashes-brows": {
-        title: "Lash Extensions Hartbeespoort | Eyelash Extensions & Brows",
-        description: "Lash extensions and brow treatments in Hartbeespoort for fuller-looking lashes, better brow shape and easier everyday beauty. Book at Galeo Beauty.",
+        title: "Lash Extensions Hartbeespoort | Eyelash Extensions, Lash Lift & Brows",
+        description: "Lash extensions, lash lift and tint, and brow treatments in Hartbeespoort for fuller-looking lashes, better brow shape and easier everyday beauty.",
         h1: "Lash Extensions & Brows in Hartbeespoort",
-        intro: "If you want to wake up looking more put together without doing a full makeup routine, our Hartbeespoort lash and brow services are designed for that exact goal. We offer lash extensions, lifts and brow styling for clients who want more eye definition, softer features and a lower-maintenance beauty routine.",
+        intro: "If you want to wake up looking more put together without doing a full makeup routine, our Hartbeespoort lash and brow services are designed for that exact goal. We offer lash extensions, lash lift and tint appointments, and brow styling for clients who want more eye definition, softer features and a lower-maintenance beauty routine.",
         benefits: ["Certified lash technicians", "Premium lash materials", "Customized looks", "Long-lasting results"],
         faqs: [
-            { q: "Where can I get eyelash extensions in Hartbeespoort?", a: "Galeo Beauty offers eyelash extensions near Hartbeespoort Dam, including classic, hybrid and volume sets, plus lash lifts and brow treatments." },
+            { q: "Where can I get eyelash extensions in Hartbeespoort?", a: "Galeo Beauty offers eyelash extensions near Hartbeespoort Dam, including classic, hybrid and volume lash sets tailored to the level of fullness you want." },
+            { q: "Can I book a lash lift and tint in Hartbeespoort?", a: "Yes. Galeo Beauty offers lash lift and tint appointments in Hartbeespoort for clients who want more lifted, darker-looking natural lashes without extensions." },
             { q: "Will lash extensions damage my natural lashes?", a: "Not when they are applied correctly and maintained properly. Healthy natural lashes should be protected by correct lash mapping, weight selection and aftercare." },
             { q: "How often do I need lash fills or brow maintenance?", a: "Most lash extension clients need fills every 2 to 3 weeks, while brow tinting, lamination and similar services vary based on growth and aftercare." },
         ],
@@ -211,7 +212,7 @@ const categoryMeta: Record<string, {
         benefits: ["100% Remy human hair", "Double drawn quality", "Multiple methods available", "Expert application"],
         faqs: [
             { q: "Where can I get hair extensions in Hartbeespoort?", a: "Galeo Beauty offers premium hair extensions near Hartbeespoort Dam, including tape-ins, clip-ins, U-tip, micro loop and halo options." },
-            { q: "Which hair extension method is best for me?", a: "That depends on your hair density, lifestyle, maintenance budget and styling goals. We recommend a method only after checking your natural hair properly." },
+            { q: "Which hair extension method is best for me?", a: "The best method depends on your hair density, lifestyle, maintenance budget and styling goals. We recommend a method only after checking your natural hair properly." },
             { q: "How long do hair extensions usually last?", a: "Longevity depends on the method, home care and how often you maintain them, but professional extensions can last from several weeks to a few months before refitting or replacement." },
         ],
     },
@@ -250,11 +251,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const categoryImageUrl = toAbsoluteUrl(category.image);
 
     return {
-        title: `${title} | Galeo Beauty`,
+        title,
         description,
         keywords: buildCategoryKeywords(category),
         openGraph: {
-            title: `${title} | Galeo Beauty`,
+            title,
             description,
             type: "website",
             images: [{ url: categoryImageUrl, alt: `${category.title} treatments at Galeo Beauty` }],
@@ -284,7 +285,6 @@ export default async function CategoryPage({ params }: PageProps) {
     const intro = meta?.intro || `${category.subtitle}. Browse our treatments and book your appointment today.`;
     const benefits = meta?.benefits || [];
     const faqs = meta?.faqs || [];
-    const intentSignals = getCategoryIntentSignals(category.id);
     const relatedIntentPages = getIntentPagesForCategory(category.id);
     const categoryImageUrl = toAbsoluteUrl(category.image);
 
@@ -406,16 +406,6 @@ export default async function CategoryPage({ params }: PageProps) {
                             <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-2xl">
                                 {intro}
                             </p>
-                            <div className="mt-6 max-w-3xl rounded-[1.5rem] border border-border/50 bg-secondary/15 p-5 text-sm text-muted-foreground sm:text-base">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    What You&apos;ll Find Here
-                                </span>
-                                <p className="mt-3 leading-relaxed">
-                                    Explore the treatments in this category, compare common concerns and likely results,
-                                    and browse current pricing before you book.
-                                </p>
-                            </div>
-
                             {/* Benefits */}
                             {benefits.length > 0 && (
                                 <div className="flex flex-wrap gap-3 mt-6">
@@ -430,92 +420,6 @@ export default async function CategoryPage({ params }: PageProps) {
                                     ))}
                                 </div>
                             )}
-                        </div>
-                    </div>
-                </section>
-
-                <section className="py-12 border-y border-border/30 bg-secondary/10">
-                    <div className="container mx-auto px-4 sm:px-6">
-                        <div className="grid gap-6 lg:grid-cols-2">
-                            <div className="rounded-[2rem] border border-border/50 bg-background p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Common Concerns
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">
-                                    What Clients Usually Want Help With
-                                </h2>
-                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    Most journeys in this category start with a visible concern, a recurring frustration, or something
-                                    that no longer feels right. Let us know what you&apos;d like to address, and we&apos;ll guide you toward
-                                    the treatment path that fits best.
-                                </p>
-                                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                                    {intentSignals.painPoints.slice(0, 8).map((term) => (
-                                        <li
-                                            key={term}
-                                            className="rounded-2xl border border-border/60 bg-secondary/20 px-4 py-3 text-sm leading-relaxed text-foreground"
-                                        >
-                                            {term}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="rounded-[2rem] border border-border/50 bg-background p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Desired Results
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">
-                                    What Clients Usually Hope To Improve
-                                </h2>
-                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    You likely already know the result you&apos;re looking for - whether it&apos;s clearer,
-                                    smoother, brighter, or more refined results. Our goal is to help you compare the options that will truly get you there.
-                                </p>
-                                <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-                                    {intentSignals.results.slice(0, 8).map((term) => (
-                                        <li
-                                            key={term}
-                                            className="rounded-2xl border border-gold/20 bg-gold/10 px-4 py-3 text-sm leading-relaxed text-foreground"
-                                        >
-                                            {term}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="rounded-[2rem] border border-border/50 bg-background p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Comparing Treatments
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">
-                                    How We Help You Compare Options
-                                </h2>
-                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    Before booking, it&apos;s natural to want to compare approaches side by side. We skip the jargon
-                                    and help you understand which option truly fits your skin, goals, downtime, and budget.
-                                </p>
-                                <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-secondary/15 p-5 text-sm leading-relaxed text-foreground">
-                                    <p>We help you understand the real differences between treatments, not just the names on the menu.</p>
-                                    <p>That means discussing comfort, recovery time, maintenance, and how realistic each result will be for your specific concern.</p>
-                                    <p>Our priority is finding the most suitable path for you, not simply the strongest or most expensive option.</p>
-                                </div>
-                            </div>
-                            <div className="rounded-[2rem] border border-border/50 bg-background p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Before You Book
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">
-                                    Questions Clients Often Have Before Booking
-                                </h2>
-                                <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                                    It&apos;s completely normal to want full confidence before you commit. We&apos;re here to explain whether a treatment
-                                    is suitable, gentle enough, worth the downtime, and appropriate for your specific situation.
-                                </p>
-                                <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-background p-5 text-sm leading-relaxed text-foreground">
-                                    <p>We gently talk you through suitability, sensitivity, aftercare, and exactly what to expect before you commit to any treatment path.</p>
-                                    <p>This is especially helpful when timing matters - like booking before an event, starting a skin reset, or choosing an option with manageable downtime.</p>
-                                    <p>Our focus is on absolute clarity, so you know exactly why a recommendation makes sense for you personally.</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>

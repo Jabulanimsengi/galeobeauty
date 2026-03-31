@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { LocationServiceBookingButton } from "@/components/booking/LocationServiceBookingButton";
 import { Button } from "@/components/ui/button";
@@ -24,63 +24,17 @@ import {
     getLocationServiceInsight,
     getServiceFAQs,
     getPriorityLocationServiceContent,
+    isHartbeespoortClusterLocation,
+    isIndexableLocationService,
     isPriorityLocationService,
-    type SEOLocation,
-    type SEOService,
     type FAQ,
 } from "@/lib/seo-data";
 import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
 import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
-import { buildServiceIntentCopy, buildServiceKeywords, getServiceIntentSignals } from "@/lib/seo-keywords";
+import { buildServiceKeywords } from "@/lib/seo-keywords";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
-
-function formatTermList(terms: string[], limit = 4) {
-    const items = terms.slice(0, limit);
-
-    if (items.length === 0) {
-        return "";
-    }
-
-    if (items.length === 1) {
-        return items[0];
-    }
-
-    if (items.length === 2) {
-        return `${items[0]} and ${items[1]}`;
-    }
-
-    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
-}
-
-function getLocationPageHighlights(location: SEOLocation, service: SEOService, nearbyLocations: SEOLocation[]) {
-    const nearbyNames = nearbyLocations.slice(0, 3).map((nearby) => nearby.name);
-    const nearbyLabel =
-        nearbyNames.length > 0
-            ? `If you are coming from ${location.name}, it is easy to pair your appointment with time in ${nearbyNames.join(", ")}.`
-            : `If you are coming from ${location.name}, it is easy to turn this booking into a fuller salon visit with other treatments on the same day.`;
-
-    const isLocalCatchment = location.region === "Hartbeespoort" || location.region === "North West";
-    const isUrbanCatchment = ["Gauteng", "Johannesburg", "Pretoria", "Centurion", "Midrand"].includes(location.region);
-
-    const accessNote = isLocalCatchment
-        ? `If you are based in ${location.name}, regular maintenance appointments, quick follow-up visits and weekday bookings are usually easy to fit in.`
-        : isUrbanCatchment
-            ? `If you are travelling from ${location.name}, many bookings for ${service.keyword} are planned as part of a quieter day in Hartbeespoort away from the city pace.`
-            : `If you are travelling from ${location.name}, we keep the appointment flow efficient and aftercare clear so the visit feels well worth the trip.`;
-
-    const serviceNote = service.duration
-        ? `${service.keyword} typically takes ${service.duration}, which helps you plan travel and booking times more confidently.`
-        : `${service.keyword} appointments are scheduled with enough flexibility to make travelling in from surrounding areas feel manageable.`;
-
-    return [
-        `${location.name} is one of the surrounding areas we regularly welcome for ${service.keyword}.`,
-        accessNote,
-        serviceNote,
-        nearbyLabel,
-    ];
-}
 
 // ============================================
 // STATIC GENERATION WITH ISR
@@ -122,8 +76,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "Service Not Found" };
     }
 
+    const shouldIndex = isIndexableLocationService(locationSlug, serviceSlug);
     const category = getCategoryForService(serviceSlug);
     const categoryTitle = category?.title || "Beauty Services";
+    const canonicalUrl = shouldIndex
+        ? `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`
+        : `https://www.galeobeauty.com/prices/${service.categoryId}/${service.slug}`;
 
     // Generate unique description
     const richDescription = generateServiceDescription(
@@ -132,8 +90,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         categoryTitle,
         location.name
     );
-    const title = `${service.keyword} in ${location.name} | Galeo Beauty Salon & Spa`;
-    const metadataDescription = `${richDescription.substring(0, 150)} Available for ${location.name} clients from our Hartbeespoort salon.`;
+    const title = `${service.keyword} in ${location.name}`;
+    const metadataDescription = `${richDescription.substring(0, 150)} Book from our Hartbeespoort salon, convenient for ${location.name} clients.`;
     const socialDescription = `${richDescription.substring(0, 140)} Serving ${location.name} and surrounding Hartbeespoort areas.`;
     const serviceImageUrl = toAbsoluteUrl(service.image);
 
@@ -145,7 +103,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             description: socialDescription,
             type: "website",
-            url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            url: canonicalUrl,
             siteName: "Galeo Beauty Salon & Spa",
             locale: "en_ZA",
             images: [
@@ -163,13 +121,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             site: "@galeobeauty",
         },
         alternates: {
-            canonical: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
+            canonical: canonicalUrl,
         },
         robots: {
-            index: true,
+            index: shouldIndex,
             follow: true,
             googleBot: {
-                index: true,
+                index: shouldIndex,
                 follow: true,
                 "max-video-preview": -1,
                 "max-image-preview": "large",
@@ -215,6 +173,10 @@ export default async function LocationServicePage({ params }: PageProps) {
         notFound();
     }
 
+    if (isHartbeespoortClusterLocation(locationSlug)) {
+        permanentRedirect(`/prices/${service.categoryId}/${service.slug}`);
+    }
+
     const resolvedService = service;
     const category = getCategoryForService(resolvedService.slug);
 
@@ -245,8 +207,6 @@ export default async function LocationServicePage({ params }: PageProps) {
         ? relatedKeywordPool[(resolvedService.slug.length + location.slug.length) % relatedKeywordPool.length]
         : "treatment";
     const introText = `${richDescription} ${location.name} residents can now enjoy this premium ${lsiKeyword} close to home.`;
-    const intentSignals = getServiceIntentSignals(resolvedService);
-    const intentCopy = buildServiceIntentCopy(resolvedService);
     const serviceTypeKeywords = Array.from(
         new Set([
             resolvedService.keyword,
@@ -262,7 +222,6 @@ export default async function LocationServicePage({ params }: PageProps) {
     const locationServiceInsight = getLocationServiceInsight(resolvedService, location);
     const faqs = getServiceFAQs(resolvedService, location);
     const treatmentProcess = getTreatmentProcess(resolvedService, location);
-    const locationPageHighlights = getLocationPageHighlights(location, resolvedService, nearbyLocations);
     const priorityContent = getPriorityLocationServiceContent(resolvedService, location);
     const isPriorityCombination = isPriorityLocationService(locationSlug, serviceSlug);
 
@@ -460,9 +419,6 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 {/* Unique intro paragraph */}
                                 <div className="text-muted-foreground text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl space-y-4">
                                     <p>{introText}</p>
-                                    <p className="text-base sm:text-lg">{intentCopy.problemStatement}</p>
-                                    <p className="text-base sm:text-lg">{intentCopy.resultStatement}</p>
-                                    <p className="text-base sm:text-lg">{intentCopy.reassuranceStatement}</p>
                                 </div>
 
                                 {/* Price & Duration */}
@@ -523,99 +479,6 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 <div key={i} className="flex items-start gap-3">
                                     <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
                                     <span className="text-muted-foreground">{benefit}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                <section className="py-16">
-                    <div className="container mx-auto px-6 max-w-6xl">
-                        <div className="grid gap-6 lg:grid-cols-2">
-                            <div className="rounded-[2rem] border border-border bg-secondary/10 p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Common Concerns
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What {location.name} Clients Often Ask About</h2>
-                                <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
-                                    <p>
-                                        Appointments usually begin with something you would like to improve, such as{" "}
-                                        {formatTermList(intentSignals.painPoints, 5)}.
-                                    </p>
-                                    <p>
-                                        Sharing that concern gives us a clear starting point so we can recommend the most suitable
-                                        treatment path for you instead of making you guess from the menu.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-[2rem] border border-border bg-secondary/10 p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    The Results
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What You Can Expect Afterwards</h2>
-                                <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground">
-                                    <p>
-                                        The most successful consultations begin with a clear picture of the result you want, whether
-                                        that means {formatTermList(intentSignals.results, 5)}.
-                                    </p>
-                                    <p>
-                                        We shape the recommendation around what feels realistic for your features, schedule and comfort
-                                        level, so the finished result feels beautifully considered.
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="rounded-[2rem] border border-border bg-background p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Treatment Guidance
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">How We Help You Decide</h2>
-                                <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-secondary/15 p-5 text-sm leading-relaxed text-foreground">
-                                    <p>
-                                        We help you understand which approach best matches your goals, schedule and comfort level.
-                                    </p>
-                                    <p>
-                                        That may include comparing options such as {formatTermList(intentSignals.comparisons, 3)}, along
-                                        with how each path fits into your routine.
-                                    </p>
-                                    <p>Our priority is to thoughtfully narrow down the choices for you, rather than overwhelming you with endless options.</p>
-                                </div>
-                            </div>
-                            <div className="rounded-[2rem] border border-border bg-background p-7">
-                                <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                    Booking Confidence
-                                </span>
-                                <h2 className="mt-3 font-serif text-2xl text-foreground">What to Know Before Booking</h2>
-                                <div className="mt-6 space-y-3 rounded-2xl border border-border/60 bg-background p-5 text-sm leading-relaxed text-foreground">
-                                    <p>
-                                        It is natural to want reassurance around {formatTermList(intentSignals.objections, 3)} before
-                                        you commit.
-                                    </p>
-                                    <p>This is especially important before an event, when starting a corrective plan, or when choosing an option that requires manageable downtime.</p>
-                                    <p>
-                                        We provide clear, personalized advice so that whether you are booking for{" "}
-                                        {formatTermList(intentSignals.audiences, 3)}, or simply for yourself, you can feel fully
-                                        confident before you book.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="py-16">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-3">
-                            Why {location.name} Clients Book {service.keyword} Here
-                        </h2>
-                        <p className="text-muted-foreground mb-10 max-w-3xl">
-                            If you are based in {location.name}, this section gives you the local booking context, travel expectations
-                            and planning details that make your visit feel easier to arrange.
-                        </p>
-
-                        <div className="grid gap-4 md:grid-cols-2">
-                            {locationPageHighlights.map((highlight, index) => (
-                                <div key={index} className="rounded-xl border border-border bg-secondary/20 p-5">
-                                    <p className="text-muted-foreground leading-relaxed">{highlight}</p>
                                 </div>
                             ))}
                         </div>
@@ -935,7 +798,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                         </p>
 
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {dynamicRelatedServices.map((relatedService: SEOService) => (
+                            {dynamicRelatedServices.map((relatedService) => (
                                 <Link
                                     key={relatedService.slug}
                                     href={`/locations/${locationSlug}/${relatedService.slug}`}

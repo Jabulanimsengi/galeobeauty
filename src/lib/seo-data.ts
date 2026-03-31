@@ -326,6 +326,12 @@ export const PRIORITY_LOCATIONS = [
     // These are now generated on-demand via ISR when first visited
 ];
 
+export const PRIMARY_LOCAL_LOCATION_SLUGS = [
+    "hartbeespoort",
+    "harties",
+    "landsmeer",
+] as const;
+
 // ============================================
 // SEO SERVICES - Extracted from all categories
 // ============================================
@@ -400,6 +406,9 @@ export const SECONDARY_PREBUILD_SERVICES = [
 export const PREBUILD_LOCATION_SERVICE_SLUGS = Array.from(
     new Set([...HERO_SERVICES, ...SECONDARY_PREBUILD_SERVICES])
 );
+
+const PRIORITY_LOCATION_SET = new Set(PRIORITY_LOCATIONS);
+const PREBUILD_LOCATION_SERVICE_SET = new Set(PREBUILD_LOCATION_SERVICE_SLUGS);
 
 /**
  * Extracts ALL services from the main services-data.ts file
@@ -512,17 +521,46 @@ export function getPriorityParams(): { location: string; service: string }[] {
     return params;
 }
 
+export function isPrimaryLocalLocation(locationSlug: string): boolean {
+    return PRIMARY_LOCAL_LOCATION_SLUGS.includes(
+        locationSlug as (typeof PRIMARY_LOCAL_LOCATION_SLUGS)[number]
+    );
+}
+
+export function isHartbeespoortClusterLocation(locationSlug: string): boolean {
+    if (isPrimaryLocalLocation(locationSlug)) {
+        return true;
+    }
+
+    const location = getLocationBySlug(locationSlug);
+    if (!location) {
+        return false;
+    }
+
+    return location.region === "Hartbeespoort" || location.slug === "hartbeespoort-dam";
+}
+
+export function isIndexableLocationService(locationSlug: string, serviceSlug: string): boolean {
+    if (isHartbeespoortClusterLocation(locationSlug)) {
+        return false;
+    }
+
+    return PRIORITY_LOCATION_SET.has(locationSlug) && PREBUILD_LOCATION_SERVICE_SET.has(serviceSlug);
+}
+
 export function getPrebuildLocationServiceParams(): { location: string; service: string }[] {
-    const prebuildSet = new Set(PREBUILD_LOCATION_SERVICE_SLUGS);
-    const services = getCachedSEOServices().filter((service) => prebuildSet.has(service.slug));
+    const services = getCachedSEOServices().filter((service) =>
+        PREBUILD_LOCATION_SERVICE_SET.has(service.slug)
+    );
     const params: { location: string; service: string }[] = [];
 
-    for (const location of TARGET_LOCATIONS) {
+    for (const location of PRIORITY_LOCATIONS) {
+        if (!getLocationBySlug(location) || isHartbeespoortClusterLocation(location)) {
+            continue;
+        }
+
         for (const service of services) {
-            params.push({
-                location: location.slug,
-                service: service.slug,
-            });
+            params.push({ location, service: service.slug });
         }
     }
 
@@ -1335,6 +1373,203 @@ export interface FAQ {
     answer: string;
 }
 
+function serviceMatchesPattern(service: SEOService, pattern: RegExp): boolean {
+    return pattern.test(`${service.slug} ${service.keyword}`.toLowerCase());
+}
+
+function getFAQTheme(question: string): string {
+    const normalized = question.toLowerCase();
+
+    if (normalized.includes("consult")) return "consultation";
+    if (normalized.includes("book")) return "booking";
+    if (
+        normalized.includes("worth visiting") ||
+        normalized.includes("regularly treat clients") ||
+        normalized.includes("where can i get") ||
+        normalized.includes("near ")
+    ) {
+        return "location";
+    }
+    if (normalized.includes("how long") && (normalized.includes("last") || normalized.includes("results"))) {
+        return "longevity";
+    }
+    if (normalized.includes("how often") || normalized.includes("rebook") || normalized.includes("maintenance")) {
+        return "maintenance";
+    }
+    if (normalized.includes("pain") || normalized.includes("hurt")) return "comfort";
+    if (normalized.includes("downtime") || normalized.includes("recovery")) return "downtime";
+    if (
+        normalized.includes("aftercare") ||
+        normalized.includes("shower") ||
+        normalized.includes("wash my hair") ||
+        normalized.includes("what should i do before")
+    ) {
+        return "aftercare";
+    }
+    if (normalized.includes("natural")) return "natural";
+
+    return normalized;
+}
+
+function pickFAQWithUniqueTheme(faqs: FAQ[], startIndex: number, usedThemes: Set<string>): FAQ | null {
+    if (faqs.length === 0) return null;
+
+    for (let offset = 0; offset < faqs.length; offset++) {
+        const candidate = faqs[(startIndex + offset) % faqs.length];
+        const theme = getFAQTheme(candidate.question);
+        if (!usedThemes.has(theme)) {
+            return candidate;
+        }
+    }
+
+    return faqs[startIndex % faqs.length];
+}
+
+function getAlignedServiceCategoryFAQs(service: SEOService, location: SEOLocation): FAQ[] | null {
+    const isMatch = (pattern: RegExp) => serviceMatchesPattern(service, pattern);
+
+    switch (service.categoryId) {
+        case "hart-aesthetics":
+            if (isMatch(/russian|lip|filler|cheek|dermal/)) {
+                return [
+                    { question: `How long do ${service.keyword} results usually last?`, answer: `Longevity varies with the product used, the treatment area and how your body metabolises filler, but many filler results hold for several months and sometimes longer before maintenance is needed.` },
+                    { question: `Will ${service.keyword} still look natural?`, answer: `Yes, that is usually the goal. We use treatment planning to keep the result balanced, flattering and suited to your features rather than overfilled.` },
+                    { question: `Will I have swelling after ${service.keyword}?`, answer: `Mild swelling, tenderness or bruising can happen after filler-based treatments, especially for lips. That usually settles over the following days as the result softens into place.` },
+                    { question: `When will I see the final result from ${service.keyword}?`, answer: `You will usually see a visible change straight away, but the final look is judged once early swelling has settled and the area has had time to soften naturally.` },
+                ];
+            }
+
+            if (isMatch(/tox|botox|wrinkle|nefertiti/)) {
+                return [
+                    { question: `When should I expect to see results from ${service.keyword}?`, answer: `Results from toxin-based treatments usually start showing over a few days and settle more fully within about 10 to 14 days.` },
+                    { question: `How long does ${service.keyword} usually last?`, answer: `Most toxin-style treatments last a few months before muscle movement gradually returns and maintenance becomes worth considering.` },
+                    { question: `Will ${service.keyword} make me look frozen?`, answer: `The aim is usually a fresher, softer look rather than a stiff one. We tailor placement and dosing so your result still feels like you.` },
+                    { question: `Is there downtime after ${service.keyword}?`, answer: `There is usually little to no downtime, although mild redness, tenderness or small bumps at the injection points can happen for a short time afterwards.` },
+                ];
+            }
+
+            if (isMatch(/booster|under.?eye/)) {
+                return [
+                    { question: `What is ${service.keyword} usually best for?`, answer: `${service.keyword} is usually chosen when the goal is hydration, skin quality improvement, or a fresher-looking area rather than dramatic structural volume.` },
+                    { question: `How many sessions of ${service.keyword} might I need?`, answer: `Many skin-booster style treatments work best as a course rather than a once-off treatment, but the number of sessions depends on the area, the product and your goal.` },
+                    { question: `When should I expect to see changes from ${service.keyword}?`, answer: `Some clients notice early hydration or glow fairly quickly, while the fuller improvement usually builds over the following weeks as the treatment settles.` },
+                    { question: `Is there downtime after ${service.keyword}?`, answer: `Most clients have minimal downtime, but temporary swelling, small bumps or tenderness can happen after the appointment depending on the treatment area.` },
+                ];
+            }
+
+            if (isMatch(/biostimulator|collagen/)) {
+                return [
+                    { question: `How does ${service.keyword} work?`, answer: `${service.keyword} is usually used to stimulate your own collagen response over time, so the improvement tends to build more gradually than a filler result.` },
+                    { question: `When will I see results from ${service.keyword}?`, answer: `This type of treatment is usually judged over weeks rather than days because the strongest improvement often comes from gradual collagen support.` },
+                    { question: `How many sessions of ${service.keyword} are usually needed?`, answer: `Session count depends on the product and your starting point, but many collagen-focused injectable plans work best over a series of treatments rather than a single visit.` },
+                    { question: `Is ${service.keyword} meant to look natural?`, answer: `Yes. The appeal of collagen-stimulating treatments is usually that they improve firmness and skin quality in a more gradual, less obvious way.` },
+                ];
+            }
+            break;
+
+        case "ipl":
+            if (isMatch(/tattoo/)) {
+                return [
+                    { question: `How does ${service.keyword} work?`, answer: `${service.keyword} uses targeted light-based treatment to break down tattoo pigment gradually, so fading happens over a course of sessions rather than all at once.` },
+                    { question: `How many sessions of ${service.keyword} might I need?`, answer: `The number of sessions depends on the tattoo size, colours, age and depth, but tattoo fading usually takes multiple appointments spaced out over time.` },
+                    { question: `Will ${service.keyword} remove the tattoo completely?`, answer: `Some tattoos fade very significantly while others lighten enough for cover-up work. The realistic outcome depends on the pigment and how your skin responds.` },
+                    { question: `What is recovery like after ${service.keyword}?`, answer: `You can expect temporary redness, sensitivity or mild crusting in the treated area, and we guide you on aftercare so the skin heals properly between sessions.` },
+                ];
+            }
+            break;
+
+        case "hair":
+            if (isMatch(/balayage|foil|highlights?|colour|color|toner|bleach|root|grey/)) {
+                return [
+                    { question: `How often should I rebook ${service.keyword}?`, answer: `Rebooking depends on whether the service is a toner, regrowth appointment, blonding refresh or bigger colour service, but most colour maintenance is planned around fading, brassiness and regrowth.` },
+                    { question: `Can ${service.keyword} be adjusted for my hair history?`, answer: `Yes. Colour services should always be planned around your current hair condition, previous colour, porosity and the result you are trying to achieve.` },
+                    { question: `Will I need a toner or treatment with ${service.keyword}?`, answer: `Often yes. Supportive steps like toning, bond care or a treatment may be recommended when they help protect the hair or refine the final colour result.` },
+                    { question: `Can I still book ${service.keyword} if my hair feels dry or damaged?`, answer: `Possibly, but the safest plan depends on your hair condition. In some cases we adjust the service or recommend repair support before stronger chemical work.` },
+                ];
+            }
+
+            if (isMatch(/brazilian|keratin|botox|treatment|straightener/)) {
+                return [
+                    { question: `How long does ${service.keyword} usually last?`, answer: `Longevity depends on the treatment type, your home care and how often you wash your hair, but smoothing and repair services usually need periodic maintenance rather than being permanent.` },
+                    { question: `Can ${service.keyword} help with frizz and humidity?`, answer: `Yes, that is one of the main reasons clients book smoothing treatments. The goal is usually calmer, more manageable hair with less daily frizz.` },
+                    { question: `When can I wash my hair after ${service.keyword}?`, answer: `Wash timing depends on the exact treatment used. We give you specific aftercare guidance because timing and product choice can affect how long the result lasts.` },
+                    { question: `Is ${service.keyword} mainly for smoothing or repair?`, answer: `Some treatments lean more toward frizz control and smoothing, while others focus more on softness, strength or condition. We explain which result your specific treatment is designed to deliver.` },
+                ];
+            }
+
+            return [
+                { question: `What is included in ${service.keyword}?`, answer: `What is included depends on the service, but hair appointments are usually shaped around your hair length, condition, styling needs and the finish you want to leave with.` },
+                { question: `How long does ${service.keyword} usually take?`, answer: `Timing depends on whether you are booking a cut, styling appointment or a more involved hair service. We confirm the expected appointment length when you book.` },
+                { question: `Can ${service.keyword} be adapted to my hair type?`, answer: `Yes. Technique, product choice and finish should all be adjusted to your texture, density, previous history and the result you want.` },
+                { question: `How often should I rebook ${service.keyword}?`, answer: `Most cut and styling maintenance depends on your haircut, growth speed and how polished you like your hair to stay between appointments.` },
+            ];
+
+        case "nails":
+            if (isMatch(/pedi|toes|feet/)) {
+                return [
+                    { question: `What is ${service.keyword} usually best for?`, answer: `${service.keyword} is usually chosen when you want neater, softer, more polished feet or extra support for dry, rough or neglected heels.` },
+                    { question: `How long will ${service.keyword} usually last?`, answer: `Longevity depends on whether the service includes polish, gel or more basic foot care, but many clients rebook pedicure maintenance every few weeks depending on wear and regrowth.` },
+                    { question: `Can ${service.keyword} help with rough or dry heels?`, answer: `Yes. Pedicure-focused services are often booked specifically to improve comfort, appearance and smoothness when feet feel dry or overworked.` },
+                    { question: `How often should I rebook ${service.keyword}?`, answer: `Rebooking depends on your foot condition, footwear and whether you want regular maintenance or a once-off refresh before an event or holiday.` },
+                ];
+            }
+            break;
+
+        case "lashes-brows":
+            if (isMatch(/lift|lamination|tint|brow/) && !isMatch(/classic|volume|hybrid|glamour|silk|fill|removal/)) {
+                return [
+                    { question: `How long do ${service.keyword} results usually last?`, answer: `Lift, tint and brow-style treatments usually last several weeks, depending on growth, cleansing habits and the specific treatment you booked.` },
+                    { question: `Is ${service.keyword} a lower-maintenance option than extensions?`, answer: `Usually yes. Treatments like lifts, laminations and tints are often chosen by clients who want definition without the upkeep of a full lash extension set.` },
+                    { question: `Is ${service.keyword} suitable for sensitive eyes or skin?`, answer: `It can be, but sensitivity should always be discussed before treatment. We can advise on patch testing or whether a gentler option makes more sense.` },
+                    { question: `What aftercare should I follow after ${service.keyword}?`, answer: `Aftercare depends on the treatment, but usually includes keeping the area dry for an initial period and avoiding products or habits that shorten the result.` },
+                ];
+            }
+
+            return [
+                { question: `How often will I need maintenance after ${service.keyword}?`, answer: `Maintenance depends on your natural growth cycle and the look you want to keep, but lash extension clients usually return for fills every 2 to 3 weeks.` },
+                { question: `What is the difference between classic, hybrid and fuller lash styles?`, answer: `The main differences are how natural, textured or full the finished set looks. We guide you based on the finish you want and how much weight your natural lashes can comfortably carry.` },
+                { question: `Will ${service.keyword} damage my natural lashes?`, answer: `Not when the set is applied properly, mapped carefully and maintained well. Correct technique and aftercare are what protect the natural lashes underneath.` },
+                { question: `What aftercare should I follow after ${service.keyword}?`, answer: `Aftercare usually includes keeping the lashes clean, avoiding oil-heavy products around the eye area and returning before the set becomes too grown out.` },
+            ];
+
+        case "makeup":
+            if (isMatch(/bridal|wedding/)) {
+                return [
+                    { question: `Should I book a trial before ${service.keyword}?`, answer: `Yes, a trial is usually worth it for bridal bookings because it helps confirm the finish, timing, colours and comfort level before the wedding day.` },
+                    { question: `How long will ${service.keyword} last?`, answer: `Bridal makeup is planned to hold for the ceremony, photos and celebration, but the exact longevity still depends on skin type, weather and touch-up needs.` },
+                    { question: `Do you travel for ${service.keyword}?`, answer: `Travel can be discussed depending on the booking and location. If you need venue-based bridal services, we confirm availability and logistics in advance.` },
+                    { question: `Can ${service.keyword} still look natural in photos?`, answer: `Yes. Bridal makeup can be soft, polished and camera-friendly at the same time. The final look is tailored to how glam or understated you want it to feel.` },
+                ];
+            }
+
+            return [
+                { question: `How long will ${service.keyword} usually last?`, answer: `Professional event makeup is designed to wear well for hours, but longevity still depends on skin type, weather, activity and whether lashes or touch-up support are included.` },
+                { question: `Should I arrive with clean skin for ${service.keyword}?`, answer: `Usually yes. Clean, well-prepped skin gives the best starting point unless we have advised something different for your booking.` },
+                { question: `Can ${service.keyword} be adapted for soft glam or a stronger look?`, answer: `Yes. Event makeup is tailored to the occasion, your features and whether you want the finish to feel more natural, polished or dramatic.` },
+                { question: `Do you recommend a trial for ${service.keyword}?`, answer: `Trials are most important for higher-stakes bookings like weddings, but they can also help if you are unsure about the style or want to test the look before an important event.` },
+            ];
+
+        case "sunbed":
+            if (isMatch(/spray/)) {
+                return [
+                    { question: `How long does ${service.keyword} usually last?`, answer: `Most spray tan results last around 5 to 7 days depending on prep, moisturising, shower habits and how much exfoliation happens afterwards.` },
+                    { question: `When can I shower after ${service.keyword}?`, answer: `Shower timing depends on the formula used, but spray tan aftercare always includes waiting for the tan to develop properly before showering.` },
+                    { question: `What should I do before ${service.keyword}?`, answer: `It is usually best to exfoliate in advance, avoid heavy lotion or oil on the day, and wear loose clothing so the tan can develop more evenly.` },
+                    { question: `Will ${service.keyword} look natural?`, answer: `That is usually the goal. A good spray tan should look warm and believable rather than obviously dark or orange.` },
+                ];
+            }
+
+            return [
+                { question: `How long is a typical ${service.keyword} session?`, answer: `Session length depends on your skin type and tanning history. We keep timing controlled rather than pushing longer sessions than your skin should handle.` },
+                { question: `How often should I use the sunbed?`, answer: `Frequency should be based on your skin type, previous exposure and tanning goal. Sessions should be spaced responsibly rather than treated as an everyday routine.` },
+                { question: `Do I need a special lotion for ${service.keyword}?`, answer: `Professional tanning support can help with comfort and the overall tanning experience, but we guide you based on the equipment, your skin and your goal.` },
+                { question: `Is ${service.keyword} about building colour gradually?`, answer: `Yes. Sunbed tanning is usually approached as a gradual build rather than a single dramatic session, with a focus on sensible session planning.` },
+            ];
+    }
+
+    return null;
+}
+
 /**
  * Generate 3-4 unique FAQs for each service
  * Uses category, subcategory, and service attributes for variety
@@ -1724,7 +1959,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
         // Add one location-specific question to ensure local context
         const localQ = {
             question: `Where can I get ${service.keyword} near ${location.name}?`,
-            answer: `Galeo Beauty in Hartbeespoort offers professional ${service.keyword} treatments. We are conveniently located for clients traveling from ${location.name} and surrounding ${location.region} areas.`
+            answer: `Galeo Beauty in Hartbeespoort offers ${service.keyword} for clients coming from ${location.name} and the surrounding ${location.region} area, with clear treatment guidance before you book.`
         };
 
         return [localQ, ...specificFAQs];
@@ -1744,11 +1979,11 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     const locationFAQs: FAQ[] = [
         {
             question: `Is Galeo Beauty worth visiting from ${location.name} for ${service.keyword}?`,
-            answer: `${drivingContext}. Many clients travel from ${location.name} because they want a calmer Hartbeespoort salon experience, specialist treatments, and clear pricing before they book.`
+            answer: `${drivingContext}. Clients often make the trip from ${location.name} because they want a calmer Hartbeespoort salon setting, specialist treatments and clear pricing before they commit.`
         },
         {
             question: `Do you regularly treat clients from ${location.name}?`,
-            answer: `Yes. We welcome clients from ${location.name} and the wider ${location.region} area for ${service.keyword}, and many return for maintenance appointments or planned treatment days in Hartbeespoort.`
+            answer: `Yes. We see clients from ${location.name} and the wider ${location.region} area for ${service.keyword}, including regular maintenance bookings and planned treatment visits to Hartbeespoort.`
         },
     ];
 
@@ -1756,11 +1991,11 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     const universalFAQs: FAQ[] = [
         {
             question: `How do I book ${service.keyword}?`,
-            answer: `You can contact us directly to book ${service.keyword}, confirm the right treatment option, and choose a time that suits your schedule. Pricing for this service starts from ${service.price}.`
+            answer: `You can contact us directly to book ${service.keyword}, confirm that you are choosing the right option and lock in a time that suits your schedule. Pricing for this service starts from ${service.price}.`
         },
         {
             question: `Do I need a consultation before booking ${service.keyword}?`,
-            answer: `For many services, yes. A consultation helps us confirm suitability, explain downtime or maintenance, and recommend the right version of ${service.keyword} for your goal.`
+            answer: `For many services, yes. A consultation lets us check suitability, talk through downtime or maintenance and recommend the version of ${service.keyword} that best matches your goal.`
         },
     ];
 
@@ -1779,7 +2014,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
         ],
         "hair": [
             { question: `Does ${service.keyword} suit all hair types?`, answer: `Most hair services can be adapted, but the technique, formula and timing should match your hair history, density and overall condition.` },
-            { question: `How often should I rebook ${service.keyword}?`, answer: `That depends on whether you are booking a cut, colour, toner, treatment or smoothing service, but many clients rebook hair maintenance every 6 to 8 weeks.` },
+            { question: `How often should I rebook ${service.keyword}?`, answer: `Rebooking depends on whether you are booking a cut, colour, toner, treatment or smoothing service, but many clients return for hair maintenance every 6 to 8 weeks.` },
             { question: `Will ${service.keyword} damage my hair?`, answer: `Professional hair services should be planned around the current condition of your hair. We adjust formulas and recommendations to protect compromised or previously processed hair.` },
             { question: `Can ${service.keyword} help if my hair is dry or damaged?`, answer: `Sometimes, but not every hair service is corrective by itself. If your hair needs repair first, we may adjust the plan or recommend supportive treatments before pushing more chemical work.` },
         ],
@@ -1802,14 +2037,14 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
             { question: `What is the healing period like after ${service.keyword}?`, answer: `The treated area usually looks stronger at first, then softens as it heals. We provide aftercare guidance so you know what is normal and what to avoid.` },
         ],
         "nails": [
-            { question: `How long does ${service.keyword} usually last?`, answer: `That depends on whether you are booking gel, acrylic, a fill or a pedicure, but many nail clients rebook within 2 to 3 weeks for maintenance.` },
+            { question: `How long does ${service.keyword} usually last?`, answer: `Longevity depends on whether you are booking gel, acrylic, a fill or a pedicure, but many nail clients rebook within 2 to 3 weeks for maintenance.` },
             { question: `Is ${service.keyword} safe for natural nails?`, answer: `It should be when the service is applied, removed and maintained properly. Technique and aftercare matter as much as the product itself.` },
             { question: `Can I add nail art or custom finishes to ${service.keyword}?`, answer: `Usually yes. Nail art, french finishes, chrome and other extras can often be added depending on the base service and appointment time available.` },
             { question: `How do I keep ${service.keyword} looking good between appointments?`, answer: `Use cuticle oil, avoid using your nails as tools, and rebook before lifting or breakage becomes worse. Regular maintenance usually protects the result.` },
         ],
         "lashes-brows": [
             { question: `How long does ${service.keyword} usually take?`, answer: `Timing depends on the service. Brow treatments are usually shorter, while full lash sets take much longer than fills, lifts or tinting appointments.` },
-            { question: `How long do ${service.keyword} results last?`, answer: `That depends on the service. Lash extensions usually need fills every 2 to 3 weeks, while lash lifts, tints and brow treatments often last several weeks.` },
+            { question: `How long do ${service.keyword} results last?`, answer: `Result longevity depends on the service. Lash extensions usually need fills every 2 to 3 weeks, while lash lifts, tints and brow treatments often last several weeks.` },
             { question: `Will ${service.keyword} damage my natural lashes or brows?`, answer: `Not when the service is applied correctly and maintained properly. Safe technique and correct aftercare are what protect your natural lashes and brows.` },
             { question: `What aftercare should I follow after ${service.keyword}?`, answer: `Aftercare varies by the treatment, but usually includes avoiding oil-based products around the area, keeping the area clean, and following our guidance on water, makeup and rubbing.` },
         ],
@@ -1833,7 +2068,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
         ],
         "slimming": [
             { question: `Is ${service.keyword} for weight loss or body contouring?`, answer: `Most treatments in this category are better for shaping stubborn areas, inch loss and contouring than for replacing overall weight-loss efforts.` },
-            { question: `How many sessions of ${service.keyword} do most people need?`, answer: `That depends on the treatment and your goal, but body contouring usually works best as a planned course rather than a once-off session.` },
+            { question: `How many sessions of ${service.keyword} do most people need?`, answer: `The number of sessions depends on the treatment and your goal, but body contouring usually works best as a planned course rather than a once-off session.` },
             { question: `When will I notice changes from ${service.keyword}?`, answer: `Some clients notice early changes quickly, but visible contouring often builds over several weeks as the body responds to the treatment plan.` },
             { question: `Can ${service.keyword} be combined with other body treatments?`, answer: `Often yes. We can advise whether combining treatments makes sense or whether it is better to focus on one approach first.` },
         ],
@@ -1846,7 +2081,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
         "sunbed": [
             { question: `Should I choose a spray tan or a sunbed session?`, answer: `A spray tan is the better option if you want fast cosmetic colour without UV exposure, while sunbed tanning is for clients deliberately building a tan over time.` },
             { question: `How long does a spray tan usually last?`, answer: `Most spray tans last around 5 to 7 days depending on your prep, shower routine, exfoliation and moisturising.` },
-            { question: `How often should I use a sunbed?`, answer: `That depends on your skin type and tanning history. We keep sessions controlled and spaced responsibly rather than recommending overuse.` },
+            { question: `How often should I use a sunbed?`, answer: `That should be guided by your skin type and tanning history. We keep sessions controlled and spaced responsibly rather than recommending overuse.` },
             { question: `What should I do before a spray tan?`, answer: `Exfoliate ahead of time, avoid heavy lotion or oil on the day, and wear loose clothing after the appointment so the tan can develop evenly.` },
         ],
         "fat-freezing": [
@@ -1858,7 +2093,10 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     };
 
     // Get category-specific FAQs
+    const alignedCategoryFAQs = getAlignedServiceCategoryFAQs(service, location);
+
     const categoryFAQs =
+        alignedCategoryFAQs ||
         focusedCategoryFAQPools[service.categoryId] ||
         extraCategoryFAQPools[service.categoryId] ||
         baseCategoryFAQPools[service.categoryId] ||
@@ -1870,19 +2108,42 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     // Select 3 category FAQs using hash (different per location)
     const selectedCategoryFAQs: FAQ[] = [];
     const usedIndices = new Set<number>();
-    for (let i = 0; i < 3 && selectedCategoryFAQs.length < 3 && categoryFAQs.length > 0; i++) {
+    const usedThemes = new Set<string>();
+    for (let i = 0; i < categoryFAQs.length && selectedCategoryFAQs.length < 3 && categoryFAQs.length > 0; i++) {
         const index = (hash + i * 7) % categoryFAQs.length;
+        const candidate = categoryFAQs[index];
+        const theme = getFAQTheme(candidate.question);
         if (!usedIndices.has(index)) {
-            selectedCategoryFAQs.push(categoryFAQs[index]);
+            if (usedThemes.has(theme)) {
+                continue;
+            }
+
+            selectedCategoryFAQs.push(candidate);
             usedIndices.add(index);
+            usedThemes.add(theme);
+        }
+    }
+
+    for (let i = 0; i < categoryFAQs.length && selectedCategoryFAQs.length < Math.min(3, categoryFAQs.length); i++) {
+        const index = (hash + i * 5) % categoryFAQs.length;
+        if (!usedIndices.has(index)) {
+            const candidate = categoryFAQs[index];
+            selectedCategoryFAQs.push(candidate);
+            usedIndices.add(index);
+            usedThemes.add(getFAQTheme(candidate.question));
         }
     }
 
     // Select 1 location FAQ
-    const selectedLocationFAQ = locationFAQs[hash % locationFAQs.length];
+    const selectedLocationFAQ =
+        pickFAQWithUniqueTheme(locationFAQs, hash % locationFAQs.length, usedThemes) ||
+        locationFAQs[hash % locationFAQs.length];
+    usedThemes.add(getFAQTheme(selectedLocationFAQ.question));
 
     // Select 1 universal FAQ
-    const selectedUniversalFAQ = universalFAQs[(hash + 3) % universalFAQs.length];
+    const selectedUniversalFAQ =
+        pickFAQWithUniqueTheme(universalFAQs, (hash + 3) % universalFAQs.length, usedThemes) ||
+        universalFAQs[(hash + 3) % universalFAQs.length];
 
     // Combine: 3 category + 1 location + 1 universal = 5 FAQs
     return [...selectedCategoryFAQs, selectedLocationFAQ, selectedUniversalFAQ];
@@ -2520,6 +2781,91 @@ export function getFeaturedLocationServices(limit = 6): SEOService[] {
     }
 
     return selected.slice(0, limit);
+}
+
+export interface LocationPopularTreatmentGroup {
+    id: string;
+    title: string;
+    headline: string;
+    description: string;
+    categoryHref: string;
+    categoryLabel: string;
+    services: SEOService[];
+}
+
+const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
+    {
+        id: "nails",
+        title: "Nails",
+        categoryHref: "/prices/nails",
+        categoryLabel: "Explore all nail services",
+        serviceSlugs: ["gel-overlay-hands", "acrylic-tips", "rubber-base"],
+        buildDescription: (location: SEOLocation) =>
+            `${location.name} searches for nail appointments usually focus on gel overlays, acrylic tips and rubber base for cleaner shape, stronger wear and longer-lasting manicure results.`,
+    },
+    {
+        id: "hair-extensions",
+        title: "Hair Extensions",
+        categoryHref: "/prices/hair-extensions",
+        categoryLabel: "Explore all hair extensions",
+        serviceSlugs: ["tape-45cm-dark", "clip-45cm-dark", "halo-45cm-dark"],
+        buildDescription: (location: SEOLocation) =>
+            `Clients searching hair extensions in ${location.name} are usually comparing tape-ins, clip-ins and halo hair when they want more length, fullness and a more noticeable transformation.`,
+    },
+    {
+        id: "lashes",
+        title: "Lashes",
+        categoryHref: "/prices/lashes-brows",
+        categoryLabel: "Explore all lash and brow services",
+        serviceSlugs: ["lash-lift-tint", "lash-lamination", "brow-tint"],
+        buildDescription: (location: SEOLocation) =>
+            `For lower-maintenance lash and brow beauty in ${location.name}, people usually look for lash lift and tint, lash lamination and brow tinting that make the eye area look more defined without extensions.`,
+    },
+    {
+        id: "eyelash-extensions",
+        title: "Eyelash Extensions",
+        categoryHref: "/prices/lashes-brows",
+        categoryLabel: "Explore all eyelash extension options",
+        serviceSlugs: ["classic-lashes", "hybrid-lashes", "volume-lashes"],
+        buildDescription: (location: SEOLocation) =>
+            `Eyelash extension searches around ${location.name} usually centre on classic, hybrid and volume sets, depending on whether the goal is natural definition, textured fullness or a more dramatic lash line.`,
+    },
+    {
+        id: "facial-treatments",
+        title: "Facial Treatments",
+        categoryHref: "/prices/dermalogica",
+        categoryLabel: "Explore all facial treatments",
+        serviceSlugs: ["pro-skin-60", "pro-clear", "pro-microneedling"],
+        buildDescription: (location: SEOLocation) =>
+            `Facial treatment searches in ${location.name} usually lean toward customised facials, acne-clearing treatments and microneedling for clients who want brighter, smoother or clearer skin.`,
+    },
+    {
+        id: "hair-treatments",
+        title: "Hair Treatments",
+        categoryHref: "/prices/hair",
+        categoryLabel: "Explore all hair treatments",
+        serviceSlugs: ["brazilian-medium", "keratin", "botox"],
+        buildDescription: (location: SEOLocation) =>
+            `Hair treatment searches from ${location.name} usually focus on Brazilian blowouts, keratin and hair botox for frizz control, smoother styling and healthier-looking hair.`,
+    },
+] as const;
+
+export function getLocationPopularTreatmentGroups(location: SEOLocation): LocationPopularTreatmentGroup[] {
+    return LOCATION_POPULAR_TREATMENT_GROUP_CONFIG.map((group) => {
+        const services = group.serviceSlugs
+            .map((slug) => getServiceBySlug(slug))
+            .filter((service): service is SEOService => Boolean(service));
+
+        return {
+            id: group.id,
+            title: group.title,
+            headline: `${group.title} in ${location.name}`,
+            description: group.buildDescription(location),
+            categoryHref: group.categoryHref,
+            categoryLabel: group.categoryLabel,
+            services,
+        };
+    }).filter((group) => group.services.length > 0);
 }
 
 export function getPriorityLocationServiceContent(service: SEOService, location: SEOLocation): {

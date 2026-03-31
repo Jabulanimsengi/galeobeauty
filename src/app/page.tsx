@@ -3,25 +3,27 @@ import { Header, Footer } from "@/components/layout";
 import { NavLink } from "@/components/ui/nav-link";
 import {
   HeroSection,
+  HomepageFaqSection,
   StatsSection,
   ServicesSection,
   ReviewsSection,
   BrandsSection,
 } from "@/components/sections";
+import { businessInfo } from "@/lib/constants";
 import { buildHomepageKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
-  title: "Galeo Beauty | Premium Salon & Medical Spa in Hartbeespoort",
+  title: "Hair, Nails, Lashes & Beauty Salon in Hartbeespoort",
   description:
-    "Discover premium hair, nails, facials, lashes, body treatments, and advanced aesthetics at Galeo Beauty in Hartbeespoort.",
+    "Discover hair, nails, facials, lash lift and tint, massage, waxing, IPL, and advanced aesthetics at Galeo Beauty in Hartbeespoort.",
   keywords: buildHomepageKeywords(),
   alternates: {
     canonical: "https://www.galeobeauty.com",
   },
   openGraph: {
-    title: "Galeo Beauty | Premium Salon & Medical Spa in Hartbeespoort",
+    title: "Hair, Nails, Lashes & Beauty Salon in Hartbeespoort",
     description:
-      "A premium Hartbeespoort beauty destination for hair, nails, facials, body treatments, and advanced aesthetics.",
+      "A Hartbeespoort beauty destination for hair, nails, facials, lashes, massage, waxing, IPL, and advanced aesthetics.",
     url: "https://www.galeobeauty.com",
     type: "website",
   },
@@ -29,15 +31,60 @@ export const metadata: Metadata = {
 
 const priorityLinks = [
   { href: "/prices/hair", label: "Hair" },
+  { href: "/prices/hair-extensions", label: "Hair Extensions" },
   { href: "/prices/nails", label: "Nails" },
   { href: "/prices/massages", label: "Massage" },
   { href: "/prices/permanent-makeup", label: "Permanent Makeup" },
   { href: "/prices/lashes-brows", label: "Lashes" },
 ];
 
+const homepageFaqs = [
+  {
+    question: "What services are offered by Galeo Beauty?",
+    answer:
+      "Galeo Beauty offers hair, hair extensions, nails, lashes and brows, facials, massage, waxing, IPL hair removal, permanent makeup, injectables, body contouring, and a wide range of advanced beauty treatments from the Hartbeespoort salon.",
+  },
+  {
+    question: "Does Galeo Beauty also offer hair extensions?",
+    answer:
+      "Yes. Galeo Beauty offers premium hair extensions for clients who want added length, fullness, or a more polished finish alongside colour and styling services.",
+  },
+  {
+    question: "Does Galeo Beauty offer nails and lash lift and tint in Hartbeespoort?",
+    answer:
+      "Yes. You can book nail services including gel and acrylic systems, as well as lash lift and tint, lash extensions, and brow treatments at Galeo Beauty in Hartbeespoort.",
+  },
+  {
+    question: "Where can I check Galeo Beauty reviews?",
+    answer:
+      "You can browse testimonials on the Galeo Beauty site and read client feedback on Fresha and Google before you book.",
+    links: [
+      { label: "View Fresha Reviews", href: businessInfo.socials.fresha ?? "#" },
+      { label: "View Google Reviews", href: businessInfo.socials.google ?? "#" },
+    ],
+  },
+];
+
 export default function HomePage() {
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homepageFaqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Header />
       <main>
         <HeroSection />
@@ -82,8 +129,8 @@ export default function HomePage() {
           </div>
         </section>
         <StatsSection />
+        <HomepageFaqSection faqs={homepageFaqs} />
         <ReviewsSection />
-
       </main>
       <Footer />
     </>

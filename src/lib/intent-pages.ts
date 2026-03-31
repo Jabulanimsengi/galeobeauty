@@ -53,6 +53,21 @@ function buildServiceLinks(serviceSlugs: string[]): IntentLink[] {
         }));
 }
 
+export const INTENT_PAGE_REDIRECTS: Record<string, string> = {
+    "lip-filler-hartbeespoort": "/prices/hart-aesthetics",
+    "ipl-hair-removal-hartbeespoort": "/prices/ipl",
+    "lash-extensions-hartbeespoort": "/prices/lashes-brows",
+    "hair-salon-hartbeespoort": "/prices/hair",
+    "nail-salon-hartbeespoort": "/prices/nails",
+    "event-makeup-hartbeespoort": "/prices/makeup",
+    "permanent-makeup-brows-hartbeespoort": "/prices/permanent-makeup",
+    "qms-facial-hartbeespoort": "/prices/qms",
+    "spray-tan-hartbeespoort": "/prices/sunbed",
+    "waxing-hair-removal-hartbeespoort": "/prices/waxing",
+    "massage-hartbeespoort": "/prices/massages",
+    "hair-extensions-hartbeespoort": "/prices/hair-extensions",
+};
+
 const INTENT_PAGES: IntentPageSpec[] = [
     {
         slug: "acne-treatment-hartbeespoort",
@@ -89,7 +104,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best acne treatment in Hartbeespoort?", answer: "That depends on whether your main issue is active breakouts, congestion, oily skin, blackheads or post-acne marks. Galeo typically matches facials, peels and microneedling based on the dominant concern." },
+            { question: "What is the best acne treatment in Hartbeespoort?", answer: "The best option depends on whether your main issue is active breakouts, congestion, oily skin, blackheads or post-acne marks. Galeo typically matches facials, peels and microneedling to the dominant concern." },
             { question: "Can I treat adult acne with facials and peels?", answer: "Yes. Adult acne often responds well to targeted skin-clearing facials, pore-decongesting treatments and carefully selected resurfacing support when appropriate." },
             { question: "What if I have both acne and acne marks?", answer: "The treatment plan normally needs to start by calming active breakouts first, then shift toward mark fading or scar refinement once inflammation is under better control." },
         ],
@@ -131,7 +146,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best acne scar treatment in Hartbeespoort?", answer: "That depends on whether you are dealing with dark marks, textural scarring or both. Galeo typically considers microneedling, resurfacing peels and stronger corrective treatments based on scar type." },
+            { question: "What is the best acne scar treatment in Hartbeespoort?", answer: "The right treatment depends on whether you are dealing with dark marks, textural scarring or both. Galeo typically considers microneedling, resurfacing peels and stronger corrective treatments based on scar type." },
             { question: "Does microneedling help acne scars?", answer: "Yes. Microneedling is commonly used to stimulate collagen and help refine the look of textural acne scars over a course of sessions." },
             { question: "What if my acne scars are dark marks rather than pits?", answer: "Dark marks usually need a slightly different strategy from pitted scars, often leaning more into brightening, resurfacing and pigment-focused treatments." },
         ],
@@ -173,7 +188,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best treatment for stubborn belly fat in Hartbeespoort?", answer: "That depends on whether the main issue is localized fat, overall weight-loss goals or general body shape. Galeo uses body contouring treatments for targeted areas rather than positioning them as overall weight-loss solutions." },
+            { question: "What is the best treatment for stubborn belly fat in Hartbeespoort?", answer: "The best option depends on whether the main issue is localized fat, overall weight-loss goals or general body shape. Galeo uses body contouring treatments for targeted areas rather than positioning them as overall weight-loss solutions." },
             { question: "Does fat freezing help with love handles?", answer: "Yes, love handles are one of the most common areas clients target with fat freezing because they are often resistant to exercise alone." },
             { question: "Can these treatments flatten the lower tummy?", answer: "They can help contour and reduce localized fullness in the lower tummy area when you are an appropriate candidate, but they are not a substitute for overall lifestyle change or surgical intervention." },
         ],
@@ -267,15 +282,15 @@ const INTENT_PAGES: IntentPageSpec[] = [
     {
         slug: "lash-extensions-hartbeespoort",
         title: "Lash Extensions in Hartbeespoort",
-        metaTitle: "Lash Extensions in Hartbeespoort | Classic, Hybrid, Volume & Wispy Lashes",
-        metaDescription: "Book lash extensions in Hartbeespoort for classic, hybrid, volume and wispy styles. Find the right lash look for natural beauty or full glam at Galeo Beauty.",
+        metaTitle: "Lash Extensions in Hartbeespoort | Classic, Hybrid, Volume & Lash Lift",
+        metaDescription: "Book lash extensions in Hartbeespoort for classic, hybrid, volume and wispy styles, or choose a lash lift and tint at Galeo Beauty.",
         h1: "Lash Extensions in Hartbeespoort",
         eyebrow: "Natural everyday lashes to full glam volume",
         heroDescription: "If your lashes disappear without mascara or you are unsure whether you want natural, wispy or fuller glam, this guide helps you choose a lash look that suits your face and routine.",
         heroImage: "/images/gallery/lashes-brows/wispy-hybrid-lash-extensions-green-eyes.png",
         heroImageAlt: "Lash extensions in Hartbeespoort at Galeo Beauty",
         primaryKeywords: ["lash extensions hartbeespoort", "eyelash extensions harties", "natural lash extensions hartbeespoort", "wispy lashes hartbeespoort"],
-        supportingKeywords: ["classic lashes", "hybrid lashes", "volume lashes", "cat eye lashes"],
+        supportingKeywords: ["classic lashes", "hybrid lashes", "volume lashes", "lash lift and tint hartbeespoort"],
         symptoms: ["short or sparse lashes", "lashes that disappear without mascara", "straight lashes with little lift", "not knowing which lash style will suit you"],
         results: ["fuller looking lashes", "more lift around the eyes", "soft everyday definition", "a polished makeup free look", "glam lashes that still feel wearable"],
         comparisons: ["classic vs hybrid lashes", "hybrid vs volume lashes", "lash extensions vs lash lift"],
@@ -301,7 +316,8 @@ const INTENT_PAGES: IntentPageSpec[] = [
         faqs: [
             { question: "Which lash extensions look the most natural?", answer: "Classic lashes are often the most natural-looking option, but some clients also prefer soft hybrid or wispy sets for a slightly fuller result." },
             { question: "What is the difference between classic, hybrid and volume lashes?", answer: "Classic sets are cleaner and more natural, hybrids add texture and density, and volume sets create a fuller, fluffier lash line." },
-            { question: "Should I choose lash extensions or a lash lift?", answer: "If you want added fullness and shape, lash extensions usually make more sense. If you want to enhance your own lashes with a lower-maintenance finish, a lash lift can be the better option." },
+            { question: "Should I choose lash extensions or a lash lift and tint?", answer: "If you want added fullness and shape, lash extensions usually make more sense. If you want to enhance your own lashes with a lower-maintenance finish, a lash lift and tint can be the better option." },
+            { question: "Can I book a lash lift and tint in Hartbeespoort?", answer: "Yes. Galeo Beauty offers lash lift and tint appointments in Hartbeespoort for clients who want darker, more lifted natural lashes without extensions." },
         ],
         categoryIds: ["lashes-brows"],
         serviceSlugs: ["classic-lashes", "hybrid-lashes", "volume-lashes", "lash-lift-tint"],
@@ -309,15 +325,15 @@ const INTENT_PAGES: IntentPageSpec[] = [
     {
         slug: "hair-salon-hartbeespoort",
         title: "Hair Salon in Hartbeespoort",
-        metaTitle: "Hair Salon in Hartbeespoort | Colour, Balayage, Blowouts & Hair Repair",
-        metaDescription: "Visit Galeo Beauty hair salon in Hartbeespoort for colour, balayage, blowouts, smoothing and hair repair. Ideal for grey coverage, frizz control and colour refresh.",
+        metaTitle: "Hair Salon & Hairdresser in Hartbeespoort | Colour, Blowouts & Keratin",
+        metaDescription: "Visit Galeo Beauty hair salon and hairdresser in Hartbeespoort for cuts, colour, balayage, blowouts, keratin, Brazilian smoothing and hair repair.",
         h1: "Hair Salon in Hartbeespoort",
         eyebrow: "Colour, blonding, smoothing and repair",
         heroDescription: "If your colour feels dull, your blonde has gone brassy, or your hair is just not sitting the way you want anymore, this guide helps you find the salon service that matches the problem you actually want solved.",
         heroImage: "/images/gallery/hair/blowdry-styling-session-two-stylists-salon.jpg",
         heroImageAlt: "Hair salon in Hartbeespoort at Galeo Beauty",
-        primaryKeywords: ["hair salon hartbeespoort", "hairdresser harties", "hair colour hartbeespoort", "balayage hartbeespoort"],
-        supportingKeywords: ["colour correction", "grey coverage", "blow dry styling", "frizz control treatment"],
+        primaryKeywords: ["hair salon hartbeespoort", "hairdresser hartbeespoort", "hair salon in hartbeespoort", "hair colour hartbeespoort"],
+        supportingKeywords: ["balayage hartbeespoort", "blow dry hartbeespoort", "keratin treatment hartbeespoort", "grey coverage"],
         symptoms: ["visible grey regrowth", "yellow or brassy blonde", "hair that falls flat", "frizz in humidity", "colour that has faded", "hair that feels dry after colouring"],
         results: ["fresher more dimensional colour", "smoother hair", "a glossy salon finish", "healthier looking lengths", "hair that feels polished again"],
         comparisons: ["balayage vs foils", "keratin vs brazilian smoothing", "colour correction vs toner"],
@@ -328,38 +344,38 @@ const INTENT_PAGES: IntentPageSpec[] = [
         bestFor: ["colour refresh", "brassy blonde correction", "frizz control", "grey coverage", "hair that needs more polish"],
         sections: [
             {
-                title: "Colour and blonding goals",
-                body: "Whether you want softer dimension, brighter blonde, better grey coverage or a full refresh, the best colour service starts with the result you want to see in the mirror.",
+                title: "Cuts, colour and polished styling",
+                body: "Some clients want a polished cut and blow-dry, while others need colour correction, blonde maintenance or a proper refresh before an event. The best starting point is the result you want to see in the mirror.",
             },
             {
-                title: "Frizz control and smoothing",
-                body: "If your hair feels puffy, hard to style or overly reactive to humidity, smoothing treatments can help you create a finish that feels calmer and easier to manage.",
+                title: "Smoother, easier hair",
+                body: "If your hair feels puffy, hard to style or overly reactive to humidity, keratin and Brazilian smoothing treatments can help create a finish that feels calmer, sleeker and easier to manage.",
             },
             {
-                title: "Repair, shine and styling",
-                body: "Healthy-looking hair often comes from combining the right restorative care with styling that adds gloss, movement and a polished final shape.",
+                title: "Balayage, blonde refresh and grey coverage",
+                body: "Whether the priority is softer blonde, brighter dimension, cleaner regrowth coverage or more gloss through the lengths, colour work is usually strongest when it is matched to the maintenance level you actually want.",
             },
         ],
         faqs: [
-            { question: "What hair services can I book in Hartbeespoort?", answer: "Galeo offers a broad hair menu including colour, balayage, smoothing, blowouts and repair-focused treatments from the Hartbeespoort salon." },
-            { question: "Do you offer balayage and grey coverage?", answer: "Yes. Broad colour services like balayage, dimension work and root or grey coverage are part of the salon offering." },
-            { question: "What if my main issue is frizz rather than colour?", answer: "The salon can route you toward smoothing and frizz-control options when the main problem is manageability rather than colour." },
+            { question: "Where can I find a hairdresser in Hartbeespoort?", answer: "Galeo Beauty offers hairdresser services in Hartbeespoort including cuts, blow-dries, balayage, toner, root colour, smoothing treatments and repair-focused services." },
+            { question: "Do you offer balayage, blow-dries and keratin in Hartbeespoort?", answer: "Yes. Galeo offers balayage, blow-dries, keratin treatments, Brazilian smoothing, toner services and broader colour work from the Hartbeespoort salon." },
+            { question: "What if my main issue is frizz rather than colour?", answer: "The salon can guide you toward keratin or Brazilian smoothing when the main issue is manageability, frizz and humidity rather than colour correction." },
         ],
         categoryIds: ["hair"],
-        serviceSlugs: ["balayage", "keratin", "brazilian-medium", "brazilian-long"],
+        serviceSlugs: ["cut-blow-medium", "blow-long", "balayage", "tint-roots", "keratin", "brazilian-medium"],
     },
     {
         slug: "nail-salon-hartbeespoort",
         title: "Nail Salon in Hartbeespoort",
-        metaTitle: "Nail Salon in Hartbeespoort | Gel Nails, Acrylics, Builder Gel & Pedicures",
-        metaDescription: "Book gel nails, acrylics, builder gel and pedicures in Hartbeespoort at Galeo Beauty. Ideal for stronger nails, long-lasting manicures and polished feet.",
+        metaTitle: "Nail Salon in Hartbeespoort | Gel Nails, Acrylics, Manicures & Pedicures",
+        metaDescription: "Book gel nails, acrylics, manicures and pedicures in Hartbeespoort at Galeo Beauty. Ideal for stronger nails, long-lasting manicures and polished feet.",
         h1: "Nail Salon in Hartbeespoort",
         eyebrow: "Long-lasting manicures and polished pedicures",
         heroDescription: "If your manicures chip too fast, your natural nails keep bending or breaking, or your feet need more care than a basic polish, this guide helps you choose the nail service that will hold up best.",
         heroImage: "/images/gallery/nails/nude-almond-gel-nails-galeo-beauty-salon.jpg",
         heroImageAlt: "Nail salon in Hartbeespoort at Galeo Beauty",
-        primaryKeywords: ["nail salon hartbeespoort", "gel nails hartbeespoort", "acrylic nails hartbeespoort", "builder gel nails harties"],
-        supportingKeywords: ["chip free manicure", "strong natural nails", "pedicure for cracked heels", "bridal nails"],
+        primaryKeywords: ["nail salon hartbeespoort", "nails hartbeespoort", "gel nails hartbeespoort", "acrylic nails hartbeespoort"],
+        supportingKeywords: ["builder gel nails harties", "manicure hartbeespoort", "pedicure hartbeespoort", "strong natural nails"],
         symptoms: ["nails that bend or peel", "manicures that chip too quickly", "short nails that will not grow", "brittle weak nails", "rough dry heels"],
         results: ["a manicure that lasts longer", "stronger natural nails", "clean elegant nail shape", "soft polished feet", "a glossy well kept finish"],
         comparisons: ["biab vs gel nails", "builder gel vs acrylic", "pedicure vs spa pedicure"],
@@ -370,25 +386,25 @@ const INTENT_PAGES: IntentPageSpec[] = [
         bestFor: ["weak natural nails", "manicures that need to last", "pedicure care", "clients who want a refined polished finish"],
         sections: [
             {
-                title: "Best manicure for weak nails",
-                body: "If your nails bend, split or never seem to last, builder-based support and structured manicures can offer a stronger, cleaner foundation without always needing dramatic length.",
+                title: "Manicures that last on weak nails",
+                body: "If your nails bend, split or never seem to last, gel overlays, rubber base and structured manicures can offer a stronger, cleaner foundation without always needing dramatic length.",
             },
             {
-                title: "Gel vs acrylic vs builder support",
-                body: "Each option suits a slightly different goal. Some are better for natural-looking strength, while others are chosen for added shape, length or durability.",
+                title: "Choosing between gel and acrylic",
+                body: "Each option suits a slightly different goal. Some are better for natural-looking strength, while others are chosen for added shape, length or durability that holds up longer.",
             },
             {
-                title: "Pedicures and heel-focused care",
-                body: "Pedicures are not only about colour. They can also help refresh rough heels, restore a neater look and leave your feet feeling more comfortable and polished.",
+                title: "Pedicures that feel as good as they look",
+                body: "Pedicures are not only about colour. They can also help refresh rough heels, restore a neater look and leave your hands and feet feeling more comfortable and polished.",
             },
         ],
         faqs: [
-            { question: "What is the best manicure for weak natural nails?", answer: "That depends on whether you want strength, added length or the most natural-looking support. Builder-based and structured options are often popular for weak nails." },
-            { question: "Do you offer both gel and acrylic nails in Hartbeespoort?", answer: "Yes. Galeo offers long-lasting options including gel-based services, acrylic systems and pedicure treatments from the Hartbeespoort salon." },
-            { question: "Can a pedicure help dry cracked heels?", answer: "A pedicure can help improve the appearance and feel of rough feet while restoring a cleaner, more polished finish." },
+            { question: "Where can I get my nails done in Hartbeespoort?", answer: "Galeo Beauty offers nail appointments in Hartbeespoort for gel nails, acrylic nails, manicures, pedicures, rubber base and long-wear nail care." },
+            { question: "Do you offer both gel nails and acrylic nails in Hartbeespoort?", answer: "Yes. Galeo offers gel overlays, rubber base and acrylic systems from the Hartbeespoort salon, depending on whether you want natural-looking strength, added structure or more length." },
+            { question: "Can a pedicure help dry cracked heels?", answer: "A pedicure can help improve the appearance and feel of rough feet while restoring a cleaner, more polished finish, especially when heel care is part of the goal." },
         ],
         categoryIds: ["nails"],
-        serviceSlugs: ["rubber-base", "acrylic-tips", "acrylic-overlay", "pedicure"],
+        serviceSlugs: ["gel-overlay-hands", "rubber-base", "acrylic-tips", "full-manicure", "pedicure"],
     },
     {
         slug: "dark-circles-treatment-hartbeespoort",
@@ -425,7 +441,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best treatment for dark circles in Hartbeespoort?", answer: "That depends on whether the main issue is pigmentation, dehydration, hollowness or puffiness. Galeo uses different under-eye approaches based on the visible concern." },
+            { question: "What is the best treatment for dark circles in Hartbeespoort?", answer: "The best treatment depends on whether the main issue is pigmentation, dehydration, hollowness or puffiness. Galeo uses different under-eye approaches based on the visible concern." },
             { question: "Can under-eye treatments make me look less tired?", answer: "Yes. The main goal of many under-eye treatments is to refresh the area so the eyes look brighter, smoother and less exhausted." },
             { question: "What if I have puffiness rather than dark circles?", answer: "Puffiness and dark circles are not exactly the same issue, so the best treatment depends on which under-eye problem is most dominant." },
         ],
@@ -467,7 +483,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best treatment for frizzy hair in Hartbeespoort?", answer: "That depends on how strong the frizz is, how much smoothing you want and how much maintenance you are comfortable with. Galeo uses keratin and Brazilian-style smoothing options for different goals." },
+            { question: "What is the best treatment for frizzy hair in Hartbeespoort?", answer: "The best treatment depends on how strong the frizz is, how much smoothing you want and how much maintenance you are comfortable with. Galeo uses keratin and Brazilian-style smoothing options for different goals." },
             { question: "What is the difference between keratin and Brazilian smoothing?", answer: "Both are used to make hair smoother and easier to manage, but they can differ in intensity, finish and maintenance expectations depending on the treatment path." },
             { question: "Can a smoothing treatment help humidity frizz?", answer: "Yes. Many people book smoothing services because their hair reacts badly to humidity and becomes harder to manage." },
         ],
@@ -509,7 +525,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best anti-aging treatment in Hartbeespoort?", answer: "That depends on whether your main concern is wrinkles, tired eyes, volume loss, skin laxity or a general loss of freshness. Galeo usually matches the treatment to the visible ageing pattern rather than pushing one approach for everyone." },
+            { question: "What is the best anti-aging treatment in Hartbeespoort?", answer: "The best treatment depends on whether your main concern is wrinkles, tired eyes, volume loss, skin laxity or a general loss of freshness. Galeo usually matches the treatment to the visible ageing pattern rather than pushing one approach for everyone." },
             { question: "Can anti-aging treatment still look natural?", answer: "Yes. Many clients specifically want to look fresher and less tired without obvious change, so the focus is usually on subtle correction and balance rather than dramatic transformation." },
             { question: "Do I need fillers if my concern is mostly looking tired?", answer: "Not always. Some people need volume support, while others benefit more from skin quality, line-softening or lifting-focused options. It depends on what is actually creating the tired look." },
         ],
@@ -594,7 +610,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
         ],
         faqs: [
             { question: "What is the difference between microblading and powder brows?", answer: "Microblading focuses on fine hair-like strokes, while powder brows create a softer shaded effect. Hybrid brows combine both for more definition and depth." },
-            { question: "Which permanent brow style looks the most natural?", answer: "That depends on your skin, existing brow hair and the finish you like. Some clients suit hair strokes best, while others look better with a softly shaded brow." },
+            { question: "Which permanent brow style looks the most natural?", answer: "The most natural-looking style depends on your skin, existing brow hair and the finish you like. Some clients suit hair strokes best, while others look better with a softly shaded brow." },
             { question: "Can permanent makeup help if my brows are patchy?", answer: "Yes. Brow tattooing is often used to fill sparse areas, create better balance and reduce the need for daily brow products." },
         ],
         categoryIds: ["permanent-makeup"],
@@ -677,7 +693,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What is the best tan before a wedding or event?", answer: "Many clients prefer a spray tan when they want a quick, controlled glow before a fixed date, while others use sunbed sessions when they want to build colour over time." },
+            { question: "What is the best tan before a wedding or event?", answer: "For most clients on a fixed date, a spray tan is the better option because it gives immediate cosmetic colour without needing multiple build-up sessions. Sunbed tanning usually makes more sense only when you want to build colour gradually over time." },
             { question: "Can I get a spray tan that looks natural?", answer: "Yes. The goal for most clients is a believable sun-kissed finish rather than a dark or obviously artificial colour." },
             { question: "Do you offer both spray tanning and sunbed tanning in Hartbeespoort?", answer: "Yes. Galeo offers both spray tan and sunbed options so clients can choose the approach that fits their timing and preferred finish." },
         ],
@@ -803,7 +819,7 @@ const INTENT_PAGES: IntentPageSpec[] = [
             },
         ],
         faqs: [
-            { question: "What are the best hair extensions for fine hair?", answer: "That depends on how much volume you want and how permanent you want the method to be. Many fine-haired clients compare tape-ins, halo hair and other lighter-feeling methods." },
+            { question: "What are the best hair extensions for fine hair?", answer: "The best method depends on how much volume you want and how permanent you want it to be. Many fine-haired clients compare tape-ins, halo hair and other lighter-feeling options." },
             { question: "Can hair extensions look natural?", answer: "Yes. When the colour, density and method are chosen properly, extensions can blend very naturally and add fullness without looking obvious." },
             { question: "Do you offer different hair extension methods in Hartbeespoort?", answer: "Yes. Galeo offers multiple methods including tape-ins, clip-ins, halo hair and other premium Remy options depending on the result you want." },
         ],
@@ -816,8 +832,16 @@ export function getAllIntentPages(): IntentPageSpec[] {
     return INTENT_PAGES;
 }
 
+export function getPublishedIntentPages(): IntentPageSpec[] {
+    return INTENT_PAGES.filter((page) => !INTENT_PAGE_REDIRECTS[page.slug]);
+}
+
 export function getIntentPageBySlug(slug: string): IntentPageSpec | undefined {
     return INTENT_PAGES.find((page) => page.slug === slug);
+}
+
+export function getIntentPageRedirectPath(slug: string): string | undefined {
+    return INTENT_PAGE_REDIRECTS[slug];
 }
 
 export function getIntentPageServiceLinks(page: IntentPageSpec): IntentLink[] {
@@ -825,9 +849,9 @@ export function getIntentPageServiceLinks(page: IntentPageSpec): IntentLink[] {
 }
 
 export function getIntentPagesForCategory(categoryId: string): IntentPageSpec[] {
-    return INTENT_PAGES.filter((page) => page.categoryIds.includes(categoryId));
+    return getPublishedIntentPages().filter((page) => page.categoryIds.includes(categoryId));
 }
 
 export function getIntentPagesForService(serviceSlug: string): IntentPageSpec[] {
-    return INTENT_PAGES.filter((page) => page.serviceSlugs.includes(serviceSlug));
+    return getPublishedIntentPages().filter((page) => page.serviceSlugs.includes(serviceSlug));
 }

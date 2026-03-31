@@ -35,14 +35,6 @@ interface CategorySeoStrategy {
     audienceTerms: string[];
 }
 
-export interface SeoIntentSignals {
-    painPoints: string[];
-    results: string[];
-    comparisons: string[];
-    objections: string[];
-    audiences: string[];
-}
-
 const REDUNDANT_KEYWORD_PATTERNS = [
     /\bbest\b/i,
     /\baffordable\b/i,
@@ -1088,16 +1080,6 @@ function normalizeKeywordPhrase(value: string): string {
         .trim();
 }
 
-function formatKeywordList(values: string[], maxItems = 3): string {
-    const items = values.slice(0, maxItems);
-
-    if (items.length === 0) return "";
-    if (items.length === 1) return items[0];
-    if (items.length === 2) return `${items[0]} and ${items[1]}`;
-
-    return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
-}
-
 function dedupeKeywords(values: Array<string | undefined>): string[] {
     const seen = new Set<string>();
     const keywords: string[] = [];
@@ -1151,42 +1133,6 @@ function getCategoryStrategy(categoryId: string): CategorySeoStrategy {
     };
 }
 
-export function getCategoryIntentSignals(categoryId: string): SeoIntentSignals {
-    const strategy = getCategoryStrategy(categoryId);
-
-    return {
-        painPoints: strategy.journeyPainPoints,
-        results: strategy.journeyResults,
-        comparisons: strategy.comparisonTerms,
-        objections: strategy.objectionTerms,
-        audiences: strategy.audienceTerms,
-    };
-}
-
-export function getServiceIntentSignals(service: KeywordService): SeoIntentSignals {
-    return getCategoryIntentSignals(service.categoryId);
-}
-
-export function buildCategoryIntentCopy(categoryTitle: string, categoryId: string) {
-    const signals = getCategoryIntentSignals(categoryId);
-
-    return {
-        problemStatement: `You may start exploring ${categoryTitle.toLowerCase()} because you want help with concerns like ${formatKeywordList(signals.painPoints)}.`,
-        resultStatement: `Most often, the goal is to see results like ${formatKeywordList(signals.results)} in a way that still feels realistic and well suited to you.`,
-        reassuranceStatement: `Before you book, it helps to understand options like ${formatKeywordList(signals.comparisons, 2)} and to feel clear about things like ${formatKeywordList(signals.objections, 2)}.`,
-    };
-}
-
-export function buildServiceIntentCopy(service: KeywordService) {
-    const signals = getServiceIntentSignals(service);
-
-    return {
-        problemStatement: `You may be considering ${service.keyword} because you want help with concerns like ${formatKeywordList(signals.painPoints)}.`,
-        resultStatement: `The usual aim is to see results like ${formatKeywordList(signals.results)} with a plan that feels natural, considered and appropriate for you.`,
-        reassuranceStatement: `Before you decide, it helps to understand options like ${formatKeywordList(signals.comparisons, 2)} and to feel reassured about ${formatKeywordList(signals.objections, 2)}.`,
-    };
-}
-
 function getCategoryServiceHighlights(category: KeywordCategory): string[] {
     return dedupeKeywords(
         category.subcategories.flatMap((subcategory) =>
@@ -1219,6 +1165,13 @@ export function buildGlobalKeywords(): string[] {
 export function buildHomepageKeywords(): string[] {
     return dedupeKeywords([
         ...buildGlobalKeywords(),
+        "services offered by galeo beauty",
+        "galeo beauty hartbeespoort",
+        "galeo beauty reviews",
+        "hairdresser hartbeespoort",
+        "hair salon hartbeespoort",
+        "nail salon hartbeespoort",
+        "lash lift and tint hartbeespoort",
         "injectables hartbeespoort",
         "facials hartbeespoort",
         "body contouring hartbeespoort",
@@ -1232,6 +1185,8 @@ export function buildHomepageKeywords(): string[] {
 
 export function buildPricesPageKeywords(): string[] {
     return dedupeKeywords([
+        "galeo beauty services",
+        "services offered by galeo beauty",
         "beauty treatment prices hartbeespoort",
         "salon price list hartbeespoort",
         "facial prices hartbeespoort",
