@@ -1,12 +1,52 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 import packageJson from "../../package.json";
 import { STATIC_BUILD_SCOPE } from "@/lib/build-config";
 
+type ReleaseMetadataFile = {
+    buildScope?: string;
+    deployedAt?: string;
+    deployTarget?: string;
+    gitSha?: string;
+    releaseId?: string;
+    slot?: string;
+};
+
+function firstNonEmpty(...values: Array<string | null | undefined>) {
+    for (const value of values) {
+        if (typeof value === "string" && value.trim().length > 0) {
+            return value.trim();
+        }
+    }
+
+    return undefined;
+}
+
+function readReleaseMetadataFile(): ReleaseMetadataFile {
+    const metadataPath = path.join(process.cwd(), "release-metadata.json");
+
+    if (!existsSync(metadataPath)) {
+        return {};
+    }
+
+    try {
+        return JSON.parse(readFileSync(metadataPath, "utf8")) as ReleaseMetadataFile;
+    } catch {
+        return {};
+    }
+}
+
 function resolveGitSha() {
+    const fileMetadata = readReleaseMetadataFile();
+
     return (
-        process.env.GALEO_GIT_SHA ||
-        process.env.GIT_SHA ||
-        process.env.VERCEL_GIT_COMMIT_SHA ||
-        process.env.GITHUB_SHA ||
+        firstNonEmpty(
+            process.env.GALEO_GIT_SHA,
+            process.env.GIT_SHA,
+            process.env.VERCEL_GIT_COMMIT_SHA,
+            process.env.GITHUB_SHA,
+            fileMetadata.gitSha,
+        ) ||
         "unknown"
     );
 }
@@ -16,8 +56,14 @@ function shortenGitSha(gitSha: string) {
 }
 
 function resolveDeployTarget() {
-    if (process.env.GALEO_DEPLOY_TARGET) {
-        return process.env.GALEO_DEPLOY_TARGET;
+    const fileMetadata = readReleaseMetadataFile();
+    const explicitTarget = firstNonEmpty(
+        process.env.GALEO_DEPLOY_TARGET,
+        fileMetadata.deployTarget,
+    );
+
+    if (explicitTarget) {
+        return explicitTarget;
     }
 
     if (process.env.HETZNER === "1" || process.env.HETZNER === "true") {
@@ -40,9 +86,10 @@ function resolveDeployTarget() {
 }
 
 export function getReleaseMetadata() {
+    const fileMetadata = readReleaseMetadataFile();
     const gitSha = resolveGitSha();
     const releaseId =
-        process.env.GALEO_RELEASE_ID ||
+        firstNonEmpty(process.env.GALEO_RELEASE_ID, fileMetadata.releaseId) ||
         (gitSha !== "unknown" ? shortenGitSha(gitSha) : packageJson.version);
 
     return {
@@ -50,11 +97,20 @@ export function getReleaseMetadata() {
         version: packageJson.version,
         releaseId,
         gitSha,
-        slot: process.env.GALEO_RELEASE_SLOT || process.env.APP_SLOT || "unknown",
-        buildScope: STATIC_BUILD_SCOPE,
+        slot:
+            firstNonEmpty(
+                process.env.GALEO_RELEASE_SLOT,
+                process.env.APP_SLOT,
+                fileMetadata.slot,
+            ) || "unknown",
+        buildScope:
+            firstNonEmpty(process.env.GALEO_BUILD_SCOPE, fileMetadata.buildScope) ||
+            STATIC_BUILD_SCOPE,
         deployTarget: resolveDeployTarget(),
-        deployedAt: process.env.GALEO_DEPLOYED_AT || process.env.BUILD_TIME || null,
-        port: process.env.PORT || null,
-        nodeEnv: process.env.NODE_ENV || "development",
+        deployedAt:
+            firstNonEmpty(process.env.GALEO_DEPLOYED_AT, process.env.BUILD_TIME, fileMetadata.deployedAt) ||
+            null,
+        port: firstNonEmpty(process.env.PORT) || null,
+        nodeEnv: firstNonEmpty(process.env.NODE_ENV) || "development",
     };
 }

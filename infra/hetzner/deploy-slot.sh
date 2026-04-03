@@ -62,6 +62,17 @@ else
   npm run build:production
 fi
 
+cat > "$app_dir/release-metadata.json" <<EOF
+{
+  "releaseId": "$release_id",
+  "gitSha": "$git_sha",
+  "slot": "$slot",
+  "buildScope": "$build_scope",
+  "deployTarget": "hetzner",
+  "deployedAt": "$deployed_at"
+}
+EOF
+
 run_pm2_with_release_env() {
   local pm2_action="$1"
   shift
@@ -70,6 +81,7 @@ run_pm2_with_release_env() {
   GALEO_RELEASE_ID="$release_id" \
   GALEO_GIT_SHA="$git_sha" \
   GALEO_DEPLOYED_AT="$deployed_at" \
+  GALEO_BUILD_SCOPE="$build_scope" \
   GALEO_DEPLOY_TARGET="hetzner" \
   PORT="$port" \
   pm2 "$pm2_action" "$@"
