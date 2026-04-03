@@ -9,7 +9,7 @@ import { ArrowRight, Clock, Calendar } from "lucide-react";
 import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
-    title: "Beauty Blog | Expert Tips & Guides | Galeo Beauty Hartbeespoort",
+    title: "Beauty Blog & Treatment Guides in Hartbeespoort",
     description: "Expert beauty tips, treatment guides, and skincare advice from Galeo Beauty in Hartbeespoort. Learn about facials, lash extensions, permanent makeup, anti-aging & more.",
     keywords: [
         "beauty blog Hartbeespoort",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
         canonical: "https://www.galeobeauty.com/blog",
     },
     openGraph: {
-        title: "Beauty Blog | Expert Tips & Guides | Galeo Beauty",
+        title: "Beauty Blog & Treatment Guides in Hartbeespoort",
         description:
             "Expert beauty tips, treatment guides & skincare advice from Galeo Beauty in Hartbeespoort.",
         url: "https://www.galeobeauty.com/blog",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Beauty Blog | Expert Tips & Guides | Galeo Beauty",
+        title: "Beauty Blog & Treatment Guides in Hartbeespoort",
         description:
             "Expert beauty tips, treatment guides & skincare advice from Galeo Beauty in Hartbeespoort.",
         images: ["https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg"],

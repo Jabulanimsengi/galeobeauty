@@ -271,6 +271,7 @@ export function PricesClient() {
                                                                                 note={subcategory.note}
                                                                                 isSelected={isItemSelected(item.id)}
                                                                                 onToggle={handleToggleTreatment}
+                                                                                detailsLink={`/prices/${category.id}/${item.id}`}
                                                                             />
                                                                         ))}
                                                                     </div>

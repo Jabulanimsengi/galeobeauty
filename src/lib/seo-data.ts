@@ -17,9 +17,28 @@ export interface SEOLocation {
     slug: string;
     name: string;
     region: string;
+    tier?: "national" | "province" | "metro" | "district" | "locality";
+    parentSlug?: string;
+    supportsServicePages?: boolean;
+}
+
+export interface LocationIndexGroup {
+    title: string;
+    locations: Array<{
+        name: string;
+        slug: string;
+        badge?: string;
+    }>;
 }
 
 export const TARGET_LOCATIONS: SEOLocation[] = [
+    // ========================================
+    // NATIONAL & PROVINCIAL HUBS
+    // ========================================
+    { slug: "south-africa", name: "South Africa", region: "National", tier: "national", supportsServicePages: false },
+    { slug: "gauteng", name: "Gauteng", region: "South Africa", tier: "province", parentSlug: "south-africa", supportsServicePages: false },
+    { slug: "north-west", name: "North West", region: "South Africa", tier: "province", parentSlug: "south-africa", supportsServicePages: false },
+
     // ========================================
     // HARTBEESPOORT AREA (Primary - Salon Location)
     // ========================================
@@ -285,6 +304,269 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "bekkersdal", name: "Bekkersdal", region: "West Rand" },
 ];
 
+const BROAD_LOCATION_SLUGS = new Set(["south-africa", "gauteng", "north-west"]);
+
+const BROAD_LOCATION_REGION_MAP: Record<string, string[]> = {
+    "south-africa": [
+        "South Africa",
+        "Gauteng",
+        "North West",
+        "Hartbeespoort",
+        "Johannesburg",
+        "Pretoria",
+        "Centurion",
+        "Midrand",
+        "East Rand",
+        "Sedibeng",
+        "West Rand",
+    ],
+    gauteng: [
+        "Gauteng",
+        "Johannesburg",
+        "Pretoria",
+        "Centurion",
+        "Midrand",
+        "East Rand",
+        "Sedibeng",
+        "West Rand",
+    ],
+    "north-west": [
+        "North West",
+        "Hartbeespoort",
+    ],
+};
+
+const BROAD_LOCATION_PRIORITY_SLUGS: Record<string, string[]> = {
+    "south-africa": [
+        "gauteng",
+        "north-west",
+        "hartbeespoort",
+        "landsmeer",
+        "johannesburg",
+        "pretoria",
+        "centurion",
+        "midrand",
+        "kempton-park",
+        "vereeniging",
+        "randfontein",
+        "brits",
+    ],
+    gauteng: [
+        "johannesburg",
+        "pretoria",
+        "centurion",
+        "midrand",
+        "sandton",
+        "randburg",
+        "kempton-park",
+        "boksburg",
+        "benoni",
+        "germiston",
+        "edenvale",
+        "alberton",
+        "vereeniging",
+        "krugersdorp",
+    ],
+    "north-west": [
+        "hartbeespoort",
+        "harties",
+        "landsmeer",
+        "pecanwood",
+        "schoemansville",
+        "ifafi",
+        "melodie",
+        "broederstroom",
+        "brits",
+        "magaliesburg",
+    ],
+};
+
+interface LocationIndexGroupDefinition {
+    title: string;
+    prioritySlugs?: string[];
+    match: (location: SEOLocation) => boolean;
+}
+
+const LOCATION_INDEX_GROUP_DEFINITIONS: LocationIndexGroupDefinition[] = [
+    {
+        title: "National Coverage",
+        prioritySlugs: ["south-africa"],
+        match: (location) => location.slug === "south-africa",
+    },
+    {
+        title: "Provincial Hubs",
+        prioritySlugs: ["gauteng", "north-west"],
+        match: (location) => location.tier === "province",
+    },
+    {
+        title: "Hartbeespoort & North West",
+        prioritySlugs: [
+            "hartbeespoort",
+            "harties",
+            "landsmeer",
+            "schoemansville",
+            "melodie",
+            "ifafi",
+            "meerhof",
+            "kosmos",
+            "broederstroom",
+            "brits",
+            "magaliesburg",
+        ],
+        match: (location) =>
+            !BROAD_LOCATION_SLUGS.has(location.slug) &&
+            (location.slug === "hartbeespoort" ||
+                location.slug === "harties" ||
+                location.region === "Hartbeespoort" ||
+                location.region === "North West"),
+    },
+    {
+        title: "Johannesburg & Northern Suburbs",
+        prioritySlugs: ["johannesburg", "sandton", "randburg", "rosebank", "fourways", "roodepoort"],
+        match: (location) => location.slug === "johannesburg" || location.region === "Johannesburg",
+    },
+    {
+        title: "Pretoria & Tshwane",
+        prioritySlugs: ["pretoria", "pretoria-east", "menlyn", "brooklyn", "garsfontein", "hatfield"],
+        match: (location) => location.slug === "pretoria" || location.region === "Pretoria",
+    },
+    {
+        title: "Centurion & Midstream",
+        prioritySlugs: ["centurion", "midstream", "irene", "eldoraigne", "wierdapark"],
+        match: (location) => location.slug === "centurion" || location.region === "Centurion",
+    },
+    {
+        title: "Midrand Corridor",
+        prioritySlugs: ["midrand", "kyalami", "waterfall", "waterfall-city", "carlswald"],
+        match: (location) => location.slug === "midrand" || location.region === "Midrand",
+    },
+    {
+        title: "Ekurhuleni (East Rand)",
+        prioritySlugs: ["kempton-park", "boksburg", "benoni", "germiston", "edenvale", "alberton", "springs"],
+        match: (location) => location.region === "East Rand",
+    },
+    {
+        title: "Sedibeng & Vaal",
+        prioritySlugs: ["vereeniging", "vanderbijlpark", "meyerton", "heidelberg", "sebokeng"],
+        match: (location) => location.region === "Sedibeng",
+    },
+    {
+        title: "West Rand",
+        prioritySlugs: ["krugersdorp", "randfontein", "lanseria", "muldersdrift", "carletonville"],
+        match: (location) => location.region === "West Rand",
+    },
+];
+
+function sortLocationsByPriority(locations: SEOLocation[], prioritySlugs: string[] = []): SEOLocation[] {
+    const priorityLookup = new Map(prioritySlugs.map((slug, index) => [slug, index]));
+
+    return [...locations].sort((left, right) => {
+        const leftPriority = priorityLookup.get(left.slug);
+        const rightPriority = priorityLookup.get(right.slug);
+
+        if (leftPriority !== undefined || rightPriority !== undefined) {
+            if (leftPriority === undefined) return 1;
+            if (rightPriority === undefined) return -1;
+            return leftPriority - rightPriority;
+        }
+
+        return left.name.localeCompare(right.name);
+    });
+}
+
+function getLocationIndexBadge(location: SEOLocation): string | undefined {
+    if (location.slug === "south-africa") {
+        return "National";
+    }
+
+    if (location.tier === "province") {
+        return "Province";
+    }
+
+    if (location.slug === "landsmeer") {
+        return "Our Salon";
+    }
+
+    if (["johannesburg", "pretoria", "centurion", "midrand"].includes(location.slug)) {
+        return "Metro";
+    }
+
+    return undefined;
+}
+
+function getBroadHubCandidates(location: SEOLocation): SEOLocation[] {
+    const regions = new Set(BROAD_LOCATION_REGION_MAP[location.slug] ?? []);
+    const prioritySlugs = BROAD_LOCATION_PRIORITY_SLUGS[location.slug] ?? [];
+
+    const candidates = TARGET_LOCATIONS.filter((candidate) => {
+        if (candidate.slug === location.slug) {
+            return false;
+        }
+
+        if (location.slug !== "south-africa" && BROAD_LOCATION_SLUGS.has(candidate.slug)) {
+            return false;
+        }
+
+        return regions.has(candidate.region) || prioritySlugs.includes(candidate.slug);
+    });
+
+    return sortLocationsByPriority(candidates, prioritySlugs);
+}
+
+export function isBroadLocationHub(locationOrSlug: SEOLocation | string): boolean {
+    const slug = typeof locationOrSlug === "string" ? locationOrSlug : locationOrSlug.slug;
+    return BROAD_LOCATION_SLUGS.has(slug);
+}
+
+export function supportsLocationServicePages(location: SEOLocation | undefined): boolean {
+    if (!location) {
+        return false;
+    }
+
+    return location.supportsServicePages !== false && !isBroadLocationHub(location);
+}
+
+export function getLocationIndexGroups(): LocationIndexGroup[] {
+    const claimed = new Set<string>();
+    const groups: LocationIndexGroup[] = [];
+
+    for (const definition of LOCATION_INDEX_GROUP_DEFINITIONS) {
+        const matches = sortLocationsByPriority(
+            TARGET_LOCATIONS.filter((location) => !claimed.has(location.slug) && definition.match(location)),
+            definition.prioritySlugs
+        );
+
+        if (matches.length === 0) {
+            continue;
+        }
+
+        matches.forEach((location) => claimed.add(location.slug));
+
+        groups.push({
+            title: definition.title,
+            locations: matches.map((location) => ({
+                name: location.name,
+                slug: location.slug,
+                badge: getLocationIndexBadge(location),
+            })),
+        });
+    }
+
+    const remaining = TARGET_LOCATIONS.filter((location) => !claimed.has(location.slug));
+    if (remaining.length > 0) {
+        groups.push({
+            title: "Additional Coverage",
+            locations: sortLocationsByPriority(remaining).map((location) => ({
+                name: location.name,
+                slug: location.slug,
+                badge: getLocationIndexBadge(location),
+            })),
+        });
+    }
+
+    return groups;
+}
+
 // ============================================
 // PRIORITY LOCATIONS & SERVICES FOR PRE-BUILDING
 // ============================================
@@ -528,6 +810,10 @@ export function isPrimaryLocalLocation(locationSlug: string): boolean {
 }
 
 export function isHartbeespoortClusterLocation(locationSlug: string): boolean {
+    if (isBroadLocationHub(locationSlug)) {
+        return false;
+    }
+
     if (isPrimaryLocalLocation(locationSlug)) {
         return true;
     }
@@ -541,7 +827,9 @@ export function isHartbeespoortClusterLocation(locationSlug: string): boolean {
 }
 
 export function isIndexableLocationService(locationSlug: string, serviceSlug: string): boolean {
-    if (isHartbeespoortClusterLocation(locationSlug)) {
+    const location = getLocationBySlug(locationSlug);
+
+    if (!location || !supportsLocationServicePages(location) || isHartbeespoortClusterLocation(locationSlug)) {
         return false;
     }
 
@@ -592,6 +880,10 @@ export function getNearbyLocations(currentSlug: string, limit = 5): SEOLocation[
     const current = getLocationBySlug(currentSlug);
     if (!current) return [];
 
+    if (isBroadLocationHub(current)) {
+        return getBroadHubCandidates(current).slice(0, limit);
+    }
+
     // Get locations from same region first
     const sameRegion = TARGET_LOCATIONS.filter(
         (loc) => loc.region === current.region && loc.slug !== currentSlug
@@ -614,6 +906,10 @@ export function getNearbyLocations(currentSlug: string, limit = 5): SEOLocation[
 export function getLocationClusterLinks(currentSlug: string, limit = 12): SEOLocation[] {
     const current = getLocationBySlug(currentSlug);
     if (!current) return [];
+
+    if (isBroadLocationHub(current)) {
+        return getBroadHubCandidates(current).slice(0, limit);
+    }
 
     const parentLocation = TARGET_LOCATIONS.find((loc) => loc.name === current.region);
     const childLocations = TARGET_LOCATIONS.filter(
@@ -1132,6 +1428,18 @@ export function generateServiceIntro(service: SEOService, location: SEOLocation)
  * Get driving context text based on location region
  */
 export function getDrivingContext(location: SEOLocation): string {
+    if (location.slug === "south-africa") {
+        return "Clients across South Africa plan destination beauty visits to our Hartbeespoort salon";
+    }
+
+    if (location.slug === "gauteng") {
+        return "Galeo Beauty has become a Hartbeespoort destination for clients across Gauteng";
+    }
+
+    if (location.slug === "north-west") {
+        return "North West clients can reach our Hartbeespoort salon easily for planned beauty and wellness visits";
+    }
+
     const contexts: Record<string, string> = {
         "Hartbeespoort": "Our salon is just minutes away from your doorstep",
         "North West": "A quick, scenic drive through the countryside to our salon",
@@ -1154,6 +1462,21 @@ export function getDrivingContext(location: SEOLocation): string {
 export function getLocationInsights(location: SEOLocation): { characteristic: string; clientProfile: string; travelNote: string } {
     // Location-specific characteristics and demographics
     const locationProfiles: Record<string, { characteristic: string; clientProfile: string; travelNote: string }> = {
+        "south-africa": {
+            characteristic: "South African beauty searches increasingly blend destination travel, treatment quality, and the appeal of a calmer setting outside the biggest city centres.",
+            clientProfile: "National clients usually compare Galeo Beauty with metro salons and clinics, then choose us for planned bookings, premium treatments, and the Hartbeespoort experience around the appointment.",
+            travelNote: "Many clients pair their booking with a dedicated Hartbeespoort visit, giving them a clearer, more destination-led alternative to rushed city appointments."
+        },
+        "gauteng": {
+            characteristic: "Gauteng is our strongest broad catchment, combining busy urban professionals, event-driven bookings, and clients who want premium beauty services worth a planned trip.",
+            clientProfile: "Gauteng clients usually want clear pricing, reliable treatment quality, and enough confidence in the experience to justify travelling out to Hartbeespoort.",
+            travelNote: "From Johannesburg, Pretoria, Centurion, Midrand and the East Rand, Galeo Beauty is positioned as a scenic Hartbeespoort destination rather than a generic neighbourhood salon."
+        },
+        "north-west": {
+            characteristic: "North West clients often value scenic convenience, repeatability, and the ability to access premium beauty services without defaulting to Johannesburg or Pretoria.",
+            clientProfile: "North West clients tend to book Galeo Beauty for a blend of trusted treatment quality, easier travel planning, and a more relaxed appointment setting around Hartbeespoort.",
+            travelNote: "For Hartbeespoort, Brits, Broederstroom and nearby North West areas, the salon is close enough for regular bookings while still feeling like a premium destination."
+        },
         // Hartbeespoort Core
         "hartbeespoort": {
             characteristic: "Known for its scenic dam views and vibrant tourism, Hartbeespoort is home to a diverse community that values quality beauty services.",

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
-    title: "Specials & Promotions | Galeo Beauty Hartbeespoort",
+    title: "Specials & Promotions in Hartbeespoort",
     description:
         "Explore the latest specials at Galeo Beauty in Hartbeespoort, including curated savings on facials, lashes, massage, and seasonal treatment offers.",
     keywords: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         canonical: "https://www.galeobeauty.com/specials",
     },
     openGraph: {
-        title: "Specials & Promotions | Galeo Beauty Hartbeespoort",
+        title: "Specials & Promotions in Hartbeespoort",
         description:
             "Latest curated treatment offers from Galeo Beauty in Hartbeespoort.",
         url: "https://www.galeobeauty.com/specials",

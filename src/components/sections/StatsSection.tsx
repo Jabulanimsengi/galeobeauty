@@ -68,7 +68,7 @@ function StatItem({ value, suffix, label, description, delay = 0 }: StatItemProp
 export function StatsSection() {
     const stats = [
         {
-            value: 190,
+            value: 300,
             suffix: "+",
             label: "Verified Reviews",
             description: "Across Google and Fresha",
@@ -109,7 +109,7 @@ export function StatsSection() {
                     transition={{ duration: 0.5 }}
                 >
                     <span className="text-gold text-xs uppercase tracking-[0.3em] mb-3 block font-sans font-semibold">
-                        At a Glance
+                        By The Numbers
                     </span>
                     <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold">
                         Trusted Beauty &amp; Aesthetic Care in <span className="text-gold">Hartbeespoort</span>

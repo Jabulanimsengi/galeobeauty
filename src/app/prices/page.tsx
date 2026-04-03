@@ -6,8 +6,8 @@ import { PricesClient } from "./PricesClient";
 import { buildPricesPageKeywords } from "@/lib/seo-keywords";
 
 export const metadata: Metadata = {
-    title: "Beauty Treatment Prices | Galeo Beauty Hartbeespoort",
-    description: "Explore Galeo Beauty's treatment prices in Hartbeespoort, from facials and injectables to hair, nails, massage, lashes, and body treatments.",
+    title: "Services Offered & Prices in Hartbeespoort",
+    description: "Browse services and prices at Galeo Beauty in Hartbeespoort, from hair, nails, lash lift and tint, and facials to massage, waxing, IPL, and advanced aesthetics.",
     keywords: buildPricesPageKeywords(),
     alternates: {
         canonical: "https://www.galeobeauty.com/prices",

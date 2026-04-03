@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SITEMAP_1_LOCATIONS } from '@/lib/sitemap-config';
-import { getAllSEOServices } from '@/lib/seo-data';
+import { getAllSEOServices, isIndexableLocationService } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
 
@@ -36,6 +36,10 @@ export async function GET() {
     // Add location service pages for SITEMAP_1_LOCATIONS
     for (const location of SITEMAP_1_LOCATIONS) {
         for (const service of services) {
+            if (!isIndexableLocationService(location, service.slug)) {
+                continue;
+            }
+
             entries.push(`
   <url>
     <loc>${escapeXml(`${BASE_URL}/locations/${location}/${service.slug}`)}</loc>

@@ -6,7 +6,7 @@ import { getGalleryImages } from "@/lib/gallery-utils";
 import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
-    title: "Gallery | Galeo Beauty Salon & Spa in Hartbeespoort",
+    title: "Treatment Gallery in Hartbeespoort",
     description:
         "Browse our gallery of beauty treatments, nail art, skincare results, and salon ambiance at Galeo Beauty in Hartbeespoort. See real before & after results.",
     keywords: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         canonical: "https://www.galeobeauty.com/gallery",
     },
     openGraph: {
-        title: "Gallery | Galeo Beauty Salon & Spa Hartbeespoort",
+        title: "Treatment Gallery in Hartbeespoort",
         description:
             "Browse real treatment results, nail art, skincare before & afters at Galeo Beauty in Hartbeespoort.",
         url: "https://www.galeobeauty.com/gallery",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Gallery | Galeo Beauty Salon & Spa Hartbeespoort",
+        title: "Treatment Gallery in Hartbeespoort",
         description:
             "Browse real treatment results, nail art, skincare before & afters at Galeo Beauty in Hartbeespoort.",
         images: ["https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg"],

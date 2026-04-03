@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAllBlogPosts } from '@/lib/blog-data';
-import { getAllSEOServices } from '@/lib/seo-data';
+import { getAllSEOServices, isIndexableLocationService } from '@/lib/seo-data';
 import { SITEMAP_0_LOCATIONS } from '@/lib/sitemap-config';
 import { SITEMAP_STATIC_PAGES } from '@/lib/sitemap-static-pages';
 import { toAbsoluteUrl } from '@/lib/site-url';
@@ -92,6 +92,10 @@ export async function GET() {
   // Add location service pages for all SITEMAP_0_LOCATIONS
   for (const location of SITEMAP_0_LOCATIONS) {
     for (const service of services) {
+      if (!isIndexableLocationService(location, service.slug)) {
+        continue;
+      }
+
       const serviceImageUrl = toAbsoluteUrl(service.image || FALLBACK_IMAGE);
       entries.push(`
   <url>

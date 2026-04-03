@@ -164,7 +164,7 @@ function getInfoWindowContent({
 export function Map({
     latitude,
     longitude,
-    zoom = 16,
+    zoom = 15,
     className = "",
     markerTitle = "Galeo Beauty",
     markerDescription = "Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort",

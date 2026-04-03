@@ -1,6 +1,10 @@
+import { getCategoryAliasKeywords, getMatchingAliasKeywords } from "./seo-aliases";
+
 interface KeywordLocation {
     name: string;
     region?: string;
+    slug?: string;
+    tier?: string;
 }
 
 interface KeywordService {
@@ -20,6 +24,12 @@ interface KeywordCategory {
     subcategories: Array<{
         items: KeywordServiceItem[];
     }>;
+}
+
+interface IntentKeywordPage {
+    primaryKeywords: string[];
+    supportingKeywords: string[];
+    categoryIds: string[];
 }
 
 interface CategorySeoStrategy {
@@ -63,6 +73,13 @@ const LOCATION_NOISE_PATTERNS = [
     /\bgauteng\b/i,
     /\bnorth west\b/i,
 ];
+
+const PROXIMITY_VARIATIONS = [
+    "near me",
+    "close to me",
+    "nearby",
+    "in my area",
+] as const;
 
 export const CATEGORY_SEO_STRATEGIES: Record<string, CategorySeoStrategy> = {
     "hart-aesthetics": {
@@ -1141,6 +1158,27 @@ function getCategoryServiceHighlights(category: KeywordCategory): string[] {
     ).filter((keyword) => keyword.length > 4).slice(0, 8);
 }
 
+function stripKeywordLocations(value: string): string {
+    return normalizeKeywordPhrase(value)
+        .replace(/\b(hartbeespoort|harties|pretoria|centurion|johannesburg|gauteng|north west)\b/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function expandMetadataKeywordVariations(
+    baseKeywords: string[],
+    locationName?: string,
+    regionName?: string,
+    perKeywordLimit = 6,
+    overallLimit = 24
+): string[] {
+    return dedupeKeywords(
+        baseKeywords.flatMap((keyword) =>
+            buildKeywordVariationCluster(keyword, locationName, regionName).slice(0, perKeywordLimit)
+        )
+    ).slice(0, overallLimit);
+}
+
 export function buildGlobalKeywords(): string[] {
     return dedupeKeywords([
         "beauty salon hartbeespoort",
@@ -1206,6 +1244,10 @@ export function buildLocationsIndexKeywords(): string[] {
         "beauty salon hartbeespoort",
         "areas we serve hartbeespoort",
         "beauty treatments gauteng",
+        "beauty salon gauteng",
+        "beauty treatments north west",
+        "beauty salon north west",
+        "beauty services south africa",
         "day spa near pretoria",
         "beauty salon near johannesburg",
         "hartbeespoort salon for pretoria clients",
@@ -1218,6 +1260,30 @@ export function buildLocationsIndexKeywords(): string[] {
 export function buildLocationHubKeywords(location: KeywordLocation): string[] {
     const locationName = normalizeKeywordPhrase(location.name);
     const regionName = location.region ? normalizeKeywordPhrase(location.region) : "";
+
+    if (location.slug === "south-africa" || location.tier === "national") {
+        return dedupeKeywords([
+            "beauty services south africa",
+            "beauty salon south africa",
+            "day spa south africa",
+            "hartbeespoort beauty destination",
+            "gauteng beauty clients",
+            "north west beauty clients",
+            "destination beauty salon south africa",
+            "hartbeespoort salon for south african clients",
+        ]);
+    }
+
+    if (location.tier === "province") {
+        return dedupeKeywords([
+            `beauty services ${locationName}`,
+            `beauty salon ${locationName}`,
+            `day spa ${locationName}`,
+            `hartbeespoort salon for ${locationName} clients`,
+            `beauty treatments ${locationName}`,
+            regionName ? `beauty services ${regionName}` : undefined,
+        ]);
+    }
 
     return dedupeKeywords([
         `beauty salon ${locationName}`,
@@ -1258,6 +1324,35 @@ export function buildCategoryKeywords(category: KeywordCategory): string[] {
     ]).slice(0, 36);
 }
 
+export function buildCategoryMetadataKeywords(category: KeywordCategory): string[] {
+    const categoryAliases = getCategoryAliasKeywords(category.id).slice(0, 12);
+
+    return dedupeKeywords([
+        ...buildCategoryKeywords(category),
+        ...categoryAliases,
+        ...expandMetadataKeywordVariations(categoryAliases.slice(0, 4), "hartbeespoort", "north west"),
+    ]).slice(0, 52);
+}
+
+function buildKeywordVariationCluster(
+    baseKeyword: string,
+    locationName?: string,
+    regionName?: string
+): string[] {
+    return dedupeKeywords([
+        baseKeyword,
+        `${baseKeyword} treatment`,
+        `${baseKeyword} service`,
+        locationName ? `${baseKeyword} ${locationName}` : undefined,
+        locationName ? `${baseKeyword} in ${locationName}` : undefined,
+        locationName ? `${baseKeyword} near ${locationName}` : undefined,
+        locationName ? `${baseKeyword} for ${locationName} clients` : undefined,
+        regionName ? `${baseKeyword} ${regionName}` : undefined,
+        regionName ? `${baseKeyword} in ${regionName}` : undefined,
+        ...PROXIMITY_VARIATIONS.map((variation) => `${baseKeyword} ${variation}`),
+    ]).slice(0, 12);
+}
+
 export function buildServiceKeywords(service: KeywordService, location?: KeywordLocation): string[] {
     const strategy = getCategoryStrategy(service.categoryId);
     const serviceKeyword = normalizeKeywordPhrase(service.keyword);
@@ -1280,6 +1375,65 @@ export function buildServiceKeywords(service: KeywordService, location?: Keyword
         ...strategy.audienceTerms,
         ...serviceSeedKeywords,
     ]).slice(0, 34);
+}
+
+export function buildServiceMetadataKeywords(service: KeywordService, location?: KeywordLocation): string[] {
+    const strategy = getCategoryStrategy(service.categoryId);
+    const serviceKeyword = normalizeKeywordPhrase(service.keyword);
+    const simplifiedKeyword = simplifyServiceName(service.keyword);
+    const locationName = location ? normalizeKeywordPhrase(location.name) : "";
+    const regionName = location?.region ? normalizeKeywordPhrase(location.region) : "";
+    const serviceSeedKeywords = sanitizeLegacyKeywords(service.seoKeywords).slice(0, 12);
+    const matchedAliases = getMatchingAliasKeywords(
+        service.categoryId,
+        [serviceKeyword, simplifiedKeyword, ...serviceSeedKeywords]
+    ).slice(0, 12);
+
+    return dedupeKeywords([
+        ...buildKeywordVariationCluster(serviceKeyword, locationName, regionName),
+        ...(simplifiedKeyword !== serviceKeyword
+            ? buildKeywordVariationCluster(simplifiedKeyword, locationName, regionName)
+            : []),
+        locationName ? `${strategy.catalogLabel} ${locationName}` : undefined,
+        regionName ? `${strategy.catalogLabel} ${regionName}` : undefined,
+        ...matchedAliases,
+        ...expandMetadataKeywordVariations(serviceSeedKeywords.slice(0, 4), locationName, regionName, 5, 18),
+        ...expandMetadataKeywordVariations(matchedAliases.slice(0, 4), locationName, regionName, 6, 24),
+        ...strategy.shortTail,
+        ...strategy.seoPainPoints,
+        ...strategy.seoResults,
+        ...strategy.comparisonTerms,
+        ...strategy.objectionTerms,
+        ...strategy.audienceTerms,
+        ...serviceSeedKeywords,
+    ]).slice(0, 60);
+}
+
+export function buildIntentPageMetadataKeywords(page: IntentKeywordPage): string[] {
+    const baseKeywords = dedupeKeywords([...page.primaryKeywords, ...page.supportingKeywords]);
+    const strippedKeywords = dedupeKeywords(
+        baseKeywords
+            .map((keyword) => stripKeywordLocations(keyword))
+            .filter((keyword) => keyword.length > 3)
+    ).slice(0, 8);
+    const matchedAliases = dedupeKeywords(
+        page.categoryIds.flatMap((categoryId) =>
+            getMatchingAliasKeywords(categoryId, [...baseKeywords, ...strippedKeywords])
+        )
+    ).slice(0, 12);
+
+    return dedupeKeywords([
+        ...baseKeywords,
+        ...strippedKeywords,
+        ...matchedAliases,
+        ...expandMetadataKeywordVariations(
+            [...strippedKeywords.slice(0, 4), ...matchedAliases.slice(0, 4)],
+            "hartbeespoort",
+            "north west",
+            6,
+            28
+        ),
+    ]).slice(0, 56);
 }
 
 export function buildOfferCatalogEntries() {

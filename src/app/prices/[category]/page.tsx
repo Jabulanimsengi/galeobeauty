@@ -6,10 +6,10 @@ import { TrustBadge } from "@/components/ui/trust-badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { ArrowRight, ArrowLeft, Phone, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { serviceCategories, getCategoryById } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
-import { buildCategoryKeywords } from "@/lib/seo-keywords";
+import { buildCategoryMetadataKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
@@ -253,7 +253,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title,
         description,
-        keywords: buildCategoryKeywords(category),
+        keywords: buildCategoryMetadataKeywords(category),
         openGraph: {
             title,
             description,
@@ -371,7 +371,7 @@ export default async function CategoryPage({ params }: PageProps) {
             <Header />
             <main className="bg-background min-h-screen">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-12 lg:pt-40 lg:pb-16 overflow-hidden">
+                <section className="relative pt-24 pb-8 lg:pt-32 lg:pb-12 overflow-hidden">
                     {/* Background Image */}
                     <div className="absolute inset-0 -z-10">
                         <CloudinaryImage
@@ -384,16 +384,7 @@ export default async function CategoryPage({ params }: PageProps) {
                         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
                     </div>
 
-                    <div className="container mx-auto px-4 sm:px-6">
-                        {/* Breadcrumb */}
-                        <Link
-                            href="/prices"
-                            className="inline-flex items-center gap-2 text-muted-foreground hover:text-gold transition-colors mb-6 text-sm"
-                        >
-                            <ArrowLeft className="w-4 h-4" />
-                            All Services
-                        </Link>
-
+                    <div className="container mx-auto px-4 sm:px-6 mt-4">
                         <div className="max-w-4xl">
                             <div className="flex items-center gap-3 mb-4">
                                 <TrustBadge variant={category.badgeVariant}>
@@ -412,67 +403,14 @@ export default async function CategoryPage({ params }: PageProps) {
                                     {benefits.map((benefit, index) => (
                                         <span
                                             key={index}
-                                            className="inline-flex items-center gap-1.5 bg-gold/10 text-gold px-3 py-1.5 rounded-full text-sm font-medium"
+                                            className="inline-flex items-center gap-2 border border-border/60 bg-background/80 px-4 py-1.5 rounded-full text-sm font-medium text-foreground/80 shadow-sm backdrop-blur-sm transition-colors hover:border-gold/30"
                                         >
-                                            <Sparkles className="w-3.5 h-3.5" />
+                                            <div className="h-1.5 w-1.5 rounded-full bg-gold" />
                                             {benefit}
                                         </span>
                                     ))}
                                 </div>
                             )}
-                        </div>
-                    </div>
-                </section>
-
-                {relatedIntentPages.length > 0 && (
-                    <section className="py-10 border-b border-border/30 bg-background">
-                        <div className="container mx-auto px-4 sm:px-6">
-                            <div className="max-w-3xl mb-6">
-                                <h2 className="font-serif text-2xl text-foreground">Helpful Treatment Guides</h2>
-                                <p className="text-sm text-muted-foreground mt-2">
-                                    If you are still deciding, these guides can help you understand common concerns, treatment
-                                    options, and what may suit your goals best.
-                                </p>
-                            </div>
-                            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                                {relatedIntentPages.map((page) => (
-                                    <Link
-                                        key={page.slug}
-                                        href={`/${page.slug}`}
-                                        className="rounded-2xl border border-border bg-secondary/10 p-5 transition-colors hover:border-gold/40"
-                                    >
-                                        <h3 className="font-medium text-foreground">{page.title}</h3>
-                                        <p className="mt-2 text-sm text-muted-foreground">{page.metaDescription}</p>
-                                        <span className="mt-4 inline-block text-sm font-medium text-gold">Read guide</span>
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* Booking Instructions */}
-                <section className="py-6 border-b border-border/30">
-                    <div className="container mx-auto px-4 sm:px-6">
-                        <div className="bg-secondary/30 rounded-2xl p-5 sm:p-7">
-                            <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                                <div className="flex-1">
-                                    <h2 className="mb-2 font-serif text-2xl text-foreground">
-                                        How to Book
-                                    </h2>
-                                    <p className="max-w-4xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-                                        Choose the treatments you want from this page, then click
-                                        {" "}
-                                        <span className="font-semibold text-foreground">&quot;Book Your Visit&quot;</span>
-                                        {" "}
-                                        to send your booking request. You can add more than one treatment before you continue.
-                                    </p>
-                                </div>
-                                <div className="flex items-center gap-2 text-base font-medium text-gold sm:text-lg">
-                                    <Phone className="h-5 w-5" />
-                                    <span>Or call: 012 253 9850</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -503,8 +441,34 @@ export default async function CategoryPage({ params }: PageProps) {
                     </section>
                 )}
 
-                {/* Reviews Section */}
-
+                {/* Helpful Treatment Guides Moved to Bottom */}
+                {relatedIntentPages.length > 0 && (
+                    <section className="py-16 bg-background border-t border-border/30">
+                        <div className="container mx-auto px-4 sm:px-6">
+                            <div className="max-w-3xl mb-10 text-center mx-auto">
+                                <h2 className="font-serif text-3xl text-foreground mb-4">Unsure where to start?</h2>
+                                <p className="text-base text-muted-foreground">
+                                    Read our deep-dive treatment guides to better understand these services and know exactly what to book.
+                                </p>
+                            </div>
+                            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 max-w-6xl mx-auto">
+                                {relatedIntentPages.map((page) => (
+                                    <Link
+                                        key={page.slug}
+                                        href={`/${page.slug}`}
+                                        className="group rounded-3xl border border-border/50 bg-secondary/5 p-8 transition-all hover:border-gold/30 hover:shadow-sm"
+                                    >
+                                        <h3 className="font-serif text-xl text-foreground mb-3">{page.title}</h3>
+                                        <p className="text-sm leading-relaxed text-muted-foreground mb-6 line-clamp-3">{page.metaDescription}</p>
+                                        <span className="inline-flex items-center text-sm font-medium text-gold group-hover:underline underline-offset-4">
+                                            Explore guide <ArrowRight className="w-4 h-4 ml-1" />
+                                        </span>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* CTA */}
                 <section className="py-20 bg-foreground text-background text-center">

@@ -7,6 +7,7 @@ import { Breadcrumbs, type BreadcrumbItem } from "@/components/ui/breadcrumbs";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { getCategoryById } from "@/lib/services-data";
+import { buildIntentPageMetadataKeywords } from "@/lib/seo-keywords";
 import {
     getPublishedIntentPages,
     getIntentPageBySlug,
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title: page.metaTitle,
         description: page.metaDescription,
-        keywords: [...page.primaryKeywords, ...page.supportingKeywords],
+        keywords: buildIntentPageMetadataKeywords(page),
         alternates: {
             canonical: `https://www.galeobeauty.com/${page.slug}`,
         },

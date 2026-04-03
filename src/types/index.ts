@@ -83,6 +83,7 @@ export interface BusinessInfo {
     whatsapp: string;
     tiktok?: string;
     fresha?: string;
+    google?: string;
   };
   banking: {
     companyName: string;

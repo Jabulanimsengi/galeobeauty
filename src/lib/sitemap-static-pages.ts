@@ -28,11 +28,6 @@ export const SITEMAP_STATIC_PAGES = [
   { path: "/acne-treatment-hartbeespoort", priority: 0.82, changefreq: "weekly" },
   { path: "/acne-scar-treatment-hartbeespoort", priority: 0.82, changefreq: "weekly" },
   { path: "/stubborn-belly-fat-treatment-hartbeespoort", priority: 0.82, changefreq: "weekly" },
-  { path: "/lip-filler-hartbeespoort", priority: 0.82, changefreq: "weekly" },
-  { path: "/ipl-hair-removal-hartbeespoort", priority: 0.82, changefreq: "weekly" },
-  { path: "/lash-extensions-hartbeespoort", priority: 0.8, changefreq: "weekly" },
-  { path: "/hair-salon-hartbeespoort", priority: 0.8, changefreq: "weekly" },
-  { path: "/nail-salon-hartbeespoort", priority: 0.8, changefreq: "weekly" },
   { path: "/dark-circles-treatment-hartbeespoort", priority: 0.78, changefreq: "weekly" },
   { path: "/frizz-control-keratin-treatment-hartbeespoort", priority: 0.78, changefreq: "weekly" },
 ] as const;

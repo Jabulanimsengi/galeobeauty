@@ -937,8 +937,8 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
         image: "/images/gallery/lashes-brows/hybrid-lashes-with-defined-eyebrows.png",
         subcategories: [
             {
-                id: "lashes-brows-all",
-                title: "All",
+                id: "lash-extensions-infills",
+                title: "Lash Extensions & Infills",
                 items: [
                     { id: "classic-lashes", name: "Classic Lashes", duration: "1hr 30min", price: "R450", description: "One extension applied to one natural lash. Clean, natural definition." },
                     { id: "volume-lashes", name: "Volume Lashes", duration: "2hr", price: "R540", description: "Multiple fine lashes per natural lash for fluffier volume." },
@@ -947,11 +947,17 @@ const rawServiceCategoriesContent: ServiceCategoryContent[] = [
                     { id: "hybrid-lashes", name: "Hybrid Lashes", duration: "1hr 45min", price: "R500", description: "Mix of classic and volume for textured density." },
                     { id: "lash-fill-2", name: "Lash Fill (2 Week)", duration: "1hr", price: "R270", description: "Maintenance fill at 2 weeks." },
                     { id: "lash-fill-3", name: "Lash Fill (3 Week)", duration: "1hr 15min", price: "R315", description: "Maintenance fill at 3 weeks." },
+                    { id: "lash-removal", name: "Lash Removal", duration: "30min", price: "R135", description: "Safe removal of extensions." },
+                ],
+            },
+            {
+                id: "lash-lift-tint-brows",
+                title: "Lash Lift, Tint & Brow Styling",
+                items: [
                     { id: "lash-lift-tint", name: "Lash Lift & Tint", duration: "45min", price: "R405", description: "Curl and darken natural lashes for an open-eyed look." },
                     { id: "lash-lamination", name: "Lash Lamination", duration: "45min", price: "R405", description: "Advanced lifting treatment for thicker, darker looking lashes." },
                     { id: "lash-tint", name: "Lash Tint", duration: "15min", price: "R99", description: "Darken pale lashes." },
                     { id: "brow-tint", name: "Brow Tint", duration: "15min", price: "R90", description: "Define brows with colour." },
-                    { id: "lash-removal", name: "Lash Removal", duration: "30min", price: "R135", description: "Safe removal of extensions." },
                 ],
             },
         ],

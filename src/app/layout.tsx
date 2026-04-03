@@ -7,6 +7,7 @@ import { AppBootLoader } from "@/components/providers/AppBootLoader";
 import { DeferredFloatingSocials } from "@/components/ui/DeferredFloatingSocials";
 import { AGGREGATE_RATING } from "@/lib/reviews-data";
 import { buildGlobalKeywords, buildOfferCatalogEntries } from "@/lib/seo-keywords";
+import { businessInfo } from "@/lib/constants";
 import "./globals.css";
 
 const GA_MEASUREMENT_ID = "G-8JRBY6T1GQ";
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.galeobeauty.com"),
   title: {
     default: "Galeo Beauty | Premium Salon & Medical Aesthetics in Hartbeespoort",
-    template: "%s | Galeo Beauty Hartbeespoort",
+    template: "%s | Galeo Beauty",
   },
   description:
     "Premium hair, nails, facials, massage, body treatments, and medical aesthetics in Hartbeespoort at Galeo Beauty.",
@@ -75,6 +76,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sameAsProfiles = [
+    businessInfo.socials.facebook,
+    businessInfo.socials.instagram,
+    businessInfo.socials.tiktok,
+    businessInfo.socials.fresha,
+    businessInfo.socials.google,
+  ].filter(Boolean);
+
   return (
     <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
       <head>
@@ -121,6 +130,7 @@ export default function RootLayout({
                 { "@type": "City", name: "Johannesburg" },
                 { "@type": "AdministrativeArea", name: "North West Province" },
               ],
+              sameAs: sameAsProfiles,
               aggregateRating: {
                 "@type": "AggregateRating",
                 ...AGGREGATE_RATING,
@@ -151,10 +161,7 @@ export default function RootLayout({
                 { "@type": "State", name: "Gauteng" },
                 { "@type": "State", name: "North West" },
               ],
-              sameAs: [
-                "https://www.facebook.com/galeobeauty",
-                "https://www.instagram.com/galeobeauty",
-              ],
+              sameAs: sameAsProfiles,
               contactPoint: {
                 "@type": "ContactPoint",
                 telephone: "+27121111730",

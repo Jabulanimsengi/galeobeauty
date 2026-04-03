@@ -2,8 +2,7 @@
 
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { Phone } from "lucide-react";
-import { motion } from "framer-motion";
+import { Menu, Phone, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { NavLink } from "@/components/ui/nav-link";
 import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { useNavigationLoading } from "@/components/providers/NavigationLoadingProvider";
 import {
+    SheetClose,
     Sheet,
     SheetContent,
     SheetHeader,
@@ -69,6 +69,10 @@ export function Header() {
         });
     }, [pathname, router, startNavigation]);
 
+    const isHomepage = pathname === "/";
+    const useTransparentHeader = isHomepage && !isScrolled && !isMobileMenuOpen;
+    const mobileToggleIconClass = isMobileMenuOpen || useTransparentHeader ? "text-white" : "text-foreground";
+
     return (
         <>
             {/* Top Bar removed */}
@@ -76,7 +80,8 @@ export function Header() {
             {/* Main Header */}
             <header
                 className={cn(
-                    "sticky top-0 z-50 isolate transition-shadow duration-300 ease-out",
+                    "inset-x-0 top-0 z-50 isolate transition-shadow duration-300 ease-out",
+                    isHomepage ? "fixed" : "sticky",
                     isScrolled && "shadow-lg"
                 )}
             >
@@ -84,7 +89,7 @@ export function Header() {
                 <div
                     className={cn(
                         "absolute inset-0 -z-10 bg-background/95 backdrop-blur-md transition-opacity duration-300 ease-out",
-                        isScrolled ? "opacity-95" : "opacity-95 lg:opacity-0"
+                        useTransparentHeader ? "opacity-0" : "opacity-95"
                     )}
                 />
                 <div className="container mx-auto px-4 sm:px-6">
@@ -94,29 +99,24 @@ export function Header() {
                                 <button
                                     aria-label="Toggle menu"
                                     aria-controls={mobileMenuContentId}
-                                    className="relative z-50 flex h-12 w-12 items-center justify-center bg-transparent transition-transform duration-300 active:scale-[0.98] focus:outline-none"
+                                    className="relative z-[60] flex h-12 w-12 items-center justify-center bg-transparent transition-transform duration-200 active:scale-[0.98] focus:outline-none"
                                 >
-                                    <span className="relative flex w-7 flex-col items-start gap-[0.38rem]">
-                                        <span
+                                    <span className="relative flex h-7 w-7 items-center justify-center">
+                                        <Menu
                                             className={cn(
-                                                "block h-0.5 w-7 origin-left rounded-full transition-all duration-300",
-                                                "bg-foreground",
-                                                isMobileMenuOpen && "translate-y-[7px] rotate-45"
+                                                "absolute size-7 transition-all duration-200 ease-out",
+                                                mobileToggleIconClass,
+                                                isMobileMenuOpen ? "scale-75 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"
                                             )}
+                                            strokeWidth={2}
                                         />
-                                        <span
+                                        <X
                                             className={cn(
-                                                "block h-0.5 w-5 origin-left rounded-full transition-all duration-300",
-                                                "bg-foreground",
-                                                isMobileMenuOpen && "opacity-0"
+                                                "absolute size-7 transition-all duration-200 ease-out",
+                                                mobileToggleIconClass,
+                                                isMobileMenuOpen ? "scale-100 rotate-0 opacity-100" : "scale-75 -rotate-90 opacity-0"
                                             )}
-                                        />
-                                        <span
-                                            className={cn(
-                                                "block h-0.5 w-3 origin-left rounded-full transition-all duration-300",
-                                                "bg-foreground",
-                                                isMobileMenuOpen && "-translate-y-[7px] w-7 -rotate-45"
-                                            )}
+                                            strokeWidth={2}
                                         />
                                     </span>
                                 </button>
@@ -124,9 +124,19 @@ export function Header() {
                             <SheetContent
                                 id={mobileMenuContentId}
                                 side="left"
-                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0"
+                                hideCloseButton
+                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0 data-[state=closed]:duration-100 data-[state=open]:duration-100"
                             >
                                 <SheetHeader className="relative border-b border-white/10 px-7 pt-7 pb-6">
+                                    <SheetClose asChild>
+                                        <button
+                                            type="button"
+                                            aria-label="Close menu"
+                                            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/85 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                                        >
+                                            <X className="size-5" strokeWidth={2.1} />
+                                        </button>
+                                    </SheetClose>
                                     <div className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-white/45">
                                         Galeo Beauty
                                     </div>
@@ -146,51 +156,33 @@ export function Header() {
                                     <div className="hide-scrollbar flex-1 overflow-y-auto px-7 py-6">
                                         <nav className="flex flex-col gap-5 overflow-hidden">
                                             {navItems.map((item, index) => (
-                                                <motion.div
-                                                    key={item.href}
-                                                    initial={{ opacity: 0, x: -28 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{
-                                                        duration: 0.32,
-                                                        delay: 0.08 + index * 0.06,
-                                                        ease: [0.25, 0.1, 0.25, 1]
-                                                    }}
-                                                >
+                                                <div key={item.href}>
                                                     <button
                                                         type="button"
                                                         onClick={() => handleMobileNavigation(item.href)}
-                                                        className="group inline-flex w-fit items-center py-1 text-[1.05rem] font-medium uppercase tracking-[0.22em] text-white/72 transition-all duration-300 hover:text-white"
+                                                        className="group inline-flex w-fit items-center py-1 text-[1.05rem] font-medium uppercase tracking-[0.22em] text-white/72 transition-all duration-200 hover:text-white"
                                                     >
                                                         <span>{item.label}</span>
-                                                        <span className="ml-3 h-px w-0 bg-gold/80 transition-all duration-300 group-hover:w-8" />
-                                                        <span className="overflow-hidden text-gold/80 transition-all duration-300 group-hover:translate-x-1">
+                                                        <span className="ml-3 h-px w-0 bg-gold/80 transition-all duration-200 group-hover:w-8" />
+                                                        <span className="overflow-hidden text-gold/80 transition-all duration-200 group-hover:translate-x-1">
                                                             <span className="block opacity-0 group-hover:opacity-100">
                                                                 /
                                                             </span>
                                                         </span>
                                                     </button>
-                                                </motion.div>
+                                                </div>
                                             ))}
                                         </nav>
 
-                                        <motion.div
-                                            className="mt-6"
-                                            initial={{ opacity: 0, x: -28 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{
-                                                duration: 0.32,
-                                                delay: 0.08 + navItems.length * 0.06,
-                                                ease: [0.25, 0.1, 0.25, 1]
-                                            }}
-                                        >
+                                        <div className="mt-6">
                                             <Button
                                                 size="lg"
                                                 className="w-full rounded-[1.35rem] bg-gold py-6 text-base font-semibold text-white hover:bg-gold-dark"
                                                 onClick={() => handleMobileNavigation("/prices")}
                                             >
-                                                    Book Your Visit
+                                                    Book Now
                                             </Button>
-                                        </motion.div>
+                                        </div>
                                     </div>
 
                                     <div className="border-t border-white/10 px-7 py-5">
@@ -215,7 +207,10 @@ export function Header() {
                                 alt="Galeo Beauty"
                                 width={170}
                                 height={70}
-                                className="h-14 w-auto"
+                                className={cn(
+                                    "h-14 w-auto transition-all duration-300",
+                                    useTransparentHeader && "brightness-0 invert drop-shadow-[0_12px_28px_rgba(0,0,0,0.38)]"
+                                )}
                                 priority
                                 noSpinner
                             />
@@ -231,7 +226,10 @@ export function Header() {
                                 alt="Galeo Beauty"
                                 width={200}
                                 height={80}
-                                className="h-16 sm:h-20 md:h-24 w-auto transition-all duration-300"
+                                className={cn(
+                                    "h-16 w-auto transition-all duration-300 sm:h-20 md:h-24",
+                                    useTransparentHeader && "brightness-0 invert drop-shadow-[0_18px_40px_rgba(0,0,0,0.42)]"
+                                )}
                                 priority
                                 noSpinner
                             />
@@ -248,8 +246,13 @@ export function Header() {
                                         className="group relative overflow-hidden"
                                     >
                                         <span className={cn(
-                                            "relative z-10 flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300 group-hover:text-white",
-                                            isSpecial ? "text-gold" : "text-foreground/70"
+                                            "relative z-10 flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300",
+                                            "group-hover:text-white",
+                                            useTransparentHeader
+                                                ? isSpecial
+                                                    ? "text-gold"
+                                                    : "text-white/85"
+                                                : "text-foreground"
                                         )}>
                                             {item.label}
                                             {isSpecial && (
@@ -262,7 +265,9 @@ export function Header() {
 
                                         <span className={cn(
                                             "absolute inset-0 transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0",
-                                            isSpecial ? "bg-gold/90" : "bg-gold"
+                                            useTransparentHeader
+                                                ? "bg-white/14"
+                                                : "bg-gold"
                                         )} />
                                     </NavLink>
                                 );
@@ -271,9 +276,14 @@ export function Header() {
 
                         <Button
                             asChild
-                            className="bg-gold hover:bg-gold-dark text-white font-medium"
+                            className={cn(
+                                "font-medium text-white",
+                                useTransparentHeader
+                                    ? "border border-white/30 bg-white/10 backdrop-blur-md hover:bg-white/18"
+                                    : "bg-gold hover:bg-gold-dark"
+                            )}
                         >
-                            <NavLink href="/prices">Make a Booking</NavLink>
+                            <NavLink href="/prices">Book Now</NavLink>
                         </Button>
                     </div>
                 </div>

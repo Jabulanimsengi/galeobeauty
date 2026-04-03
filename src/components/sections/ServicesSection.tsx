@@ -5,7 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } fro
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Heart, Eye, Scissors, Zap, ChevronRight } from "lucide-react";
+import { Sparkles, Heart, Eye, Scissors, Zap, ChevronRight, ArrowRight, Plus } from "lucide-react";
 
 const services = [
     {
@@ -23,6 +23,7 @@ const services = [
         badge: "Premium",
         badgeVariant: "premium" as const,
         icon: Sparkles,
+        ctaText: "Explore our facials",
         features: ["Skinovage Facials", "Anti-Ageing", "Skin Renewal Peels", "Ampoule Crash"],
         color: "from-amber-500/20 to-orange-500/20",
         bookingFast: true,
@@ -43,6 +44,7 @@ const services = [
         badge: "Professional",
         badgeVariant: "premium" as const,
         icon: Heart,
+        ctaText: "View make-up options",
         features: ["Bridal Make-up", "Permanent Make-up", "Phi-Brows", "Phi-Contour"],
         color: "from-rose-500/20 to-pink-500/20",
     },
@@ -62,6 +64,7 @@ const services = [
         badge: "CE Approved",
         badgeVariant: "safe" as const,
         icon: Zap,
+        ctaText: "Learn about IPL",
         features: ["Full Face", "Full Body", "Bikini & Brazilian", "Gents Treatments"],
         color: "from-teal-500/20 to-cyan-500/20",
         bookingFast: true,
@@ -86,6 +89,7 @@ const services = [
         badge: "Wellness",
         badgeVariant: "premium" as const,
         icon: Heart,
+        ctaText: "See massage treatments",
         features: ["Swedish Massage", "Deep Tissue", "Aromatherapy", "Indian Head Massage"],
         color: "from-emerald-500/20 to-green-500/20",
     },
@@ -107,6 +111,7 @@ const services = [
         badge: "Premium",
         badgeVariant: "premium" as const,
         icon: Eye,
+        ctaText: "Explore lash & brow services",
         features: ["Lash Extensions", "Brow Tinting", "Volume Lashes", "Lash Lift"],
         color: "from-purple-500/20 to-violet-500/20",
     },
@@ -124,6 +129,7 @@ const services = [
         badge: "Hygienic",
         badgeVariant: "medical" as const,
         icon: Sparkles,
+        ctaText: "View waxing options",
         features: ["Full Face", "brazilian", "Hollywood", "Full Body"],
         color: "from-pink-500/20 to-rose-500/20",
     },
@@ -141,6 +147,7 @@ const services = [
         badge: "CE Approved",
         badgeVariant: "safe" as const,
         icon: Zap,
+        ctaText: "Learn about fat freezing",
         features: ["Non-Invasive", "No Downtime", "Permanent Results", "Safe & Effective"],
         color: "from-blue-500/20 to-indigo-500/20",
     },
@@ -158,6 +165,7 @@ const services = [
         badge: "New Tech",
         badgeVariant: "premium" as const,
         icon: Zap,
+        ctaText: "Explore EMS slimming",
         features: ["Builds Muscle", "Burns Fat", "Non-Invasive", "30min Treatment"],
         color: "from-cyan-500/20 to-teal-500/20",
     },
@@ -177,6 +185,7 @@ const services = [
         badge: "Premium Quality",
         badgeVariant: "premium" as const,
         icon: Scissors,
+        ctaText: "View hair extensions",
         features: ["100% Remy Hair", "Tape-in & Clip-in", "Keratin Bonds", "Multiple Lengths"],
         color: "from-amber-500/20 to-yellow-500/20",
     },
@@ -201,6 +210,7 @@ const services = [
         badge: "Certified",
         badgeVariant: "premium" as const,
         icon: Eye,
+        ctaText: "Explore permanent makeup",
         features: ["Microblading", "Powder Brows", "Lip Blush", "Permanent Eyeliner"],
         color: "from-fuchsia-500/20 to-pink-500/20",
     },
@@ -226,6 +236,7 @@ const services = [
         badge: "Premium",
         badgeVariant: "premium" as const,
         icon: Sparkles,
+        ctaText: "See nail options",
         features: ["Gel Overlay", "Acrylic Nails", "Nail Art", "Pedicure"],
         color: "from-pink-500/20 to-fuchsia-500/20",
     },
@@ -247,6 +258,7 @@ interface Service {
     features: string[];
     color: string;
     bookingFast?: boolean;
+    ctaText?: string;
 }
 
 interface ServiceCardProps {
@@ -446,8 +458,8 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                     animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 10 }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    <span className="text-sm font-bold uppercase tracking-wider drop-shadow-md">Explore Treatment</span>
-                                    <ArrowRight className="w-4 h-4 drop-shadow-md" />
+                                    <span className="text-sm font-bold uppercase tracking-wider drop-shadow-md">{service.ctaText || "Explore Treatment"}</span>
+                                    <ArrowRight className="w-4 h-4 drop-shadow-md transition-transform group-hover:translate-x-1" />
                                 </motion.div>
                             </div>
 
@@ -491,7 +503,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                     key={feature}
                                     className="flex items-center gap-2 text-sm text-foreground/85"
                                 >
-                                    <ChevronRight className="h-4 w-4 flex-shrink-0 text-gold" />
+                                    <ChevronRight className="h-3.5 w-3.5 flex-shrink-0 text-gold" />
                                     <span>{feature}</span>
                                 </div>
                             ))}
@@ -505,7 +517,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 className="group bg-foreground px-7 font-medium text-background transition-all duration-300 hover:bg-gold hover:text-white"
                             >
                                 <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`}>
-                                    Explore Treatment
+                                    {service.ctaText || "Explore Treatment"}
                                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </NavLink>
                             </Button>
@@ -521,141 +533,117 @@ export function ServicesSection() {
     const prefersReducedMotion = useReducedMotion();
 
     return (
-        <section className="py-20 md:py-28 lg:py-36 bg-amber-50/50 overflow-hidden relative" id="services">
-            {/* Subtle decorative background elements */}
-            <div className="absolute top-20 left-0 w-72 h-72 bg-gold/5 rounded-full blur-3xl -z-10" />
-            <div className="absolute bottom-40 right-0 w-96 h-96 bg-gold/3 rounded-full blur-3xl -z-10" />
+        <>
+            <section className="relative mt-8 min-h-[15rem] overflow-hidden sm:mt-10 sm:min-h-[17rem] lg:mt-12 lg:min-h-[18rem]" id="services">
+                <div
+                    className="absolute inset-0 bg-cover bg-center bg-no-repeat grayscale bg-fixed"
+                    style={{ backgroundImage: "url('/images/interior/galeo-beauty-interior-p1.jpg')" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/78 via-black/56 to-black/46" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(201,165,92,0.08),rgba(201,165,92,0.02))]" />
 
-            <div className="container mx-auto px-4 sm:px-6">
-                {/* Section Header */}
-                <motion.div
-                    className="text-center mb-20 md:mb-28 relative"
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: prefersReducedMotion ? 0 : 0.5 }}
-                >
-                    {/* Decorative line */}
-                    <div className="flex items-center justify-center gap-4 mb-6">
-                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/50" />
-                        <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] font-sans">
-                            Signature Services
-                        </span>
-                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-gold/50" />
-                    </div>
+                <div className="relative flex min-h-[15rem] items-center sm:min-h-[17rem] lg:min-h-[18rem]">
+                    <div className="container mx-auto px-4 sm:px-6">
+                    <motion.div
+                        className="mx-auto max-w-5xl text-center"
+                        initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: prefersReducedMotion ? 0 : 0.5 }}
+                    >
+                        <h2 className="mx-auto max-w-[18ch] font-serif text-[1.55rem] leading-[0.98] text-white sm:max-w-none sm:whitespace-nowrap sm:text-[2.5rem] lg:text-[3.1rem]">
+                            <span className="block sm:inline">Explore Galeo Beauty&apos;s</span>{" "}
+                            <span className="block text-white italic sm:inline">Signature Treatments</span>
+                        </h2>
 
-                    <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-medium mb-6 text-foreground">
-                        Explore Galeo Beauty&apos;s <span className="text-gold italic">Signature Treatments</span>
-                    </h2>
-
-                    <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-base sm:text-lg font-light leading-relaxed mb-12">
-                        From everyday beauty appointments to advanced aesthetics, explore the treatments clients return for most often at Galeo Beauty.
-                        
-                    </p>
-
-                    {/* Trust Indicators - Unified Gold Theme */}
-                    <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-                        {[
-                            { icon: "shield", label: "Medical-grade care" },
-                            { icon: "check", label: "Clean, professional setup" },
-                            { icon: "star", label: "15+ years experience" },
-                        ].map((badge, index) => (
-                            <motion.div
-                                key={badge.label}
-                                initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: prefersReducedMotion ? 0 : 0.4, delay: prefersReducedMotion ? 0 : index * 0.1 }}
-                                className="flex items-center gap-2.5 bg-white border border-gold/20 px-5 py-3 rounded-full shadow-sm hover:shadow-md hover:border-gold/40 transition-all duration-300 group"
-                            >
-                                <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                                    {badge.icon === "shield" && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-gold">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                        </svg>
-                                    )}
-                                    {badge.icon === "check" && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-gold">
-                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                                            <polyline points="22 4 12 14.01 9 11.01" />
-                                        </svg>
-                                    )}
-                                    {badge.icon === "star" && (
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gold">
-                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                        </svg>
-                                    )}
-                                </div>
-                                <span className="text-sm font-semibold text-foreground/80 uppercase tracking-wide">
-                                    {badge.label}
+                        <div className="mt-3 hidden flex-wrap justify-center gap-2 sm:mt-4 sm:flex sm:gap-2.5">
+                            {[
+                                "Medical-grade care",
+                                "Clean, professional setup",
+                                "15+ years experience",
+                            ].map((label) => (
+                                <span
+                                    key={label}
+                                    className="inline-flex items-center rounded-full border border-white/16 bg-white/10 px-3 py-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.12em] text-white/86 backdrop-blur-sm"
+                                >
+                                    {label}
                                 </span>
-                            </motion.div>
+                            ))}
+                        </div>
+                    </motion.div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="relative overflow-hidden bg-amber-50/50 py-20 md:py-28 lg:py-36">
+                {/* Subtle decorative background elements */}
+                <div className="absolute top-20 left-0 w-72 h-72 rounded-full bg-gold/5 blur-3xl -z-10" />
+                <div className="absolute bottom-40 right-0 w-96 h-96 rounded-full bg-gold/3 blur-3xl -z-10" />
+
+                <div className="container mx-auto px-4 sm:px-6">
+                    {/* Alternating Services Layout */}
+                    <div className="space-y-24 md:space-y-32 lg:space-y-40">
+                        {services.map((service, index) => (
+                            <ServiceCard
+                                key={service.id}
+                                service={service}
+                                index={index}
+                                isReversed={index % 2 !== 0}
+                            />
                         ))}
                     </div>
-                </motion.div>
 
-                {/* Alternating Services Layout */}
-                <div className="space-y-24 md:space-y-32 lg:space-y-40">
-                    {services.map((service, index) => (
-                        <ServiceCard
-                            key={service.id}
-                            service={service}
-                            index={index}
-                            isReversed={index % 2 !== 0}
-                        />
-                    ))}
-                </div>
+                    {/* Bottom CTA */}
+                    <motion.div
+                        className="mt-24 border-t border-border/30 pt-16 md:mt-32"
+                        initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : 0.2 }}
+                    >
+                        <div className="overflow-hidden rounded-[2rem] border border-border/40 bg-secondary/10">
+                            <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+                                <div className="relative min-h-[18rem] sm:min-h-[22rem] lg:min-h-[28rem]">
+                                    <CloudinaryImage
+                                        src="/images/interior/galeo-beauty-interior-p1.jpg"
+                                        alt="Interior of Galeo Beauty salon in Hartbeespoort"
+                                        fill
+                                        className="object-cover"
+                                        sizes="(min-width: 1024px) 52vw, 100vw"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-black/5 to-transparent" />
+                                </div>
 
-                {/* Bottom CTA */}
-                <motion.div
-                    className="mt-24 border-t border-border/30 pt-16 md:mt-32"
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: prefersReducedMotion ? 0 : 0.5, delay: prefersReducedMotion ? 0 : 0.2 }}
-                >
-                    <div className="overflow-hidden rounded-[2rem] border border-border/40 bg-secondary/10">
-                        <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-                            <div className="relative min-h-[18rem] sm:min-h-[22rem] lg:min-h-[28rem]">
-                                <CloudinaryImage
-                                    src="/images/interior/galeo-beauty-interior-p1.jpg"
-                                    alt="Interior of Galeo Beauty salon in Hartbeespoort"
-                                    fill
-                                    className="object-cover"
-                                    sizes="(min-width: 1024px) 52vw, 100vw"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-black/5 to-transparent" />
-                            </div>
-
-                            <div className="flex items-center px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
-                                <div className="max-w-xl">
-                                    <span className="mb-4 inline-flex rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
-                                        Inside Galeo Beauty
-                                    </span>
-                                    <h3 className="font-serif text-3xl text-foreground sm:text-4xl lg:max-w-[11ch]">
-                                        Explore the full treatment menu
-                                    </h3>
-                                    <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-                                        Browse every treatment category, current pricing page, and bookable service available at Galeo Beauty,
-                                        from advanced aesthetics and facials to nails, lashes, body treatments, and more.
-                                    </p>
-                                    <Button
-                                        asChild
-                                        size="lg"
-                                        variant="outline"
-                                        className="mt-8 border-2 border-foreground px-10 font-medium text-foreground hover:bg-foreground hover:text-background"
-                                    >
-                                        <NavLink href="/prices">
-                                            Explore Full Menu
-                                            <ArrowRight className="ml-2 h-4 w-4" />
-                                        </NavLink>
-                                    </Button>
+                                <div className="flex items-center px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
+                                    <div className="max-w-xl">
+                                        <span className="mb-4 inline-flex rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
+                                            Inside Galeo Beauty
+                                        </span>
+                                        <h3 className="font-serif text-3xl text-foreground sm:text-4xl lg:max-w-[11ch]">
+                                            Explore the full treatment menu
+                                        </h3>
+                                        <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+                                            Browse every treatment category, current pricing page, and bookable service available at Galeo Beauty,
+                                            from advanced aesthetics and facials to nails, lashes, body treatments, and more.
+                                        </p>
+                                        <Button
+                                            asChild
+                                            size="lg"
+                                            variant="outline"
+                                            className="mt-8 border-2 border-foreground px-10 font-medium text-foreground hover:bg-foreground hover:text-background"
+                                        >
+                                            <NavLink href="/prices">
+                                                Explore Full Menu
+                                                <Plus className="ml-2 h-4 w-4" />
+                                            </NavLink>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </motion.div>
-            </div>
-        </section>
+                    </motion.div>
+                </div>
+            </section>
+        </>
     );
 }

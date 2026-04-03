@@ -1,73 +1,49 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-
-// Real brand logos from public/images/brands
-const brands = [
-    { name: "Dermalogica", src: "/images/brands/dermalogica.png", id: 1, alt: "Dermalogica professional skincare products used at Galeo Beauty Hartbeespoort" },
-    { name: "QMS Medicosmetics", src: "/images/brands/qms.png", id: 2, alt: "QMS Medicosmetics medical-grade skincare at Galeo Beauty salon in Hartbeespoort" },
-    { name: "Moroccanoil", src: "/images/brands/moroccanoil.png", id: 3, alt: "Moroccanoil hair care products at Galeo Beauty Hartbeespoort" },
-    { name: "Milkshake", src: "/images/brands/milkshake.png", id: 4, alt: "Milkshake hair products at Galeo Beauty salon near Hartbeespoort Dam" },
-    { name: "Lola Lee", src: "/images/brands/lola-lee.png", id: 5, alt: "Lola Lee nail products at Galeo Beauty Hartbeespoort" },
-];
+import { motion, useReducedMotion } from "framer-motion";
 
 export const BrandsSection = () => {
+    const prefersReducedMotion = useReducedMotion();
+
     return (
-        <section className="overflow-hidden bg-gradient-to-b from-stone-100/60 to-stone-50/50 py-10 md:py-16">
-            {/* Header */}
-            <div className="container mx-auto mb-8 px-4 text-center sm:px-6 md:mb-12">
+        <section className="absolute inset-x-0 top-[100svh] z-20 min-h-[100svh] overflow-hidden bg-[rgba(201,168,108,0.34)] backdrop-blur-[2px]">
+            <div
+                className="absolute inset-0"
+                style={{
+                    background:
+                        "linear-gradient(180deg, rgba(215,184,126,0.24) 0%, rgba(201,168,108,0.32) 48%, rgba(186,149,86,0.38) 100%)",
+                }}
+            />
+            <div
+                className="absolute inset-0 opacity-40"
+                style={{
+                    background:
+                        "radial-gradient(circle at 18% 18%, rgba(255,248,236,0.18), transparent 20%), radial-gradient(circle at 82% 24%, rgba(223,195,146,0.14), transparent 18%), linear-gradient(135deg, rgba(255,255,255,0.05), transparent 42%)",
+                }}
+            />
+
+            <div className="relative flex min-h-[100svh] items-center justify-center px-6 py-16 sm:px-10 lg:px-16">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={prefersReducedMotion ? false : { opacity: 0, y: 36 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center"
                 >
-                    <span className="text-gold text-xs font-bold tracking-[0.3em] uppercase block mb-3">
-                        Trusted Product Partners
-                    </span>
-                    <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-4">
-                        Professional Brands Chosen for <span className="text-gold italic">Results</span>
-                    </h2>
-                    <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto">
-                        Galeo works with respected professional brands across skin, hair, and beauty so every treatment feels refined and considered.
-                    </p>
-                </motion.div>
-            </div>
-
-            {/* Scrolling Logos */}
-            <div className="group relative flex overflow-x-hidden">
-                {/* Gradient Masks for smooth fade edges */}
-                <div className="absolute top-0 bottom-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent sm:w-32" />
-                <div className="absolute top-0 bottom-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent sm:w-32" />
-
-                {/* Infinite Scroll Wrapper */}
-                <motion.div
-                    className="flex items-center gap-12 whitespace-nowrap py-4 sm:gap-20"
-                    animate={{ x: [0, -1200] }}
-                    transition={{
-                        repeat: Infinity,
-                        ease: "linear",
-                        duration: 35,
-                    }}
-                >
-                    {[...brands, ...brands, ...brands, ...brands].map((brand, index) => (
-                        <div
-                            key={`${brand.id}-${index}`}
-                            className="relative flex h-14 w-28 items-center justify-center md:h-24 md:w-48"
-                        >
-                            <CloudinaryImage
-                                src={brand.src}
-                                alt={brand.alt}
-                                width={180}
-                                height={90}
-                                className={`object-contain w-full h-full ${brand.name === "QMS Medicosmetics" ? "invert" : "grayscale"}`}
-                            />
-                        </div>
-                    ))}
+                    <div className="max-w-6xl text-center">
+                        <span className="mb-4 block text-[0.78rem] font-semibold uppercase tracking-[0.42em] text-white/75 sm:mb-6">
+                            Galeo Beauty
+                        </span>
+                        <h2 className="text-center font-serif text-[3.35rem] font-medium leading-[0.88] tracking-[-0.035em] text-white sm:text-[4.9rem] md:text-[6.1rem] lg:text-[7.6rem] xl:text-[8.6rem]">
+                            This is where
+                            <br />
+                            <span className="italic">beauty</span> &amp; wellness
+                            <br />
+                            meet
+                        </h2>
+                    </div>
                 </motion.div>
             </div>
         </section>
     );
 };
-

@@ -1,8 +1,6 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 
 type Testimonial = {
     id: number;
@@ -127,13 +125,6 @@ const testimonials: Testimonial[] = [
     },
 ];
 
-const reviewRows: Testimonial[][] = [
-    testimonials.slice(0, 8),
-    testimonials.slice(8),
-];
-
-const freshaReviewUrl = "https://www.fresha.com/a/galeo-beauty-hartbeespoort-galeo-beauty-landsmeer-equestrian-estate-sb28s52l";
-
 function ReviewAvatar({ name }: { name: string }) {
     const initials = name
         .split(" ")
@@ -164,22 +155,22 @@ function ReviewCard({
     return (
         <article
             aria-hidden={ariaHidden}
-            className={`w-[18rem] shrink-0 rounded-[1.5rem] border border-stone-200/90 bg-white p-5 shadow-[0_24px_50px_-38px_rgba(28,20,16,0.2)] sm:w-[21rem] sm:p-6 lg:w-[22.5rem] xl:w-[23rem] ${className}`}
+            className={`w-[16.5rem] shrink-0 rounded-[1.35rem] border border-stone-200/90 bg-white p-4 shadow-[0_24px_50px_-38px_rgba(28,20,16,0.2)] sm:w-[18.5rem] sm:p-5 lg:w-[19.5rem] xl:w-[20rem] ${className}`}
         >
-            <div className="flex items-start gap-4">
+            <div className="flex items-start gap-3">
                 <ReviewAvatar name={testimonial.name} />
                 <div className="min-w-0 flex-1">
-                    <p className="text-[0.98rem] leading-7 text-foreground/72 sm:text-[1.02rem] sm:leading-8">
+                    <p className="text-[0.92rem] leading-6 text-foreground/72 sm:text-[0.96rem] sm:leading-7">
                         &ldquo;{testimonial.text}&rdquo;
                     </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-                        <span className="text-sm font-semibold uppercase tracking-[0.08em] text-foreground sm:text-base">
+                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                        <span className="text-xs font-semibold uppercase tracking-[0.08em] text-foreground sm:text-sm">
                             {testimonial.name}
                         </span>
-                        <span className="text-xs uppercase tracking-[0.12em] text-foreground/40 sm:text-sm">
+                        <span className="text-[0.68rem] uppercase tracking-[0.12em] text-foreground/40 sm:text-xs">
                             {testimonial.date}
                         </span>
-                        <span className="text-xs uppercase tracking-[0.12em] text-foreground/50 sm:text-sm">
+                        <span className="text-[0.68rem] uppercase tracking-[0.12em] text-foreground/50 sm:text-xs">
                             {testimonial.service}
                         </span>
                     </div>
@@ -205,7 +196,7 @@ function ReviewMarqueeRow({
     return (
         <div className="relative overflow-hidden">
             <motion.div
-                className="flex w-max gap-4 sm:gap-5"
+                className="flex w-max gap-3 sm:gap-4"
                 animate={
                     prefersReducedMotion
                         ? { x: 0 }
@@ -254,43 +245,30 @@ export function ReviewsSection() {
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between"
+                    className="mb-8 sm:mb-10"
                 >
                     <div className="max-w-2xl">
                         <div className="mb-3 flex items-center gap-3">
                             <span className="text-2xl font-light text-gold">&rsaquo;</span>
                             <span className="text-xs font-semibold uppercase tracking-[0.22em] text-foreground/45">
-                                Fresha Reviews
+                                Client Reviews
                             </span>
                         </div>
                         <h2 className="font-sans text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl md:text-[3rem]">
                             What People Say
                         </h2>
                         <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/62 sm:text-base sm:leading-7">
-                            Verified client feedback from Fresha, highlighting the service, consistency, and care people mention most often at Galeo Beauty.
+                            Read through the kind words clients share most often about Galeo Beauty, then explore more feedback on Fresha and Google before you book.
                         </p>
                         <div className="mt-4 flex flex-wrap gap-2.5">
                             <span className="inline-flex items-center rounded-full border border-gold/20 bg-white/80 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/70 sm:px-4">
-                                5.0 rating on Fresha
+                                Fresha & Google
                             </span>
                             <span className="inline-flex items-center rounded-full border border-gold/20 bg-white/80 px-3 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-foreground/70 sm:px-4">
-                                190+ client votes
+                                300+ client reviews
                             </span>
                         </div>
                     </div>
-
-                    <TrackedExternalLink
-                        href={freshaReviewUrl}
-                        trackingContext="reviews_fresha"
-                        linkType="review_platform"
-                        linkLabel="Fresha reviews"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex w-fit items-center gap-2 text-sm font-medium text-gold-dark transition-colors hover:text-gold sm:text-base"
-                    >
-                        <span>View on Fresha</span>
-                        <ArrowRight className="h-4 w-4" />
-                    </TrackedExternalLink>
                 </motion.div>
 
                 <div className="space-y-4 sm:hidden">
@@ -305,19 +283,6 @@ export function ReviewsSection() {
                             <ReviewCard testimonial={testimonial} className="w-full" />
                         </motion.div>
                     ))}
-
-                    <TrackedExternalLink
-                        href={freshaReviewUrl}
-                        trackingContext="reviews_fresha_mobile"
-                        linkType="review_platform"
-                        linkLabel="Fresha reviews mobile"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold/25 bg-white px-5 py-3 text-sm font-medium text-gold-dark transition-colors hover:border-gold hover:text-gold"
-                    >
-                        <span>View More Reviews on Fresha</span>
-                        <ArrowRight className="h-4 w-4" />
-                    </TrackedExternalLink>
                 </div>
             </div>
 
@@ -325,23 +290,19 @@ export function ReviewsSection() {
                 <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-28 bg-gradient-to-r from-white via-[#fbf8f4] to-transparent lg:w-44" />
                 <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-28 bg-gradient-to-l from-white via-[#fbf8f4] to-transparent lg:w-44" />
 
-                <div className="relative left-1/2 w-[calc(100vw+6rem)] -translate-x-1/2 space-y-4 lg:w-[calc(100vw+10rem)] sm:space-y-5">
-                    {reviewRows.map((row, index) => (
-                        <motion.div
-                            key={`row-${index}`}
-                            initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: prefersReducedMotion ? 0 : index * 0.08 }}
-                        >
-                            <ReviewMarqueeRow
-                                items={row}
-                                direction={index % 2 === 0 ? "left" : "right"}
-                                duration={index % 2 === 0 ? 72 : 78}
-                                prefersReducedMotion={prefersReducedMotion}
-                            />
-                        </motion.div>
-                    ))}
+                <div className="relative left-1/2 w-[calc(100vw+4rem)] -translate-x-1/2 lg:w-[calc(100vw+8rem)]">
+                    <motion.div
+                        initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <ReviewMarqueeRow
+                            items={testimonials}
+                            direction="left"
+                            duration={88}
+                            prefersReducedMotion={prefersReducedMotion}
+                        />
+                    </motion.div>
                 </div>
             </div>
         </section>

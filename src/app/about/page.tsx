@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { AboutClient } from "./AboutClient";
 
 export const metadata: Metadata = {
-    title: "About Galeo Beauty | Hartbeespoort Salon & Medical Aesthetics",
-    description: "Meet Dandi Meyer and the Galeo Beauty team in Hartbeespoort. Learn about our approach to hair, nails, skin, beauty, and advanced aesthetics at Landsmeer Estate.",
+    title: "About the Salon, Reviews & Team in Hartbeespoort",
+    description: "Meet Dandi Meyer and the Galeo Beauty team in Hartbeespoort and learn why clients trust our hair, nails, skin, beauty, and advanced aesthetics services at Landsmeer Estate.",
     keywords: [
         "about galeo beauty hartbeespoort",
         "galeo beauty harties",
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
         canonical: "https://www.galeobeauty.com/about",
     },
     openGraph: {
-        title: "About Galeo Beauty | Hartbeespoort Salon & Medical Aesthetics",
-        description: "Meet the team behind Galeo Beauty in Hartbeespoort and learn more about our refined treatment approach and client care.",
+        title: "About the Salon, Reviews & Team in Hartbeespoort",
+        description: "Meet the team behind Galeo Beauty in Hartbeespoort and learn more about the client care and trusted reputation behind the salon.",
         url: "https://www.galeobeauty.com/about",
         type: "website",
     },

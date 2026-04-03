@@ -176,7 +176,7 @@ export function ContactClient() {
                                 <DeferredMap
                                     latitude={-25.753414}
                                     longitude={27.909252}
-                                    zoom={18}
+                                    zoom={15}
                                     className="w-full h-full"
                                 />
                             </motion.div>

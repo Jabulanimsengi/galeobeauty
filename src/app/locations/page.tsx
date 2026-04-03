@@ -3,90 +3,26 @@ import Link from "next/link";
 import { Header, Footer } from "@/components/layout";
 import { MapPin, ArrowRight } from "lucide-react";
 import { buildLocationsIndexKeywords } from "@/lib/seo-keywords";
+import { getLocationIndexGroups, isBroadLocationHub, TARGET_LOCATIONS } from "@/lib/seo-data";
+
+const serviceAreaCount = TARGET_LOCATIONS.filter((location) => !isBroadLocationHub(location)).length;
+const locationGroups = getLocationIndexGroups();
 
 export const metadata: Metadata = {
-    title: "Areas We Serve | Beauty Salon Services Across Hartbeespoort & Gauteng",
-    description: "Galeo Beauty serves 60+ locations in Hartbeespoort, Pretoria, Johannesburg, and surrounding areas. Find premium beauty treatments near you - from luxury estates to major metros.",
+    title: "Areas We Serve | Beauty Salon Services Across Hartbeespoort, Gauteng & North West",
+    description: `Galeo Beauty serves ${serviceAreaCount} locations across Hartbeespoort, Gauteng, North West, and surrounding areas. Explore local beauty hubs, provincial coverage, and premium treatments near you.`,
     keywords: buildLocationsIndexKeywords(),
     alternates: {
         canonical: "https://www.galeobeauty.com/locations",
     },
     openGraph: {
-        title: "Areas We Serve | Galeo Beauty Hartbeespoort & Gauteng",
+        title: "Areas We Serve | Beauty Salon Services Across Hartbeespoort, Gauteng & North West",
         description:
-            "Find Galeo Beauty services across 60+ locations in Hartbeespoort, Pretoria, Johannesburg & surrounding areas.",
+            `Find Galeo Beauty services across ${serviceAreaCount} locations in Hartbeespoort, Gauteng, North West, and surrounding areas.`,
         url: "https://www.galeobeauty.com/locations",
         type: "website",
     },
 };
-
-// Location data grouped by region for users
-const locationGroups = [
-    {
-        title: "Hartbeespoort & Surrounds",
-        locations: [
-            { name: "Hartbeespoort", slug: "hartbeespoort" },
-            { name: "Harties", slug: "harties" },
-            { name: "Landsmeer", slug: "landsmeer", badge: "Our Salon" },
-            { name: "Schoemansville", slug: "schoemansville" },
-            { name: "Melodie", slug: "melodie" },
-            { name: "Ifafi", slug: "ifafi" },
-            { name: "Meerhof", slug: "meerhof" },
-            { name: "Kosmos", slug: "kosmos" },
-            { name: "Hartbeespoort Dam", slug: "hartbeespoort-dam" },
-            { name: "Damdoryn", slug: "damdoryn" },
-            { name: "Broederstroom", slug: "broederstroom" },
-            { name: "Skeerpoort", slug: "skeerpoort" },
-            { name: "Zilkaatsnek", slug: "zilkaatsnek" },
-            { name: "Magaliesburg", slug: "magaliesburg" },
-        ],
-    },
-    {
-        title: "Estates & Lifestyle Living",
-        locations: [
-            { name: "Pecanwood Estate", slug: "pecanwood" },
-            { name: "The Islands Estate", slug: "the-islands-estate" },
-            { name: "Caribbean Beach Club", slug: "caribbean-beach-club" },
-            { name: "Xanadu Nature Estate", slug: "xanadu" },
-            { name: "The Coves", slug: "the-coves" },
-            { name: "Estate d'Afrique", slug: "estate-dafrique" },
-            { name: "Leloko Lifestyle Estate", slug: "leloko-lifestyle-estate" },
-            { name: "Birdwood Estate", slug: "birdwood-estate" },
-            { name: "Seasons Lifestyle Estate", slug: "seasons-lifestyle-estate" },
-            { name: "Magalies Park", slug: "magalies-park" },
-            { name: "Redstone Estate", slug: "redstone-estate" },
-            { name: "La Camargue Estate", slug: "la-camargue" },
-            { name: "Eagles Landing", slug: "eagles-landing" },
-            { name: "Gateway Manor", slug: "gateway-manor" },
-            { name: "K'Shane Estate", slug: "kshane" },
-            { name: "Lakeland Estate", slug: "lakeland-estate" },
-            { name: "Landsmeer Residential Estate", slug: "landsmeer-estate" },
-            { name: "Safari Gardens", slug: "safari-gardens" },
-        ],
-    },
-    {
-        title: "Greater Gauteng",
-        locations: [
-            { name: "Pretoria", slug: "pretoria" },
-            { name: "Johannesburg", slug: "johannesburg" },
-            { name: "Centurion", slug: "centurion" },
-            { name: "Sandton", slug: "sandton" },
-            { name: "Midrand", slug: "midrand" },
-            { name: "Brits", slug: "brits" },
-            { name: "Lanseria", slug: "lanseria" },
-        ],
-    },
-    {
-        title: "Agricultural Holdings & Rural",
-        locations: [
-            { name: "Melodie AH", slug: "melodie-ah" },
-            { name: "Rietfontein AH", slug: "rietfontein-ah" },
-            { name: "Zilkaatsnek", slug: "zilkaatsnek" },
-            { name: "Village Mall Hartbeespoort", slug: "village-mall-hartbeespoort" },
-            { name: "Islands Shopping Mall", slug: "islands-shopping-mall" },
-        ],
-    },
-];
 
 export default function LocationsIndexPage() {
     return (
@@ -100,7 +36,7 @@ export default function LocationsIndexPage() {
                             Areas We Serve
                         </h1>
                         <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-                            Find Galeo Beauty services near you. Based in Hartbeespoort, serving clients across Gauteng.
+                            Explore our national, provincial, and local beauty coverage. Based in Hartbeespoort, we welcome clients from across Gauteng, North West, and surrounding areas.
                         </p>
                     </div>
                 </section>

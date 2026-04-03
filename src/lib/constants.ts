@@ -6,7 +6,6 @@ export const navItems: NavItem[] = [
     { label: "Services", href: "/prices" },
     { label: "Specials", href: "/specials" },
     { label: "Gallery", href: "/gallery" },
-    { label: "Location", href: "/location" },
     { label: "Contact", href: "/contact" },
 ];
 
@@ -31,6 +30,7 @@ export const businessInfo: BusinessInfo = {
         whatsapp: "27824447389",
         tiktok: "https://www.tiktok.com/@dandimeyer711",
         fresha: "https://www.fresha.com/a/galeo-beauty-hartbeespoort-galeo-beauty-landsmeer-equestrian-estate-sb28s52l?pId=1023476",
+        google: "https://maps.app.goo.gl/rheE1Ud1GurDRFzQ8",
     },
     banking: {
         companyName: "GALEO BEAUTY PTY LTD",

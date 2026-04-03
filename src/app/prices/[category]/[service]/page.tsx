@@ -23,7 +23,7 @@ import {
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 import { generateServiceDescription } from "@/lib/seo-generator";
-import { buildServiceKeywords } from "@/lib/seo-keywords";
+import { buildServiceMetadataKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForService } from "@/lib/intent-pages";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
         subcategoryTitle
     );
 
-    const keywords = buildServiceKeywords(service, { name: "Hartbeespoort", region: "North West" });
+    const keywords = buildServiceMetadataKeywords(service, { name: "Hartbeespoort", region: "North West" });
     const serviceImageUrl = toAbsoluteUrl(service.image);
     const title = `${service.keyword} in Hartbeespoort`;
     const metadataDescription = `${description.substring(0, 120)} Available at Galeo Beauty in Hartbeespoort near Hartbeespoort Dam.`;

@@ -27,12 +27,13 @@ import {
     isHartbeespoortClusterLocation,
     isIndexableLocationService,
     isPriorityLocationService,
+    isBroadLocationHub,
     type FAQ,
 } from "@/lib/seo-data";
 import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
 import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
-import { buildServiceKeywords } from "@/lib/seo-keywords";
+import { buildServiceKeywords, buildServiceMetadataKeywords } from "@/lib/seo-keywords";
 import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
 
@@ -98,7 +99,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
         title,
         description: metadataDescription,
-        keywords: buildServiceKeywords(service, location),
+        keywords: buildServiceMetadataKeywords(service, location),
         openGraph: {
             title,
             description: socialDescription,
@@ -171,6 +172,10 @@ export default async function LocationServicePage({ params }: PageProps) {
 
     if (!service) {
         notFound();
+    }
+
+    if (isBroadLocationHub(location)) {
+        redirect(`/prices/${service.categoryId}/${service.slug}`);
     }
 
     if (isHartbeespoortClusterLocation(locationSlug)) {

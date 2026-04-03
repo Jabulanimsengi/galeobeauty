@@ -8,9 +8,15 @@ const SITEMAP_0_REGIONS = [
     "Centurion",
 ];
 
+const SITEMAP_0_HUB_SLUGS = new Set(["south-africa", "gauteng", "north-west"]);
+
 // Combine into arrays based on region
 export const SITEMAP_0_LOCATIONS: string[] = SEOTargets
-    .filter((loc: SEOLocation) => SITEMAP_0_REGIONS.includes(loc.region) || (loc.slug === "pretoria"))
+    .filter((loc: SEOLocation) =>
+        SITEMAP_0_REGIONS.includes(loc.region) ||
+        loc.slug === "pretoria" ||
+        SITEMAP_0_HUB_SLUGS.has(loc.slug)
+    )
     .map((loc: SEOLocation) => loc.slug);
 
 export const SITEMAP_1_LOCATIONS: string[] = SEOTargets

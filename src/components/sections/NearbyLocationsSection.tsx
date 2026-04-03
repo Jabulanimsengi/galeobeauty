@@ -10,45 +10,32 @@ interface Location {
 interface NearbyLocationsSectionProps {
     /** The service name (e.g., "Body Contouring", "Permanent Makeup") */
     serviceName: string;
-    /** Optional: Custom title. Defaults to "Find {serviceName} Near You" */
+    /** Optional: Custom title. Defaults to "Visiting Us for {serviceName}" */
     title?: string;
     /** Optional: Custom description */
     description?: string;
-    /** Optional: Category slug for canonical linking (Hartbeespoort) */
-    categorySlug?: string;
-    /** Optional: Service slug for canonical linking (Hartbeespoort) */
-    serviceSlug?: string;
 }
 
 const FEATURED_LOCATIONS: Location[] = [
-    { name: "Hartbeespoort", slug: "hartbeespoort", description: "Main town - full service range" },
-    { name: "Landsmeer", slug: "landsmeer", description: "Our salon location - Shop 6" },
-    { name: "Pecanwood Estate", slug: "pecanwood", description: "Luxury golf estate" },
-    { name: "The Islands Estate", slug: "the-islands-estate", description: "Waterfront living" },
-    { name: "Melodie", slug: "melodie", description: "Commercial heart" },
-    { name: "Schoemansville", slug: "schoemansville", description: "Waterfront area" },
-    { name: "Pretoria", slug: "pretoria", description: "45min drive - capital city" },
-    { name: "Centurion", slug: "centurion", description: "35min drive" },
-    { name: "Johannesburg", slug: "johannesburg", description: "1hr drive - major metro" },
-    { name: "Sandton", slug: "sandton", description: "Wealthy suburb" },
-    { name: "Midrand", slug: "midrand", description: "Business hub" },
-    { name: "Brits", slug: "brits", description: "20min drive" },
+    { name: "Hartbeespoort", slug: "hartbeespoort", description: "Local clients from around the dam" },
+    { name: "Landsmeer", slug: "landsmeer", description: "Home of our salon on Jan Smuts Road" },
+    { name: "Pecanwood", slug: "pecanwood", description: "A short drive from the estate" },
+    { name: "The Islands", slug: "the-islands-estate", description: "Easy access from the waterfront estates" },
+    { name: "Melodie", slug: "melodie", description: "Convenient for everyday appointments" },
+    { name: "Schoemansville", slug: "schoemansville", description: "Close by for regular visits" },
+    { name: "Brits", slug: "brits", description: "Popular for clients travelling in from nearby" },
+    { name: "Pretoria", slug: "pretoria", description: "Often combined with a planned beauty day" },
+    { name: "Centurion", slug: "centurion", description: "Straightforward trip for advance bookings" },
+    { name: "Johannesburg", slug: "johannesburg", description: "Worth the drive for a dedicated appointment" },
 ];
 
 export function NearbyLocationsSection({
     serviceName,
     title,
-    description,
-    categorySlug,
-    serviceSlug
+    description
 }: NearbyLocationsSectionProps) {
-    const defaultTitle = `Find ${serviceName} Near You`;
-    const defaultDescription = `We serve clients from across Hartbeespoort, Pretoria, Johannesburg, and surrounding areas. Click your location to see ${serviceName.toLowerCase()} services and pricing in your area.`;
-
-    // Helper to determine the correct link
-    const getLocationLink = (slug: string) => {
-        return `/locations/${slug}`;
-    };
+    const defaultTitle = `Visiting Us for ${serviceName}`;
+    const defaultDescription = `Clients often visit our Landsmeer salon from Hartbeespoort, the nearby estates, Brits, Pretoria, Centurion, and Johannesburg. If you are planning around travel time, we are happy to help you choose a booking slot that feels easy and worthwhile.`;
 
     return (
         <section className="py-20 px-6 bg-secondary/10">
@@ -57,7 +44,7 @@ export function NearbyLocationsSection({
                 <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 bg-gold/10 text-gold px-4 py-2 rounded-full mb-4 border border-gold/20">
                         <MapPin className="w-4 h-4" />
-                        <span className="text-sm font-medium">Serving 43+ Locations</span>
+                        <span className="text-sm font-medium">Easy to Reach From Nearby Areas</span>
                     </div>
                     <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
                         {title || defaultTitle}
@@ -68,35 +55,33 @@ export function NearbyLocationsSection({
                 </div>
 
                 {/* Locations Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
                     {FEATURED_LOCATIONS.map((location) => (
-                        <Link
+                        <div
                             key={location.slug}
-                            href={getLocationLink(location.slug)}
-                            className="group bg-white p-4 rounded-xl border border-border hover:border-gold/50 hover:shadow-lg transition-all duration-300"
+                            className="bg-white p-4 rounded-xl border border-border"
                         >
-                            <div className="flex items-start justify-between mb-2">
-                                <h3 className="font-semibold text-foreground group-hover:text-gold transition-colors text-sm leading-tight">
-                                    {location.name}
-                                </h3>
-                                <ArrowRight className="w-4 h-4 text-gold opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 transform group-hover:translate-x-1" />
-                            </div>
-                            <p className="text-xs text-muted-foreground line-clamp-1">
+                            <h3 className="font-semibold text-foreground text-sm leading-tight mb-2">
+                                {location.name}
+                            </h3>
+                            <p className="text-xs text-muted-foreground leading-relaxed">
                                 {location.description}
                             </p>
-                        </Link>
+                        </div>
                     ))}
                 </div>
 
-                {/* View All Link */}
-                <div className="text-center">
+                <div className="flex flex-wrap items-center justify-center gap-4 text-center">
                     <Link
-                        href="/locations"
-                        className="inline-flex items-center gap-2 text-gold hover:text-gold/80 font-medium transition-colors group"
+                        href="/contact#location"
+                        className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gold-dark"
                     >
-                        <span>View All 60+ Locations We Serve</span>
-                        <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                        <span>Get Directions to the Salon</span>
+                        <ArrowRight className="w-4 h-4 transition-transform" />
                     </Link>
+                    <p className="max-w-2xl text-sm text-muted-foreground">
+                        Galeo Beauty is based in Landsmeer, Hartbeespoort, with parking on site and a calm salon setting that many clients prefer over a rushed in-city stop.
+                    </p>
                 </div>
             </div>
         </section>

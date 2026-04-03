@@ -6,3 +6,4 @@ export { ReviewsSection } from "./ReviewsSection";
 export { BrandsSection } from "./BrandsSection";
 export { FeaturedServicesSection } from "./FeaturedServicesSection";
 export { HomepageFaqSection } from "./HomepageFaqSection";
+export { HomepageLocationSection } from "./HomepageLocationSection";
