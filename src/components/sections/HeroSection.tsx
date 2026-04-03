@@ -53,7 +53,6 @@ const heroImages = [
     { src: "/images/interior/galeo-beauty-interior-p3.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Nail station near Hartbeespoort Dam" },
     { src: "/images/interior/galeo-beauty-interior-p4.jpg", alt: "Galeo Beauty Salon Hartbeespoort luxury interior - Spa Lounge" },
 ];
-
 export function HeroSection() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const prefersReducedMotion = !!useReducedMotion();
@@ -146,6 +145,12 @@ export function HeroSection() {
                 delay={1.5}
                 reducedMotion={prefersReducedMotion}
             />
+
+            <div className="absolute inset-0 z-30 flex items-center justify-center px-6 text-center sm:px-10">
+                <p className="font-serif text-4xl italic tracking-[0.08em] text-white/92 drop-shadow-[0_10px_30px_rgba(0,0,0,0.35)] sm:text-5xl lg:text-7xl">
+                    Galeo Beauty
+                </p>
+            </div>
 
             <motion.div
                 className="absolute bottom-20 left-6 z-40 hidden sm:block sm:bottom-24 sm:left-10 lg:bottom-28 lg:left-16 xl:left-24"

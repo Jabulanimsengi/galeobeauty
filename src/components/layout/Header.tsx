@@ -2,7 +2,7 @@
 
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
-import { Menu, Phone, X } from "lucide-react";
+import { Phone, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -99,24 +99,25 @@ export function Header() {
                                 <button
                                     aria-label="Toggle menu"
                                     aria-controls={mobileMenuContentId}
-                                    className="relative z-[60] flex h-12 w-12 items-center justify-center bg-transparent transition-transform duration-200 active:scale-[0.98] focus:outline-none"
+                                    className={cn(
+                                        "relative z-[60] flex h-12 w-12 touch-manipulation select-none items-center justify-center bg-transparent transition-transform duration-200 active:scale-[0.98] focus:outline-none",
+                                        mobileToggleIconClass,
+                                    )}
+                                    onPointerDown={(event) => {
+                                        if (event.pointerType !== "mouse") {
+                                            setIsMobileMenuOpen(true);
+                                        }
+                                    }}
                                 >
-                                    <span className="relative flex h-7 w-7 items-center justify-center">
-                                        <Menu
-                                            className={cn(
-                                                "absolute size-7 transition-all duration-200 ease-out",
-                                                mobileToggleIconClass,
-                                                isMobileMenuOpen ? "scale-75 rotate-90 opacity-0" : "scale-100 rotate-0 opacity-100"
-                                            )}
-                                            strokeWidth={2}
+                                    <span className="relative block h-5 w-7" aria-hidden="true">
+                                        <span
+                                            className="absolute left-0 top-0.5 h-0.5 w-7 rounded-full bg-current transition-all duration-200 ease-out"
                                         />
-                                        <X
-                                            className={cn(
-                                                "absolute size-7 transition-all duration-200 ease-out",
-                                                mobileToggleIconClass,
-                                                isMobileMenuOpen ? "scale-100 rotate-0 opacity-100" : "scale-75 -rotate-90 opacity-0"
-                                            )}
-                                            strokeWidth={2}
+                                        <span
+                                            className="absolute left-0 top-2 h-0.5 w-7 rounded-full bg-current transition-all duration-150 ease-out"
+                                        />
+                                        <span
+                                            className="absolute left-0 top-[0.875rem] h-0.5 w-7 rounded-full bg-current transition-all duration-200 ease-out"
                                         />
                                     </span>
                                 </button>
