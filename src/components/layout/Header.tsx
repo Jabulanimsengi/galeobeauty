@@ -213,7 +213,7 @@ export function Header() {
                                 alt="Galeo Beauty"
                                 width={170}
                                 height={70}
-                                className="h-12 w-auto transition-all duration-300 sm:h-14"
+                                className="h-[4.1rem] w-auto transition-all duration-300 sm:h-[4.6rem]"
                                 priority
                                 noSpinner
                             />
@@ -229,7 +229,7 @@ export function Header() {
                                 alt="Galeo Beauty"
                                 width={200}
                                 height={80}
-                                className="h-14 w-auto transition-all duration-300"
+                                className="h-[5.1rem] w-auto transition-all duration-300"
                                 priority
                                 noSpinner
                             />
