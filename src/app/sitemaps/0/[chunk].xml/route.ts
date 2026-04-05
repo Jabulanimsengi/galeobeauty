@@ -3,12 +3,8 @@ import {
   buildSitemapXml,
   getSitemapChunkCount,
   getSitemapChunkEntries,
-  SITEMAP_REVALIDATE,
   xmlResponse,
 } from '@/lib/sitemap-helpers';
-
-export const dynamic = 'force-dynamic';
-export const revalidate = SITEMAP_REVALIDATE;
 
 export async function GET(
   _: Request,
