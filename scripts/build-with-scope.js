@@ -9,7 +9,7 @@ if (!scope) {
 
 const result = spawnSync(
     process.platform === "win32" ? "npx.cmd" : "npx",
-    ["next", "build"],
+    ["tsx", "scripts/generate-sitemaps.ts"],
     {
         stdio: "inherit",
         env: {
@@ -23,4 +23,24 @@ if (result.error) {
     throw result.error;
 }
 
-process.exit(result.status ?? 0);
+if ((result.status ?? 0) !== 0) {
+    process.exit(result.status ?? 1);
+}
+
+const buildResult = spawnSync(
+    process.platform === "win32" ? "npx.cmd" : "npx",
+    ["next", "build"],
+    {
+        stdio: "inherit",
+        env: {
+            ...process.env,
+            GALEO_BUILD_SCOPE: scope,
+        },
+    },
+);
+
+if (buildResult.error) {
+    throw buildResult.error;
+}
+
+process.exit(buildResult.status ?? 0);

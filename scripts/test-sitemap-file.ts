@@ -1,12 +1,12 @@
 /**
- * Test the sitemap route handlers to ensure they're valid
+ * Test the generated sitemap files to ensure they're valid.
  */
-import { GET } from '../src/app/sitemap.xml/route';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 async function test() {
-    console.log('Testing sitemap index...');
-    const response = await GET();
-    const xml = await response.text();
+    console.log('Testing generated sitemap index...');
+    const xml = await fs.readFile(path.resolve(__dirname, '../public/sitemap.xml'), 'utf8');
     console.log('Sitemap index XML:');
     console.log(xml);
 

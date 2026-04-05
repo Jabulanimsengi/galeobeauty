@@ -30,7 +30,7 @@ function validateAssetReferences() {
   const assetRefs = [
     { file: "src/app/layout.tsx", asset: "/images/logo.png" },
     { file: "src/app/locations/[location]/[service]/page.tsx", asset: "https://www.galeobeauty.com/images/logo.png" },
-    { file: "src/app/sitemaps/0.xml/route.ts", asset: "https://www.galeobeauty.com/images/logo.png" },
+    { file: "src/lib/sitemap-helpers.ts", asset: "https://www.galeobeauty.com/images/logo.png" },
   ];
 
   for (const ref of assetRefs) {
@@ -70,7 +70,7 @@ function validateKnownOgImageTypos() {
   const files = [
     "src/app/layout.tsx",
     "src/app/locations/[location]/[service]/page.tsx",
-    "src/app/sitemaps/0.xml/route.ts",
+    "src/lib/sitemap-helpers.ts",
   ];
 
   for (const file of files) {
@@ -82,15 +82,14 @@ function validateKnownOgImageTypos() {
 }
 
 function validateSitemapPolicy() {
-  const sitemap0 = readFile("src/app/sitemaps/0.xml/route.ts");
-  const sitemap1 = readFile("src/app/sitemaps/1.xml/route.ts");
+  const sitemapHelpers = readFile("src/lib/sitemap-helpers.ts");
 
-  if (sitemap0.includes("location === 'hartbeespoort'") || sitemap0.includes("location === 'harties'")) {
-    addIssue("error", "src/app/sitemaps/0.xml/route.ts still excludes hartbeespoort or harties from sitemap coverage.");
+  if (sitemapHelpers.includes("location === 'hartbeespoort'") || sitemapHelpers.includes("location === 'harties'")) {
+    addIssue("error", "src/lib/sitemap-helpers.ts still excludes hartbeespoort or harties from sitemap coverage.");
   }
 
-  if (sitemap1.includes("LOW_VALUE_PATTERN")) {
-    addIssue("error", "src/app/sitemaps/1.xml/route.ts still excludes low-value variants from sitemap coverage.");
+  if (sitemapHelpers.includes("LOW_VALUE_PATTERN")) {
+    addIssue("error", "src/lib/sitemap-helpers.ts still excludes low-value variants from sitemap coverage.");
   }
 }
 

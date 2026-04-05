@@ -1,8 +1,8 @@
-import { getAllBlogPosts } from '@/lib/blog-data';
-import { getAllSEOServices, isIndexableLocationService } from '@/lib/seo-data';
-import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from '@/lib/sitemap-config';
-import { SITEMAP_STATIC_PAGES } from '@/lib/sitemap-static-pages';
-import { toAbsoluteUrl } from '@/lib/site-url';
+import { getAllBlogPosts } from './blog-data';
+import { getAllSEOServices, isIndexableLocationService } from './seo-data';
+import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from './sitemap-config';
+import { SITEMAP_STATIC_PAGES } from './sitemap-static-pages';
+import { toAbsoluteUrl } from './site-url';
 
 export const BASE_URL = 'https://www.galeobeauty.com';
 export const FALLBACK_IMAGE = `${BASE_URL}/images/logo.png`;
@@ -208,4 +208,8 @@ export function getSitemapChunkEntries(section: SitemapSection, chunkIndex: numb
   });
 
   return entries;
+}
+
+export function getTopLevelSitemapIndexUrls(): string[] {
+  return [`${BASE_URL}/sitemaps/0.xml`, `${BASE_URL}/sitemaps/1.xml`];
 }
