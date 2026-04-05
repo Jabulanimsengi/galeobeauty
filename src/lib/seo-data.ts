@@ -6,7 +6,6 @@
 // ============================================
 
 import { serviceCategories, type ServiceCategory } from "./services-data";
-import { resolveServiceImageMatch } from "./service-image-matcher";
 
 // ============================================
 // TARGET LOCATIONS
@@ -757,6 +756,36 @@ const PREBUILD_LOCATION_SERVICE_SET = new Set(PREBUILD_LOCATION_SERVICE_SLUGS);
 const NEARBY_COMMUTER_ALL_SERVICE_SET = new Set<string>(NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS);
 const MAJOR_GAUTENG_HUB_SET = new Set<string>(MAJOR_GAUTENG_HUB_LOCATIONS);
 
+function resolveSEOServiceImage(
+    category: ServiceCategory,
+    subcategory: ServiceCategory["subcategories"][number],
+    item: ServiceCategory["subcategories"][number]["items"][number],
+) {
+    const fallback = {
+        image: item.image ?? category.image,
+        imageAlt: item.imageAlt ?? `${item.name} at Galeo Beauty in Hartbeespoort`,
+    };
+
+    if (typeof window !== "undefined") {
+        return fallback;
+    }
+
+    try {
+        const serverRequire = eval("require") as NodeRequire;
+        const { resolveServiceImageMatch } = serverRequire("./service-image-matcher") as typeof import("./service-image-matcher");
+
+        return resolveServiceImageMatch({
+            categoryId: category.id,
+            categoryTitle: category.title,
+            categoryImage: category.image,
+            subcategoryTitle: subcategory.title,
+            item,
+        });
+    } catch {
+        return fallback;
+    }
+}
+
 /**
  * Extracts ALL services from the main services-data.ts file
  * and formats them for SEO page generation.
@@ -767,13 +796,7 @@ export function getAllSEOServices(): SEOService[] {
     for (const category of serviceCategories) {
         for (const subcategory of category.subcategories) {
             for (const item of subcategory.items) {
-                const serviceImage = resolveServiceImageMatch({
-                    categoryId: category.id,
-                    categoryTitle: category.title,
-                    categoryImage: category.image,
-                    subcategoryTitle: subcategory.title,
-                    item,
-                });
+                const serviceImage = resolveSEOServiceImage(category, subcategory, item);
 
                 services.push({
                     slug: item.id,
