@@ -1,28 +1,13 @@
-import { NextResponse } from 'next/server';
+import { BASE_URL, buildSitemapIndexXml, SITEMAP_REVALIDATE, xmlResponse } from '@/lib/sitemap-helpers';
 
-const BASE_URL = 'https://www.galeobeauty.com';
-export const dynamic = "force-static";
-export const revalidate = 86400;
-const BUILD_DATE = new Date().toISOString();
+export const dynamic = 'force-static';
+export const revalidate = SITEMAP_REVALIDATE;
 
 export async function GET() {
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>${BASE_URL}/sitemaps/0.xml</loc>
-    <lastmod>${BUILD_DATE}</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>${BASE_URL}/sitemaps/1.xml</loc>
-    <lastmod>${BUILD_DATE}</lastmod>
-  </sitemap>
-</sitemapindex>`;
-
-    return new NextResponse(xml, {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/xml',
-            'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        },
-    });
+  return xmlResponse(
+    buildSitemapIndexXml([
+      `${BASE_URL}/sitemaps/0.xml`,
+      `${BASE_URL}/sitemaps/1.xml`,
+    ])
+  );
 }
