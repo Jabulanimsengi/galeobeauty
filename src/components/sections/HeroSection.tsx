@@ -46,19 +46,19 @@ export function HeroSection() {
                         initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: prefersReducedMotion ? 0 : 0.7, ease: "easeOut" }}
-                        className="max-w-3xl"
+                        className="mx-auto max-w-3xl text-center sm:mx-0 sm:text-left"
                     >
                         <p className="font-serif text-[2.35rem] leading-none tracking-[-0.06em] text-white sm:text-[4.4rem] lg:text-[6.1rem] xl:text-[7rem]">
                             Galeo Beauty
                         </p>
-                        <h1 className="mt-3 max-w-[10ch] font-sans text-[1.8rem] font-light uppercase leading-[0.94] tracking-[0.03em] text-white sm:text-[3.4rem] sm:tracking-[0.04em] lg:text-[4.6rem]">
+                        <h1 className="mx-auto mt-3 max-w-[10ch] font-sans text-[1.8rem] font-light uppercase leading-[0.94] tracking-[0.03em] text-white sm:mx-0 sm:text-[3.4rem] sm:tracking-[0.04em] lg:text-[4.6rem]">
                             Hair, Skin, Lashes, Nails.
                         </h1>
-                        <div className="mt-7 hidden gap-3 sm:mt-8 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+                        <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                             <Button
                                 asChild
                                 size="lg"
-                                className="rounded-none bg-white px-8 text-xs font-semibold uppercase tracking-[0.24em] text-[#17120f] transition-colors hover:bg-gold hover:text-white sm:text-sm"
+                                className="w-full rounded-none bg-white px-8 text-xs font-semibold uppercase tracking-[0.24em] text-[#17120f] transition-colors hover:bg-gold hover:text-white sm:w-auto sm:text-sm"
                             >
                                 <TrackedWhatsAppLink
                                     message="Hi, I found you on www.galeobeauty.com and would like to book or enquire about your services."
@@ -72,7 +72,7 @@ export function HeroSection() {
 
                             <NavLink
                                 href="/prices"
-                                className="inline-flex items-center justify-center border border-white/25 px-7 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-colors hover:border-white hover:bg-white/10 sm:text-sm"
+                                className="inline-flex w-full items-center justify-center border border-white/25 px-7 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-colors hover:border-white hover:bg-white/10 sm:w-auto sm:text-sm"
                             >
                                 Explore Services
                             </NavLink>

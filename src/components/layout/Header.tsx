@@ -131,14 +131,14 @@ export function Header() {
                                 id={mobileMenuContentId}
                                 side="left"
                                 hideCloseButton
-                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-white/10 bg-[#171719] p-0 text-white !gap-0 data-[state=closed]:duration-100 data-[state=open]:duration-100"
+                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-black/8 bg-white p-0 text-foreground !gap-0 data-[state=closed]:duration-100 data-[state=open]:duration-100"
                             >
-                                <SheetHeader className="relative border-b border-white/10 px-7 pt-7 pb-6">
+                                <SheetHeader className="relative border-b border-black/8 bg-[#17120f] px-7 pt-7 pb-6">
                                     <SheetClose asChild>
                                         <button
                                             type="button"
                                             aria-label="Close menu"
-                                            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/85 transition-all duration-200 hover:border-white/20 hover:bg-white/10 hover:text-white"
+                                            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-none border border-white/14 bg-white/8 text-white/85 transition-all duration-200 hover:border-white/24 hover:bg-white/12 hover:text-white"
                                         >
                                             <X className="size-5" strokeWidth={2.1} />
                                         </button>
@@ -161,12 +161,12 @@ export function Header() {
                                 <div className="flex flex-1 flex-col overflow-hidden">
                                     <div className="hide-scrollbar flex-1 overflow-y-auto px-7 py-6">
                                         <nav className="flex flex-col gap-5 overflow-hidden">
-                                            {navItems.map((item, index) => (
+                                            {navItems.map((item) => (
                                                 <div key={item.href}>
                                                     <button
                                                         type="button"
                                                         onClick={() => handleMobileNavigation(item.href)}
-                                                        className="group inline-flex w-fit items-center py-1 text-[1.05rem] font-medium uppercase tracking-[0.22em] text-white/72 transition-all duration-200 hover:text-white"
+                                                        className="group inline-flex w-fit items-center py-1 text-[1.02rem] font-medium uppercase tracking-[0.22em] text-foreground/82 transition-all duration-200 hover:text-gold"
                                                     >
                                                         <span>{item.label}</span>
                                                         <span className="ml-3 h-px w-0 bg-gold/80 transition-all duration-200 group-hover:w-8" />
@@ -183,21 +183,21 @@ export function Header() {
                                         <div className="mt-6">
                                             <Button
                                                 size="lg"
-                                                className="w-full rounded-[1.35rem] bg-gold py-6 text-base font-semibold text-white hover:bg-gold-dark"
+                                                className="w-full rounded-none bg-[#17120f] py-6 text-base font-semibold text-white hover:bg-black"
                                                 onClick={() => handleMobileNavigation("/prices")}
                                             >
-                                                    Book Now
+                                                Book Now
                                             </Button>
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-white/10 px-7 py-5">
+                                    <div className="border-t border-black/8 px-7 py-5">
                                         <TrackedExternalLink
                                             href={`tel:${businessInfo.phone}`}
                                             trackingContext="header_mobile_phone"
                                             linkType="phone"
                                             linkLabel="Header phone"
-                                            className="flex items-center gap-3 text-white/65 transition-colors hover:text-gold"
+                                            className="flex items-center gap-3 text-foreground/65 transition-colors hover:text-gold"
                                         >
                                             <Phone className="w-5 h-5" />
                                             <span className="text-base">012 111 1730</span>
