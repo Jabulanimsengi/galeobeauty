@@ -9,6 +9,8 @@ import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import {
+    CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
+    getCanonicalLocationSlug,
     getLocationBySlug,
     getServiceBySlug,
     getCategoryForService,
@@ -23,10 +25,8 @@ import {
     getLocationInsights,
     getLocationServiceInsight,
     getServiceFAQs,
-    getPriorityLocationServiceContent,
     isHartbeespoortClusterLocation,
     isIndexableLocationService,
-    isPriorityLocationService,
     isBroadLocationHub,
     type FAQ,
 } from "@/lib/seo-data";
@@ -66,6 +66,8 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { location: locationSlug, service: serviceSlug } = await params;
     const location = getLocationBySlug(locationSlug);
+    const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);
+    const canonicalLocation = getLocationBySlug(canonicalLocationSlug);
     const service = getServiceBySlug(serviceSlug);
     const legacyService = resolveLegacyServiceRedirect(serviceSlug);
 
@@ -77,11 +79,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         return { title: "Service Not Found" };
     }
 
+    if (!canonicalLocation) {
+        return { title: "Location Not Found" };
+    }
+
     const shouldIndex = isIndexableLocationService(locationSlug, serviceSlug);
     const category = getCategoryForService(serviceSlug);
     const categoryTitle = category?.title || "Beauty Services";
-    const canonicalUrl = shouldIndex
-        ? `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`
+    const isCanonicalLocalPage = canonicalLocationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
+    const canonicalUrl = canonicalLocationSlug !== locationSlug
+        ? `https://www.galeobeauty.com/locations/${canonicalLocationSlug}/${serviceSlug}`
+        : shouldIndex
+            ? `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`
         : `https://www.galeobeauty.com/prices/${service.categoryId}/${service.slug}`;
 
     // Generate unique description
@@ -89,17 +98,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         // @ts-expect-error - generator expects a service item shape with name
         { ...service, name: service.keyword },
         categoryTitle,
-        location.name
+        canonicalLocation.name
     );
-    const title = `${service.keyword} in ${location.name}`;
-    const metadataDescription = `${richDescription.substring(0, 150)} Book from our Hartbeespoort salon, convenient for ${location.name} clients.`;
-    const socialDescription = `${richDescription.substring(0, 140)} Serving ${location.name} and surrounding Hartbeespoort areas.`;
+    const title = isCanonicalLocalPage
+        ? `${service.keyword} in Hartbeespoort | Harties`
+        : `${service.keyword} in ${canonicalLocation.name}`;
+    const metadataDescription = isCanonicalLocalPage
+        ? `${richDescription.substring(0, 150)} Book at Galeo Beauty in Hartbeespoort, trusted by clients across Harties and the dam area.`
+        : `${richDescription.substring(0, 150)} Book from our Hartbeespoort salon, convenient for ${canonicalLocation.name} clients.`;
+    const socialDescription = isCanonicalLocalPage
+        ? `${richDescription.substring(0, 140)} Serving Hartbeespoort, Harties, and the surrounding dam area.`
+        : `${richDescription.substring(0, 140)} Serving ${canonicalLocation.name} and surrounding Hartbeespoort areas.`;
     const serviceImageUrl = toAbsoluteUrl(service.image);
+    const keywordSet = new Set(buildServiceMetadataKeywords(service, canonicalLocation));
+
+    if (isCanonicalLocalPage) {
+        keywordSet.add(`${service.keyword} Hartbeespoort`);
+        keywordSet.add(`${service.keyword} Harties`);
+        keywordSet.add(`${service.keyword} in Hartbeespoort`);
+        keywordSet.add(`${service.keyword} in Harties`);
+    }
 
     return {
         title,
         description: metadataDescription,
-        keywords: buildServiceMetadataKeywords(service, location),
+        keywords: Array.from(keywordSet),
         openGraph: {
             title,
             description: socialDescription,
@@ -145,6 +168,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function LocationServicePage({ params }: PageProps) {
     const { location: locationSlug, service: serviceSlug } = await params;
     const location = getLocationBySlug(locationSlug);
+    const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);
     const service = getServiceBySlug(serviceSlug);
     const legacyService = resolveLegacyServiceRedirect(serviceSlug);
 
@@ -178,7 +202,10 @@ export default async function LocationServicePage({ params }: PageProps) {
         redirect(`/prices/${service.categoryId}/${service.slug}`);
     }
 
-    if (isHartbeespoortClusterLocation(locationSlug)) {
+    if (
+        isHartbeespoortClusterLocation(locationSlug) &&
+        locationSlug !== CANONICAL_LOCAL_SERVICE_LOCATION_SLUG
+    ) {
         permanentRedirect(`/prices/${service.categoryId}/${service.slug}`);
     }
 
@@ -227,8 +254,30 @@ export default async function LocationServicePage({ params }: PageProps) {
     const locationServiceInsight = getLocationServiceInsight(resolvedService, location);
     const faqs = getServiceFAQs(resolvedService, location);
     const treatmentProcess = getTreatmentProcess(resolvedService, location);
-    const priorityContent = getPriorityLocationServiceContent(resolvedService, location);
-    const isPriorityCombination = isPriorityLocationService(locationSlug, serviceSlug);
+    const isCanonicalLocalPage = locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
+    const localHubLinks = isCanonicalLocalPage
+        ? [
+            { slug: "hartbeespoort", label: "Hartbeespoort" },
+            { slug: "harties", label: "Harties" },
+            { slug: "landsmeer", label: "Landsmeer" },
+            { slug: "melodie", label: "Melodie" },
+            { slug: "schoemansville", label: "Schoemansville" },
+            { slug: "ifafi", label: "Ifafi" },
+            { slug: "pecanwood", label: "Pecanwood" },
+        ]
+        : [];
+    const commuterAreaCandidates = isCanonicalLocalPage
+        ? [
+            { slug: "pretoria", label: "Pretoria" },
+            { slug: "centurion", label: "Centurion" },
+            { slug: "brits", label: "Brits" },
+            { slug: "midstream", label: "Midstream" },
+            { slug: "johannesburg", label: "Johannesburg" },
+        ]
+        : [];
+    const commuterAreaLinks = commuterAreaCandidates.filter((candidate) =>
+        isIndexableLocationService(candidate.slug, resolvedService.slug)
+    );
 
     const whatsappMessage =
         `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`;
@@ -384,7 +433,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 />
 
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-16 lg:pt-40 lg:pb-24 px-6 overflow-hidden">
+                <section className="relative overflow-hidden px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-32 lg:pb-24 lg:pt-40">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent -z-10" />
 
                     <div className="container mx-auto max-w-6xl">
@@ -416,18 +465,31 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 </nav>
 
                                 {/* Main Heading */}
-                                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-tight mb-6">
-                                    Professional <span className="text-gold italic">{service.keyword}</span>
-                                    <br />near <span className="text-gold">{location.name}</span>
+                                <h1 className="mb-6 font-sans text-4xl font-semibold leading-[0.95] tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
+                                    {isCanonicalLocalPage ? (
+                                        <>
+                                            {service.keyword}
+                                            <br />in <span className="text-gold">Hartbeespoort &amp; Harties</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {service.keyword}
+                                            <br />near <span className="text-gold">{location.name}</span>
+                                        </>
+                                    )}
                                 </h1>
 
-                                {/* Unique intro paragraph */}
-                                <div className="text-muted-foreground text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl space-y-4">
+                                <div className="mb-8 max-w-2xl space-y-4 text-base leading-8 text-muted-foreground sm:text-lg">
                                     <p>{introText}</p>
+                                    {isCanonicalLocalPage && (
+                                        <p>
+                                            Clients from Hartbeespoort, Harties, Landsmeer, Melodie, Schoemansville, Ifafi, and nearby estates usually start here when planning an appointment.
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Price & Duration */}
-                                <div className="flex flex-wrap gap-4 mb-8">
+                                <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
                                     <div className="bg-gold/10 border border-gold/20 rounded-full px-6 py-3">
                                         <span className="text-gold font-bold text-lg">{service.price}</span>
                                     </div>
@@ -435,6 +497,12 @@ export default async function LocationServicePage({ params }: PageProps) {
                                         <div className="bg-secondary/50 border border-border rounded-full px-6 py-3 flex items-center gap-2">
                                             <Clock className="w-4 h-4 text-muted-foreground" />
                                             <span className="text-foreground">{service.duration}</span>
+                                        </div>
+                                    )}
+                                    {isCanonicalLocalPage && (
+                                        <div className="bg-secondary/50 border border-border rounded-full px-6 py-3 flex items-center gap-2">
+                                            <MapPin className="w-4 h-4 text-muted-foreground" />
+                                            <span className="text-foreground">Hartbeespoort / Harties</span>
                                         </div>
                                     )}
                                     <LocationServiceBookingButton
@@ -452,7 +520,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 </div>
                             </div>
 
-                            <figure className="overflow-hidden rounded-[2rem] border border-border/60 bg-background/90 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
+                            <figure className="overflow-hidden rounded-[1.6rem] border border-border/60 bg-background/90 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)] sm:rounded-[2rem]">
                                 <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-[4/5]">
                                     <CloudinaryImage
                                         src={serviceImage}
@@ -464,18 +532,71 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     />
                                 </div>
                                 <figcaption className="border-t border-border/60 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
-                                    {resolvedService.keyword} for clients travelling from {location.name}. Prices start from {resolvedService.price}
-                                    {resolvedService.duration ? ` and appointments typically take ${resolvedService.duration}.` : "."}
+                                    {isCanonicalLocalPage
+                                        ? `${resolvedService.keyword} at Galeo Beauty for Hartbeespoort, Harties, and the surrounding dam area. Prices start from ${resolvedService.price}${resolvedService.duration ? ` and appointments typically take ${resolvedService.duration}.` : "."}`
+                                        : `${resolvedService.keyword} for clients travelling from ${location.name}. Prices start from ${resolvedService.price}${resolvedService.duration ? ` and appointments typically take ${resolvedService.duration}.` : "."}`}
                                 </figcaption>
                             </figure>
                         </div>
                     </div>
                 </section>
 
+                {isCanonicalLocalPage && (
+                    <section className="border-y border-border/50 bg-secondary/10 py-12 sm:py-14">
+                        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+                            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-start">
+                                <div className="rounded-[1.5rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                    <h2 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">
+                                        Serving the dam area
+                                    </h2>
+                                    <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
+                                        Browse local hubs around Hartbeespoort and Harties if you want to explore nearby areas before you book.
+                                    </p>
+
+                                    <div className="mt-5 flex flex-wrap gap-3">
+                                        {localHubLinks.map((hub) => (
+                                            <Link
+                                                key={hub.slug}
+                                                href={`/locations/${hub.slug}`}
+                                                className="rounded-full border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                            >
+                                                {hub.label}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="rounded-[1.5rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                    <h3 className="font-sans text-lg font-semibold text-foreground">Nearby areas</h3>
+                                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                                        Travelling in from Pretoria, Centurion, Brits, or another nearby area? These pages can help you explore the same treatment closer to your route.
+                                    </p>
+                                    <div className="mt-5 flex flex-wrap gap-3">
+                                        {commuterAreaLinks.map((area) => (
+                                            <Link
+                                                key={area.slug}
+                                                href={`/locations/${area.slug}/${resolvedService.slug}`}
+                                                className="rounded-full border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                            >
+                                                {resolvedService.keyword} in {area.label}
+                                            </Link>
+                                        ))}
+                                        {commuterAreaLinks.length === 0 && (
+                                            <p className="text-sm text-muted-foreground">
+                                                More nearby area pages for this treatment will be added over time.
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {/* Why Choose Us Section - Category-specific benefits */}
-                <section className="py-16 bg-secondary/20">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-8">
+                <section className="bg-secondary/20 py-12 sm:py-16">
+                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                        <h2 className="mb-8 font-sans text-3xl font-semibold text-foreground">
                             Why Choose Galeo Beauty for <span className="text-gold">{service.keyword}</span>?
                         </h2>
 
@@ -490,45 +611,18 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {isPriorityCombination && priorityContent && (
-                    <section className="py-16 bg-secondary/20">
-                        <div className="container mx-auto px-6 max-w-4xl">
-                            <div className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-sm font-medium text-gold mb-5">
-                                Priority Location + Service Combination
-                            </div>
-                            <h2 className="font-serif text-3xl text-foreground mb-4">
-                                {priorityContent.title}
-                            </h2>
-                            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-                                {priorityContent.intro}
-                            </p>
-                            <div className="space-y-4">
-                                {priorityContent.bullets.map((bullet, index) => (
-                                    <div key={index} className="flex items-start gap-3 rounded-xl border border-border bg-background p-5">
-                                        <Sparkles className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                                        <p className="text-muted-foreground leading-relaxed">{bullet}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
                 {/* Treatment Process - What to Expect */}
-                <section className="py-16">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
+                <section className="py-12 sm:py-16">
+                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                        <h2 className="mb-2 text-center font-sans text-3xl font-semibold text-foreground">
                             What to Expect During {service.keyword}
                         </h2>
-                        <p className="text-muted-foreground text-center mb-12">
-                            Your step-by-step treatment journey at Galeo Beauty
-                        </p>
 
                         <div className="space-y-6">
                             {treatmentProcess.map((step) => (
-                                <div key={step.step} className="flex gap-6">
+                                <div key={step.step} className="flex gap-4 sm:gap-6">
                                     <div className="flex-shrink-0">
-                                        <div className="w-12 h-12 rounded-full bg-gold/10 border-2 border-gold flex items-center justify-center">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gold bg-gold/10 sm:h-12 sm:w-12">
                                             <span className="text-gold font-bold text-lg">{step.step}</span>
                                         </div>
                                     </div>
@@ -569,16 +663,16 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </div>
                 </section>
 
-                <section className="py-16 bg-secondary/20">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-6">
+                <section className="bg-secondary/20 py-12 sm:py-16">
+                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                        <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
                             {service.keyword} Quick Facts for {location.name}
                         </h2>
                         <div className="grid gap-4 sm:grid-cols-2">
                             <div className="rounded-xl border border-border bg-background p-5">
                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Service</p>
                                 <p className="font-medium text-foreground">{service.keyword}</p>
-                                <p className="text-sm text-muted-foreground mt-2">From {service.price}{service.duration ? ` • ${service.duration}` : ""}</p>
+                                <p className="mt-2 text-sm text-muted-foreground">From {service.price}{service.duration ? ` | ${service.duration}` : ""}</p>
                             </div>
                             <div className="rounded-xl border border-border bg-background p-5">
                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Best For</p>
@@ -620,9 +714,9 @@ export default async function LocationServicePage({ params }: PageProps) {
                 </section>
 
                 {/* Location Info - Location-specific insights for uniqueness */}
-                <section className="py-16">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-6">
+                <section className="py-12 sm:py-16">
+                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                        <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
                             Serving <span className="text-gold">{location.name}</span> & {location.region}
                         </h2>
 
@@ -684,7 +778,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {relatedServices.length > 0 && (
                     <section className="py-16 bg-secondary/20">
                         <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="font-serif text-3xl text-foreground mb-6">
+                            <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
                                 More {category?.title} Services in {location.name}
                             </h2>
                             <p className="text-muted-foreground mb-8">
@@ -736,7 +830,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {otherCategoryServices.length > 0 && (
                     <section className="py-16">
                         <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="font-serif text-3xl text-foreground mb-6">
+                            <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
                                 <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
                                 Also Popular in {location.name}
                             </h2>
@@ -758,7 +852,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     href="/prices"
                                     className="bg-gold/10 hover:bg-gold hover:text-white rounded-full px-5 py-2.5 text-sm font-medium text-gold transition-all duration-300"
                                 >
-                                    View All Services →
+                                    View All Services
                                 </Link>
                             </div>
                         </div>
@@ -769,7 +863,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {nearbyLocations.length > 0 && (
                     <section className="py-16 bg-secondary/20">
                         <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="font-serif text-3xl text-foreground mb-6">
+                            <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
                                 {service.keyword} Near Other {location.region} Areas
                             </h2>
                             <p className="text-muted-foreground mb-8">
@@ -794,10 +888,10 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {/* Dynamic Related Services - Unique Per Page */}
                 <section className="py-16 bg-background border-t border-b border-border">
                     <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-4 text-center">
-                            <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
-                            You Might Also Be Interested In
-                        </h2>
+                            <h2 className="mb-4 text-center font-sans text-3xl font-semibold text-foreground">
+                                <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
+                                You Might Also Be Interested In
+                            </h2>
                         <p className="text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
                             Discover complementary treatments popular with {location.name} clients
                         </p>
@@ -840,8 +934,8 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {/* FAQ Section - Service-specific questions */}
                 <section className="py-16 bg-secondary/20">
                     <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
-                            Frequently Asked Questions
+                        <h2 className="mb-2 text-center font-sans text-3xl font-semibold text-foreground">
+                            FAQs
                         </h2>
                         <p className="text-muted-foreground text-center mb-10">
                             Common questions about {service.keyword} in {location.name}
@@ -891,7 +985,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
                                         Book With Confidence
                                     </span>
-                                    <h2 className="mt-5 max-w-2xl font-serif text-3xl leading-tight sm:text-4xl lg:text-[2.9rem]">
+                                    <h2 className="mt-5 max-w-2xl font-sans text-3xl font-semibold leading-tight sm:text-4xl lg:text-[2.9rem]">
                                         Ready for your <span className="text-gold">{service.keyword}</span> near {location.name}?
                                     </h2>
                                     <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/68 sm:text-lg">

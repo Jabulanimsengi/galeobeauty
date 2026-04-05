@@ -358,7 +358,7 @@ function getSubcategorySummary(categoryId: string, subcategory: ServiceSubcatego
 
     const featuredItems = formatItemList(subcategory.items.map((item) => item.name), 3);
 
-    return `A focused section within ${categoryId.replace(/-/g, " ")}, including treatments such as ${featuredItems}.`;
+    return `Explore ${subcategory.title.toLowerCase()} options such as ${featuredItems}.`;
 }
 
 export function CategoryContent({ subcategories, categoryId, categoryTitle }: CategoryContentProps) {
@@ -426,13 +426,10 @@ export function CategoryContent({ subcategories, categoryId, categoryTitle }: Ca
                 <div className="container mx-auto px-4 sm:px-6">
                     <div className="mb-8 rounded-[2rem] border border-border/50 bg-secondary/10 p-6 sm:p-8">
                         <div className="max-w-3xl">
-                            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-gold/80">
-                                {categoryGuide?.eyebrow ?? "Inside This Collection"}
-                            </span>
-                            <h2 className="mt-3 font-serif text-3xl text-foreground">
-                                {categoryGuide?.title ?? `Browse ${categoryTitle} With More Confidence`}
+                            <h2 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">
+                                {categoryGuide?.title ?? `${categoryTitle} Services`}
                             </h2>
-                            <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                            <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
                                 {categoryGuide?.description ?? `Use the sections below to compare treatment styles, pricing, and maintenance level before you decide what feels right for you.`}
                             </p>
                         </div>
@@ -444,13 +441,13 @@ export function CategoryContent({ subcategories, categoryId, categoryTitle }: Ca
                                     return (
                                         <div
                                             key={card.title}
-                                            className="rounded-2xl border border-border/60 bg-background/90 overflow-hidden transition-all duration-300"
+                                            className="overflow-hidden rounded-[1.35rem] border border-border/60 bg-background/90 transition-all duration-300 sm:rounded-2xl"
                                         >
                                             <button
                                                 onClick={() => setExpandedGuideCard(isExpanded ? null : card.title)}
-                                                className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-gold/5 focus:outline-none"
+                                                className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gold/5 focus:outline-none sm:p-5"
                                             >
-                                                <h3 className="font-medium text-foreground">{card.title}</h3>
+                                                <h3 className="font-sans text-base font-semibold text-foreground sm:text-lg">{card.title}</h3>
                                                 <span className="ml-4 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-secondary/10 text-lg font-bold leading-none text-muted-foreground transition-colors group-hover:bg-gold/10 group-hover:text-gold">
                                                     {isExpanded ? "−" : "+"}
                                                 </span>
@@ -484,11 +481,9 @@ export function CategoryContent({ subcategories, categoryId, categoryTitle }: Ca
                     <div className="flex gap-8 lg:gap-12">
                         <div className="flex-1 lg:max-w-2xl">
                             <div className="mb-6 rounded-[1.5rem] border border-border/50 bg-background p-5">
-                                <h2 className="font-serif text-2xl text-foreground">Browse Treatments In Detail</h2>
-                                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                                    Open each section to compare services, add treatments to your booking, or use{" "}
-                                    <span className="font-medium text-foreground">View treatment details</span>{" "}
-                                    whenever you want a fuller page with more explanation before deciding.
+                                <h2 className="font-sans text-xl font-semibold text-foreground sm:text-2xl">Services</h2>
+                                <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                                    Open a section to compare treatments, pricing, and details before you book.
                                 </p>
                             </div>
 
@@ -497,23 +492,23 @@ export function CategoryContent({ subcategories, categoryId, categoryTitle }: Ca
                                     const isExpanded = isSubcategoryExpanded(subcategory.id);
 
                                     return (
-                                        <div key={subcategory.id} className="overflow-hidden rounded-3xl border border-border/50 bg-background transition-shadow hover:shadow-sm">
+                                        <div key={subcategory.id} className="overflow-hidden rounded-[1.6rem] border border-border/50 bg-background transition-shadow hover:shadow-sm sm:rounded-3xl">
                                             <button
                                                 onClick={() => toggleSubcategoryExpansion(subcategory.id)}
-                                                className={`group flex w-full flex-col p-6 text-left transition-colors duration-300 hover:bg-gold/5 focus:outline-none ${isExpanded ? "bg-gold/5" : ""
+                                                className={`group flex w-full flex-col p-4 text-left transition-colors duration-300 hover:bg-gold/5 focus:outline-none sm:p-6 ${isExpanded ? "bg-gold/5" : ""
                                                     }`}
                                             >
                                                 <div className="flex w-full items-start justify-between gap-4">
                                                     <div>
                                                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                                                            <h3 className="font-serif text-xl sm:text-2xl text-foreground">
+                                                            <h3 className="font-sans text-xl font-semibold text-foreground sm:text-2xl">
                                                                 {subcategory.title}
                                                             </h3>
                                                             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
                                                                 {subcategory.items.length} treatments
                                                             </span>
                                                         </div>
-                                                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                                                        <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
                                                             {getSubcategorySummary(categoryId, subcategory)}
                                                         </p>
                                                     </div>
@@ -574,11 +569,23 @@ export function CategoryContent({ subcategories, categoryId, categoryTitle }: Ca
 
                         <div className="hidden w-[380px] shrink-0 lg:block">
                             <div className="sticky top-[140px]">
-                                <BookingSummary
-                                    items={selectedTreatments}
-                                    onRemoveItem={handleRemoveTreatment}
-                                    onBook={handleOpenBooking}
-                                />
+                                <AnimatePresence initial={false}>
+                                    {selectedTreatments.length > 0 && (
+                                        <motion.div
+                                            key="desktop-booking-summary"
+                                            initial={{ opacity: 0, y: 18 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 18 }}
+                                            transition={{ duration: 0.22, ease: "easeOut" }}
+                                        >
+                                            <BookingSummary
+                                                items={selectedTreatments}
+                                                onRemoveItem={handleRemoveTreatment}
+                                                onBook={handleOpenBooking}
+                                            />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
                         </div>
                     </div>

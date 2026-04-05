@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { cormorant, montserrat } from "@/lib/fonts";
+import { montserrat } from "@/lib/fonts";
 import { AttributionTracker } from "@/components/providers/AttributionTracker";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
 import { AppBootLoader } from "@/components/providers/AppBootLoader";
@@ -85,7 +85,7 @@ export default function RootLayout({
   ].filter(Boolean);
 
   return (
-    <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
+    <html lang="en" className={montserrat.variable}>
       <head>
         {/* JSON-LD Structured Data for Local Business */}
         <script

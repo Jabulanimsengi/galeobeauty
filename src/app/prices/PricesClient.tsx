@@ -209,7 +209,7 @@ export function PricesClient() {
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="flex gap-8 lg:gap-12">
                             {/* Left Column - Accordion Categories */}
-                            <div className="flex-1 lg:max-w-2xl">
+                            <div className={`flex-1 lg:max-w-2xl ${selectedTreatments.length === 0 ? "lg:mx-auto" : ""}`}>
                                 <div className="space-y-2">
                                     {serviceCategories.map((category) => {
                                         // Filter items if search query exists
@@ -287,15 +287,26 @@ export function PricesClient() {
                             </div>
 
                             {/* Right Column - Sticky Booking Summary (Desktop Only) */}
-                            <div className="hidden lg:block w-[380px] shrink-0">
-                                <div className="sticky top-[140px]">
-                                    <BookingSummary
-                                        items={selectedTreatments}
-                                        onRemoveItem={handleRemoveTreatment}
-                                        onBook={handleOpenBooking}
-                                    />
-                                </div>
-                            </div>
+                            <AnimatePresence initial={false}>
+                                {selectedTreatments.length > 0 && (
+                                    <motion.div
+                                        key="desktop-booking-column"
+                                        initial={{ opacity: 0, x: 24 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 24 }}
+                                        transition={{ duration: 0.22, ease: "easeOut" }}
+                                        className="hidden w-[380px] shrink-0 lg:block"
+                                    >
+                                        <div className="sticky top-[140px]">
+                                            <BookingSummary
+                                                items={selectedTreatments}
+                                                onRemoveItem={handleRemoveTreatment}
+                                                onBook={handleOpenBooking}
+                                            />
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     </div>
                 </section>

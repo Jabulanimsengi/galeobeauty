@@ -2,12 +2,11 @@ import { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
 import { NavLink } from "@/components/ui/nav-link";
 import {
+  HomepageBrandsMarqueeSection,
+  HomepageCategoriesSection,
   HeroSection,
   HomepageFaqSection,
-  StatsSection,
-  ServicesSection,
   ReviewsSection,
-  BrandsSection,
   HomepageLocationSection,
 } from "@/components/sections";
 import { businessInfo } from "@/lib/constants";
@@ -30,22 +29,13 @@ export const metadata: Metadata = {
   },
 };
 
-const popularServiceColumns = [
-  [
-    { href: "/prices/hair/cut-blow-short", label: "Cut & Blow Dry", price: "R378" },
-    { href: "/prices/hair/tint-roots", label: "Root Tint", price: "R522" },
-    { href: "/prices/hair/balayage", label: "Balayage", price: "R765" },
-  ],
-  [
-    { href: "/prices/nails/gel-overlay-hands", label: "Gel Overlay", price: "R342" },
-    { href: "/prices/nails/acrylic-tips", label: "Acrylic Tips", price: "R432" },
-    { href: "/prices/nails/pedicure", label: "Pedicure", price: "R279" },
-  ],
-  [
-    { href: "/prices/lashes-brows/classic-lashes", label: "Classic Lashes", price: "R450" },
-    { href: "/prices/lashes-brows/hybrid-lashes", label: "Hybrid Lashes", price: "R500" },
-    { href: "/prices/lashes-brows/lash-lift-tint", label: "Lash Lift & Tint", price: "R405" },
-  ],
+const featuredPopularServices = [
+  { href: "/prices/hair/cut-blow-short", label: "Cut & Blow Dry", price: "R378" },
+  { href: "/prices/hair/balayage", label: "Balayage", price: "R765" },
+  { href: "/prices/nails/gel-overlay-hands", label: "Gel Overlay", price: "R342" },
+  { href: "/prices/nails/pedicure", label: "Pedicure", price: "R279" },
+  { href: "/prices/lashes-brows/hybrid-lashes", label: "Hybrid Lashes", price: "R500" },
+  { href: "/prices/dermalogica/pro-microneedling", label: "Pro Microneedling", price: "R1,215" },
 ];
 
 const homepageFaqs = [
@@ -96,65 +86,50 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Header />
-      <main>
-        <section className="relative min-h-[200svh]">
-          <HeroSection />
-          <BrandsSection />
-        </section>
-        <ServicesSection />
-        <section className="bg-white py-10 md:py-12">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="border-y border-border/30 py-8 sm:py-10">
-              <div className="mx-auto max-w-3xl text-center">
-                <span className="mb-2 block text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-gold/85">
-                  Most Popular
-                </span>
-                <h2 className="mx-auto max-w-[12ch] font-serif text-3xl text-foreground sm:text-[3.1rem]">
-                  Services
+      <main className="bg-[#f6efe6]">
+        <HeroSection />
+        <HomepageBrandsMarqueeSection />
+        <HomepageCategoriesSection />
+        <section className="bg-[#17120f] py-12 text-[#f6efe6] sm:py-16 lg:py-20">
+          <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+            <div className="mb-8 text-center sm:mb-10">
+              <div>
+                <h2 className="mx-auto whitespace-nowrap font-serif text-[1.9rem] leading-[0.94] tracking-[-0.045em] text-white sm:text-[3.4rem] lg:text-[4rem]">
+                  Popular Services
                 </h2>
-                <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-muted-foreground">
-                  A quick look at the treatments clients book most often at Galeo Beauty.
-                </p>
               </div>
+            </div>
 
-              <div className="mx-auto mt-8 max-w-6xl">
-                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-                  {popularServiceColumns.map((column, columnIndex) => (
-                    <div key={`popular-column-${columnIndex}`} className="space-y-0">
-                      {column.map((service) => (
-                        <NavLink
-                          key={service.href}
-                          href={service.href}
-                          className="flex items-center justify-between gap-4 border-b border-foreground/20 py-3 text-foreground transition-colors duration-300 hover:text-gold"
-                        >
-                          <span className="text-base leading-6 sm:text-[1.05rem]">
-                            {service.label}
-                          </span>
-                          <span className="shrink-0 text-base leading-6 text-foreground/80 sm:text-[1.05rem]">
-                            {service.price}
-                          </span>
-                        </NavLink>
-                      ))}
-                    </div>
-                  ))}
-                </div>
+            <div className="grid gap-x-8 gap-y-1 border-t border-white/10 pt-2 md:grid-cols-2">
+              {featuredPopularServices.map((service) => (
+                <NavLink
+                  key={service.href}
+                  href={service.href}
+                  className="flex items-center justify-between gap-4 border-b border-white/10 py-3.5 text-[#f6efe6] transition-colors duration-300 hover:text-[#cfb284] sm:py-4"
+                >
+                  <span className="text-[0.94rem] leading-6 sm:text-[1.02rem]">
+                    {service.label}
+                  </span>
+                  <span className="shrink-0 text-[0.72rem] uppercase tracking-[0.14em] text-white/55 sm:text-[0.78rem]">
+                    {service.price}
+                  </span>
+                </NavLink>
+              ))}
+            </div>
 
-                <div className="mt-8 flex justify-center">
-                  <NavLink
-                    href="/prices"
-                    className="inline-flex items-center justify-center rounded-full bg-foreground px-8 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-background transition-colors duration-300 hover:bg-gold hover:text-white"
-                  >
-                    All Services
-                  </NavLink>
-                </div>
-              </div>
+            <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/10 pt-6">
+              <NavLink
+                href="/prices"
+                className="inline-flex items-center justify-center bg-white px-8 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#17120f] transition-colors duration-300 hover:bg-gold hover:text-white sm:text-sm"
+              >
+                All Services
+              </NavLink>
             </div>
           </div>
         </section>
-        <StatsSection />
-        <HomepageFaqSection faqs={homepageFaqs} />
         <ReviewsSection />
         <HomepageLocationSection />
+        <HomepageFaqSection faqs={homepageFaqs} />
       </main>
       <Footer />
     </>

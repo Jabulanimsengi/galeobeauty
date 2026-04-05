@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Header, Footer } from "@/components/layout";
 
-import { TrustBadge } from "@/components/ui/trust-badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
@@ -386,15 +385,10 @@ export default async function CategoryPage({ params }: PageProps) {
 
                     <div className="container mx-auto px-4 sm:px-6 mt-4">
                         <div className="max-w-4xl">
-                            <div className="flex items-center gap-3 mb-4">
-                                <TrustBadge variant={category.badgeVariant}>
-                                    {category.badge}
-                                </TrustBadge>
-                            </div>
-                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-4">
+                            <h1 className="font-sans text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
                                 {h1}
                             </h1>
-                            <p className="text-muted-foreground text-lg leading-relaxed font-light max-w-2xl">
+                            <p className="mt-4 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
                                 {intro}
                             </p>
                             {/* Benefits */}
@@ -426,13 +420,13 @@ export default async function CategoryPage({ params }: PageProps) {
                 {faqs.length > 0 && (
                     <section className="py-16 bg-secondary/20">
                         <div className="container mx-auto px-4 sm:px-6 max-w-3xl">
-                            <h2 className="font-serif text-2xl sm:text-3xl text-foreground text-center mb-8">
-                                Frequently Asked Questions
+                            <h2 className="mb-8 text-center font-sans text-2xl font-semibold text-foreground sm:text-3xl">
+                                FAQs
                             </h2>
                             <div className="space-y-4">
                                 {faqs.map((faq, index) => (
                                     <div key={index} className="bg-white rounded-xl p-5 shadow-sm">
-                                        <h3 className="font-medium text-foreground mb-2">{faq.q}</h3>
+                                        <h3 className="mb-2 font-sans font-semibold text-foreground">{faq.q}</h3>
                                         <p className="text-muted-foreground text-sm">{faq.a}</p>
                                     </div>
                                 ))}
@@ -446,9 +440,9 @@ export default async function CategoryPage({ params }: PageProps) {
                     <section className="py-16 bg-background border-t border-border/30">
                         <div className="container mx-auto px-4 sm:px-6">
                             <div className="max-w-3xl mb-10 text-center mx-auto">
-                                <h2 className="font-serif text-3xl text-foreground mb-4">Unsure where to start?</h2>
+                                <h2 className="mb-3 font-sans text-3xl font-semibold text-foreground">Related Guides</h2>
                                 <p className="text-base text-muted-foreground">
-                                    Read our deep-dive treatment guides to better understand these services and know exactly what to book.
+                                    Read a few useful guides if you want help choosing the right treatment before you book.
                                 </p>
                             </div>
                             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 max-w-6xl mx-auto">
@@ -458,7 +452,7 @@ export default async function CategoryPage({ params }: PageProps) {
                                         href={`/${page.slug}`}
                                         className="group rounded-3xl border border-border/50 bg-secondary/5 p-8 transition-all hover:border-gold/30 hover:shadow-sm"
                                     >
-                                        <h3 className="font-serif text-xl text-foreground mb-3">{page.title}</h3>
+                                        <h3 className="mb-3 font-sans text-xl font-semibold text-foreground">{page.title}</h3>
                                         <p className="text-sm leading-relaxed text-muted-foreground mb-6 line-clamp-3">{page.metaDescription}</p>
                                         <span className="inline-flex items-center text-sm font-medium text-gold group-hover:underline underline-offset-4">
                                             Explore guide <ArrowRight className="w-4 h-4 ml-1" />
@@ -473,7 +467,7 @@ export default async function CategoryPage({ params }: PageProps) {
                 {/* CTA */}
                 <section className="py-20 bg-foreground text-background text-center">
                     <div className="container mx-auto px-4">
-                        <h2 className="font-serif text-3xl md:text-4xl font-semibold mb-4">
+                        <h2 className="mb-4 font-sans text-3xl font-semibold md:text-4xl">
                             Ready to book your {category.title.toLowerCase()} treatment?
                         </h2>
                         <p className="text-background/70 mb-8 max-w-lg mx-auto">

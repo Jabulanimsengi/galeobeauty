@@ -13,15 +13,9 @@ export function HomepageLocationSection() {
                 <div className="grid gap-6 lg:grid-cols-[minmax(18rem,0.82fr)_minmax(0,1.08fr)] lg:items-stretch lg:gap-8">
                     <div className="flex flex-col justify-between bg-stone-50 px-6 py-7 sm:px-7 lg:px-8">
                         <div>
-                            <span className="mb-4 block text-[0.72rem] font-semibold uppercase tracking-[0.3em] text-gold/90">
-                                Visit Galeo Beauty
-                            </span>
                             <h2 className="font-serif text-2xl leading-[0.98] text-foreground sm:text-3xl lg:max-w-[11ch]">
-                                Visit Our Salon in Hartbeespoort
+                                Visit Our Salon
                             </h2>
-                            <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">
-                                Visit our Hartbeespoort salon for hair, nails, lashes, facials, wellness, and advanced treatments in one polished destination near the dam.
-                            </p>
 
                             <div className="mt-8 space-y-5 text-foreground/80">
                                 <div className="flex items-start gap-4">

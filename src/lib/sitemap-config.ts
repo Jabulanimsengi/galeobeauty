@@ -1,4 +1,4 @@
-import { TARGET_LOCATIONS as SEOTargets, SEOLocation } from "./seo-data";
+import { getCanonicalLocationSlug, TARGET_LOCATIONS as SEOTargets, SEOLocation } from "./seo-data";
 
 // Regions to group into Sitemap 0 (Primary Local & NW & Pretoria)
 const SITEMAP_0_REGIONS = [
@@ -10,18 +10,22 @@ const SITEMAP_0_REGIONS = [
 
 const SITEMAP_0_HUB_SLUGS = new Set(["south-africa", "gauteng", "north-west"]);
 
+function canonicalizeLocationSlugs(locations: SEOLocation[]): string[] {
+    return Array.from(new Set(locations.map((loc) => getCanonicalLocationSlug(loc.slug))));
+}
+
 // Combine into arrays based on region
-export const SITEMAP_0_LOCATIONS: string[] = SEOTargets
-    .filter((loc: SEOLocation) =>
+export const SITEMAP_0_LOCATIONS: string[] = canonicalizeLocationSlugs(
+    SEOTargets.filter((loc: SEOLocation) =>
         SITEMAP_0_REGIONS.includes(loc.region) ||
         loc.slug === "pretoria" ||
         SITEMAP_0_HUB_SLUGS.has(loc.slug)
     )
-    .map((loc: SEOLocation) => loc.slug);
+);
 
-export const SITEMAP_1_LOCATIONS: string[] = SEOTargets
-    .filter((loc: SEOLocation) => !SITEMAP_0_LOCATIONS.includes(loc.slug))
-    .map((loc: SEOLocation) => loc.slug);
+export const SITEMAP_1_LOCATIONS: string[] = canonicalizeLocationSlugs(
+    SEOTargets.filter((loc: SEOLocation) => !SITEMAP_0_LOCATIONS.includes(getCanonicalLocationSlug(loc.slug)))
+);
 
 // Combined list for backward compatibility
 export const TARGET_LOCATIONS: string[] = SEOTargets.map(loc => loc.slug);

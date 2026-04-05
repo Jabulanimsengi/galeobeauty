@@ -28,11 +28,8 @@ export function HomepageFaqSection({ faqs }: HomepageFaqSectionProps) {
             <div className="container mx-auto px-4 sm:px-6">
                 <div className="mx-auto max-w-5xl">
                     <div className="mb-6 text-center">
-                        <span className="mb-2 block text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-gold/85">
-                            Before You Book
-                        </span>
-                        <h2 className="font-serif text-2xl font-medium text-foreground sm:text-3xl">
-                            Questions Clients Often Ask
+                        <h2 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">
+                            FAQs
                         </h2>
                     </div>
 
@@ -51,11 +48,11 @@ export function HomepageFaqSection({ faqs }: HomepageFaqSectionProps) {
                                         onClick={() => setOpenIndex(isOpen ? -1 : index)}
                                         className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5"
                                     >
-                                        <span className="font-serif text-lg text-foreground sm:text-[1.35rem]">
+                                        <span className="font-sans text-lg font-semibold text-foreground sm:text-[1.2rem]">
                                             {faq.question}
                                         </span>
                                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 bg-secondary/10 text-xl font-bold leading-none text-gold">
-                                            {isOpen ? "−" : "+"}
+                                            {isOpen ? "-" : "+"}
                                         </span>
                                     </button>
 
@@ -104,3 +101,4 @@ export function HomepageFaqSection({ faqs }: HomepageFaqSectionProps) {
         </section>
     );
 }
+

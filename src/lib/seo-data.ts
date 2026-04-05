@@ -143,6 +143,9 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     // Central/Business
     { slug: "johannesburg-cbd", name: "Johannesburg CBD", region: "Johannesburg" },
     { slug: "braamfontein", name: "Braamfontein", region: "Johannesburg" },
+    { slug: "hillbrow", name: "Hillbrow", region: "Johannesburg" },
+    { slug: "yeoville", name: "Yeoville", region: "Johannesburg" },
+    { slug: "newtown", name: "Newtown", region: "Johannesburg" },
     { slug: "rosebank", name: "Rosebank", region: "Johannesburg" },
     { slug: "parkhurst", name: "Parkhurst", region: "Johannesburg" },
     { slug: "houghton", name: "Houghton", region: "Johannesburg" },
@@ -155,6 +158,8 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "linden", name: "Linden", region: "Johannesburg" },
     { slug: "blairgowrie", name: "Blairgowrie", region: "Johannesburg" },
     { slug: "ferndale", name: "Ferndale", region: "Johannesburg" },
+    { slug: "cresta", name: "Cresta", region: "Johannesburg" },
+    { slug: "olivedale", name: "Olivedale", region: "Johannesburg" },
     { slug: "roodepoort", name: "Roodepoort", region: "Johannesburg" },
     { slug: "florida", name: "Florida", region: "Johannesburg" },
     { slug: "constantia-kloof", name: "Constantia Kloof", region: "Johannesburg" },
@@ -163,13 +168,22 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "north-riding", name: "North Riding", region: "Johannesburg" },
     { slug: "honeydew", name: "Honeydew", region: "Johannesburg" },
     // Southern/Residential
+    { slug: "rosettenville", name: "Rosettenville", region: "Johannesburg" },
+    { slug: "turffontein", name: "Turffontein", region: "Johannesburg" },
     { slug: "glenvista", name: "Glenvista", region: "Johannesburg" },
     { slug: "mulbarton", name: "Mulbarton", region: "Johannesburg" },
     { slug: "mondeor", name: "Mondeor", region: "Johannesburg" },
+    { slug: "ormonde", name: "Ormonde", region: "Johannesburg" },
     { slug: "winchester-hills", name: "Winchester Hills", region: "Johannesburg" },
     { slug: "southgate", name: "Southgate", region: "Johannesburg" },
     { slug: "kibler-park", name: "Kibler Park", region: "Johannesburg" },
     { slug: "soweto", name: "Soweto", region: "Johannesburg" },
+    { slug: "diepkloof", name: "Diepkloof", region: "Johannesburg" },
+    { slug: "orlando", name: "Orlando", region: "Johannesburg" },
+    { slug: "dobsonville", name: "Dobsonville", region: "Johannesburg" },
+    { slug: "pimville", name: "Pimville", region: "Johannesburg" },
+    { slug: "jabulani", name: "Jabulani", region: "Johannesburg" },
+    { slug: "protea-glen", name: "Protea Glen", region: "Johannesburg" },
     { slug: "orange-farm", name: "Orange Farm", region: "Johannesburg" },
     { slug: "lenasia", name: "Lenasia", region: "Johannesburg" },
     { slug: "ennerdale", name: "Ennerdale", region: "Johannesburg" },
@@ -179,6 +193,7 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "kyalami", name: "Kyalami", region: "Midrand" },
     { slug: "waterfall", name: "Waterfall", region: "Midrand" },
     { slug: "waterfall-city", name: "Waterfall City", region: "Midrand" },
+    { slug: "noordwyk", name: "Noordwyk", region: "Midrand" },
     { slug: "blue-hills", name: "Blue Hills", region: "Midrand" },
     { slug: "halfway-house", name: "Halfway House", region: "Midrand" },
     { slug: "carlswald", name: "Carlswald", region: "Midrand" },
@@ -196,7 +211,9 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "moreleta-park", name: "Moreleta Park", region: "Pretoria" },
     { slug: "faerie-glen", name: "Faerie Glen", region: "Pretoria" },
     { slug: "lynnwood", name: "Lynnwood", region: "Pretoria" },
+    { slug: "menlo-park", name: "Menlo Park", region: "Pretoria" },
     { slug: "silver-lakes", name: "Silver Lakes", region: "Pretoria" },
+    { slug: "equestria", name: "Equestria", region: "Pretoria" },
     { slug: "menlyn", name: "Menlyn", region: "Pretoria" },
     { slug: "constantia-park", name: "Constantia Park", region: "Pretoria" },
     { slug: "waterkloof", name: "Waterkloof", region: "Pretoria" },
@@ -220,7 +237,7 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "lyttelton", name: "Lyttelton", region: "Centurion" },
     { slug: "eldoraigne", name: "Eldoraigne", region: "Centurion" },
     { slug: "rooihuiskraal", name: "Rooihuiskraal", region: "Centurion" },
-    { slug: "wierdapark", name: "Wierdapark", region: "Centurion" },
+    { slug: "wierdapark", name: "Wierda Park", region: "Centurion" },
     { slug: "pierre-van-ryneveld", name: "Pierre van Ryneveld", region: "Centurion" },
     { slug: "midstream", name: "Midstream", region: "Centurion" },
     { slug: "olievenhoutbosch", name: "Olievenhoutbosch", region: "Centurion" },
@@ -229,16 +246,20 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "arcadia", name: "Arcadia", region: "Pretoria" },
     { slug: "hatfield", name: "Hatfield", region: "Pretoria" },
     { slug: "brooklyn", name: "Brooklyn", region: "Pretoria" },
+    { slug: "sunnyside", name: "Sunnyside", region: "Pretoria" },
     { slug: "pretoria-west", name: "Pretoria West", region: "Pretoria" },
+    { slug: "danville", name: "Danville", region: "Pretoria" },
     { slug: "lotus-gardens", name: "Lotus Gardens", region: "Pretoria" },
     { slug: "atteridgeville", name: "Atteridgeville", region: "Pretoria" },
     // Far North
     { slug: "roodeplaat", name: "Roodeplaat", region: "Pretoria" },
     { slug: "rayton", name: "Rayton", region: "Pretoria" },
     { slug: "cullinan", name: "Cullinan", region: "Pretoria" },
+    { slug: "bronkhorstspruit", name: "Bronkhorstspruit", region: "Pretoria" },
     { slug: "hammanskraal", name: "Hammanskraal", region: "Pretoria" },
     { slug: "temba", name: "Temba", region: "Pretoria" },
-    { slug: "winterveldt", name: "Winterveldt", region: "Pretoria" },
+    { slug: "winterveldt", name: "Winterveld", region: "Pretoria" },
+    { slug: "ekangala", name: "Ekangala", region: "Pretoria" },
 
     // ========================================
     // CITY OF EKURHULENI (Metropolitan)
@@ -271,6 +292,7 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "edenvale", name: "Edenvale", region: "East Rand" },
     { slug: "greenstone-hill", name: "Greenstone Hill", region: "East Rand" },
     { slug: "modderfontein", name: "Modderfontein", region: "East Rand" },
+    { slug: "clayville", name: "Clayville", region: "East Rand" },
     { slug: "alberton", name: "Alberton", region: "East Rand" },
     { slug: "brackenhurst", name: "Brackenhurst", region: "East Rand" },
     { slug: "katlehong", name: "Katlehong", region: "East Rand" },
@@ -288,6 +310,11 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "sharpeville", name: "Sharpeville", region: "Sedibeng" },
     { slug: "evaton", name: "Evaton", region: "Sedibeng" },
     { slug: "ratanda", name: "Ratanda", region: "Sedibeng" },
+    { slug: "devon", name: "Devon", region: "Sedibeng" },
+    { slug: "impumelelo", name: "Impumelelo", region: "Sedibeng" },
+    { slug: "henley-on-klip", name: "Henley-on-Klip", region: "Sedibeng" },
+    { slug: "walkerville", name: "Walkerville", region: "Sedibeng" },
+    { slug: "de-deur", name: "De Deur", region: "Sedibeng" },
 
     // ========================================
     // WEST RAND DISTRICT
@@ -299,10 +326,19 @@ export const TARGET_LOCATIONS: SEOLocation[] = [
     { slug: "muldersdrift", name: "Muldersdrift", region: "West Rand" },
     { slug: "lanseria", name: "Lanseria", region: "West Rand" },
     { slug: "kagiso", name: "Kagiso", region: "West Rand" },
+    { slug: "munsieville", name: "Munsieville", region: "West Rand" },
     { slug: "mohlakeng", name: "Mohlakeng", region: "West Rand" },
     { slug: "khutsong", name: "Khutsong", region: "West Rand" },
+    { slug: "fochville", name: "Fochville", region: "West Rand" },
+    { slug: "wedela", name: "Wedela", region: "West Rand" },
     { slug: "bekkersdal", name: "Bekkersdal", region: "West Rand" },
 ];
+
+export const CANONICAL_LOCAL_SERVICE_LOCATION_SLUG = "hartbeespoort";
+
+const LOCATION_ALIAS_CANONICAL_MAP: Record<string, string> = {
+    harties: CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
+};
 
 const BROAD_LOCATION_SLUGS = new Set(["south-africa", "gauteng", "north-west"]);
 
@@ -614,6 +650,33 @@ export const PRIMARY_LOCAL_LOCATION_SLUGS = [
     "landsmeer",
 ] as const;
 
+export const NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS = [
+    "pretoria",
+    "centurion",
+    "brits",
+    "midstream",
+    "moreleta-park",
+] as const;
+
+export const MAJOR_GAUTENG_HUB_LOCATIONS = [
+    "johannesburg",
+    "sandton",
+    "randburg",
+    "midrand",
+    "kempton-park",
+    "boksburg",
+    "benoni",
+    "germiston",
+    "edenvale",
+    "alberton",
+    "roodepoort",
+    "krugersdorp",
+    "vereeniging",
+    "randfontein",
+    "springs",
+    "vanderbijlpark",
+] as const;
+
 // ============================================
 // SEO SERVICES - Extracted from all categories
 // ============================================
@@ -691,6 +754,8 @@ export const PREBUILD_LOCATION_SERVICE_SLUGS = Array.from(
 
 const PRIORITY_LOCATION_SET = new Set(PRIORITY_LOCATIONS);
 const PREBUILD_LOCATION_SERVICE_SET = new Set(PREBUILD_LOCATION_SERVICE_SLUGS);
+const NEARBY_COMMUTER_ALL_SERVICE_SET = new Set<string>(NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS);
+const MAJOR_GAUTENG_HUB_SET = new Set<string>(MAJOR_GAUTENG_HUB_LOCATIONS);
 
 /**
  * Extracts ALL services from the main services-data.ts file
@@ -767,6 +832,14 @@ export function getLocationBySlug(slug: string): SEOLocation | undefined {
     return TARGET_LOCATIONS.find((loc) => loc.slug === slug);
 }
 
+export function getCanonicalLocationSlug(locationSlug: string): string {
+    return LOCATION_ALIAS_CANONICAL_MAP[locationSlug] ?? locationSlug;
+}
+
+export function isLocationAliasSlug(locationSlug: string): boolean {
+    return getCanonicalLocationSlug(locationSlug) !== locationSlug;
+}
+
 /**
  * Get service data by slug
  */
@@ -826,29 +899,84 @@ export function isHartbeespoortClusterLocation(locationSlug: string): boolean {
     return location.region === "Hartbeespoort" || location.slug === "hartbeespoort-dam";
 }
 
-export function isIndexableLocationService(locationSlug: string, serviceSlug: string): boolean {
+function supportsExpandedLocationServiceCoverage(locationSlug: string): boolean {
+    const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);
+    if (canonicalLocationSlug !== locationSlug) {
+        return false;
+    }
+
+    if (locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG) {
+        return true;
+    }
+
     const location = getLocationBySlug(locationSlug);
 
     if (!location || !supportsLocationServicePages(location) || isHartbeespoortClusterLocation(locationSlug)) {
         return false;
     }
 
-    return PRIORITY_LOCATION_SET.has(locationSlug) && PREBUILD_LOCATION_SERVICE_SET.has(serviceSlug);
+    return true;
+}
+
+export function isIndexableLocationService(locationSlug: string, serviceSlug: string): boolean {
+    if (!getServiceBySlug(serviceSlug)) {
+        return false;
+    }
+
+    return supportsExpandedLocationServiceCoverage(locationSlug);
 }
 
 export function getPrebuildLocationServiceParams(): { location: string; service: string }[] {
-    const services = getCachedSEOServices().filter((service) =>
+    const allServices = getCachedSEOServices();
+    const services = allServices.filter((service) =>
         PREBUILD_LOCATION_SERVICE_SET.has(service.slug)
     );
     const params: { location: string; service: string }[] = [];
+    const seen = new Set<string>();
 
-    for (const location of PRIORITY_LOCATIONS) {
-        if (!getLocationBySlug(location) || isHartbeespoortClusterLocation(location)) {
+    function pushParam(location: string, service: string) {
+        const key = `${location}:${service}`;
+        if (seen.has(key)) {
+            return;
+        }
+        seen.add(key);
+        params.push({ location, service });
+    }
+
+    for (const service of allServices) {
+        pushParam(CANONICAL_LOCAL_SERVICE_LOCATION_SLUG, service.slug);
+    }
+
+    for (const location of NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS) {
+        if (!getLocationBySlug(location)) {
+            continue;
+        }
+
+        for (const service of allServices) {
+            pushParam(location, service.slug);
+        }
+    }
+
+    for (const location of MAJOR_GAUTENG_HUB_LOCATIONS) {
+        if (!getLocationBySlug(location)) {
             continue;
         }
 
         for (const service of services) {
-            params.push({ location, service: service.slug });
+            pushParam(location, service.slug);
+        }
+    }
+
+    for (const location of PRIORITY_LOCATIONS) {
+        if (
+            !getLocationBySlug(location) ||
+            location === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG
+        ) {
+            continue;
+        }
+
+        for (const service of services) {
+            pushParam(location, service.slug);
         }
     }
 

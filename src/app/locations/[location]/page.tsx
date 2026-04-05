@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import {
+    getCanonicalLocationSlug,
     getLocationBySlug,
     getDrivingContext,
     TARGET_LOCATIONS,
@@ -113,7 +114,8 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { location: locationSlug } = await params;
-    const location = getLocationBySlug(locationSlug);
+    const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);
+    const location = getLocationBySlug(canonicalLocationSlug);
 
     if (!location) {
         return {
@@ -121,7 +123,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
-    const relatedAreas = getLocationClusterLinks(locationSlug, 4);
+    const relatedAreas = getLocationClusterLinks(canonicalLocationSlug, 4);
     const relatedAreaLabel = relatedAreas.map((area) => area.name).join(", ");
     const broadHub = isBroadLocationHub(location);
     const broadHubCopy = broadHub ? getBroadHubCopy(location) : undefined;
@@ -137,12 +139,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description,
         keywords: buildLocationHubKeywords(location),
         alternates: {
-            canonical: `https://www.galeobeauty.com/locations/${locationSlug}`,
+            canonical: `https://www.galeobeauty.com/locations/${canonicalLocationSlug}`,
         },
         openGraph: {
             title,
             description,
-            url: `https://www.galeobeauty.com/locations/${locationSlug}`,
+            url: `https://www.galeobeauty.com/locations/${canonicalLocationSlug}`,
             type: "website",
             siteName: "Galeo Beauty",
             locale: "en_ZA",
@@ -163,9 +165,10 @@ export default async function LocationHubPage({ params }: PageProps) {
         redirect("/locations");
     }
 
+    const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
-    const nearbyAreas = getLocationClusterLinks(locationSlug, 12);
+    const nearbyAreas = getLocationClusterLinks(canonicalLocationSlug, 12);
     const popularTreatmentGroups = getLocationPopularTreatmentGroups(location);
     const broadHub = isBroadLocationHub(location);
     const broadHubCopy = broadHub ? getBroadHubCopy(location) : undefined;

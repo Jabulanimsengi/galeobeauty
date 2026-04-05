@@ -52,8 +52,8 @@ const LOCAL_STATIC_PARAM_LIMITS: Record<StaticParamGroup, number> = {
 const PRODUCTION_STATIC_PARAM_LIMITS: Record<StaticParamGroup, number> = {
     categories: 24,
     services: 400,
-    locations: 32,
-    locationServices: 320,
+    locations: 256,
+    locationServices: 5000,
     intentPages: 40,
     blogPosts: 40,
 };

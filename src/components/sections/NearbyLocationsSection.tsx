@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
+import { getCanonicalLocationSlug, isIndexableLocationService } from "@/lib/seo-data";
 
 interface Location {
     name: string;
@@ -10,6 +11,8 @@ interface Location {
 interface NearbyLocationsSectionProps {
     /** The service name (e.g., "Body Contouring", "Permanent Makeup") */
     serviceName: string;
+    /** Optional: service slug so cards can deep link into local service pages */
+    serviceSlug?: string;
     /** Optional: Custom title. Defaults to "Visiting Us for {serviceName}" */
     title?: string;
     /** Optional: Custom description */
@@ -18,6 +21,7 @@ interface NearbyLocationsSectionProps {
 
 const FEATURED_LOCATIONS: Location[] = [
     { name: "Hartbeespoort", slug: "hartbeespoort", description: "Local clients from around the dam" },
+    { name: "Harties", slug: "harties", description: "A common local search variation around the dam" },
     { name: "Landsmeer", slug: "landsmeer", description: "Home of our salon on Jan Smuts Road" },
     { name: "Pecanwood", slug: "pecanwood", description: "A short drive from the estate" },
     { name: "The Islands", slug: "the-islands-estate", description: "Easy access from the waterfront estates" },
@@ -31,11 +35,12 @@ const FEATURED_LOCATIONS: Location[] = [
 
 export function NearbyLocationsSection({
     serviceName,
+    serviceSlug,
     title,
     description
 }: NearbyLocationsSectionProps) {
     const defaultTitle = `Visiting Us for ${serviceName}`;
-    const defaultDescription = `Clients often visit our Landsmeer salon from Hartbeespoort, the nearby estates, Brits, Pretoria, Centurion, and Johannesburg. If you are planning around travel time, we are happy to help you choose a booking slot that feels easy and worthwhile.`;
+    const defaultDescription = `Clients often visit our Landsmeer salon from Hartbeespoort, Harties, the nearby estates, Brits, Pretoria, Centurion, and Johannesburg. If you are planning around travel time, we are happy to help you choose a booking slot that feels easy and worthwhile.`;
 
     return (
         <section className="py-20 px-6 bg-secondary/10">
@@ -56,9 +61,16 @@ export function NearbyLocationsSection({
 
                 {/* Locations Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-                    {FEATURED_LOCATIONS.map((location) => (
-                        <div
+                    {FEATURED_LOCATIONS.map((location) => {
+                        const canonicalSlug = getCanonicalLocationSlug(location.slug);
+                        const href = serviceSlug && (canonicalSlug === "hartbeespoort" || isIndexableLocationService(canonicalSlug, serviceSlug))
+                            ? `/locations/${canonicalSlug}/${serviceSlug}`
+                            : `/locations/${location.slug}`;
+
+                        return (
+                        <Link
                             key={location.slug}
+                            href={href}
                             className="bg-white p-4 rounded-xl border border-border"
                         >
                             <h3 className="font-semibold text-foreground text-sm leading-tight mb-2">
@@ -67,8 +79,8 @@ export function NearbyLocationsSection({
                             <p className="text-xs text-muted-foreground leading-relaxed">
                                 {location.description}
                             </p>
-                        </div>
-                    ))}
+                        </Link>
+                    )})}
                 </div>
 
                 <div className="flex flex-wrap items-center justify-center gap-4 text-center">

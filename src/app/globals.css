@@ -10,7 +10,7 @@
 @theme inline {
   /* Typography */
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-serif: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 
   /* Color mappings */
   --color-background: var(--background);
@@ -139,7 +139,7 @@
   h2,
   h3,
   h4 {
-    @apply font-serif;
+    @apply font-sans font-semibold tracking-[-0.03em];
   }
 }
 

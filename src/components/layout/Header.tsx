@@ -69,9 +69,7 @@ export function Header() {
         });
     }, [pathname, router, startNavigation]);
 
-    const isHomepage = pathname === "/";
-    const useTransparentHeader = isHomepage && !isScrolled && !isMobileMenuOpen;
-    const mobileToggleIconClass = isMobileMenuOpen || useTransparentHeader ? "text-white" : "text-foreground";
+    const mobileToggleIconClass = isMobileMenuOpen ? "text-white" : "text-foreground";
 
     return (
         <>
@@ -80,19 +78,25 @@ export function Header() {
             {/* Main Header */}
             <header
                 className={cn(
-                    "inset-x-0 top-0 z-50 isolate transition-shadow duration-300 ease-out",
-                    isHomepage ? "fixed" : "sticky",
+                    "inset-x-0 top-0 z-50 isolate transition-[box-shadow] duration-300 ease-out",
+                    "sticky",
                     isScrolled && "shadow-lg"
                 )}
             >
                 {/* Background layer — always rendered, opacity transitions smoothly */}
                 <div
                     className={cn(
-                        "absolute inset-0 -z-10 bg-background/95 backdrop-blur-md transition-opacity duration-300 ease-out",
-                        useTransparentHeader ? "opacity-0" : "opacity-95"
+                        "absolute inset-0 -z-10 transition-all duration-300 ease-out",
+                        "border-b border-black/6 bg-background/92 backdrop-blur-xl"
                     )}
                 />
-                <div className="container mx-auto px-4 sm:px-6">
+                <div
+                    className="absolute inset-x-0 bottom-0 -z-10 h-px opacity-95 transition-opacity duration-300 ease-out"
+                    style={{
+                        background: "linear-gradient(90deg, transparent 0%, rgba(194,161,106,0.45) 50%, transparent 100%)",
+                    }}
+                />
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="relative flex h-[4.5rem] items-center justify-between lg:hidden">
                         <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                             <SheetTrigger asChild>
@@ -100,7 +104,8 @@ export function Header() {
                                     aria-label="Toggle menu"
                                     aria-controls={mobileMenuContentId}
                                     className={cn(
-                                        "relative z-[60] flex h-12 w-12 touch-manipulation select-none items-center justify-center bg-transparent transition-transform duration-200 active:scale-[0.98] focus:outline-none",
+                                        "relative z-[60] flex h-11 w-11 touch-manipulation select-none items-center justify-center border transition-all duration-200 active:scale-[0.98] focus:outline-none",
+                                        "border-black/8 bg-white/72 backdrop-blur-md",
                                         mobileToggleIconClass,
                                     )}
                                     onPointerDown={(event) => {
@@ -208,10 +213,7 @@ export function Header() {
                                 alt="Galeo Beauty"
                                 width={170}
                                 height={70}
-                                className={cn(
-                                    "h-14 w-auto transition-all duration-300",
-                                    useTransparentHeader && "brightness-0 invert drop-shadow-[0_12px_28px_rgba(0,0,0,0.38)]"
-                                )}
+                                className="h-12 w-auto transition-all duration-300 sm:h-14"
                                 priority
                                 noSpinner
                             />
@@ -220,56 +222,36 @@ export function Header() {
                         <div className="h-12 w-12 shrink-0" aria-hidden="true" />
                     </div>
 
-                    <div className="hidden h-[6.5rem] items-center justify-between lg:flex">
-                        <NavLink href="/" className="relative z-10">
+                    <div className="hidden h-[5.8rem] items-center lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-8">
+                        <NavLink href="/" className="relative z-10 justify-self-start">
                             <CloudinaryImage
                                 src="/images/logo.png"
                                 alt="Galeo Beauty"
                                 width={200}
                                 height={80}
-                                className={cn(
-                                    "h-16 w-auto transition-all duration-300 sm:h-20 md:h-24",
-                                    useTransparentHeader && "brightness-0 invert drop-shadow-[0_18px_40px_rgba(0,0,0,0.42)]"
-                                )}
+                                className="h-14 w-auto transition-all duration-300"
                                 priority
                                 noSpinner
                             />
                         </NavLink>
 
-                        <nav className="relative flex items-center gap-0">
+                        <nav className="relative flex items-center justify-center gap-1">
                             {navItems.map((item) => {
-                                const isSpecial = item.href === "/specials";
-
                                 return (
                                     <NavLink
                                         key={item.href}
                                         href={item.href}
-                                        className="group relative overflow-hidden"
+                                        className="group relative"
                                     >
                                         <span className={cn(
-                                            "relative z-10 flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium uppercase tracking-wider transition-colors duration-300",
-                                            "group-hover:text-white",
-                                            useTransparentHeader
-                                                ? isSpecial
-                                                    ? "text-gold"
-                                                    : "text-white/85"
-                                                : "text-foreground"
+                                            "relative z-10 flex items-center gap-1.5 px-4 py-2 text-[0.8rem] font-medium uppercase tracking-[0.24em] transition-colors duration-300",
+                                            "group-hover:text-gold",
+                                            "text-foreground/78"
                                         )}>
                                             {item.label}
-                                            {isSpecial && (
-                                                <span className="relative flex h-2 w-2">
-                                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                                </span>
-                                            )}
                                         </span>
 
-                                        <span className={cn(
-                                            "absolute inset-0 transition-transform duration-300 ease-out -translate-x-full group-hover:translate-x-0",
-                                            useTransparentHeader
-                                                ? "bg-white/14"
-                                                : "bg-gold"
-                                        )} />
+                                        <span className="absolute inset-x-4 bottom-0 h-px origin-center scale-x-0 bg-gold/90 transition-transform duration-300 ease-out group-hover:scale-x-100" />
                                     </NavLink>
                                 );
                             })}
@@ -278,13 +260,11 @@ export function Header() {
                         <Button
                             asChild
                             className={cn(
-                                "font-medium text-white",
-                                useTransparentHeader
-                                    ? "border border-white/30 bg-white/10 backdrop-blur-md hover:bg-white/18"
-                                    : "bg-gold hover:bg-gold-dark"
+                                "justify-self-end rounded-none px-6 text-[0.72rem] font-semibold uppercase tracking-[0.24em] transition-colors",
+                                "bg-[#17120f] text-white hover:bg-gold hover:text-white"
                             )}
                         >
-                            <NavLink href="/prices">Book Now</NavLink>
+                            <NavLink href="/prices">Book</NavLink>
                         </Button>
                     </div>
                 </div>

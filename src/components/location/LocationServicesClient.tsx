@@ -8,7 +8,7 @@ import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
-import type { SEOLocation } from "@/lib/seo-data";
+import { getCanonicalLocationSlug, type SEOLocation } from "@/lib/seo-data";
 
 interface LocationServicesClientProps {
     locationSlug: string;
@@ -16,6 +16,8 @@ interface LocationServicesClientProps {
 }
 
 export function LocationServicesClient({ locationSlug, location }: LocationServicesClientProps) {
+    const detailsLocationSlug = getCanonicalLocationSlug(locationSlug);
+
     // Booking state
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
@@ -130,7 +132,7 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                                                     subcategoryTitle={subcategory.title}
                                                                     isSelected={isItemSelected(item.id)}
                                                                     onToggle={handleToggleTreatment}
-                                                                    detailsLink={`/locations/${locationSlug}/${item.id}`}
+                                                                    detailsLink={`/locations/${detailsLocationSlug}/${item.id}`}
                                                                 />
                                                             ))}
                                                         </div>

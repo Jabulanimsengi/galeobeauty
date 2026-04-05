@@ -59,16 +59,16 @@ export function Footer() {
                                 noSpinner
                             />
                         </NavLink>
-                        <p className="max-w-sm text-sm leading-relaxed text-foreground/68">
+                        <p className="max-w-sm font-sans text-sm leading-relaxed text-foreground/68">
                             A calm Hartbeespoort beauty destination for hair, nails, facials, massage, and advanced aesthetics at Landsmeer near Hartbeespoort Dam.
                         </p>
                     </div>
 
                     <div className="space-y-5">
-                        <h3 className="text-sm font-extrabold uppercase tracking-[0.2em] text-foreground/60">
+                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
                             Visit Us
                         </h3>
-                        <div className="space-y-4 text-[1.05rem] leading-relaxed text-foreground/88">
+                        <div className="space-y-4 font-sans text-[1rem] leading-relaxed text-foreground/88">
                             <p>
                                 {businessInfo.address.street}<br />
                                 {businessInfo.address.area}<br />
@@ -102,10 +102,10 @@ export function Footer() {
                     </div>
 
                     <div className="space-y-5">
-                        <h3 className="text-sm font-extrabold uppercase tracking-[0.2em] text-foreground/60">
+                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
                             Working Hours
                         </h3>
-                        <div className="space-y-4 text-[1.05rem] leading-relaxed text-foreground/88">
+                        <div className="space-y-4 font-sans text-[1rem] leading-relaxed text-foreground/88">
                             <p>{businessInfo.hours.weekday}</p>
                             <p>{businessInfo.hours.saturday}</p>
                             <p>{businessInfo.hours.publicHoliday}</p>
@@ -113,10 +113,10 @@ export function Footer() {
                     </div>
 
                     <div className="space-y-5">
-                        <h3 className="text-sm font-extrabold uppercase tracking-[0.2em] text-foreground/60">
+                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
                             Areas We Serve
                         </h3>
-                        <div className="space-y-3 text-[1.02rem] leading-relaxed text-foreground/88">
+                        <div className="space-y-3 font-sans text-[1rem] leading-relaxed text-foreground/88">
                             {footerLocations.map((location) => (
                                 <NavLink
                                     key={location.href}
@@ -129,14 +129,14 @@ export function Footer() {
                         </div>
                         <NavLink
                             href="/locations"
-                            className="inline-flex items-center rounded-full border border-foreground/18 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                            className="inline-flex items-center rounded-full border border-foreground/18 px-4 py-2 font-sans text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
                         >
                             View All Areas
                         </NavLink>
                     </div>
 
                     <div className="space-y-4 lg:justify-self-end">
-                        <h3 className="text-sm font-extrabold uppercase tracking-[0.2em] text-foreground/60">
+                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
                             Follow Us
                         </h3>
                         <div className="flex flex-wrap items-start gap-3 lg:max-w-[7.5rem] lg:justify-end">
@@ -192,7 +192,7 @@ export function Footer() {
             </div>
 
             <div className="border-t border-border/25">
-                <div className="container mx-auto flex flex-col gap-4 px-4 py-6 text-sm text-foreground/52 sm:px-6 md:flex-row md:items-center md:justify-between">
+                <div className="container mx-auto flex flex-col gap-4 px-4 py-6 font-sans text-sm text-foreground/52 sm:px-6 md:flex-row md:items-center md:justify-between">
                     <p>&copy; {currentYear} Galeo Beauty Hartbeespoort. All rights reserved.</p>
                     <div className="flex gap-6">
                         <NavLink href="/privacy-policy" className="transition-colors hover:text-gold">

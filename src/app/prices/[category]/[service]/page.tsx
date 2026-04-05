@@ -12,11 +12,13 @@ import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
 import {
+    CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
     getAllSEOServices,
     getAllServiceParams,
     getServiceFAQs,
     getTreatmentProcess,
     getLocationBySlug,
+    isIndexableLocationService,
     // New imports for enhanced uniqueness
     generateServiceIntro,
     getServiceSpecificBenefits
@@ -67,10 +69,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
         subcategoryTitle
     );
 
-    const keywords = buildServiceMetadataKeywords(service, { name: "Hartbeespoort", region: "North West" });
+    const keywords = buildServiceMetadataKeywords(service);
     const serviceImageUrl = toAbsoluteUrl(service.image);
-    const title = `${service.keyword} in Hartbeespoort`;
-    const metadataDescription = `${description.substring(0, 120)} Available at Galeo Beauty in Hartbeespoort near Hartbeespoort Dam.`;
+    const title = `${service.keyword} | Galeo Beauty`;
+    const metadataDescription = `${description.substring(0, 120)} Available at Galeo Beauty in Hartbeespoort, serving local clients and nearby commuter areas.`;
 
     return {
         title,
@@ -154,6 +156,17 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     const benefits = getServiceSpecificBenefits(service);
     const intro = generateServiceIntro(service, location);
     const relatedIntentPages = getIntentPagesForService(service.slug);
+    const localServiceHref = `/locations/${CANONICAL_LOCAL_SERVICE_LOCATION_SLUG}/${service.slug}`;
+    const nearbyCoverageCandidates = [
+        { slug: "pretoria", label: "Pretoria" },
+        { slug: "centurion", label: "Centurion" },
+        { slug: "brits", label: "Brits" },
+        { slug: "midstream", label: "Midstream" },
+        { slug: "johannesburg", label: "Johannesburg" },
+    ];
+    const nearbyCoverageLinks = nearbyCoverageCandidates.filter((candidate) =>
+        isIndexableLocationService(candidate.slug, service.slug)
+    );
 
     const faqs = getServiceFAQs(service, location);
     const treatmentProcess = getTreatmentProcess(service, location);
@@ -221,13 +234,13 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
             <Header />
             <main className="bg-background">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 px-6 overflow-hidden bg-gradient-to-br from-background via-secondary/5 to-background">
+                <section className="relative overflow-hidden bg-gradient-to-br from-background via-secondary/5 to-background px-4 pb-14 pt-24 sm:px-6 sm:pb-20 sm:pt-32 lg:pb-28 lg:pt-40">
                     <div className="absolute top-0 right-0 w-2/3 h-full bg-secondary/10 -z-10 skew-x-12" />
                     <div className="container mx-auto max-w-6xl">
                         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(20rem,0.92fr)] lg:items-start">
                             <div className="max-w-3xl">
                                 {/* Breadcrumb */}
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
+                                <div className="mb-6 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                                     <Link href="/" className="hover:text-gold transition-colors">Home</Link>
                                     <span>/</span>
                                     <Link href="/prices" className="hover:text-gold transition-colors">Services</Link>
@@ -237,29 +250,23 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                     <span className="text-foreground">{service.keyword}</span>
                                 </div>
 
-                                {/* Category Badge */}
-                                <span className="inline-block text-gold font-bold tracking-[0.2em] uppercase text-xs sm:text-sm mb-4">
-                                    {category.title}
-                                </span>
-
                                 {/* Title */}
-                                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6 leading-tight">
+                                <h1 className="mb-6 font-sans text-4xl font-semibold leading-[0.95] tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
                                     {service.keyword} in Hartbeespoort
                                 </h1>
 
-                                {/* Description - NOW DYNAMICALLY GENERATED WITH INTRO */}
-                                <div className="text-muted-foreground text-lg mb-8 space-y-4">
-                                    <p className="font-medium text-foreground/80 leading-relaxed">
+                                <div className="mb-8 space-y-4 text-base text-muted-foreground sm:text-lg">
+                                    <p className="font-medium leading-8 text-foreground/80">
                                         {intro}
                                     </p>
-                                    <p className="leading-relaxed">
+                                    <p className="leading-8">
                                         {richDescription}
                                     </p>
                                 </div>
 
                                 {/* Quick Info + Book Button */}
-                                <div className="flex items-center gap-6 mb-8">
-                                    <div className="flex flex-wrap items-center gap-6">
+                                <div className="mb-8 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
+                                    <div className="flex flex-wrap items-center gap-4 sm:gap-6">
                                         <span className="text-2xl font-bold text-gold">{service.price}</span>
                                         {service.duration && (
                                             <div className="flex items-center gap-2 text-muted-foreground">
@@ -282,14 +289,14 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                 </div>
 
                                 {/* CTAs */}
-                                <div className="flex flex-wrap gap-4">
+                                <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4">
                                     <Button asChild size="lg" variant="outline">
                                         <NavLink href={`/prices/${category.id}`}>View All {category.title}</NavLink>
                                     </Button>
                                 </div>
                             </div>
 
-                            <figure className="overflow-hidden rounded-[2rem] border border-border/60 bg-background/85 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
+                            <figure className="overflow-hidden rounded-[1.6rem] border border-border/60 bg-background/85 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)] sm:rounded-[2rem]">
                                 <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-[4/5]">
                                     <CloudinaryImage
                                         src={serviceImage}
@@ -309,10 +316,61 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                     </div>
                 </section>
 
+                <section className="border-y border-border/40 bg-secondary/10 py-12 sm:py-14">
+                    <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+                        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:items-start">
+                            <div className="rounded-[1.5rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                <h2 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">
+                                    Available in Hartbeespoort
+                                </h2>
+                                <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
+                                    Book this treatment from our Hartbeespoort salon, or browse nearby area pages if you are travelling in from surrounding areas.
+                                </p>
+
+                                <div className="mt-6 flex flex-wrap gap-3">
+                                    <Link
+                                        href={localServiceHref}
+                                        className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-gold-dark"
+                                    >
+                                        Hartbeespoort Page
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                    <Link
+                                        href="/locations/harties"
+                                        className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                    >
+                                        Harties Hub
+                                    </Link>
+                                </div>
+                            </div>
+
+                            <div className="rounded-[1.5rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                <h3 className="font-sans text-lg font-semibold text-foreground">Nearby areas</h3>
+                                <div className="mt-5 flex flex-wrap gap-3">
+                                    {nearbyCoverageLinks.map((area) => (
+                                        <Link
+                                            key={area.slug}
+                                            href={`/locations/${area.slug}/${service.slug}`}
+                                            className="rounded-full border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                        >
+                                            {service.keyword} in {area.label}
+                                        </Link>
+                                    ))}
+                                    {nearbyCoverageLinks.length === 0 && (
+                                        <p className="text-sm text-muted-foreground">
+                                            More nearby area pages for this treatment will be added over time.
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Benefits Section - DYNAMIC */}
-                <section className="py-20 bg-white">
-                    <div className="container mx-auto px-6 max-w-6xl">
-                        <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-12 text-center">
+                <section className="bg-white py-12 sm:py-20">
+                    <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+                        <h2 className="mb-12 text-center font-sans text-3xl font-semibold text-foreground md:text-4xl">
                             Why Choose {service.keyword}?
                         </h2>
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -330,10 +388,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                     <section className="py-14 bg-white">
                         <div className="container mx-auto px-6 max-w-6xl">
                             <div className="max-w-3xl mb-8">
-                                <h2 className="font-serif text-3xl text-foreground">Explore the Related Treatment Guide</h2>
-                                <p className="text-muted-foreground mt-2">
-                                    If you want a broader view before booking, this guide explains common concerns, your treatment
-                                    options, and how to choose the right path for you.
+                                <h2 className="font-sans text-3xl font-semibold text-foreground">Related Guides</h2>
+                                <p className="mt-2 text-muted-foreground">
+                                    A few helpful reads if you want more context before you book.
                                 </p>
                             </div>
                             <div className="grid gap-4 md:grid-cols-2">
@@ -367,20 +424,17 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 )}
 
                 {/* Treatment Process - What to Expect */}
-                <section className="py-16">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
+                <section className="py-12 sm:py-16">
+                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                        <h2 className="mb-2 text-center font-sans text-3xl font-semibold text-foreground">
                             What to Expect During {service.keyword}
                         </h2>
-                        <p className="text-muted-foreground text-center mb-12">
-                            Your step-by-step treatment journey at Galeo Beauty
-                        </p>
 
                         <div className="space-y-6">
                             {treatmentProcess.map((step) => (
-                                <div key={step.step} className="flex gap-6">
+                                <div key={step.step} className="flex gap-4 sm:gap-6">
                                     <div className="flex-shrink-0">
-                                        <div className="w-12 h-12 rounded-full bg-gold/10 border-2 border-gold flex items-center justify-center">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gold bg-gold/10 sm:h-12 sm:w-12">
                                             <span className="text-gold font-bold text-lg">{step.step}</span>
                                         </div>
                                     </div>
@@ -424,8 +478,8 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 {/* FAQ Section - Service-specific questions */}
                 <section className="py-16 bg-secondary/20">
                     <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="font-serif text-3xl text-foreground mb-2 text-center">
-                            Frequently Asked Questions
+                        <h2 className="mb-2 text-center font-sans text-3xl font-semibold text-foreground">
+                            FAQs
                         </h2>
                         <p className="text-muted-foreground text-center mb-10">
                             Common questions about {service.keyword}
@@ -450,9 +504,9 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 {relatedServices.length > 0 && (
                     <section className="py-20 bg-white">
                         <div className="container mx-auto px-6 max-w-6xl">
-                            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4 text-center">
-                                Related Treatments
-                            </h2>
+                        <h2 className="mb-4 text-center font-sans text-3xl font-semibold text-foreground md:text-4xl">
+                            Related Treatments
+                        </h2>
                             <p className="text-muted-foreground text-center mb-12">
                                 Explore more {category.title.toLowerCase()} services
                             </p>
@@ -484,16 +538,17 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 {/* Visiting Us */}
                 <NearbyLocationsSection
                     serviceName={service.keyword}
+                    serviceSlug={service.slug}
                 />
 
                 {/* CTA Section */}
                 <section className="py-20 px-6 bg-gradient-to-br from-secondary/20 to-background">
                     <div className="container mx-auto max-w-4xl text-center">
-                        <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">
+                        <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground md:text-4xl">
                             Ready to Book Your {service.keyword}?
                         </h2>
-                        <p className="text-muted-foreground text-lg mb-8">
-                            Experience professional beauty treatments at Galeo Beauty in Hartbeespoort
+                        <p className="mb-8 text-lg text-muted-foreground">
+                            Book with Galeo Beauty in Hartbeespoort.
                         </p>
                         <div className="flex flex-wrap gap-4 justify-center">
                             <Button asChild size="lg" className="bg-gold hover:bg-gold/90">
