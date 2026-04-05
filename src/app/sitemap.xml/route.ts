@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const BASE_URL = 'https://www.galeobeauty.com';
+export const dynamic = "force-static";
+export const revalidate = 86400;
 const BUILD_DATE = new Date().toISOString();
 
 export async function GET() {

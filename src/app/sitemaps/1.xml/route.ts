@@ -3,6 +3,8 @@ import { SITEMAP_1_LOCATIONS } from '@/lib/sitemap-config';
 import { getAllSEOServices, isIndexableLocationService } from '@/lib/seo-data';
 
 const BASE_URL = 'https://www.galeobeauty.com';
+export const dynamic = "force-static";
+export const revalidate = 86400;
 
 // Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
 const BUILD_DATE = new Date().toISOString();

@@ -7,6 +7,8 @@ import { toAbsoluteUrl } from '@/lib/site-url';
 
 const BASE_URL = 'https://www.galeobeauty.com';
 const FALLBACK_IMAGE = 'https://www.galeobeauty.com/images/logo.png';
+export const dynamic = "force-static";
+export const revalidate = 86400;
 
 // Stable timestamp captured at build/deploy time — avoids lastmod changing on every request
 const BUILD_DATE = new Date().toISOString();
