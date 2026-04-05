@@ -1,7 +1,4 @@
-import { BASE_URL, buildSitemapIndexXml, SITEMAP_REVALIDATE, xmlResponse } from '@/lib/sitemap-helpers';
-
-export const dynamic = 'force-static';
-export const revalidate = SITEMAP_REVALIDATE;
+import { BASE_URL, buildSitemapIndexXml, xmlResponse } from '@/lib/sitemap-helpers';
 
 export async function GET() {
   return xmlResponse(
