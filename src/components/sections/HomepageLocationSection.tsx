@@ -83,6 +83,7 @@ export function HomepageLocationSection() {
                             zoom={15}
                             previewTitle="Find Galeo Beauty"
                             previewDescription="Our location is always visible here, and the live map upgrades automatically as it comes into view."
+                            directionsClassName="rounded-none"
                             className="h-full w-full"
                         />
                     </div>

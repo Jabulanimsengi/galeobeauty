@@ -18,6 +18,7 @@ interface DeferredMapProps extends MapProps {
     loadStrategy?: "in-view" | "interaction";
     previewTitle?: string;
     previewDescription?: string;
+    directionsClassName?: string;
 }
 
 export function DeferredMap({
@@ -28,6 +29,7 @@ export function DeferredMap({
     loadStrategy = "in-view",
     previewTitle,
     previewDescription,
+    directionsClassName,
     ...props
 }: DeferredMapProps) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -64,6 +66,7 @@ export function DeferredMap({
                     longitude={longitude}
                     markerTitle={markerTitle}
                     markerDescription={markerDescription}
+                    directionsClassName={directionsClassName}
                     {...props}
                 />
             ) : (
@@ -102,7 +105,7 @@ export function DeferredMap({
                                 linkLabel="Deferred map preview directions"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center rounded-full border border-foreground/15 bg-white/80 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                className={`inline-flex items-center justify-center border border-foreground/15 bg-white/80 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold ${directionsClassName ?? "rounded-full"}`}
                             >
                                 Get Directions
                             </TrackedExternalLink>

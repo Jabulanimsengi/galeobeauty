@@ -11,6 +11,7 @@ import {
 } from "@/components/sections";
 import { businessInfo } from "@/lib/constants";
 import { buildHomepageKeywords } from "@/lib/seo-keywords";
+import { serviceCategories } from "@/lib/services-data";
 
 export const metadata: Metadata = {
   title: "Hair, Nails, Lashes & Beauty Salon in Hartbeespoort",
@@ -29,14 +30,33 @@ export const metadata: Metadata = {
   },
 };
 
-const featuredPopularServices = [
-  { href: "/prices/hair/cut-blow-short", label: "Cut & Blow Dry", price: "R378" },
-  { href: "/prices/hair/balayage", label: "Balayage", price: "R765" },
-  { href: "/prices/nails/gel-overlay-hands", label: "Gel Overlay", price: "R342" },
-  { href: "/prices/nails/pedicure", label: "Pedicure", price: "R279" },
-  { href: "/prices/lashes-brows/hybrid-lashes", label: "Hybrid Lashes", price: "R500" },
-  { href: "/prices/dermalogica/pro-microneedling", label: "Pro Microneedling", price: "R1,215" },
-];
+const featuredPopularServiceSelections = [
+  { categoryId: "lashes-brows", serviceId: "hybrid-lashes" },
+  { categoryId: "lashes-brows", serviceId: "lash-lift-tint", label: "Lash Lift & Tint" },
+  { categoryId: "nails", serviceId: "gel-overlay-hands", label: "Gel Overlay" },
+  { categoryId: "nails", serviceId: "pedicure" },
+  { categoryId: "hair-extensions", serviceId: "tape-45cm-dark", label: "Tape In Extensions 45cm" },
+  { categoryId: "massages", serviceId: "swedish-massage-60", label: "Swedish Massage" },
+] as const;
+
+const featuredPopularServices = featuredPopularServiceSelections.map(
+  ({ categoryId, serviceId, label }) => {
+    const category = serviceCategories.find((item) => item.id === categoryId);
+    const service = category?.subcategories
+      .flatMap((subcategory) => subcategory.items)
+      .find((item) => item.id === serviceId);
+
+    if (!category || !service) {
+      throw new Error(`Missing homepage popular service: ${categoryId}/${serviceId}`);
+    }
+
+    return {
+      href: `/prices/${category.id}/${service.id}`,
+      label: label ?? service.name,
+      price: service.price,
+    };
+  }
+);
 
 const homepageFaqs = [
   {

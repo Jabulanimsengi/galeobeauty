@@ -51,6 +51,7 @@ export interface MapProps {
     className?: string;
     markerTitle?: string;
     markerDescription?: string;
+    directionsClassName?: string;
 }
 
 const GOOGLE_MAPS_SCRIPT_ID = "galeo-google-maps-script";
@@ -168,6 +169,7 @@ export function Map({
     className = "",
     markerTitle = "Galeo Beauty",
     markerDescription = "Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort",
+    directionsClassName,
 }: MapProps) {
     const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "";
     const mapContainer = useRef<HTMLDivElement>(null);
@@ -358,7 +360,7 @@ export function Map({
                 linkLabel="Map directions"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="absolute top-4 left-4 z-10 flex items-center gap-2 rounded-lg bg-gold px-5 py-3 text-white shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gold/90"
+                className={`absolute top-4 left-4 z-10 flex items-center gap-2 bg-gold px-5 py-3 text-white shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gold/90 ${directionsClassName ?? "rounded-lg"}`}
             >
                 <svg
                     className="h-5 w-5 text-white"

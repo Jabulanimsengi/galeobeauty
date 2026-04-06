@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { businessInfo } from "@/lib/constants";
 
 type Testimonial = {
     id: number;
@@ -287,6 +288,17 @@ export function ReviewsSection() {
                         />
                     </motion.div>
                 </div>
+            </div>
+
+            <div className="container relative mx-auto px-4 pt-8 text-center sm:px-6">
+                <a
+                    href={businessInfo.socials.fresha}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center text-sm font-semibold uppercase tracking-[0.16em] text-foreground transition-colors duration-300 hover:text-gold"
+                >
+                    View more reviews
+                </a>
             </div>
         </section>
     );
