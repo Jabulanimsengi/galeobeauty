@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, Share2, Check } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, SquareArrowOutUpRight, Check } from "lucide-react";
 
 interface LightboxProps {
     images: { src: string; alt: string; title?: string; subtitle?: string }[];
@@ -140,34 +140,28 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             e.stopPropagation();
                             handleShare();
                         }}
-                        className="absolute top-4 right-16 md:right-20 z-10 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors text-white flex items-center gap-2 group"
+                        className="absolute top-4 right-16 z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-black/45 text-white transition-colors hover:bg-black/70 md:right-20 md:h-12 md:w-12"
                         aria-label="Share image"
                         title="Share image"
                     >
                         {copied ? (
-                            <>
-                                <Check className="w-5 h-5 md:w-6 md:h-6 text-green-400" />
-                                <span className="hidden sm:block text-sm font-medium pr-1 text-green-400">Copied!</span>
-                            </>
+                            <Check className="h-5 w-5 text-green-400 md:h-5 md:w-5" />
                         ) : (
-                            <>
-                                <Share2 className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
-                                <span className="hidden sm:block text-sm font-medium pr-1">Share</span>
-                            </>
+                            <SquareArrowOutUpRight className="h-5 w-5 md:h-5 md:w-5" />
                         )}
                     </button>
 
                     {/* Close Button */}
                     <button
                         onClick={onClose}
-                        className="absolute top-4 right-4 z-10 p-3 rounded-full bg-black/60 hover:bg-black/80 transition-colors text-white"
+                        className="absolute top-4 right-4 z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/12 bg-black/55 text-white transition-colors hover:bg-black/80 md:h-12 md:w-12"
                         aria-label="Close lightbox"
                     >
-                        <X className="w-5 h-5 md:w-6 md:h-6" />
+                        <X className="h-5 w-5 md:h-5 md:w-5" />
                     </button>
 
                     {/* Counter */}
-                    <div className="absolute top-4 left-4 z-10 text-white/70 text-sm">
+                    <div className="absolute top-4 left-4 z-20 rounded-2xl border border-white/10 bg-black/35 px-3 py-2 text-xs font-medium tracking-[0.12em] text-white/75 backdrop-blur-sm md:text-sm">
                         {validIndex + 1} / {images.length}
                     </div>
 
@@ -177,14 +171,14 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             e.stopPropagation();
                             goToPrevious();
                         }}
-                        className="absolute left-4 z-10 p-3 rounded-full bg-black/45 hover:bg-black/65 transition-colors text-white"
+                        className="absolute left-3 z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-black/35 text-white transition-colors hover:bg-black/60 md:left-5 md:h-12 md:w-12"
                         aria-label="Previous image"
                     >
-                        <ChevronLeft className="w-6 h-6" />
+                        <ChevronLeft className="h-6 w-6" />
                     </button>
 
                     <div
-                        className="mx-4 flex h-full w-full max-w-6xl flex-col items-center justify-center gap-4 py-20 md:py-24"
+                        className="flex h-[100svh] w-full items-center justify-center"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Image */}
@@ -192,7 +186,7 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             key={validIndex}
                             ref={imagePanelRef}
                             tabIndex={-1}
-                            className="relative w-full flex-1 overflow-hidden rounded-[28px] border border-white/10 bg-black shadow-[0_24px_80px_rgba(0,0,0,0.35)]"
+                            className="relative h-[100svh] w-full overflow-hidden bg-black sm:h-[calc(100svh-1.5rem)] sm:w-[calc(100vw-1.5rem)] sm:rounded-[28px] md:h-[calc(100svh-2rem)] md:w-[calc(100vw-2rem)] md:max-w-[1600px]"
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
@@ -213,18 +207,18 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                                 alt={activeImage.alt}
                                 fill
                                 className="object-contain"
-                                sizes="(max-width: 1280px) 100vw, 1280px"
+                                sizes="100vw"
                                 priority
                             />
-                        </motion.div>
 
-                        <div className="w-full rounded-[20px] border border-white/10 bg-black px-4 py-3 md:px-5">
-                            <div className="max-w-3xl">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/90">
+                            {activeImage.subtitle ? (
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 sm:bottom-5">
+                                    <p className="rounded-full border border-white/10 bg-black/45 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/90 backdrop-blur-sm sm:text-[11px]">
                                     {activeImage.subtitle || "Galeo Beauty Gallery"}
-                                </p>
-                            </div>
-                        </div>
+                                    </p>
+                                </div>
+                            ) : null}
+                        </motion.div>
                     </div>
 
                     {/* Next Button */}
@@ -233,10 +227,10 @@ export function Lightbox({ images, initialIndex = 0, isOpen, onClose }: Lightbox
                             e.stopPropagation();
                             goToNext();
                         }}
-                        className="absolute right-4 z-10 p-3 rounded-full bg-black/45 hover:bg-black/65 transition-colors text-white"
+                        className="absolute right-3 z-20 flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-black/35 text-white transition-colors hover:bg-black/60 md:right-5 md:h-12 md:w-12"
                         aria-label="Next image"
                     >
-                        <ChevronRight className="w-6 h-6" />
+                        <ChevronRight className="h-6 w-6" />
                     </button>
 
                 </motion.div>
