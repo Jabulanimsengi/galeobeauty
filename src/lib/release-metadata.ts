@@ -1,7 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import packageJson from "../../package.json";
-import { STATIC_BUILD_SCOPE } from "@/lib/build-config";
 
 type ReleaseMetadataFile = {
     buildScope?: string;
@@ -85,6 +84,26 @@ function resolveDeployTarget() {
     return "local";
 }
 
+function resolveBuildScope(fileMetadata: ReleaseMetadataFile) {
+    const explicitScope = firstNonEmpty(process.env.GALEO_BUILD_SCOPE, fileMetadata.buildScope);
+
+    if (explicitScope) {
+        return explicitScope;
+    }
+
+    if (
+        process.env.HETZNER === "1" ||
+        process.env.HETZNER === "true" ||
+        process.env.VERCEL === "1" ||
+        process.env.GITHUB_ACTIONS === "true" ||
+        process.env.CI === "true"
+    ) {
+        return "production";
+    }
+
+    return "local";
+}
+
 export function getReleaseMetadata() {
     const fileMetadata = readReleaseMetadataFile();
     const gitSha = resolveGitSha();
@@ -103,9 +122,7 @@ export function getReleaseMetadata() {
                 process.env.APP_SLOT,
                 fileMetadata.slot,
             ) || "unknown",
-        buildScope:
-            firstNonEmpty(process.env.GALEO_BUILD_SCOPE, fileMetadata.buildScope) ||
-            STATIC_BUILD_SCOPE,
+        buildScope: resolveBuildScope(fileMetadata),
         deployTarget: resolveDeployTarget(),
         deployedAt:
             firstNonEmpty(process.env.GALEO_DEPLOYED_AT, process.env.BUILD_TIME, fileMetadata.deployedAt) ||

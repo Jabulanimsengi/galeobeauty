@@ -6,15 +6,14 @@ import { Button } from "@/components/ui/button";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { getAllBlogPosts, getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
 import { ArrowLeft, ArrowRight, Clock, Calendar, User } from "lucide-react";
-import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
 
 // Generate static params for all blog posts
 export function generateStaticParams() {
     const posts = getAllBlogPosts();
-    return limitStaticParams(posts.map((post) => ({
+    return posts.map((post) => ({
         slug: post.slug,
-    })), "blogPosts");
+    }));
 }
 
 // Fully static - no ISR

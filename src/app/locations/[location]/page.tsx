@@ -7,7 +7,7 @@ import {
     getCanonicalLocationSlug,
     getLocationBySlug,
     getDrivingContext,
-    TARGET_LOCATIONS,
+    getPrebuildLocationHubParams,
     getLocationInsights,
     getLocationClusterLinks,
     getLocationPopularTreatmentGroups,
@@ -18,7 +18,6 @@ import { businessInfo } from "@/lib/constants";
 import { CheckCircle, ArrowRight, MapPin } from "lucide-react";
 import { LocationServicesClient } from "@/components/location/LocationServicesClient";
 import { buildLocationHubKeywords } from "@/lib/seo-keywords";
-import { limitStaticParams } from "@/lib/build-config";
 import { serviceCategories } from "@/lib/services-data";
 
 function getBroadHubCopy(location: SEOLocation) {
@@ -96,14 +95,12 @@ function getBroadHubCopy(location: SEOLocation) {
     };
 }
 
-// Pre-build priority locations
+// Pre-build a deterministic nearby-location hub set.
 export const dynamic = "force-static";
 export const dynamicParams = true;
 
 export function generateStaticParams() {
-    return limitStaticParams(TARGET_LOCATIONS.map(loc => ({
-        location: loc.slug
-    })), "locations");
+    return getPrebuildLocationHubParams();
 }
 
 interface PageProps {

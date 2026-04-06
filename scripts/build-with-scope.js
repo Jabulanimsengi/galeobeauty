@@ -8,8 +8,8 @@ if (!scope) {
 }
 
 const result = spawnSync(
-    process.platform === "win32" ? "npx.cmd" : "npx",
-    ["tsx", "scripts/generate-sitemaps.ts"],
+    process.execPath,
+    ["scripts/run-generate-sitemaps.cjs", "--if-production"],
     {
         stdio: "inherit",
         env: {

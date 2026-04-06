@@ -10,7 +10,6 @@ import { serviceCategories, getCategoryById } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
 import { buildCategoryMetadataKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
-import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
 
 // Comprehensive SEO metadata for each category - optimized for South African search
@@ -219,9 +218,9 @@ const categoryMeta: Record<string, {
 
 // Generate static paths for all categories
 export function generateStaticParams() {
-    return limitStaticParams(serviceCategories.map((category) => ({
+    return serviceCategories.map((category) => ({
         category: category.id,
-    })), "categories");
+    }));
 }
 
 // Fully static - no ISR

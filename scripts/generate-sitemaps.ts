@@ -9,7 +9,7 @@ import {
   getTopLevelSitemapIndexUrls,
 } from '../src/lib/sitemap-helpers';
 
-const repoRoot = path.resolve(__dirname, '..');
+const repoRoot = process.cwd();
 const publicDir = path.join(repoRoot, 'public');
 const sitemapRoot = path.join(publicDir, 'sitemaps');
 
@@ -44,6 +44,11 @@ async function writeSection(section: '0' | '1') {
 }
 
 async function main() {
+  if (process.env.GALEO_SITEMAP_COMPILE_ONLY === '1') {
+    console.log('Sitemap generator compiled successfully.');
+    return;
+  }
+
   await fs.mkdir(publicDir, { recursive: true });
   await ensureCleanDir(sitemapRoot);
 

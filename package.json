@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "generate:sitemaps": "node scripts/run-generate-sitemaps.cjs",
+    "generate:sitemaps:if-production": "node scripts/run-generate-sitemaps.cjs --if-production",
     "dev": "next dev",
     "dev:turbo": "next dev --turbo",
+    "prebuild": "npm run generate:sitemaps:if-production",
     "build": "next build",
     "build:local": "node scripts/build-with-scope.js local",
     "build:production": "node scripts/build-with-scope.js production",

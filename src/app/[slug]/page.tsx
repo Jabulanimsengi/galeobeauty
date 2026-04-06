@@ -14,7 +14,6 @@ import {
     getIntentPageRedirectPath,
     getIntentPageServiceLinks,
 } from "@/lib/intent-pages";
-import { limitStaticParams } from "@/lib/build-config";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -25,10 +24,7 @@ export const dynamicParams = true;
 export const revalidate = false;
 
 export function generateStaticParams() {
-    return limitStaticParams(
-        getPublishedIntentPages().map((page) => ({ slug: page.slug })),
-        "intentPages"
-    );
+    return getPublishedIntentPages().map((page) => ({ slug: page.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

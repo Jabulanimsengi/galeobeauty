@@ -39,6 +39,7 @@ Recommended commands:
 - Local dev build: `npm run build:local`
 - Standard server deploy: `npm run build:production`
 - Full SEO sweep: `npm run build:full-seo`
+- Production-like builds generate the static sitemap files in `public/` before running `next build`
 
 ## Release Visibility
 

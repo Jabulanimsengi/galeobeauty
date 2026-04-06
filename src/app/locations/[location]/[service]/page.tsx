@@ -34,22 +34,20 @@ import { generateServiceDescription } from "@/lib/seo-generator";
 import { businessInfo } from "@/lib/constants";
 import { resolveLegacyServiceRedirect } from "@/lib/legacy-service-redirects";
 import { buildServiceKeywords, buildServiceMetadataKeywords } from "@/lib/seo-keywords";
-import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
 
 // ============================================
 // STATIC GENERATION WITH ISR
 // ============================================
-// Priority locations (Hartbeespoort core) pre-built at build time.
-// All other Gauteng locations generate on-demand via ISR when first visited.
+// Pre-build only the explicit hero location-service pages for Hartbeespoort and nearby areas.
+// The rest of the valid location-service URLs generate on-demand via ISR.
 
 export const dynamic = "force-static";
 export const dynamicParams = true;
 export const revalidate = 43200; // ISR: Revalidate every 12 hours
 
 export function generateStaticParams() {
-    // Pre-build the strongest location-service combinations across all target locations.
-    return limitStaticParams(getPrebuildLocationServiceParams(), "locationServices");
+    return getPrebuildLocationServiceParams();
 }
 
 // ============================================

@@ -14,7 +14,7 @@ import { serviceCategories } from "@/lib/services-data";
 import {
     CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
     getAllSEOServices,
-    getAllServiceParams,
+    getPrebuildServiceParams,
     getServiceFAQs,
     getTreatmentProcess,
     getLocationBySlug,
@@ -27,7 +27,6 @@ import { businessInfo } from "@/lib/constants";
 import { generateServiceDescription } from "@/lib/seo-generator";
 import { buildServiceMetadataKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForService } from "@/lib/intent-pages";
-import { limitStaticParams } from "@/lib/build-config";
 import { toAbsoluteUrl } from "@/lib/site-url";
 
 //============================================
@@ -40,9 +39,10 @@ export const dynamic = "force-static";
 export const dynamicParams = true;
 export const revalidate = false;
 
-// Generate static pages for all 262 services
+// Pre-build all canonical service pages deterministically.
+// Location-targeted long-tail pages stay on-demand elsewhere.
 export function generateStaticParams() {
-    return limitStaticParams(getAllServiceParams(), "services");
+    return getPrebuildServiceParams();
 }
 
 // Generate metadata for each service page

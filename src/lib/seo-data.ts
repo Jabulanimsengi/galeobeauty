@@ -605,9 +605,8 @@ export function getLocationIndexGroups(): LocationIndexGroup[] {
 // ============================================
 // PRIORITY LOCATIONS & SERVICES FOR PRE-BUILDING
 // ============================================
-// These key SEO target locations are pre-built at build time (~2,600 pages).
-// All other location/service combinations are generated on-demand with ISR.
-// 10 core locations - optimized to stay under Vercel's 75MB limit.
+// These lists decide which location hubs and location-service pages are worth
+// spending build time on. Everything outside these lists stays on-demand.
 
 export const PRIORITY_LOCATIONS = [
     // Primary locations - EQUAL RANKING (Most Critical!)
@@ -676,6 +675,31 @@ export const MAJOR_GAUTENG_HUB_LOCATIONS = [
     "vanderbijlpark",
 ] as const;
 
+export const IMPORTANT_LOCATION_HUB_SLUGS = [
+    "hartbeespoort",
+    "landsmeer",
+    "harties",
+    "pretoria",
+    "centurion",
+    "moreleta-park",
+    "midstream",
+    "brits",
+    "schoemansville",
+    "melodie",
+    "meerhof",
+    "ifafi",
+    "pecanwood",
+    "broederstroom",
+] as const;
+
+export const IMPORTANT_LOCATION_SERVICE_BUILD_SLUGS = [
+    "pretoria",
+    "centurion",
+    "moreleta-park",
+    "midstream",
+    "brits",
+] as const;
+
 // ============================================
 // SEO SERVICES - Extracted from all categories
 // ============================================
@@ -728,33 +752,22 @@ export const HERO_SERVICES = [
     "day-makeup", "spraytan", "sunbed-10", "sunbed-20"
 ];
 
-// Second-tier services that still have strong commercial intent and enough unique
-// supporting copy to justify pre-building across the full location set.
-export const SECONDARY_PREBUILD_SERVICES = [
-    // Aesthetics
-    "tox-per-unit", "undereye-2-treatments", "undereye-1-treatment", "cheek-fillers-2ml", "cheek-fillers-1ml",
+const IMPORTANT_LOCATION_HUB_SET = new Set<string>(IMPORTANT_LOCATION_HUB_SLUGS);
+const HERO_SERVICE_SET = new Set<string>(HERO_SERVICES);
+const IMPORTANT_LOCATION_SERVICE_BUILD_SET = new Set<string>(IMPORTANT_LOCATION_SERVICE_BUILD_SLUGS);
 
-    // Massage
-    "swedish-massage-60", "aromatherapy-60", "hot-stone-60", "deep-tissue-60", "sports-massage-60", "back-neck-45",
+function sortServicesByBuildPriority(services: SEOService[]): SEOService[] {
+    return [...services].sort((left, right) => {
+        const leftHero = HERO_SERVICE_SET.has(left.slug);
+        const rightHero = HERO_SERVICE_SET.has(right.slug);
 
-    // Dermalogica
-    "pro-skin-60", "pro-clear", "pro-calm", "pro-firm", "pro-dermaplaning-full", "age-smart-facial", "skin-clearing-facial",
+        if (leftHero !== rightHero) {
+            return leftHero ? -1 : 1;
+        }
 
-    // Hair removal and waxing
-    "ipl-underarm", "ipl-bikini-sides", "wax-underarm",
-
-    // Beauty maintenance
-    "lip-liner", "full-manicure",
-];
-
-export const PREBUILD_LOCATION_SERVICE_SLUGS = Array.from(
-    new Set([...HERO_SERVICES, ...SECONDARY_PREBUILD_SERVICES])
-);
-
-const PRIORITY_LOCATION_SET = new Set(PRIORITY_LOCATIONS);
-const PREBUILD_LOCATION_SERVICE_SET = new Set(PREBUILD_LOCATION_SERVICE_SLUGS);
-const NEARBY_COMMUTER_ALL_SERVICE_SET = new Set<string>(NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS);
-const MAJOR_GAUTENG_HUB_SET = new Set<string>(MAJOR_GAUTENG_HUB_LOCATIONS);
+        return left.keyword.localeCompare(right.keyword);
+    });
+}
 
 function resolveSEOServiceImage(
     category: ServiceCategory,
@@ -848,11 +861,48 @@ export function getAllServiceParams(): { category: string; service: string }[] {
     }));
 }
 
+export function getPrebuildServiceParams(): { category: string; service: string }[] {
+    return sortServicesByBuildPriority(getAllSEOServices()).map((service) => ({
+        category: service.categoryId,
+        service: service.slug,
+    }));
+}
+
+const LOCATION_BY_SLUG = new Map<string, SEOLocation>(
+    TARGET_LOCATIONS.map((location) => [location.slug, location])
+);
+
+let _serviceBySlug: Map<string, SEOService> | null = null;
+let _categoryByServiceSlug: Map<string, ServiceCategory | undefined> | null = null;
+
+function getServiceBySlugMap(): Map<string, SEOService> {
+    if (!_serviceBySlug) {
+        _serviceBySlug = new Map(
+            getCachedSEOServices().map((service) => [service.slug, service])
+        );
+    }
+
+    return _serviceBySlug;
+}
+
+function getCategoryByServiceSlugMap(): Map<string, ServiceCategory | undefined> {
+    if (!_categoryByServiceSlug) {
+        _categoryByServiceSlug = new Map(
+            getCachedSEOServices().map((service) => [
+                service.slug,
+                serviceCategories.find((category) => category.id === service.categoryId),
+            ])
+        );
+    }
+
+    return _categoryByServiceSlug;
+}
+
 /**
  * Get location data by slug
  */
 export function getLocationBySlug(slug: string): SEOLocation | undefined {
-    return TARGET_LOCATIONS.find((loc) => loc.slug === slug);
+    return LOCATION_BY_SLUG.get(slug);
 }
 
 export function getCanonicalLocationSlug(locationSlug: string): string {
@@ -867,22 +917,18 @@ export function isLocationAliasSlug(locationSlug: string): boolean {
  * Get service data by slug
  */
 export function getServiceBySlug(slug: string): SEOService | undefined {
-    return getAllSEOServices().find((svc) => svc.slug === slug);
+    return getServiceBySlugMap().get(slug);
 }
 
 /**
  * Get the parent category for a service
  */
 export function getCategoryForService(serviceSlug: string): ServiceCategory | undefined {
-    const service = getServiceBySlug(serviceSlug);
-    if (!service) return undefined;
-    return serviceCategories.find((cat) => cat.id === service.categoryId);
+    return getCategoryByServiceSlugMap().get(serviceSlug);
 }
 
 /**
- * Get priority location/service combinations for ISR pre-building.
- * Generates ALL services for priority locations at build time (~1,000 pages).
- * Other pages are generated on-demand when first visited.
+ * Legacy helper retained for compatibility with older scripts.
  */
 export function getPriorityParams(): { location: string; service: string }[] {
     const services = getCachedSEOServices();
@@ -894,6 +940,23 @@ export function getPriorityParams(): { location: string; service: string }[] {
         for (const service of services) {
             params.push({ location: loc, service: service.slug });
         }
+    }
+
+    return params;
+}
+
+export function getPrebuildLocationHubParams(): { location: string }[] {
+    const params: { location: string }[] = [];
+    const seen = new Set<string>();
+
+    for (const slug of IMPORTANT_LOCATION_HUB_SLUGS) {
+        const canonicalSlug = getCanonicalLocationSlug(slug);
+        if (!IMPORTANT_LOCATION_HUB_SET.has(slug) || seen.has(canonicalSlug) || !getLocationBySlug(canonicalSlug)) {
+            continue;
+        }
+
+        seen.add(canonicalSlug);
+        params.push({ location: canonicalSlug });
     }
 
     return params;
@@ -950,12 +1013,19 @@ export function isIndexableLocationService(locationSlug: string, serviceSlug: st
 }
 
 export function getPrebuildLocationServiceParams(): { location: string; service: string }[] {
-    const allServices = getCachedSEOServices();
-    const services = allServices.filter((service) =>
-        PREBUILD_LOCATION_SERVICE_SET.has(service.slug)
+    const heroServices = sortServicesByBuildPriority(getCachedSEOServices()).filter((service) =>
+        HERO_SERVICE_SET.has(service.slug)
     );
     const params: { location: string; service: string }[] = [];
     const seen = new Set<string>();
+    const prebuildLocations = [
+        CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
+        ...IMPORTANT_LOCATION_SERVICE_BUILD_SLUGS,
+    ].filter((location) =>
+        (location === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG ||
+            IMPORTANT_LOCATION_SERVICE_BUILD_SET.has(location)) &&
+        supportsExpandedLocationServiceCoverage(location)
+    );
 
     function pushParam(location: string, service: string) {
         const key = `${location}:${service}`;
@@ -966,39 +1036,8 @@ export function getPrebuildLocationServiceParams(): { location: string; service:
         params.push({ location, service });
     }
 
-    for (const service of allServices) {
-        pushParam(CANONICAL_LOCAL_SERVICE_LOCATION_SLUG, service.slug);
-    }
-
-    for (const location of NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS) {
-        if (!getLocationBySlug(location)) {
-            continue;
-        }
-
-        for (const service of allServices) {
-            pushParam(location, service.slug);
-        }
-    }
-
-    for (const location of MAJOR_GAUTENG_HUB_LOCATIONS) {
-        if (!getLocationBySlug(location)) {
-            continue;
-        }
-
-        for (const service of services) {
-            pushParam(location, service.slug);
-        }
-    }
-
-    for (const location of PRIORITY_LOCATIONS) {
-        if (
-            !getLocationBySlug(location) ||
-            location === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG
-        ) {
-            continue;
-        }
-
-        for (const service of services) {
+    for (const service of heroServices) {
+        for (const location of prebuildLocations) {
             pushParam(location, service.slug);
         }
     }

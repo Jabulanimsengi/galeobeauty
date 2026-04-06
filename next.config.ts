@@ -101,6 +101,10 @@ const nextConfig: NextConfig = {
     webpackMemoryOptimizations: true,
   },
 
+  // Some of the richer SEO pages need more than the default 60 seconds to finish static generation.
+  // Raising this avoids needless retries while keeping the URL structure unchanged.
+  staticPageGenerationTimeout: 180,
+
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 2678400,
