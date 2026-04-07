@@ -30,6 +30,18 @@ This project now includes a server-side bookings persistence path backed by Post
 ## Credentials
 
 - Database password file on the server: `/root/.galeobeauty-db-pass`
+- Bookings admin password env var: `BOOKINGS_ADMIN_PASSWORD`
+- Suggested password file on the server: `/root/.galeobeauty-bookings-admin-pass`
+
+## Admin dashboard
+
+- Login URL: `/admin/login`
+- Dashboard URL: `/admin/bookings`
+- Features:
+  - filter bookings
+  - update status
+  - add admin notes
+  - export CSV
 
 ## Go-live note
 
