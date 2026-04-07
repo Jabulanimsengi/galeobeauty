@@ -31,11 +31,13 @@ import {
 import {
   buildTrackedWhatsAppUrl,
   getStoredAttribution,
+  type StoredAttribution,
   trackBookingSheetOpen,
   trackBookingStepView,
   trackBookingSubmit,
   trackWhatsAppClick,
 } from "@/lib/attribution";
+import type { BookingSaveRequest } from "@/lib/bookings";
 import { businessInfo } from "@/lib/constants";
 
 interface BookingSheetProps {
@@ -44,6 +46,57 @@ interface BookingSheetProps {
   treatments?: SelectedTreatment[];
   bookingType?: "treatment" | "consultation";
   consultationContext?: string;
+}
+
+function getBookingRequirementsStatus(state: BookingState) {
+  const hasRequiredName = !getFullNameError(state.userDetails.name);
+  const hasRequiredPhone = !getSouthAfricanPhoneError(state.userDetails.phone);
+  const hasRequiredDate = Boolean(state.appointment.date);
+  const hasRequiredTimeSlot = Boolean(state.appointment.timeSlot);
+  const hasRequiredTreatments =
+    state.bookingType === "treatment" ? Boolean(state.treatments?.length) : true;
+  const requiredChecks = [
+    hasRequiredName,
+    hasRequiredPhone,
+    hasRequiredDate,
+    hasRequiredTimeSlot,
+    hasRequiredTreatments,
+  ];
+  const requiredFieldsTotal =
+    state.bookingType === "treatment" ? requiredChecks.length : requiredChecks.length - 1;
+  const requiredFieldsCompleted = requiredChecks
+    .slice(0, requiredFieldsTotal)
+    .filter(Boolean).length;
+
+  return {
+    isComplete: requiredFieldsCompleted === requiredFieldsTotal,
+    requiredFieldsCompleted,
+    requiredFieldsTotal,
+    hasRequiredName,
+    hasRequiredPhone,
+    hasRequiredDate,
+    hasRequiredTimeSlot,
+    hasRequiredTreatments,
+    hasOptionalEmail: Boolean(state.userDetails.email.trim()),
+  };
+}
+
+function buildBookingRequirementsStatus({
+  bookingType,
+  treatments,
+  userDetails,
+  appointment,
+}: Pick<BookingState, "userDetails" | "appointment"> & {
+  bookingType: BookingState["bookingType"];
+  treatments?: SelectedTreatment[];
+}) {
+  return getBookingRequirementsStatus({
+    ...initialBookingState,
+    bookingType,
+    treatments,
+    userDetails,
+    appointment,
+  });
 }
 
 function normalizeSouthAfricanPhone(value: string) {
@@ -152,23 +205,32 @@ export function BookingSheet({
   }, []);
   const [state, setState] = useState<BookingState>({
     ...initialBookingState,
-    bookingType,
-    treatments,
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showMoreDates, setShowMoreDates] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const treatmentNames = useMemo(
-    () => state.treatments?.map((t) => t.item.name),
-    [state.treatments]
+    () => treatments.map((t) => t.item.name),
+    [treatments]
   );
+  const treatmentCount = treatments.length;
   const selectedDateOption = dateOptions.find((option) => option.value === state.appointment.date);
   const visibleDateOptions = showMoreDates ? dateOptions : dateOptions.slice(0, 7);
   const fullNameError = getFullNameError(state.userDetails.name);
   const phoneError = getSouthAfricanPhoneError(state.userDetails.phone);
   const hasNameInput = state.userDetails.name.trim().length > 0;
   const hasPhoneInput = state.userDetails.phone.trim().length > 0;
+  const bookingRequirementsStatus = useMemo(
+    () =>
+      buildBookingRequirementsStatus({
+        bookingType,
+        treatments,
+        userDetails: state.userDetails,
+        appointment: state.appointment,
+      }),
+    [bookingType, state.appointment, state.userDetails, treatments]
+  );
   // Detect mobile viewport
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -195,13 +257,6 @@ export function BookingSheet({
     }
   };
 
-  // Update state when props change (only for treatments array)
-  useEffect(() => {
-    if (treatments && treatments.length > 0) {
-      setState((prev) => ({ ...prev, treatments }));
-    }
-  }, [treatments]);
-
   useEffect(() => {
     if (!isOpen) {
       return;
@@ -212,13 +267,13 @@ export function BookingSheet({
 
     trackBookingSheetOpen({
       attribution,
-      bookingType: state.bookingType,
+      bookingType,
       currentPage,
-      treatmentCount: state.treatments?.length,
+      treatmentCount,
       treatmentNames,
       consultationContext,
     });
-  }, [consultationContext, isOpen]);
+  }, [bookingType, consultationContext, isOpen, treatmentCount, treatmentNames]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -230,26 +285,14 @@ export function BookingSheet({
 
     trackBookingStepView({
       attribution,
-      bookingType: state.bookingType,
+      bookingType,
       currentPage,
       step: state.currentStep,
-      treatmentCount: state.treatments?.length,
+      treatmentCount,
       treatmentNames,
       consultationContext,
     });
-  }, [
-    consultationContext,
-    isOpen,
-    state.currentStep,
-  ]);
-
-  useEffect(() => {
-    if (!isOpen || state.currentStep !== 2 || state.appointment.date) {
-      return;
-    }
-
-    updateAppointment("date", dateOptions[0]?.value ?? "");
-  }, [dateOptions, isOpen, state.appointment.date, state.currentStep]);
+  }, [bookingType, consultationContext, isOpen, state.currentStep, treatmentCount, treatmentNames]);
 
   useEffect(() => {
     if (!showMoreDates || !dateRailRef.current || !selectedDateOption) {
@@ -271,36 +314,53 @@ export function BookingSheet({
   const handleClose = () => {
     setState({
       ...initialBookingState,
-      treatments: [],
     });
     setShowMoreDates(false);
     onClose();
   };
 
   // Update user details
-  const updateUserDetails = (field: keyof BookingState["userDetails"], value: string) => {
+  function updateUserDetails(field: keyof BookingState["userDetails"], value: string) {
     setState((prev) => ({
       ...prev,
       userDetails: { ...prev.userDetails, [field]: value },
     }));
-  };
+  }
 
   // Update appointment
-  const updateAppointment = (field: keyof BookingState["appointment"], value: string) => {
+  function updateAppointment(field: keyof BookingState["appointment"], value: string) {
     setState((prev) => ({
       ...prev,
       appointment: { ...prev.appointment, [field]: value },
     }));
-  };
+  }
 
   // Navigation
   const goToStep = (step: 1 | 2 | 3) => {
-    setState((prev) => ({ ...prev, currentStep: step }));
+    setState((prev) => ({
+      ...prev,
+      currentStep: step,
+      appointment:
+        step === 2 && !prev.appointment.date
+          ? { ...prev.appointment, date: dateOptions[0]?.value ?? "" }
+          : prev.appointment,
+    }));
   };
 
   const nextStep = () => {
     if (state.currentStep < 3) {
-      setState((prev) => ({ ...prev, currentStep: (prev.currentStep + 1) as 1 | 2 | 3 }));
+      setState((prev) => {
+        const nextStepValue = (prev.currentStep + 1) as 1 | 2 | 3;
+
+        return {
+          ...prev,
+          currentStep: nextStepValue,
+          appointment:
+            nextStepValue === 2 && !prev.appointment.date
+              ? { ...prev.appointment, date: dateOptions[0]?.value ?? "" }
+              : prev.appointment,
+        };
+      });
     }
   };
 
@@ -316,9 +376,8 @@ export function BookingSheet({
 
   // Calculate totals
   const calculateTotal = () => {
-    if (!state.treatments) return 0;
     let total = 0;
-    for (const item of state.treatments) {
+    for (const item of treatments) {
       const priceStr = item.item.price.replace(/[R\s,]/g, "");
       const price = parseFloat(priceStr) || 0;
       total += price;
@@ -327,8 +386,7 @@ export function BookingSheet({
   };
 
   const calculateTotalDuration = () => {
-    if (!state.treatments) return 0;
-    return state.treatments.reduce((acc, item) => {
+    return treatments.reduce((acc, item) => {
       if (!item.item.duration) return acc;
       const hours = item.item.duration.match(/(\d+)\s*hr/)?.[1] || "0";
       const mins = item.item.duration.match(/(\d+)\s*min/)?.[1] || "0";
@@ -363,12 +421,18 @@ export function BookingSheet({
   };
 
   // Submit booking via WhatsApp
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!bookingRequirementsStatus.isComplete) {
+      return;
+    }
+
     let message = "";
     let totalValue: number | undefined;
     let submitTreatmentNames: string[] | undefined;
+    let attribution: StoredAttribution | null = null;
+    let currentPage = "/";
 
-    if (state.bookingType === "consultation") {
+    if (bookingType === "consultation") {
       // Consultation message format
       message = `*Free Consultation Request - Galeo Beauty*
 
@@ -383,9 +447,9 @@ Date: ${formatDate(state.appointment.date)}
 Time: ${getTimeSlotLabel(state.appointment.timeSlot)}`;
     } else {
       // Treatment booking message format
-      if (!state.treatments || state.treatments.length === 0) return;
+      if (treatments.length === 0) return;
 
-      const treatmentsList = state.treatments
+      const treatmentsList = treatments
         .map(
           (t, i) =>
             `${i + 1}. ${t.item.name}${t.item.duration ? ` (${t.item.duration})` : ""} - ${t.item.price}`
@@ -396,7 +460,7 @@ Time: ${getTimeSlotLabel(state.appointment.timeSlot)}`;
       const depositAmount = Math.round(total / 2);
       const totalDuration = calculateTotalDuration();
       totalValue = total;
-      submitTreatmentNames = state.treatments.map((t) => t.item.name);
+      submitTreatmentNames = treatments.map((t) => t.item.name);
 
       const bankingDetails = businessInfo.banking
         ? `\n*Banking Details for Deposit:*
@@ -408,7 +472,7 @@ Branch: ${businessInfo.banking.branch} (${businessInfo.banking.branchCode})`
 
       message = `*New Booking Request - Galeo Beauty*
 
-*Treatments Selected (${state.treatments.length})*
+*Treatments Selected (${treatments.length})*
 ${treatmentsList}
 
 *Total:* R ${total.toLocaleString()}${totalDuration > 0 ? `\n*Estimated Duration:* ${formatDuration(totalDuration)}` : ""}
@@ -426,8 +490,55 @@ Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 ${bankingDetails}`;
     }
 
-    const attribution = getStoredAttribution();
-    const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+    attribution = getStoredAttribution();
+    currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+    const bookingPayload: BookingSaveRequest = {
+      bookingType,
+      consultationContext,
+      currentPage,
+      bookingReference: bookingReference || undefined,
+      whatsappMessage: message,
+      whatsappDestination: businessInfo.socials.whatsapp,
+      totalValue,
+      userDetails: state.userDetails,
+      appointment: state.appointment,
+      treatments,
+      attribution,
+    };
+
+    setState((prev) => ({
+      ...prev,
+      isSubmitting: true,
+      error: null,
+    }));
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingPayload),
+      });
+
+      if (!response.ok) {
+        const result = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(result?.error ?? "We could not save this booking right now. Please try again.");
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error && error.message
+          ? error.message
+          : "We could not save this booking right now. Please try again.";
+
+      setState((prev) => ({
+        ...prev,
+        isSubmitting: false,
+        error: message,
+      }));
+      return;
+    }
+
     const whatsappUrl = buildTrackedWhatsAppUrl({
       phone: businessInfo.socials.whatsapp,
       message,
@@ -437,18 +548,27 @@ ${bankingDetails}`;
 
     trackWhatsAppClick({
       attribution,
-      context: state.bookingType === "consultation" ? "booking_sheet_consultation" : "booking_sheet_treatment",
+      context: bookingType === "consultation" ? "booking_sheet_consultation" : "booking_sheet_treatment",
       currentPage,
     });
 
     trackBookingSubmit({
       attribution,
-      bookingType: state.bookingType,
+      bookingType,
       currentPage,
-      treatmentCount: state.bookingType === "treatment" ? state.treatments?.length : undefined,
+      treatmentCount: bookingType === "treatment" ? treatmentCount : undefined,
       treatmentNames: submitTreatmentNames,
       totalValue,
       consultationContext,
+      requirementsComplete: bookingRequirementsStatus.isComplete,
+      requiredFieldsCompleted: bookingRequirementsStatus.requiredFieldsCompleted,
+      requiredFieldsTotal: bookingRequirementsStatus.requiredFieldsTotal,
+      hasRequiredName: bookingRequirementsStatus.hasRequiredName,
+      hasRequiredPhone: bookingRequirementsStatus.hasRequiredPhone,
+      hasRequiredDate: bookingRequirementsStatus.hasRequiredDate,
+      hasRequiredTimeSlot: bookingRequirementsStatus.hasRequiredTimeSlot,
+      hasRequiredTreatments: bookingRequirementsStatus.hasRequiredTreatments,
+      hasOptionalEmail: bookingRequirementsStatus.hasOptionalEmail,
     });
 
     window.open(whatsappUrl, "_blank");
@@ -482,17 +602,17 @@ ${bankingDetails}`;
             </div>
           )}
           <SheetTitle className="text-background font-serif text-xl">
-            {state.bookingType === "consultation" ? "Book Free Consultation" : "Book Treatments"}
+            {bookingType === "consultation" ? "Book Free Consultation" : "Book Treatments"}
           </SheetTitle>
           <SheetDescription className="text-background/70">
-            {state.bookingType === "consultation" ? (
+            {bookingType === "consultation" ? (
               <span className="block font-medium text-background">
                 {consultationContext || "General Consultation"}
               </span>
             ) : (
               <>
                 <span className="block font-medium text-background">
-                  {state.treatments?.length || 0} {(state.treatments?.length || 0) === 1 ? "treatment" : "treatments"} selected
+                  {treatmentCount} {treatmentCount === 1 ? "treatment" : "treatments"} selected
                 </span>
                 <span className="flex items-center gap-2 mt-1">
                   <span className="text-gold font-semibold">R {total.toLocaleString()}</span>
@@ -750,11 +870,11 @@ ${bankingDetails}`;
                 className="space-y-6"
               >
                 <h3 className="font-semibold text-foreground">
-                  {state.bookingType === "consultation" ? "Consultation Request Summary" : "Booking Summary"}
+                  {bookingType === "consultation" ? "Consultation Request Summary" : "Booking Summary"}
                 </h3>
 
                 {/* Consultation Type (Consultation only) */}
-                {state.bookingType === "consultation" && (
+                {bookingType === "consultation" && (
                   <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
                     <p className="text-sm text-muted-foreground font-medium mb-2">Consultation Type</p>
                     <p className="text-lg font-semibold text-foreground">{consultationContext || "General Consultation"}</p>
@@ -763,10 +883,10 @@ ${bankingDetails}`;
                 )}
 
                 {/* Treatments Summary (Treatment bookings only) */}
-                {state.bookingType === "treatment" && state.treatments && (
+                {bookingType === "treatment" && treatmentCount > 0 && (
                   <div className="bg-gold/10 border border-gold/30 rounded-xl p-4 space-y-3">
                     <p className="text-sm text-muted-foreground font-medium">Treatments</p>
-                    {state.treatments.map((t, i) => (
+                    {treatments.map((t, i) => (
                       <div key={i} className="flex justify-between items-start text-sm">
                         <div>
                           <p className="font-medium text-foreground">{t.item.name}</p>
@@ -813,7 +933,7 @@ ${bankingDetails}`;
                       {getTimeSlotLabel(state.appointment.timeSlot)}
                     </span>
                   </div>
-                  {state.bookingType === "treatment" && (
+                  {bookingType === "treatment" && (
                     <div className="flex justify-between py-2">
                       <span className="text-muted-foreground">Payment</span>
                       <span className="font-medium text-amber-600">50% Deposit Required</span>
@@ -822,7 +942,7 @@ ${bankingDetails}`;
                 </div>
 
                 {/* 50% Deposit Notice (Treatment only) */}
-                {state.bookingType === "treatment" && (
+                {bookingType === "treatment" && (
                   <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
@@ -835,7 +955,7 @@ ${bankingDetails}`;
                 )}
 
                 {/* Booking Reference (Treatment only) */}
-                {state.bookingType === "treatment" && bookingReference && (
+                {bookingType === "treatment" && bookingReference && (
                   <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
                     <p className="text-xs text-muted-foreground mb-1">Your Booking Reference</p>
                     <div className="flex items-center justify-between">
@@ -857,7 +977,7 @@ ${bankingDetails}`;
                 )}
 
                 {/* Banking Details (Treatment only) */}
-                {state.bookingType === "treatment" && businessInfo.banking && (
+                {bookingType === "treatment" && businessInfo.banking && (
                   <div className="bg-secondary/30 rounded-xl p-4 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
                       <CreditCard className="w-4 h-4 text-foreground" />
@@ -894,7 +1014,7 @@ ${bankingDetails}`;
 
                 <p className="text-xs text-muted-foreground text-center">
                   By confirming, you agree to our 24-hour cancellation policy.
-                  You'll be redirected to WhatsApp to finalize your booking.
+                  You&apos;ll be redirected to WhatsApp to finalize your booking.
                 </p>
               </motion.div>
             )}
@@ -902,11 +1022,19 @@ ${bankingDetails}`;
         </div>
 
         {/* Footer Navigation */}
-        <div className={`p-6 border-t bg-background flex gap-3 ${isMobile ? "pb-8" : ""}`}>
+        <div className={`border-t bg-background ${isMobile ? "pb-8" : ""}`}>
+          {state.error && (
+            <p className="px-6 pt-4 text-sm text-red-600">
+              {state.error}
+            </p>
+          )}
+
+          <div className="flex gap-3 p-6">
           {state.currentStep > 1 && (
             <Button
               variant="outline"
               onClick={prevStep}
+              disabled={state.isSubmitting}
               className="flex-1"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -918,6 +1046,7 @@ ${bankingDetails}`;
             <Button
               onClick={nextStep}
               disabled={
+                state.isSubmitting ||
                 (state.currentStep === 1 && !isStep1Valid) ||
                 (state.currentStep === 2 && !isStep2Valid)
               }
@@ -931,12 +1060,14 @@ ${bankingDetails}`;
           {state.currentStep === 3 && (
             <Button
               onClick={handleSubmit}
+              disabled={state.isSubmitting || !bookingRequirementsStatus.isComplete}
               className="flex-1 bg-gold hover:bg-gold-dark text-white"
             >
               <Send className="w-4 h-4 mr-2" />
-              Confirm via WhatsApp
+              {state.isSubmitting ? "Saving booking..." : "Confirm via WhatsApp"}
             </Button>
           )}
+          </div>
         </div>
       </SheetContent>
     </Sheet>

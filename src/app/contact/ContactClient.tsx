@@ -18,7 +18,25 @@ const DeferredMap = dynamic(
     }
 );
 
-const contactMethods = [
+type ContactMethod =
+    | {
+        label: string;
+        detail: string;
+        caption: string;
+        isWhatsApp: true;
+      }
+    | {
+        label: string;
+        detail: string;
+        caption: string;
+        href: string;
+        trackingContext: string;
+        linkType: string;
+        linkLabel: string;
+        isWhatsApp?: false;
+      };
+
+const contactMethods: readonly ContactMethod[] = [
     {
         label: "Call the salon",
         detail: businessInfo.phone,
@@ -43,7 +61,7 @@ const contactMethods = [
         linkType: "email",
         linkLabel: "Email the team",
     },
-] as const;
+];
 
 const socialLinks = [
     {

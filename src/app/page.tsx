@@ -30,14 +30,20 @@ export const metadata: Metadata = {
   },
 };
 
-const featuredPopularServiceSelections = [
+type FeaturedPopularServiceSelection = {
+  categoryId: string;
+  serviceId: string;
+  label?: string;
+};
+
+const featuredPopularServiceSelections: readonly FeaturedPopularServiceSelection[] = [
   { categoryId: "lashes-brows", serviceId: "hybrid-lashes" },
   { categoryId: "lashes-brows", serviceId: "lash-lift-tint", label: "Lash Lift & Tint" },
   { categoryId: "nails", serviceId: "gel-overlay-hands", label: "Gel Overlay" },
   { categoryId: "nails", serviceId: "pedicure" },
   { categoryId: "hair-extensions", serviceId: "tape-45cm-dark", label: "Tape In Extensions 45cm" },
   { categoryId: "massages", serviceId: "swedish-massage-60", label: "Swedish Massage" },
-] as const;
+];
 
 const featuredPopularServices = featuredPopularServiceSelections.map(
   ({ categoryId, serviceId, label }) => {

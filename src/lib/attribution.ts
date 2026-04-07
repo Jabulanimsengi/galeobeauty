@@ -31,6 +31,15 @@ interface TrackBookingSubmitOptions {
   treatmentNames?: string[];
   totalValue?: number;
   consultationContext?: string;
+  requirementsComplete?: boolean;
+  requiredFieldsCompleted?: number;
+  requiredFieldsTotal?: number;
+  hasRequiredName?: boolean;
+  hasRequiredPhone?: boolean;
+  hasRequiredDate?: boolean;
+  hasRequiredTimeSlot?: boolean;
+  hasRequiredTreatments?: boolean;
+  hasOptionalEmail?: boolean;
 }
 
 interface TrackExternalLinkClickOptions {
@@ -291,6 +300,15 @@ export function trackBookingSubmit({
   treatmentNames,
   totalValue,
   consultationContext,
+  requirementsComplete,
+  requiredFieldsCompleted,
+  requiredFieldsTotal,
+  hasRequiredName,
+  hasRequiredPhone,
+  hasRequiredDate,
+  hasRequiredTimeSlot,
+  hasRequiredTreatments,
+  hasOptionalEmail,
 }: TrackBookingSubmitOptions) {
   if (typeof window === "undefined" || typeof window.gtag !== "function") {
     return;
@@ -310,9 +328,23 @@ export function trackBookingSubmit({
     consultation_context: consultationContext,
     value: totalValue,
     currency: totalValue ? "ZAR" : undefined,
+    requirements_complete: requirementsComplete,
+    required_fields_completed: requiredFieldsCompleted,
+    required_fields_total: requiredFieldsTotal,
+    has_required_name: hasRequiredName,
+    has_required_phone: hasRequiredPhone,
+    has_required_date: hasRequiredDate,
+    has_required_time_slot: hasRequiredTimeSlot,
+    has_required_treatments: hasRequiredTreatments,
+    has_optional_email: hasOptionalEmail,
   };
 
   window.gtag("event", "booking_whatsapp_submit", sharedPayload);
+
+  if (requirementsComplete) {
+    window.gtag("event", "booking_requirements_completed_whatsapp_submit", sharedPayload);
+  }
+
   window.gtag("event", "generate_lead", sharedPayload);
 }
 
