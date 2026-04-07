@@ -207,23 +207,19 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     sortDirection,
   });
 
-  const sortHref = (column: string) =>
-    buildPageHref({
-      status,
-      bookingType,
-      clientName,
-      phone,
-      email,
-      bookingReference,
-      source,
-      from,
-      to,
-      page: "1",
-      pageSize,
-      sortBy: column,
-      sortDirection:
-        sortBy === column && sortDirection === "asc" ? "desc" : "asc",
-    });
+  const sortQueryBase = buildQueryString({
+    status,
+    bookingType,
+    clientName,
+    phone,
+    email,
+    bookingReference,
+    source,
+    from,
+    to,
+    page: "1",
+    pageSize,
+  });
 
   const previousPageHref = buildPageHref({
     status,
@@ -511,7 +507,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
           </form>
         </section>
 
-        <BookingsAdminClient bookings={bookingResult.bookings} sortHref={sortHref} activeSortBy={bookingResult.sortBy} activeSortDirection={bookingResult.sortDirection} />
+        <BookingsAdminClient bookings={bookingResult.bookings} sortQueryBase={sortQueryBase} activeSortBy={bookingResult.sortBy} activeSortDirection={bookingResult.sortDirection} />
 
         <section className="flex flex-wrap items-center justify-between gap-3 rounded-[1.2rem] border border-black/8 bg-white px-5 py-4 shadow-[0_18px_40px_-35px_rgba(23,18,15,0.25)]">
           <p className="text-sm text-foreground/60">

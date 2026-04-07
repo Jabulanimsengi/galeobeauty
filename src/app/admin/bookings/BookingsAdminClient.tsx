@@ -13,7 +13,7 @@ import {
 
 interface BookingsAdminClientProps {
   bookings: BookingAdminRecord[];
-  sortHref: (column: string) => string;
+  sortQueryBase: string;
   activeSortBy: string;
   activeSortDirection: "asc" | "desc";
 }
@@ -351,26 +351,33 @@ function BookingTableRow({
 function SortableHeader({
   label,
   column,
-  sortHref,
+  sortQueryBase,
   activeSortBy,
   activeSortDirection,
   className,
 }: {
   label: string;
   column: string;
-  sortHref: (column: string) => string;
+  sortQueryBase: string;
   activeSortBy: string;
   activeSortDirection: "asc" | "desc";
   className?: string;
 }) {
   const isActive = activeSortBy === column;
   const indicator = isActive ? (activeSortDirection === "asc" ? "^" : "v") : "";
+  const params = new URLSearchParams(sortQueryBase);
+  params.set("sortBy", column);
+  params.set(
+    "sortDirection",
+    isActive && activeSortDirection === "asc" ? "desc" : "asc"
+  );
+  const href = `/admin/bookings?${params.toString()}`;
 
   return (
     <th
       className={`sticky top-0 z-30 px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] ${className ?? ""}`}
     >
-      <a href={sortHref(column)} className="inline-flex items-center gap-2 hover:text-gold">
+      <a href={href} className="inline-flex items-center gap-2 hover:text-gold">
         <span>{label}</span>
         <span className="text-gold/90">{indicator}</span>
       </a>
@@ -380,7 +387,7 @@ function SortableHeader({
 
 export function BookingsAdminClient({
   bookings,
-  sortHref,
+  sortQueryBase,
   activeSortBy,
   activeSortDirection,
 }: BookingsAdminClientProps) {
@@ -403,7 +410,7 @@ export function BookingsAdminClient({
               <SortableHeader
                 label="Created"
                 column="createdAt"
-                sortHref={sortHref}
+                sortQueryBase={sortQueryBase}
                 activeSortBy={activeSortBy}
                 activeSortDirection={activeSortDirection}
                 className={`left-0 ${CREATED_COLUMN_WIDTH} border-r border-white/10 bg-[#17120f] shadow-[10px_0_20px_-18px_rgba(0,0,0,0.6)]`}
@@ -411,19 +418,19 @@ export function BookingsAdminClient({
               <SortableHeader
                 label="Client"
                 column="clientName"
-                sortHref={sortHref}
+                sortQueryBase={sortQueryBase}
                 activeSortBy={activeSortBy}
                 activeSortDirection={activeSortDirection}
                 className={`left-[152px] z-20 ${CLIENT_COLUMN_WIDTH} border-r border-white/10 bg-[#17120f] shadow-[10px_0_20px_-18px_rgba(0,0,0,0.45)]`}
               />
               <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Phone</th>
               <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Type</th>
-              <SortableHeader label="Preferred" column="preferredDate" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+              <SortableHeader label="Preferred" column="preferredDate" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
               <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments / Context</th>
-              <SortableHeader label="Value" column="totalValue" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
-              <SortableHeader label="Source" column="source" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+              <SortableHeader label="Value" column="totalValue" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+              <SortableHeader label="Source" column="source" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
               <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Reference</th>
-              <SortableHeader label="Status" column="status" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+              <SortableHeader label="Status" column="status" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
               <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Notes</th>
               <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Action</th>
             </tr>
