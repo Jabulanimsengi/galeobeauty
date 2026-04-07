@@ -22,10 +22,13 @@ export async function GET(request: Request) {
     source: url.searchParams.get("source") ?? undefined,
     from: url.searchParams.get("from") ?? undefined,
     to: url.searchParams.get("to") ?? undefined,
-    limit: 250,
+    page: 1,
+    pageSize: 1000,
+    sortBy: url.searchParams.get("sortBy") ?? undefined,
+    sortDirection: url.searchParams.get("sortDirection") ?? undefined,
   });
 
-  const csv = buildBookingsCsv(bookings);
+  const csv = buildBookingsCsv(bookings.bookings);
 
   return new NextResponse(csv, {
     status: 200,

@@ -6,6 +6,9 @@ import { BOOKING_STATUSES, type BookingAdminRecord } from "@/lib/bookings-admin-
 
 interface BookingsAdminClientProps {
   bookings: BookingAdminRecord[];
+  sortHref: (column: string) => string;
+  activeSortBy: string;
+  activeSortDirection: "asc" | "desc";
 }
 
 function formatDateTime(value: string) {
@@ -186,7 +189,38 @@ function BookingTableRow({ booking }: { booking: BookingAdminRecord }) {
   );
 }
 
-export function BookingsAdminClient({ bookings }: BookingsAdminClientProps) {
+function SortableHeader({
+  label,
+  column,
+  sortHref,
+  activeSortBy,
+  activeSortDirection,
+}: {
+  label: string;
+  column: string;
+  sortHref: (column: string) => string;
+  activeSortBy: string;
+  activeSortDirection: "asc" | "desc";
+}) {
+  const isActive = activeSortBy === column;
+  const indicator = isActive ? (activeSortDirection === "asc" ? "↑" : "↓") : "";
+
+  return (
+    <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">
+      <a href={sortHref(column)} className="inline-flex items-center gap-2 hover:text-gold">
+        <span>{label}</span>
+        <span className="text-gold/90">{indicator}</span>
+      </a>
+    </th>
+  );
+}
+
+export function BookingsAdminClient({
+  bookings,
+  sortHref,
+  activeSortBy,
+  activeSortDirection,
+}: BookingsAdminClientProps) {
   if (bookings.length === 0) {
     return (
       <div className="rounded-[1.4rem] border border-dashed border-black/15 bg-white/70 px-6 py-10 text-center text-sm text-foreground/70">
@@ -201,16 +235,16 @@ export function BookingsAdminClient({ bookings }: BookingsAdminClientProps) {
         <table className="min-w-[1450px] w-full border-collapse">
           <thead className="bg-[#17120f] text-white">
             <tr className="text-left">
-              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Created</th>
-              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Client</th>
+              <SortableHeader label="Created" column="createdAt" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} />
+              <SortableHeader label="Client" column="clientName" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} />
               <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Phone</th>
               <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Type</th>
-              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Preferred</th>
+              <SortableHeader label="Preferred" column="preferredDate" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} />
               <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments / Context</th>
-              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Value</th>
-              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Source</th>
+              <SortableHeader label="Value" column="totalValue" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} />
+              <SortableHeader label="Source" column="source" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} />
               <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Reference</th>
-              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Status</th>
+              <SortableHeader label="Status" column="status" sortHref={sortHref} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} />
               <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Notes</th>
               <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Action</th>
             </tr>

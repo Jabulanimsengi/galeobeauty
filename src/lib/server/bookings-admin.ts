@@ -17,7 +17,20 @@ export interface BookingAdminFilters {
   source?: string;
   from?: string;
   to?: string;
-  limit?: number;
+  page?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortDirection?: string;
+}
+
+export interface BookingAdminListResult {
+  bookings: BookingAdminRecord[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  sortBy: string;
+  sortDirection: "asc" | "desc";
 }
 
 function cleanValue(value?: string | null) {
@@ -29,12 +42,37 @@ function isIsoDate(value?: string) {
   return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
 }
 
-function normalizeLimit(limit?: number) {
-  if (!limit || !Number.isFinite(limit)) {
-    return 100;
+const SORTABLE_COLUMNS = {
+  createdAt: "created_at",
+  clientName: "client_name",
+  preferredDate: "preferred_date",
+  totalValue: "total_value",
+  source: "source",
+  status: "status",
+} as const;
+
+function normalizePageSize(pageSize?: number) {
+  if (!pageSize || !Number.isFinite(pageSize)) {
+    return 50;
   }
 
-  return Math.min(Math.max(Math.floor(limit), 1), 250);
+  return Math.min(Math.max(Math.floor(pageSize), 10), 200);
+}
+
+function normalizePage(page?: number) {
+  if (!page || !Number.isFinite(page)) {
+    return 1;
+  }
+
+  return Math.max(Math.floor(page), 1);
+}
+
+function normalizeSortBy(sortBy?: string) {
+  return sortBy && sortBy in SORTABLE_COLUMNS ? sortBy : "createdAt";
+}
+
+function normalizeSortDirection(direction?: string): "asc" | "desc" {
+  return direction === "asc" ? "asc" : "desc";
 }
 
 function mapRow(row: Record<string, unknown>): BookingAdminRecord {
@@ -77,7 +115,7 @@ export function normalizeBookingStatus(input?: string) {
     : "new";
 }
 
-export async function listBookings(filters: BookingAdminFilters = {}) {
+export async function listBookings(filters: BookingAdminFilters = {}): Promise<BookingAdminListResult> {
   const pool = getPostgresPool();
   const values: Array<string | number> = [];
   const conditions: string[] = [];
@@ -141,10 +179,25 @@ export async function listBookings(filters: BookingAdminFilters = {}) {
     conditions.push(`preferred_date <= $${values.length}::date`);
   }
 
-  const limit = normalizeLimit(filters.limit);
-  values.push(limit);
-  const limitPlaceholder = `$${values.length}`;
+  const pageSize = normalizePageSize(filters.pageSize);
+  const page = normalizePage(filters.page);
+  const offset = (page - 1) * pageSize;
+  const sortBy = normalizeSortBy(filters.sortBy);
+  const sortDirection = normalizeSortDirection(filters.sortDirection);
+  const sortColumn = SORTABLE_COLUMNS[sortBy as keyof typeof SORTABLE_COLUMNS];
   const whereClause = conditions.length > 0 ? `where ${conditions.join(" and ")}` : "";
+
+  values.push(pageSize);
+  const limitPlaceholder = `$${values.length}`;
+  values.push(offset);
+  const offsetPlaceholder = `$${values.length}`;
+
+  const countResult = await pool.query<{ count: string }>(
+    `select count(*)::text as count
+     from bookings
+     ${whereClause}`,
+    values.slice(0, values.length - 2)
+  );
 
   const result = await pool.query(
     `select
@@ -176,12 +229,24 @@ export async function listBookings(filters: BookingAdminFilters = {}) {
       contacted_at
     from bookings
     ${whereClause}
-    order by created_at desc
-    limit ${limitPlaceholder}`,
+    order by ${sortColumn} ${sortDirection}, created_at desc
+    limit ${limitPlaceholder}
+    offset ${offsetPlaceholder}`,
     values
   );
 
-  return result.rows.map((row) => mapRow(row));
+  const totalCount = Number(countResult.rows[0]?.count ?? 0);
+  const totalPages = Math.max(Math.ceil(totalCount / pageSize), 1);
+
+  return {
+    bookings: result.rows.map((row) => mapRow(row)),
+    totalCount,
+    page,
+    pageSize,
+    totalPages,
+    sortBy,
+    sortDirection,
+  };
 }
 
 export async function updateBookingAdminFields({

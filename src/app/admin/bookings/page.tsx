@@ -16,13 +16,17 @@ interface BookingsPageProps {
     source?: string;
     from?: string;
     to?: string;
+    page?: string;
+    pageSize?: string;
+    sortBy?: string;
+    sortDirection?: string;
   }>;
 }
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-function buildExportHref({
+function buildQueryString({
   status,
   bookingType,
   clientName,
@@ -32,6 +36,10 @@ function buildExportHref({
   source,
   from,
   to,
+  page,
+  pageSize,
+  sortBy,
+  sortDirection,
 }: {
   status?: string;
   bookingType?: string;
@@ -42,6 +50,10 @@ function buildExportHref({
   source?: string;
   from?: string;
   to?: string;
+  page?: string;
+  pageSize?: string;
+  sortBy?: string;
+  sortDirection?: string;
 }) {
   const params = new URLSearchParams();
 
@@ -72,9 +84,35 @@ function buildExportHref({
   if (to) {
     params.set("to", to);
   }
+  if (page && page !== "1") {
+    params.set("page", page);
+  }
+  if (pageSize && pageSize !== "50") {
+    params.set("pageSize", pageSize);
+  }
+  if (sortBy && sortBy !== "createdAt") {
+    params.set("sortBy", sortBy);
+  }
+  if (sortDirection && sortDirection !== "desc") {
+    params.set("sortDirection", sortDirection);
+  }
 
-  const queryString = params.toString();
+  return params.toString();
+}
+
+function buildExportHref(filters: Parameters<typeof buildQueryString>[0]) {
+  const queryString = buildQueryString(filters);
   return queryString ? `/admin/bookings/export?${queryString}` : "/admin/bookings/export";
+}
+
+function buildPageHref(filters: Parameters<typeof buildQueryString>[0]) {
+  const queryString = buildQueryString(filters);
+  return queryString ? `/admin/bookings?${queryString}` : "/admin/bookings";
+}
+
+function parsePositiveNumber(value?: string, fallback = 1) {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
 }
 
 export default async function AdminBookingsPage({ searchParams }: BookingsPageProps) {
@@ -90,8 +128,12 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
   const source = params.source?.trim() || "";
   const from = params.from?.trim() || "";
   const to = params.to?.trim() || "";
+  const page = String(parsePositiveNumber(params.page, 1));
+  const pageSize = String(parsePositiveNumber(params.pageSize, 50));
+  const sortBy = params.sortBy?.trim() || "createdAt";
+  const sortDirection = params.sortDirection?.trim() === "asc" ? "asc" : "desc";
 
-  const bookings = await listBookings({
+  const bookingResult = await listBookings({
     status,
     bookingType,
     clientName,
@@ -101,7 +143,10 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     source,
     from,
     to,
-    limit: 100,
+    page: Number(page),
+    pageSize: Number(pageSize),
+    sortBy,
+    sortDirection,
   });
 
   const exportHref = buildExportHref({
@@ -114,7 +159,63 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     source,
     from,
     to,
+    page: "1",
+    pageSize,
+    sortBy,
+    sortDirection,
   });
+
+  const sortHref = (column: string) =>
+    buildPageHref({
+      status,
+      bookingType,
+      clientName,
+      phone,
+      email,
+      bookingReference,
+      source,
+      from,
+      to,
+      page: "1",
+      pageSize,
+      sortBy: column,
+      sortDirection:
+        sortBy === column && sortDirection === "asc" ? "desc" : "asc",
+    });
+
+  const previousPageHref = buildPageHref({
+    status,
+    bookingType,
+    clientName,
+    phone,
+    email,
+    bookingReference,
+    source,
+    from,
+    to,
+    page: String(Math.max(bookingResult.page - 1, 1)),
+    pageSize,
+    sortBy,
+    sortDirection,
+  });
+
+  const nextPageHref = buildPageHref({
+    status,
+    bookingType,
+    clientName,
+    phone,
+    email,
+    bookingReference,
+    source,
+    from,
+    to,
+    page: String(Math.min(bookingResult.page + 1, bookingResult.totalPages)),
+    pageSize,
+    sortBy,
+    sortDirection,
+  });
+  const visibleFrom = bookingResult.totalCount === 0 ? 0 : (bookingResult.page - 1) * bookingResult.pageSize + 1;
+  const visibleTo = bookingResult.totalCount === 0 ? 0 : Math.min(bookingResult.page * bookingResult.pageSize, bookingResult.totalCount);
 
   return (
     <main className="min-h-screen bg-[#f6efe6] px-5 py-8 text-foreground sm:px-6 lg:px-8">
@@ -147,6 +248,9 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
 
         <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-4 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
           <form className="grid gap-3 xl:grid-cols-[1.1fr_0.85fr_0.95fr_0.95fr_0.9fr_0.9fr_0.85fr_0.85fr]">
+            <input type="hidden" name="sortBy" value={sortBy} />
+            <input type="hidden" name="sortDirection" value={sortDirection} />
+            <input type="hidden" name="page" value="1" />
             <div>
               <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
                 Client
@@ -270,6 +374,20 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
             </div>
 
             <div className="flex flex-wrap items-end gap-3 xl:col-span-8">
+              <div>
+                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                  Rows
+                </label>
+                <select
+                  name="pageSize"
+                  defaultValue={pageSize}
+                  className="rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+                >
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
               <button
                 type="submit"
                 className="rounded-xl bg-[#17120f] px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-gold hover:text-[#17120f]"
@@ -283,13 +401,44 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                 Reset
               </Link>
               <p className="ml-auto text-sm text-foreground/55">
-                Showing {bookings.length} most recent matching bookings
+                Showing {visibleFrom} - {visibleTo} of {bookingResult.totalCount}
               </p>
             </div>
           </form>
         </section>
 
-        <BookingsAdminClient bookings={bookings} />
+        <BookingsAdminClient bookings={bookingResult.bookings} sortHref={sortHref} activeSortBy={bookingResult.sortBy} activeSortDirection={bookingResult.sortDirection} />
+
+        <section className="flex flex-wrap items-center justify-between gap-3 rounded-[1.2rem] border border-black/8 bg-white px-5 py-4 shadow-[0_18px_40px_-35px_rgba(23,18,15,0.25)]">
+          <p className="text-sm text-foreground/60">
+            Page {bookingResult.page} of {bookingResult.totalPages}
+          </p>
+
+          <div className="flex items-center gap-3">
+            <Link
+              href={previousPageHref}
+              aria-disabled={bookingResult.page <= 1}
+              className={`rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] ${
+                bookingResult.page <= 1
+                  ? "pointer-events-none border border-black/10 text-foreground/25"
+                  : "border border-black/10 text-foreground/65 transition hover:border-gold hover:text-gold"
+              }`}
+            >
+              Previous
+            </Link>
+            <Link
+              href={nextPageHref}
+              aria-disabled={bookingResult.page >= bookingResult.totalPages}
+              className={`rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] ${
+                bookingResult.page >= bookingResult.totalPages
+                  ? "pointer-events-none border border-black/10 text-foreground/25"
+                  : "border border-black/10 text-foreground/65 transition hover:border-gold hover:text-gold"
+              }`}
+            >
+              Next
+            </Link>
+          </div>
+        </section>
       </div>
     </main>
   );
