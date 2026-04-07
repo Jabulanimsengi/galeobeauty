@@ -15,7 +15,11 @@ export async function GET(request: Request) {
   const bookings = await listBookings({
     status: url.searchParams.get("status") ?? undefined,
     bookingType: url.searchParams.get("bookingType") ?? undefined,
-    query: url.searchParams.get("q") ?? undefined,
+    clientName: url.searchParams.get("clientName") ?? undefined,
+    phone: url.searchParams.get("phone") ?? undefined,
+    email: url.searchParams.get("email") ?? undefined,
+    bookingReference: url.searchParams.get("bookingReference") ?? undefined,
+    source: url.searchParams.get("source") ?? undefined,
     from: url.searchParams.get("from") ?? undefined,
     to: url.searchParams.get("to") ?? undefined,
     limit: 250,

@@ -10,7 +10,11 @@ import {
 export interface BookingAdminFilters {
   status?: string;
   bookingType?: string;
-  query?: string;
+  clientName?: string;
+  phone?: string;
+  email?: string;
+  bookingReference?: string;
+  source?: string;
   from?: string;
   to?: string;
   limit?: number;
@@ -90,16 +94,39 @@ export async function listBookings(filters: BookingAdminFilters = {}) {
     conditions.push(`booking_type = $${values.length}`);
   }
 
-  const query = cleanValue(filters.query);
-  if (query) {
-    values.push(`%${query.toLowerCase()}%`);
+  const clientName = cleanValue(filters.clientName);
+  if (clientName) {
+    values.push(`%${clientName.toLowerCase()}%`);
     const placeholder = `$${values.length}`;
-    conditions.push(`(
-      lower(client_name) like ${placeholder}
-      or lower(phone) like ${placeholder}
-      or lower(coalesce(email, '')) like ${placeholder}
-      or lower(coalesce(booking_reference, '')) like ${placeholder}
-    )`);
+    conditions.push(`lower(client_name) like ${placeholder}`);
+  }
+
+  const phone = cleanValue(filters.phone);
+  if (phone) {
+    values.push(`%${phone.toLowerCase()}%`);
+    const placeholder = `$${values.length}`;
+    conditions.push(`lower(phone) like ${placeholder}`);
+  }
+
+  const email = cleanValue(filters.email);
+  if (email) {
+    values.push(`%${email.toLowerCase()}%`);
+    const placeholder = `$${values.length}`;
+    conditions.push(`lower(coalesce(email, '')) like ${placeholder}`);
+  }
+
+  const bookingReference = cleanValue(filters.bookingReference);
+  if (bookingReference) {
+    values.push(`%${bookingReference.toLowerCase()}%`);
+    const placeholder = `$${values.length}`;
+    conditions.push(`lower(coalesce(booking_reference, '')) like ${placeholder}`);
+  }
+
+  const source = cleanValue(filters.source);
+  if (source) {
+    values.push(`%${source.toLowerCase()}%`);
+    const placeholder = `$${values.length}`;
+    conditions.push(`lower(coalesce(source, '')) like ${placeholder}`);
   }
 
   const from = cleanValue(filters.from);

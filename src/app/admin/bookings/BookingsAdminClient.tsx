@@ -49,13 +49,19 @@ function formatTreatments(treatmentsJson: unknown) {
     .filter((value): value is string => Boolean(value));
 }
 
-function BookingRow({ booking }: { booking: BookingAdminRecord }) {
+function formatStatusLabel(value: string) {
+  return value.replace(/_/g, " ");
+}
+
+function BookingTableRow({ booking }: { booking: BookingAdminRecord }) {
   const router = useRouter();
   const [status, setStatus] = useState(booking.status);
   const [notes, setNotes] = useState(booking.adminNotes ?? "");
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const treatments = useMemo(() => formatTreatments(booking.treatmentsJson), [booking.treatmentsJson]);
+  const treatmentsPreview =
+    treatments.length > 0 ? treatments.slice(0, 2).join(" | ") : booking.consultationContext ?? "-";
 
   const saveBooking = () => {
     setFeedback(null);
@@ -75,7 +81,7 @@ function BookingRow({ booking }: { booking: BookingAdminRecord }) {
       const result = (await response.json().catch(() => null)) as { error?: string } | null;
 
       if (!response.ok) {
-        setFeedback(result?.error ?? "Unable to save this booking.");
+        setFeedback(result?.error ?? "Unable to save.");
         return;
       }
 
@@ -85,168 +91,137 @@ function BookingRow({ booking }: { booking: BookingAdminRecord }) {
   };
 
   return (
-    <article className="rounded-[1.6rem] border border-black/8 bg-white p-5 shadow-[0_20px_50px_-35px_rgba(23,18,15,0.35)]">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold/90">
-            {booking.bookingType === "consultation" ? "Consultation" : "Treatment"}
-          </p>
-          <h2 className="mt-2 font-serif text-2xl text-[#17120f]">
-            {booking.clientName}
-          </h2>
-          <p className="mt-1 text-sm text-foreground/70">
-            {booking.phone}
-            {booking.email ? ` | ${booking.email}` : ""}
-          </p>
-          <p className="mt-2 text-xs uppercase tracking-[0.18em] text-foreground/45">
-            Created {formatDateTime(booking.createdAt)}
-          </p>
+    <tr className="border-b border-black/6 align-top last:border-b-0">
+      <td className="px-3 py-3 text-xs text-foreground/60 whitespace-nowrap">
+        <div className="font-medium text-foreground/82">{formatDateTime(booking.createdAt)}</div>
+        <div className="mt-1 uppercase tracking-[0.16em]">{booking.id.slice(0, 8)}</div>
+      </td>
+
+      <td className="px-3 py-3 text-sm text-foreground/78">
+        <div className="font-semibold text-[#17120f]">{booking.clientName}</div>
+        <div className="mt-1 text-xs text-foreground/55">{booking.email ?? "-"}</div>
+      </td>
+
+      <td className="px-3 py-3 text-sm text-foreground/78 whitespace-nowrap">
+        {booking.phone}
+      </td>
+
+      <td className="px-3 py-3 text-xs uppercase tracking-[0.16em] text-foreground/60 whitespace-nowrap">
+        {booking.bookingType}
+      </td>
+
+      <td className="px-3 py-3 text-sm text-foreground/78 whitespace-nowrap">
+        <div>{booking.preferredDate}</div>
+        <div className="mt-1 text-xs uppercase tracking-[0.14em] text-foreground/50">
+          {booking.preferredTimeSlot}
         </div>
+      </td>
 
-        <div className="rounded-full border border-black/10 bg-[#f6efe6] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#17120f]">
-          {booking.status.replace(/_/g, " ")}
+      <td className="max-w-[260px] px-3 py-3 text-xs text-foreground/72">
+        <div className="line-clamp-2" title={treatmentsPreview}>
+          {treatmentsPreview}
         </div>
-      </div>
-
-      <div className="mt-5 grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-        <div className="space-y-4">
-          <div className="grid gap-3 text-sm text-foreground/80 sm:grid-cols-2">
-            <p>
-              <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Preferred date
-              </span>
-              {booking.preferredDate}
-            </p>
-            <p>
-              <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Preferred time
-              </span>
-              {booking.preferredTimeSlot}
-            </p>
-            <p>
-              <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Value
-              </span>
-              {formatMoney(booking.totalValue, booking.currency)}
-            </p>
-            <p>
-              <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Reference
-              </span>
-              {booking.bookingReference ?? "-"}
-            </p>
+        {treatments.length > 2 && (
+          <div className="mt-1 text-[11px] text-foreground/45">
+            +{treatments.length - 2} more
           </div>
+        )}
+      </td>
 
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              Treatments
-            </p>
-            {treatments.length > 0 ? (
-              <div className="mt-2 flex flex-wrap gap-2">
-                {treatments.map((treatment) => (
-                  <span
-                    key={treatment}
-                    className="rounded-full border border-black/8 bg-[#fffaf3] px-3 py-1 text-xs text-foreground/70"
-                  >
-                    {treatment}
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-2 text-sm text-foreground/70">
-                {booking.consultationContext ?? "General consultation"}
-              </p>
-            )}
-          </div>
+      <td className="px-3 py-3 text-sm font-medium text-foreground/82 whitespace-nowrap">
+        {formatMoney(booking.totalValue, booking.currency)}
+      </td>
 
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              Attribution
-            </p>
-            <p className="mt-2 text-sm text-foreground/70">
-              {booking.source ?? "direct"} / {booking.medium ?? "none"}
-              {booking.campaign ? ` / ${booking.campaign}` : ""}
-            </p>
-            <p className="mt-1 text-sm text-foreground/55">
-              {booking.enquiryPage}
-            </p>
-          </div>
+      <td className="px-3 py-3 text-xs text-foreground/60 whitespace-nowrap">
+        <div>{booking.source ?? "direct"}</div>
+        <div className="mt-1">{booking.medium ?? "none"}</div>
+      </td>
 
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              WhatsApp message
-            </p>
-            <pre className="mt-2 max-h-48 overflow-auto rounded-2xl bg-[#17120f] p-4 text-xs leading-6 text-white/82 whitespace-pre-wrap">
-              {booking.whatsappMessage}
-            </pre>
-          </div>
-        </div>
+      <td className="px-3 py-3 text-xs text-foreground/60 whitespace-nowrap">
+        {booking.bookingReference ?? "-"}
+      </td>
 
-        <div className="space-y-4 rounded-[1.4rem] border border-black/8 bg-[#fffaf3] p-4">
-          <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              Status
-            </label>
-            <select
-              value={status}
-              onChange={(event) => setStatus(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-[#17120f] outline-none transition focus:border-gold"
-            >
-              {BOOKING_STATUSES.map((option) => (
-                <option key={option} value={option}>
-                  {option.replace(/_/g, " ")}
-                </option>
-              ))}
-            </select>
-          </div>
+      <td className="px-3 py-3">
+        <select
+          value={status}
+          onChange={(event) => setStatus(event.target.value)}
+          className="min-w-[150px] rounded-lg border border-black/10 bg-[#fffaf3] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#17120f] outline-none transition focus:border-gold"
+        >
+          {BOOKING_STATUSES.map((option) => (
+            <option key={option} value={option}>
+              {formatStatusLabel(option)}
+            </option>
+          ))}
+        </select>
+      </td>
 
-          <div>
-            <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              Admin notes
-            </label>
-            <textarea
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-              rows={6}
-              className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm text-[#17120f] outline-none transition focus:border-gold"
-              placeholder="Add follow-up notes, deposit status, or client responses."
-            />
-          </div>
+      <td className="px-3 py-3">
+        <input
+          type="text"
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          placeholder="Internal notes"
+          className="min-w-[220px] rounded-lg border border-black/10 bg-[#fffaf3] px-3 py-2 text-xs text-[#17120f] outline-none transition focus:border-gold"
+        />
+      </td>
 
+      <td className="px-3 py-3">
+        <div className="flex min-w-[130px] flex-col gap-2">
           <button
             type="button"
             onClick={saveBooking}
             disabled={isPending}
-            className="w-full rounded-xl bg-[#17120f] px-4 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-gold hover:text-[#17120f] disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-lg bg-[#17120f] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:bg-gold hover:text-[#17120f] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isPending ? "Saving..." : "Save changes"}
+            {isPending ? "Saving..." : "Save"}
           </button>
-
           {feedback && (
-            <p className={`text-sm ${feedback === "Saved" ? "text-green-700" : "text-red-600"}`}>
+            <span className={`text-[11px] ${feedback === "Saved" ? "text-green-700" : "text-red-600"}`}>
               {feedback}
-            </p>
+            </span>
           )}
         </div>
-      </div>
-    </article>
+      </td>
+    </tr>
   );
 }
 
 export function BookingsAdminClient({ bookings }: BookingsAdminClientProps) {
   if (bookings.length === 0) {
     return (
-      <div className="rounded-[1.6rem] border border-dashed border-black/15 bg-white/70 px-6 py-10 text-center text-sm text-foreground/70">
+      <div className="rounded-[1.4rem] border border-dashed border-black/15 bg-white/70 px-6 py-10 text-center text-sm text-foreground/70">
         No bookings matched the current filters.
       </div>
     );
   }
 
   return (
-    <div className="space-y-5">
-      {bookings.map((booking) => (
-        <BookingRow key={booking.id} booking={booking} />
-      ))}
+    <div className="overflow-hidden rounded-[1.4rem] border border-black/8 bg-white shadow-[0_24px_70px_-45px_rgba(23,18,15,0.38)]">
+      <div className="overflow-x-auto">
+        <table className="min-w-[1450px] w-full border-collapse">
+          <thead className="bg-[#17120f] text-white">
+            <tr className="text-left">
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Created</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Client</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Phone</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Type</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Preferred</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments / Context</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Value</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Source</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Reference</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Status</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Notes</th>
+              <th className="px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <BookingTableRow key={booking.id} booking={booking} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

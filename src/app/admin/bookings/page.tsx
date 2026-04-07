@@ -9,7 +9,11 @@ interface BookingsPageProps {
   searchParams: Promise<{
     status?: string;
     bookingType?: string;
-    q?: string;
+    clientName?: string;
+    phone?: string;
+    email?: string;
+    bookingReference?: string;
+    source?: string;
     from?: string;
     to?: string;
   }>;
@@ -21,13 +25,21 @@ export const revalidate = 0;
 function buildExportHref({
   status,
   bookingType,
-  query,
+  clientName,
+  phone,
+  email,
+  bookingReference,
+  source,
   from,
   to,
 }: {
   status?: string;
   bookingType?: string;
-  query?: string;
+  clientName?: string;
+  phone?: string;
+  email?: string;
+  bookingReference?: string;
+  source?: string;
   from?: string;
   to?: string;
 }) {
@@ -39,8 +51,20 @@ function buildExportHref({
   if (bookingType && bookingType !== "all") {
     params.set("bookingType", bookingType);
   }
-  if (query) {
-    params.set("q", query);
+  if (clientName) {
+    params.set("clientName", clientName);
+  }
+  if (phone) {
+    params.set("phone", phone);
+  }
+  if (email) {
+    params.set("email", email);
+  }
+  if (bookingReference) {
+    params.set("bookingReference", bookingReference);
+  }
+  if (source) {
+    params.set("source", source);
   }
   if (from) {
     params.set("from", from);
@@ -59,35 +83,53 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
 
   const status = params.status?.trim() || "all";
   const bookingType = params.bookingType?.trim() || "all";
-  const query = params.q?.trim() || "";
+  const clientName = params.clientName?.trim() || "";
+  const phone = params.phone?.trim() || "";
+  const email = params.email?.trim() || "";
+  const bookingReference = params.bookingReference?.trim() || "";
+  const source = params.source?.trim() || "";
   const from = params.from?.trim() || "";
   const to = params.to?.trim() || "";
 
   const bookings = await listBookings({
     status,
     bookingType,
-    query,
+    clientName,
+    phone,
+    email,
+    bookingReference,
+    source,
     from,
     to,
     limit: 100,
   });
 
-  const exportHref = buildExportHref({ status, bookingType, query, from, to });
+  const exportHref = buildExportHref({
+    status,
+    bookingType,
+    clientName,
+    phone,
+    email,
+    bookingReference,
+    source,
+    from,
+    to,
+  });
 
   return (
     <main className="min-h-screen bg-[#f6efe6] px-5 py-8 text-foreground sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        <header className="rounded-[2rem] border border-black/6 bg-[#17120f] px-6 py-7 text-white shadow-[0_32px_90px_-50px_rgba(23,18,15,0.75)] sm:px-8">
+      <div className="mx-auto max-w-[1600px] space-y-5">
+        <header className="rounded-[1.6rem] border border-black/6 bg-[#17120f] px-5 py-5 text-white shadow-[0_28px_70px_-48px_rgba(23,18,15,0.75)] sm:px-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold/90">
                 Galeo Beauty
               </p>
-              <h1 className="mt-4 font-serif text-[2.4rem] leading-none sm:text-[3rem]">
+              <h1 className="mt-3 font-serif text-[2rem] leading-none sm:text-[2.5rem]">
                 Bookings admin
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/72 sm:text-[0.96rem]">
-                Review incoming bookings, update their status, add internal notes, and export the current filtered dataset.
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-white/72 sm:text-[0.96rem]">
+                Compact booking operations view with column filters, status management, internal notes, and CSV export.
               </p>
             </div>
 
@@ -103,17 +145,43 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
           </div>
         </header>
 
-        <section className="rounded-[1.8rem] border border-black/8 bg-white px-5 py-5 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)] sm:px-6">
-          <form className="grid gap-4 lg:grid-cols-[1.2fr_repeat(4,minmax(0,0.7fr))]">
+        <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-4 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
+          <form className="grid gap-3 xl:grid-cols-[1.1fr_0.85fr_0.95fr_0.95fr_0.9fr_0.9fr_0.85fr_0.85fr]">
             <div>
               <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Search
+                Client
               </label>
               <input
                 type="text"
-                name="q"
-                defaultValue={query}
-                placeholder="Name, phone, email, reference"
+                name="clientName"
+                defaultValue={clientName}
+                placeholder="Filter client name"
+                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Phone
+              </label>
+              <input
+                type="text"
+                name="phone"
+                defaultValue={phone}
+                placeholder="Filter phone"
+                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Email
+              </label>
+              <input
+                type="text"
+                name="email"
+                defaultValue={email}
+                placeholder="Filter email"
                 className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
               />
             </div>
@@ -153,6 +221,32 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
 
             <div>
               <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Reference
+              </label>
+              <input
+                type="text"
+                name="bookingReference"
+                defaultValue={bookingReference}
+                placeholder="Filter reference"
+                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Source
+              </label>
+              <input
+                type="text"
+                name="source"
+                defaultValue={source}
+                placeholder="Filter source"
+                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
                 From date
               </label>
               <input
@@ -175,7 +269,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
               />
             </div>
 
-            <div className="flex items-end gap-3 lg:col-span-5">
+            <div className="flex flex-wrap items-end gap-3 xl:col-span-8">
               <button
                 type="submit"
                 className="rounded-xl bg-[#17120f] px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-gold hover:text-[#17120f]"
