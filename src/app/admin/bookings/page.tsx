@@ -26,6 +26,47 @@ interface BookingsPageProps {
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+function formatUtcDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function getTodayInJohannesburg() {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Africa/Johannesburg",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const parts = formatter.formatToParts(new Date());
+  const year = Number(parts.find((part) => part.type === "year")?.value ?? "0");
+  const month = Number(parts.find((part) => part.type === "month")?.value ?? "1");
+  const day = Number(parts.find((part) => part.type === "day")?.value ?? "1");
+
+  return new Date(Date.UTC(year, month - 1, day));
+}
+
+function getDatePresets() {
+  const today = getTodayInJohannesburg();
+  const dayOfWeek = today.getUTCDay();
+  const weekOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+  const weekStart = new Date(today);
+  weekStart.setUTCDate(today.getUTCDate() - weekOffset);
+
+  const weekEnd = new Date(weekStart);
+  weekEnd.setUTCDate(weekStart.getUTCDate() + 6);
+
+  const monthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+  const monthEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 0));
+
+  return [
+    { label: "Today", from: formatUtcDate(today), to: formatUtcDate(today) },
+    { label: "This week", from: formatUtcDate(weekStart), to: formatUtcDate(weekEnd) },
+    { label: "This month", from: formatUtcDate(monthStart), to: formatUtcDate(monthEnd) },
+  ];
+}
+
 function buildQueryString({
   status,
   bookingType,
@@ -118,6 +159,7 @@ function parsePositiveNumber(value?: string, fallback = 1) {
 export default async function AdminBookingsPage({ searchParams }: BookingsPageProps) {
   const params = await searchParams;
   await requireAdminAuth("/admin/bookings");
+  const datePresets = getDatePresets();
 
   const status = params.status?.trim() || "all";
   const bookingType = params.bookingType?.trim() || "all";
@@ -247,6 +289,68 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
         </header>
 
         <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-4 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
+          <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-black/8 pb-4">
+            <span className="mr-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+              Quick dates
+            </span>
+            {datePresets.map((preset) => {
+              const isActive = from === preset.from && to === preset.to;
+              const href = buildPageHref({
+                status,
+                bookingType,
+                clientName,
+                phone,
+                email,
+                bookingReference,
+                source,
+                from: preset.from,
+                to: preset.to,
+                page: "1",
+                pageSize,
+                sortBy,
+                sortDirection,
+              });
+
+              return (
+                <Link
+                  key={preset.label}
+                  href={href}
+                  className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
+                    isActive
+                      ? "bg-[#17120f] text-white"
+                      : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
+                  }`}
+                >
+                  {preset.label}
+                </Link>
+              );
+            })}
+            <Link
+              href={buildPageHref({
+                status,
+                bookingType,
+                clientName,
+                phone,
+                email,
+                bookingReference,
+                source,
+                from: undefined,
+                to: undefined,
+                page: "1",
+                pageSize,
+                sortBy,
+                sortDirection,
+              })}
+              className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
+                !from && !to
+                  ? "bg-[#17120f] text-white"
+                  : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
+              }`}
+            >
+              All dates
+            </Link>
+          </div>
+
           <form className="grid gap-3 xl:grid-cols-[1.1fr_0.85fr_0.95fr_0.95fr_0.9fr_0.9fr_0.85fr_0.85fr]">
             <input type="hidden" name="sortBy" value={sortBy} />
             <input type="hidden" name="sortDirection" value={sortDirection} />
