@@ -19,14 +19,15 @@ function sanitizeNextPath(input: FormDataEntryValue | null) {
 async function buildRedirectUrl(pathname: string, request: Request) {
   const requestHeaders = await headers();
   const url = new URL(request.url);
-  const candidates = [
+  const explicitCandidates = [
     requestHeaders.get("x-forwarded-host")?.trim(),
     requestHeaders.get("host")?.trim(),
-    url.host,
   ];
-  const allowedHosts = new Set([
+  const allowedPublicHosts = new Set([
     "www.galeobeauty.com",
     "galeobeauty.com",
+  ]);
+  const allowedLocalHosts = new Set([
     "localhost",
     "localhost:3000",
     "localhost:3001",
@@ -35,8 +36,18 @@ async function buildRedirectUrl(pathname: string, request: Request) {
     "127.0.0.1:3001",
   ]);
 
-  const hostname = candidates.find((candidate) => candidate && allowedHosts.has(candidate.toLowerCase()))
-    ?? "www.galeobeauty.com";
+  const hostname = explicitCandidates.find((candidate) => {
+    if (!candidate) {
+      return false;
+    }
+
+    const normalized = candidate.toLowerCase();
+    return allowedPublicHosts.has(normalized) || allowedLocalHosts.has(normalized);
+  }) ?? (
+    process.env.NODE_ENV === "production"
+      ? "www.galeobeauty.com"
+      : (allowedLocalHosts.has(url.host.toLowerCase()) ? url.host : "localhost:3000")
+  );
   const protocol = hostname.includes("localhost") || hostname.includes("127.0.0.1")
     ? "http"
     : "https";
