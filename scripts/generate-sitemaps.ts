@@ -1,12 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {
+  assertSectionFitsSitemapLimit,
   buildSitemapIndexXml,
   buildSitemapXml,
-  getSitemapChunkCount,
-  getSitemapChunkEntries,
-  getSitemapIndexUrls,
-  getTopLevelSitemapIndexUrls,
+  getSectionSitemapUrl,
+  getSitemapEntries,
+  getTopLevelSitemapUrls,
 } from '../src/lib/sitemap-helpers';
 
 const repoRoot = process.cwd();
@@ -24,23 +24,14 @@ async function writeFile(targetPath: string, contents: string) {
 }
 
 async function writeSection(section: '0' | '1') {
-  const chunkCount = getSitemapChunkCount(section);
-  const sectionDir = path.join(sitemapRoot, section);
+  const urlCount = assertSectionFitsSitemapLimit(section);
 
-  await fs.mkdir(sectionDir, { recursive: true });
   await writeFile(
     path.join(sitemapRoot, `${section}.xml`),
-    buildSitemapIndexXml(getSitemapIndexUrls(section))
+    buildSitemapXml(getSitemapEntries(section))
   );
 
-  for (let chunkIndex = 0; chunkIndex < chunkCount; chunkIndex += 1) {
-    await writeFile(
-      path.join(sectionDir, `${chunkIndex}.xml`),
-      buildSitemapXml(getSitemapChunkEntries(section, chunkIndex))
-    );
-  }
-
-  return chunkCount;
+  return urlCount;
 }
 
 async function main() {
@@ -52,16 +43,16 @@ async function main() {
   await fs.mkdir(publicDir, { recursive: true });
   await ensureCleanDir(sitemapRoot);
 
-  await writeFile(path.join(publicDir, 'sitemap.xml'), buildSitemapIndexXml(getTopLevelSitemapIndexUrls()));
+  await writeFile(path.join(publicDir, 'sitemap.xml'), buildSitemapIndexXml(getTopLevelSitemapUrls()));
 
-  const [sitemap0Chunks, sitemap1Chunks] = await Promise.all([
+  const [sitemap0Count, sitemap1Count] = await Promise.all([
     writeSection('0'),
     writeSection('1'),
   ]);
 
-  console.log(`Generated sitemap.xml with 2 child indexes.`);
-  console.log(`Generated /public/sitemaps/0.xml with ${sitemap0Chunks} chunk files.`);
-  console.log(`Generated /public/sitemaps/1.xml with ${sitemap1Chunks} chunk files.`);
+  console.log('Generated sitemap.xml with 2 direct sitemap files.');
+  console.log(`Generated ${getSectionSitemapUrl('0')} with ${sitemap0Count.toLocaleString()} URLs.`);
+  console.log(`Generated ${getSectionSitemapUrl('1')} with ${sitemap1Count.toLocaleString()} URLs.`);
 }
 
 main().catch((error) => {

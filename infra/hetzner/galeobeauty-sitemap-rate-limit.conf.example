@@ -1,0 +1,7 @@
+map $galeo_upstream $galeo_public_root {
+    default /var/www/galeobeauty-blue/public;
+    http://127.0.0.1:3000 /var/www/galeobeauty-blue/public;
+    http://127.0.0.1:3001 /var/www/galeobeauty-green/public;
+}
+
+limit_req_zone $binary_remote_addr zone=galeo_sitemap:10m rate=2r/s;

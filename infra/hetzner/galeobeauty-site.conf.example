@@ -1,0 +1,55 @@
+server {
+    server_name galeobeauty.com www.galeobeauty.com;
+
+    include /etc/nginx/snippets/galeobeauty-upstream.conf;
+
+    location = /sitemap.xml {
+        root $galeo_public_root;
+        try_files /sitemap.xml =404;
+        default_type application/xml;
+        add_header Cache-Control "public, max-age=300, stale-while-revalidate=86400" always;
+        limit_req zone=galeo_sitemap burst=5 nodelay;
+    }
+
+    location ^~ /sitemaps/ {
+        root $galeo_public_root;
+        try_files $uri =404;
+        default_type application/xml;
+        add_header Cache-Control "public, max-age=300, stale-while-revalidate=86400" always;
+        limit_req zone=galeo_sitemap burst=10 nodelay;
+    }
+
+    location / {
+        proxy_pass $galeo_upstream;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/galeobeauty.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/galeobeauty.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = www.galeobeauty.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    if ($host = galeobeauty.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    server_name galeobeauty.com www.galeobeauty.com;
+    return 404; # managed by Certbot
+}

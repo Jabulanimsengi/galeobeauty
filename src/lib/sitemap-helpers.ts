@@ -7,7 +7,7 @@ import { toAbsoluteUrl } from './site-url';
 export const BASE_URL = 'https://www.galeobeauty.com';
 export const FALLBACK_IMAGE = `${BASE_URL}/images/logo.png`;
 export const SITEMAP_REVALIDATE = 86400;
-export const SITEMAP_CHUNK_SIZE = 2000;
+export const SITEMAP_MAX_URLS = 50000;
 
 const BUILD_DATE = new Date().toISOString();
 const blogPosts = getAllBlogPosts();
@@ -182,34 +182,32 @@ function countSectionEntries(section: SitemapSection): number {
   return count;
 }
 
-export function getSitemapChunkCount(section: SitemapSection): number {
-  return Math.max(1, Math.ceil(countSectionEntries(section) / SITEMAP_CHUNK_SIZE));
-}
-
-export function getSitemapIndexUrls(section: SitemapSection): string[] {
-  return Array.from(
-    { length: getSitemapChunkCount(section) },
-    (_, index) => `${BASE_URL}/sitemaps/${section}/${index}.xml`
-  );
-}
-
-export function getSitemapChunkEntries(section: SitemapSection, chunkIndex: number): SitemapEntry[] {
-  const start = chunkIndex * SITEMAP_CHUNK_SIZE;
-  const end = start + SITEMAP_CHUNK_SIZE;
+export function getSitemapEntries(section: SitemapSection): SitemapEntry[] {
   const entries: SitemapEntry[] = [];
-  let index = 0;
 
   walkSection(section, (entry) => {
-    if (index >= start && index < end) {
-      entries.push(entry);
-    }
-
-    index += 1;
+    entries.push(entry);
   });
 
   return entries;
 }
 
-export function getTopLevelSitemapIndexUrls(): string[] {
+export function getSectionSitemapUrl(section: SitemapSection): string {
+  return `${BASE_URL}/sitemaps/${section}.xml`;
+}
+
+export function getTopLevelSitemapUrls(): string[] {
   return [`${BASE_URL}/sitemaps/0.xml`, `${BASE_URL}/sitemaps/1.xml`];
+}
+
+export function assertSectionFitsSitemapLimit(section: SitemapSection): number {
+  const count = countSectionEntries(section);
+
+  if (count > SITEMAP_MAX_URLS) {
+    throw new Error(
+      `Sitemap section ${section} has ${count.toLocaleString()} URLs, which exceeds the ${SITEMAP_MAX_URLS.toLocaleString()} URL limit.`
+    );
+  }
+
+  return count;
 }

@@ -61,7 +61,16 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // 4. Catch-all: Flat /prices/[slug] where slug is NOT a valid category
+  // 4. Redirect old grandchild sitemap URLs to the current child sitemap files.
+  const legacyChunkMatch = pathname.match(/^\/sitemaps\/([01])\/\d+\.xml$/);
+  if (legacyChunkMatch) {
+    return NextResponse.redirect(
+      new URL(`/sitemaps/${legacyChunkMatch[1]}.xml`, request.url),
+      301
+    );
+  }
+
+  // 5. Catch-all: Flat /prices/[slug] where slug is NOT a valid category
   //    Redirects stale indexed URLs like /prices/massage-45min → /prices
   //    This covers ALL flat URLs that Google has indexed, without needing
   //    to enumerate every possible slug.
