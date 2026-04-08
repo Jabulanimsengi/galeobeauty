@@ -1,12 +1,36 @@
 import { NextResponse } from "next/server";
 import { normalizeBookingSaveRequest, type BookingSaveRequest } from "@/lib/bookings";
 import { getPostgresPool } from "@/lib/server/postgres";
+import { checkRateLimitForRequest } from "@/lib/server/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function POST(request: Request) {
+  const rateLimit = checkRateLimitForRequest({
+    request,
+    namespace: "booking-create",
+    limit: 20,
+    windowMs: 10 * 60 * 1000,
+  });
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Too many booking attempts. Please wait a few minutes and try again.",
+      },
+      {
+        status: 429,
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+          "Retry-After": String(rateLimit.retryAfterSeconds),
+        },
+      }
+    );
+  }
+
   try {
     const body = (await request.json()) as BookingSaveRequest;
     const booking = normalizeBookingSaveRequest(body);

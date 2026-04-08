@@ -93,6 +93,8 @@ const IMAGE_ASSET_REDIRECTS = [
 ];
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+
   typescript: {
     ignoreBuildErrors: true,
   },

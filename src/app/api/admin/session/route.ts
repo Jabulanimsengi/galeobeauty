@@ -5,6 +5,7 @@ import {
   getAdminCookieConfig,
   getAdminPasswordErrorMessage,
 } from "@/lib/server/admin-auth";
+import { checkRateLimitForRequest } from "@/lib/server/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,13 +18,28 @@ function sanitizeNextPath(input: FormDataEntryValue | null) {
 
 async function buildRedirectUrl(pathname: string, request: Request) {
   const requestHeaders = await headers();
-  const forwardedProto = requestHeaders.get("x-forwarded-proto")?.trim();
-  const forwardedHost = requestHeaders.get("x-forwarded-host")?.trim();
-  const host = requestHeaders.get("host")?.trim();
   const url = new URL(request.url);
+  const candidates = [
+    requestHeaders.get("x-forwarded-host")?.trim(),
+    requestHeaders.get("host")?.trim(),
+    url.host,
+  ];
+  const allowedHosts = new Set([
+    "www.galeobeauty.com",
+    "galeobeauty.com",
+    "localhost",
+    "localhost:3000",
+    "localhost:3001",
+    "127.0.0.1",
+    "127.0.0.1:3000",
+    "127.0.0.1:3001",
+  ]);
 
-  const protocol = forwardedProto || url.protocol.replace(":", "") || "https";
-  const hostname = forwardedHost || host || url.host;
+  const hostname = candidates.find((candidate) => candidate && allowedHosts.has(candidate.toLowerCase()))
+    ?? "www.galeobeauty.com";
+  const protocol = hostname.includes("localhost") || hostname.includes("127.0.0.1")
+    ? "http"
+    : "https";
 
   return new URL(pathname, `${protocol}://${hostname}`);
 }
@@ -33,6 +49,19 @@ export async function POST(request: Request) {
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")).trim() : "";
   const nextPath = sanitizeNextPath(formData.get("next"));
   const loginUrl = await buildRedirectUrl(`/admin/login?next=${encodeURIComponent(nextPath)}`, request);
+  const rateLimit = checkRateLimitForRequest({
+    request,
+    namespace: "admin-login",
+    limit: 10,
+    windowMs: 10 * 60 * 1000,
+  });
+
+  if (!rateLimit.allowed) {
+    loginUrl.searchParams.set("error", "Too many sign-in attempts. Please wait a few minutes and try again.");
+    const response = NextResponse.redirect(loginUrl, 303);
+    response.headers.set("Retry-After", String(rateLimit.retryAfterSeconds));
+    return response;
+  }
 
   try {
     if (!password) {
