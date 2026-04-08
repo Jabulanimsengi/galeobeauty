@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Valid category IDs — keep in sync with services-content.ts
-// Middleware runs in Edge Runtime so we can't import from src/lib directly
+// Proxy runs in Edge Runtime so we can't import from src/lib directly
 const VALID_CATEGORIES = new Set<string>();
 
-// We can't import from src/lib here since middleware runs in Edge Runtime,
+// We can't import from src/lib here since proxy runs in Edge Runtime,
 // so we inline the category IDs. Keep this in sync with services-content.ts.
 const CATEGORY_IDS = [
   "hart-aesthetics", "fat-freezing", "slimming", "massages", "dermalogica",
@@ -14,8 +14,8 @@ const CATEGORY_IDS = [
 ];
 CATEGORY_IDS.forEach((id) => VALID_CATEGORIES.add(id));
 
-export function middleware(request: NextRequest) {
-  const { pathname, search } = request.nextUrl;
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
   const forwardedProto = request.headers.get('x-forwarded-proto') || request.nextUrl.protocol.replace(':', '');
   const isLocalhost =
@@ -91,7 +91,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Only run middleware on specific paths
+// Only run proxy logic on specific paths
 export const config = {
   matcher: [
     /*

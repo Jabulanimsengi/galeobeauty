@@ -28,14 +28,28 @@ function getKnownServiceSlugs() {
 
 function validateAssetReferences() {
   const assetRefs = [
-    { file: "src/app/layout.tsx", asset: "/images/logo.png" },
-    { file: "src/app/locations/[location]/[service]/page.tsx", asset: "https://www.galeobeauty.com/images/logo.png" },
-    { file: "src/lib/sitemap-helpers.ts", asset: "https://www.galeobeauty.com/images/logo.png" },
+    {
+      file: "src/app/layout.tsx",
+      asset: "/images/logo.png",
+      isPresent: (content) => content.includes("/images/logo.png"),
+    },
+    {
+      file: "src/app/locations/[location]/[service]/page.tsx",
+      asset: "https://www.galeobeauty.com/images/logo.png",
+      isPresent: (content) => content.includes("https://www.galeobeauty.com/images/logo.png"),
+    },
+    {
+      file: "src/lib/sitemap-helpers.ts",
+      asset: "https://www.galeobeauty.com/images/logo.png",
+      isPresent: (content) =>
+        content.includes("export const FALLBACK_IMAGE = `${BASE_URL}/images/logo.png`;") &&
+        content.includes("toAbsoluteUrl(service.image || FALLBACK_IMAGE)"),
+    },
   ];
 
   for (const ref of assetRefs) {
     const content = readFile(ref.file);
-    if (!content.includes(ref.asset)) {
+    if (!ref.isPresent(content)) {
       addIssue("error", `${ref.file} is missing expected asset reference: ${ref.asset}`);
     }
 
@@ -95,20 +109,32 @@ function validateSitemapPolicy() {
 
 function validateLocationSeededContent() {
   const content = readFile("src/app/locations/[location]/[service]/page.tsx");
-  const seededCalls = content.match(/generateServiceDescription\([\s\S]*?location\.name[\s\S]*?\)/g) || [];
+  const descriptionCalls = content.match(/generateServiceDescription\(/g) || [];
+  const hasMetadataLocationSeed = content.includes("canonicalLocation.name");
+  const hasPageLocationSeed = content.includes("location.name");
+  const hasLocalInsightsSection =
+    content.includes("{service.keyword} Quick Facts for {location.name}") &&
+    content.includes("Serving <span className=\"text-gold\">{location.name}</span> & {location.region}") &&
+    content.includes("locationServiceInsight");
 
-  if (seededCalls.length < 2) {
-    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is not consistently seeding generated copy with location.name.");
+  if (descriptionCalls.length < 2 || !hasMetadataLocationSeed || !hasPageLocationSeed) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is not consistently seeding generated copy with location-aware context.");
   }
 
-  if (!content.includes("Why {location.name} Clients Book {service.keyword} Here")) {
-    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is missing the local uniqueness section heading.");
+  if (!hasLocalInsightsSection) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is missing the current local insights content blocks.");
   }
 }
 
 function validatePriorityContentPath() {
   const pageContent = readFile("src/app/locations/[location]/[service]/page.tsx");
   const seoDataContent = readFile("src/lib/seo-data.ts");
+  const hasCurrentLocationArchitecture =
+    pageContent.includes("getLocationInsights(location)") &&
+    pageContent.includes("getLocationServiceInsight(resolvedService, location)") &&
+    pageContent.includes("nearbyLocations.map((nearbyLoc) => (") &&
+    pageContent.includes("dynamicRelatedServices.map((relatedService) => (") &&
+    pageContent.includes("const allSchemas = [structuredData, breadcrumbSchema, faqSchema, howToSchema];");
 
   if (!seoDataContent.includes("isPriorityLocationService")) {
     addIssue("error", "src/lib/seo-data.ts is missing the priority location-service helper.");
@@ -118,8 +144,8 @@ function validatePriorityContentPath() {
     addIssue("error", "src/lib/seo-data.ts is missing the priority location-service content helper.");
   }
 
-  if (!pageContent.includes("Priority Location + Service Combination")) {
-    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is missing the priority combination content block.");
+  if (!hasCurrentLocationArchitecture) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is missing the current location-service SEO architecture blocks.");
   }
 }
 
@@ -152,18 +178,18 @@ function validatePriorityLists() {
 }
 
 function validateCanonicalOriginPolicy() {
-  const middleware = readFile("src/middleware.ts");
+  const proxy = readFile("src/proxy.ts");
 
-  if (!middleware.includes("x-forwarded-proto")) {
-    addIssue("error", "src/middleware.ts is not checking x-forwarded-proto for https canonicalization.");
+  if (!proxy.includes("x-forwarded-proto")) {
+    addIssue("error", "src/proxy.ts is not checking x-forwarded-proto for https canonicalization.");
   }
 
-  if (!middleware.includes("hostname = 'www.galeobeauty.com'") && !middleware.includes("hostname = \"www.galeobeauty.com\"")) {
-    addIssue("error", "src/middleware.ts is not forcing the canonical www.galeobeauty.com host.");
+  if (!proxy.includes("hostname = 'www.galeobeauty.com'") && !proxy.includes("hostname = \"www.galeobeauty.com\"")) {
+    addIssue("error", "src/proxy.ts is not forcing the canonical www.galeobeauty.com host.");
   }
 
-  if (!middleware.includes("protocol = 'https:'") && !middleware.includes("protocol = \"https:\"")) {
-    addIssue("error", "src/middleware.ts is not forcing https in the canonical redirect.");
+  if (!proxy.includes("protocol = 'https:'") && !proxy.includes("protocol = \"https:\"")) {
+    addIssue("error", "src/proxy.ts is not forcing https in the canonical redirect.");
   }
 }
 

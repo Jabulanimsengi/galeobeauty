@@ -95,6 +95,9 @@ const IMAGE_ASSET_REDIRECTS = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  turbopack: {
+    root: process.cwd(),
+  },
 
   typescript: {
     ignoreBuildErrors: true,
