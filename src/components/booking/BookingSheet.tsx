@@ -22,6 +22,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { TurnstileWidget } from "@/components/booking/TurnstileWidget";
 import {
   SelectedTreatment,
   BookingState,
@@ -39,6 +40,7 @@ import {
 } from "@/lib/attribution";
 import type { BookingSaveRequest } from "@/lib/bookings";
 import { businessInfo } from "@/lib/constants";
+import { getTurnstileSiteKey } from "@/lib/turnstile";
 
 interface BookingSheetProps {
   isOpen: boolean;
@@ -168,6 +170,8 @@ export function BookingSheet({
   bookingType = "treatment",
   consultationContext
 }: BookingSheetProps) {
+  const turnstileSiteKey = getTurnstileSiteKey();
+  const isTurnstileEnabled = Boolean(turnstileSiteKey);
   const dateRailRef = useRef<HTMLDivElement | null>(null);
   const dateOptions = useMemo(() => {
     const today = new Date();
@@ -209,6 +213,9 @@ export function BookingSheet({
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [showMoreDates, setShowMoreDates] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const treatmentNames = useMemo(
     () => treatments.map((t) => t.item.name),
@@ -310,12 +317,29 @@ export function BookingSheet({
     });
   }, [selectedDateOption, showMoreDates]);
 
+  useEffect(() => {
+    if (!captchaToken) {
+      return;
+    }
+
+    setState((prev) => ({
+      ...prev,
+      error:
+        prev.error && /verification/i.test(prev.error)
+          ? null
+          : prev.error,
+    }));
+  }, [captchaToken]);
+
   // Reset state when closing
   const handleClose = () => {
     setState({
       ...initialBookingState,
     });
     setShowMoreDates(false);
+    setCaptchaToken(null);
+    setCaptchaError(null);
+    setCaptchaResetKey((previous) => previous + 1);
     onClose();
   };
 
@@ -426,6 +450,14 @@ export function BookingSheet({
       return;
     }
 
+    if (isTurnstileEnabled && !captchaToken) {
+      setState((prev) => ({
+        ...prev,
+        error: captchaError ?? "Please complete the human verification before confirming your booking.",
+      }));
+      return;
+    }
+
     let message = "";
     let totalValue: number | undefined;
     let submitTreatmentNames: string[] | undefined;
@@ -495,6 +527,7 @@ ${bankingDetails}`;
     const bookingPayload: BookingSaveRequest = {
       bookingType,
       consultationContext,
+      captchaToken: captchaToken ?? undefined,
       currentPage,
       bookingReference: bookingReference || undefined,
       whatsappMessage: message,
@@ -523,6 +556,11 @@ ${bankingDetails}`;
 
       if (!response.ok) {
         const result = (await response.json().catch(() => null)) as { error?: string } | null;
+        if (response.status === 400 && /verification/i.test(result?.error ?? "")) {
+          setCaptchaToken(null);
+          setCaptchaError(result?.error ?? "Please complete the human verification and try again.");
+          setCaptchaResetKey((previous) => previous + 1);
+        }
         throw new Error(result?.error ?? "We could not save this booking right now. Please try again.");
       }
     } catch (error) {
@@ -1010,6 +1048,16 @@ ${bankingDetails}`;
                       ))}
                     </div>
                   </div>
+                )}
+
+                {isTurnstileEnabled && (
+                  <TurnstileWidget
+                    action="booking_submit"
+                    onTokenChange={setCaptchaToken}
+                    onWidgetError={setCaptchaError}
+                    resetKey={captchaResetKey}
+                    siteKey={turnstileSiteKey ?? ""}
+                  />
                 )}
 
                 <p className="text-xs text-muted-foreground text-center">

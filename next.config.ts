@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { serviceCategoriesContent } from "./src/lib/services-content";
+import { CONTENT_SECURITY_POLICY } from "./src/lib/security-headers";
 import { SERVICE_SLUGS } from "./src/lib/sitemap-config";
 
 const LASH_BROW_DUPLICATE_FILES = [
@@ -124,6 +125,20 @@ const nextConfig: NextConfig = {
     fetches: {
       fullUrl: false,
     },
+  },
+
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: CONTENT_SECURITY_POLICY,
+          },
+        ],
+      },
+    ];
   },
 
   async redirects() {

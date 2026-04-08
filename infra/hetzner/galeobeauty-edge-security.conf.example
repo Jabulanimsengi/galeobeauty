@@ -1,0 +1,19 @@
+map $request_method $galeo_invalid_method {
+    default 1;
+    GET 0;
+    HEAD 0;
+    POST 0;
+    OPTIONS 0;
+}
+
+map $request_uri $galeo_probe_request {
+    default 0;
+    ~*^/(?:wp-admin|wp-login\.php|xmlrpc\.php|phpmyadmin|adminer|vendor/phpunit|boaform|cgi-bin|\.git|\.env) 1;
+    ~*\.php(?:$|/) 1;
+    ~*\.aspx?(?:$|/) 1;
+    ~*\.jsp(?:$|/) 1;
+    ~*\.cgi(?:$|/) 1;
+    ~*\.pl(?:$|/) 1;
+}
+
+limit_conn_zone $binary_remote_addr zone=galeo_per_ip:10m;

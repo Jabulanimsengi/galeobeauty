@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { normalizeBookingSaveRequest, type BookingSaveRequest } from "@/lib/bookings";
 import { getPostgresPool } from "@/lib/server/postgres";
 import { checkRateLimitForRequest } from "@/lib/server/rate-limit";
+import { verifyTurnstileToken } from "@/lib/server/turnstile";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -33,6 +34,27 @@ export async function POST(request: Request) {
 
   try {
     const body = (await request.json()) as BookingSaveRequest;
+    const turnstileVerification = await verifyTurnstileToken({
+      request,
+      token: body.captchaToken,
+      expectedAction: "booking_submit",
+    });
+
+    if (!turnstileVerification.success) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error: turnstileVerification.message ?? "Please complete the human verification and try again.",
+        },
+        {
+          status: 400,
+          headers: {
+            "Cache-Control": "no-store, max-age=0",
+          },
+        }
+      );
+    }
+
     const booking = normalizeBookingSaveRequest(body);
     const pool = getPostgresPool();
 

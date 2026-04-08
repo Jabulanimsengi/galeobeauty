@@ -9,6 +9,7 @@ const TIME_SLOT_VALUES = new Set<BookingState["appointment"]["timeSlot"]>([
 
 export interface BookingSaveRequest {
   bookingType: BookingType;
+  captchaToken?: string;
   consultationContext?: string;
   currentPage?: string;
   bookingReference?: string;
