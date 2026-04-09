@@ -25,6 +25,8 @@ declare global {
 
 const TURNSTILE_SCRIPT_ID = "galeo-turnstile-script";
 const TURNSTILE_SCRIPT_URL = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+const AUTO_RETRY_LIMIT = 2;
+const RETRY_DELAY_MS = 1_500;
 
 let turnstileLoadPromise: Promise<TurnstileApi> | null = null;
 
@@ -60,9 +62,7 @@ function loadTurnstileApi() {
     };
 
     if (existingScript) {
-      existingScript.addEventListener("load", handleLoad, { once: true });
-      existingScript.addEventListener("error", handleError, { once: true });
-      return;
+      existingScript.remove();
     }
 
     const script = document.createElement("script");
@@ -93,26 +93,63 @@ export function TurnstileWidget({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
   useEffect(() => {
     if (!siteKey) {
       onTokenChange(null);
       onWidgetError(null);
       setLoadError(null);
+      setRetryCount(0);
+      setIsRetrying(false);
       return;
     }
 
     let active = true;
     onTokenChange(null);
     onWidgetError(null);
-    setLoadError(null);
+    setLoadError((previous) => (retryCount === 0 ? null : previous));
+    setIsRetrying(false);
+
+    const clearRetryTimeout = () => {
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
+    };
+
+    const scheduleRetry = (message: string) => {
+      onTokenChange(null);
+      onWidgetError(message);
+
+      if (retryCount < AUTO_RETRY_LIMIT) {
+        setLoadError("Human verification is reconnecting...");
+        setIsRetrying(true);
+        clearRetryTimeout();
+        retryTimeoutRef.current = setTimeout(() => {
+          if (!active) {
+            return;
+          }
+
+          setRetryCount((current) => current + 1);
+        }, RETRY_DELAY_MS);
+        return;
+      }
+
+      setLoadError(message);
+      setIsRetrying(false);
+    };
 
     loadTurnstileApi()
       .then((turnstile) => {
         if (!active || !containerRef.current) {
           return;
         }
+
+        clearRetryTimeout();
 
         if (widgetIdRef.current) {
           turnstile.remove(widgetIdRef.current);
@@ -128,6 +165,9 @@ export function TurnstileWidget({
               return;
             }
 
+            setRetryCount(0);
+            setLoadError(null);
+            setIsRetrying(false);
             onWidgetError(null);
             onTokenChange(token);
           },
@@ -152,10 +192,7 @@ export function TurnstileWidget({
               return;
             }
 
-            const message = "The human verification widget is unavailable right now. Please try again.";
-            onTokenChange(null);
-            onWidgetError(message);
-            setLoadError(message);
+            scheduleRetry("The human verification widget is unavailable right now. Please try again.");
           },
         });
       })
@@ -168,13 +205,12 @@ export function TurnstileWidget({
           error instanceof Error && error.message
             ? error.message
             : "The human verification widget is unavailable right now. Please try again.";
-        onTokenChange(null);
-        onWidgetError(message);
-        setLoadError(message);
+        scheduleRetry(message);
       });
 
     return () => {
       active = false;
+      clearRetryTimeout();
 
       if (window.turnstile && widgetIdRef.current) {
         window.turnstile.remove(widgetIdRef.current);
@@ -182,7 +218,7 @@ export function TurnstileWidget({
 
       widgetIdRef.current = null;
     };
-  }, [action, onTokenChange, onWidgetError, resetKey, siteKey]);
+  }, [action, onTokenChange, onWidgetError, resetKey, retryCount, siteKey]);
 
   return (
     <div className="space-y-3 rounded-xl border border-border/60 bg-secondary/20 p-4">
@@ -196,7 +232,24 @@ export function TurnstileWidget({
       <div ref={containerRef} className="min-h-[66px]" />
 
       {loadError && (
-        <p className="text-xs text-red-600">{loadError}</p>
+        <div className="flex flex-wrap items-center gap-3">
+          <p className={`text-xs ${isRetrying ? "text-muted-foreground" : "text-red-600"}`}>
+            {loadError}
+          </p>
+          {!isRetrying && (
+            <button
+              type="button"
+              onClick={() => {
+                setLoadError(null);
+                setIsRetrying(false);
+                setRetryCount((current) => current + 1);
+              }}
+              className="text-xs font-medium text-gold transition-colors hover:text-gold-dark"
+            >
+              Retry verification
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
