@@ -3,10 +3,12 @@ import "server-only";
 import { getPostgresPool } from "@/lib/server/postgres";
 import type {
   BookingFlowMetricsBookingTypeRow,
+  BookingFlowMetricsCampaignRow,
   BookingFlowEventPayload,
   BookingFlowMetricsDashboard,
   BookingFlowMetricsFilters,
   BookingFlowMetricsDailyRow,
+  BookingFlowMetricsLandingPageRow,
   BookingFlowMetricsSourceRow,
   BookingFlowMetricsSummary,
 } from "@/lib/booking-flow-analytics";
@@ -59,6 +61,36 @@ function isMissingRelationError(error: unknown) {
     "code" in error &&
     (error as { code?: string }).code === "42P01"
   );
+}
+
+function buildMetricsBreakdownRow({
+  sheetOpenCount,
+  whatsappSubmitCount,
+  completedWhatsappSubmitCount,
+}: {
+  sheetOpenCount: string | number | null | undefined;
+  whatsappSubmitCount: string | number | null | undefined;
+  completedWhatsappSubmitCount: string | number | null | undefined;
+}) {
+  const normalizedSheetOpenCount = Number(sheetOpenCount ?? 0);
+  const normalizedWhatsappSubmitCount = Number(whatsappSubmitCount ?? 0);
+  const normalizedCompletedWhatsappSubmitCount = Number(
+    completedWhatsappSubmitCount ?? 0
+  );
+
+  return {
+    sheetOpenCount: normalizedSheetOpenCount,
+    whatsappSubmitCount: normalizedWhatsappSubmitCount,
+    completedWhatsappSubmitCount: normalizedCompletedWhatsappSubmitCount,
+    openToSubmitRate:
+      normalizedSheetOpenCount > 0
+        ? normalizedWhatsappSubmitCount / normalizedSheetOpenCount
+        : null,
+    submitCompletionRate:
+      normalizedWhatsappSubmitCount > 0
+        ? normalizedCompletedWhatsappSubmitCount / normalizedWhatsappSubmitCount
+        : null,
+  };
 }
 
 export async function recordBookingFlowEvent(payload: BookingFlowEventPayload) {
@@ -139,7 +171,14 @@ export async function getBookingFlowMetricsDashboard(
     buildBookingFlowDateWhereClause(filters);
 
   try {
-    const [summaryResult, dailyRowsResult, bookingTypeRowsResult, sourceRowsResult] = await Promise.all([
+    const [
+      summaryResult,
+      dailyRowsResult,
+      bookingTypeRowsResult,
+      sourceRowsResult,
+      campaignRowsResult,
+      landingPageRowsResult,
+    ] = await Promise.all([
       pool.query<{
         sheet_open_count: string;
         whatsapp_submit_count: string;
@@ -214,6 +253,46 @@ export async function getBookingFlowMetricsDashboard(
           medium asc`,
         values
       ),
+      pool.query<{
+        campaign: string | null;
+        sheet_open_count: string;
+        whatsapp_submit_count: string;
+        completed_whatsapp_submit_count: string;
+      }>(
+        `select
+          coalesce(campaign, '(not set)') as campaign,
+          count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
+          count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
+          count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count
+        from booking_flow_events
+        ${whereClause}
+        group by coalesce(campaign, '(not set)')
+        order by
+          count(*) filter (where event_name = 'booking_sheet_open') desc,
+          count(*) filter (where event_name = 'booking_whatsapp_submit') desc,
+          campaign asc`,
+        values
+      ),
+      pool.query<{
+        landing_page: string | null;
+        sheet_open_count: string;
+        whatsapp_submit_count: string;
+        completed_whatsapp_submit_count: string;
+      }>(
+        `select
+          coalesce(landing_page, '/') as landing_page,
+          count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
+          count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
+          count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count
+        from booking_flow_events
+        ${whereClause}
+        group by coalesce(landing_page, '/')
+        order by
+          count(*) filter (where event_name = 'booking_sheet_open') desc,
+          count(*) filter (where event_name = 'booking_whatsapp_submit') desc,
+          landing_page asc`,
+        values
+      ),
     ]);
 
     const row = summaryResult.rows[0];
@@ -236,85 +315,65 @@ export async function getBookingFlowMetricsDashboard(
       lastTrackedAt: row?.last_tracked_at ?? null,
     };
 
-    const dailyRows: BookingFlowMetricsDailyRow[] = dailyRowsResult.rows.map((dailyRow) => {
-      const dailySheetOpenCount = Number(dailyRow.sheet_open_count ?? 0);
-      const dailyWhatsappSubmitCount = Number(dailyRow.whatsapp_submit_count ?? 0);
-      const dailyCompletedWhatsappSubmitCount = Number(
-        dailyRow.completed_whatsapp_submit_count ?? 0
-      );
-
-      return {
-        trackedDate: dailyRow.tracked_date,
-        sheetOpenCount: dailySheetOpenCount,
-        whatsappSubmitCount: dailyWhatsappSubmitCount,
-        completedWhatsappSubmitCount: dailyCompletedWhatsappSubmitCount,
-        openToSubmitRate:
-          dailySheetOpenCount > 0
-            ? dailyWhatsappSubmitCount / dailySheetOpenCount
-            : null,
-        submitCompletionRate:
-          dailyWhatsappSubmitCount > 0
-            ? dailyCompletedWhatsappSubmitCount / dailyWhatsappSubmitCount
-            : null,
-      };
-    });
+    const dailyRows: BookingFlowMetricsDailyRow[] = dailyRowsResult.rows.map((dailyRow) => ({
+      trackedDate: dailyRow.tracked_date,
+      ...buildMetricsBreakdownRow({
+        sheetOpenCount: dailyRow.sheet_open_count,
+        whatsappSubmitCount: dailyRow.whatsapp_submit_count,
+        completedWhatsappSubmitCount: dailyRow.completed_whatsapp_submit_count,
+      }),
+    }));
 
     const bookingTypeRows: BookingFlowMetricsBookingTypeRow[] = bookingTypeRowsResult.rows.map(
-      (bookingTypeRow) => {
-        const bookingTypeSheetOpenCount = Number(bookingTypeRow.sheet_open_count ?? 0);
-        const bookingTypeWhatsappSubmitCount = Number(
-          bookingTypeRow.whatsapp_submit_count ?? 0
-        );
-        const bookingTypeCompletedWhatsappSubmitCount = Number(
-          bookingTypeRow.completed_whatsapp_submit_count ?? 0
-        );
-
-        return {
-          bookingType: bookingTypeRow.booking_type,
-          sheetOpenCount: bookingTypeSheetOpenCount,
-          whatsappSubmitCount: bookingTypeWhatsappSubmitCount,
-          completedWhatsappSubmitCount: bookingTypeCompletedWhatsappSubmitCount,
-          openToSubmitRate:
-            bookingTypeSheetOpenCount > 0
-              ? bookingTypeWhatsappSubmitCount / bookingTypeSheetOpenCount
-              : null,
-          submitCompletionRate:
-            bookingTypeWhatsappSubmitCount > 0
-              ? bookingTypeCompletedWhatsappSubmitCount / bookingTypeWhatsappSubmitCount
-              : null,
-        };
-      }
+      (bookingTypeRow) => ({
+        bookingType: bookingTypeRow.booking_type,
+        ...buildMetricsBreakdownRow({
+          sheetOpenCount: bookingTypeRow.sheet_open_count,
+          whatsappSubmitCount: bookingTypeRow.whatsapp_submit_count,
+          completedWhatsappSubmitCount: bookingTypeRow.completed_whatsapp_submit_count,
+        }),
+      })
     );
 
-    const sourceRows: BookingFlowMetricsSourceRow[] = sourceRowsResult.rows.map((sourceRow) => {
-      const sourceSheetOpenCount = Number(sourceRow.sheet_open_count ?? 0);
-      const sourceWhatsappSubmitCount = Number(sourceRow.whatsapp_submit_count ?? 0);
-      const sourceCompletedWhatsappSubmitCount = Number(
-        sourceRow.completed_whatsapp_submit_count ?? 0
-      );
+    const sourceRows: BookingFlowMetricsSourceRow[] = sourceRowsResult.rows.map((sourceRow) => ({
+      source: sourceRow.source ?? "direct",
+      medium: sourceRow.medium ?? "none",
+      ...buildMetricsBreakdownRow({
+        sheetOpenCount: sourceRow.sheet_open_count,
+        whatsappSubmitCount: sourceRow.whatsapp_submit_count,
+        completedWhatsappSubmitCount: sourceRow.completed_whatsapp_submit_count,
+      }),
+    }));
 
-      return {
-        source: sourceRow.source ?? "direct",
-        medium: sourceRow.medium ?? "none",
-        sheetOpenCount: sourceSheetOpenCount,
-        whatsappSubmitCount: sourceWhatsappSubmitCount,
-        completedWhatsappSubmitCount: sourceCompletedWhatsappSubmitCount,
-        openToSubmitRate:
-          sourceSheetOpenCount > 0
-            ? sourceWhatsappSubmitCount / sourceSheetOpenCount
-            : null,
-        submitCompletionRate:
-          sourceWhatsappSubmitCount > 0
-            ? sourceCompletedWhatsappSubmitCount / sourceWhatsappSubmitCount
-            : null,
-      };
-    });
+    const campaignRows: BookingFlowMetricsCampaignRow[] = campaignRowsResult.rows.map(
+      (campaignRow) => ({
+        campaign: campaignRow.campaign ?? "(not set)",
+        ...buildMetricsBreakdownRow({
+          sheetOpenCount: campaignRow.sheet_open_count,
+          whatsappSubmitCount: campaignRow.whatsapp_submit_count,
+          completedWhatsappSubmitCount: campaignRow.completed_whatsapp_submit_count,
+        }),
+      })
+    );
+
+    const landingPageRows: BookingFlowMetricsLandingPageRow[] = landingPageRowsResult.rows.map(
+      (landingPageRow) => ({
+        landingPage: landingPageRow.landing_page ?? "/",
+        ...buildMetricsBreakdownRow({
+          sheetOpenCount: landingPageRow.sheet_open_count,
+          whatsappSubmitCount: landingPageRow.whatsapp_submit_count,
+          completedWhatsappSubmitCount: landingPageRow.completed_whatsapp_submit_count,
+        }),
+      })
+    );
 
     return {
       summary,
       dailyRows,
       bookingTypeRows,
       sourceRows,
+      campaignRows,
+      landingPageRows,
       activeFrom,
       activeTo,
     };
@@ -333,6 +392,8 @@ export async function getBookingFlowMetricsDashboard(
         dailyRows: [],
         bookingTypeRows: [],
         sourceRows: [],
+        campaignRows: [],
+        landingPageRows: [],
         activeFrom,
         activeTo,
       };

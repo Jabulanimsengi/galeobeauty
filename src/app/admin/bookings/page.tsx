@@ -378,7 +378,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                   This view groups booking sheet events by the tracked event date in Africa/Johannesburg so you can audit opens, WhatsApp submits, and completed booking submissions for any selected range.
                 </p>
                 <p className="mt-2 text-sm leading-7 text-foreground/52">
-                  These same booking flow events are also emitted to Google Analytics 4 with `booking_type`, `source`, `medium`, `campaign`, and completion metadata.
+                  These same booking flow events are also emitted to Google Analytics 4 with `booking_type`, `source`, `medium`, `campaign`, `landing_page`, and completion metadata.
                 </p>
               </div>
 
@@ -702,6 +702,123 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                       <tr className="bg-white">
                         <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
                           No source breakdown is available for this event-date range.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
+              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                  By campaign
+                </p>
+                <p className="mt-2 text-sm text-foreground/58">
+                  See which tracked campaigns are opening the booking sheet and driving WhatsApp submits in the selected date range.
+                </p>
+              </div>
+              <div className="overflow-auto">
+                <table className="min-w-[720px] w-full border-collapse">
+                  <thead className="bg-[#17120f] text-white">
+                    <tr className="text-left">
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Campaign</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bookingFlowDashboard.campaignRows.length > 0 ? (
+                      bookingFlowDashboard.campaignRows.map((row) => (
+                        <tr key={row.campaign} className="border-b border-black/6 bg-white last:border-b-0">
+                          <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
+                            {row.campaign}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.sheetOpenCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {formatPercent(row.openToSubmitRate)}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {formatPercent(row.submitCompletionRate)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
+                          No campaign breakdown is available for this event-date range.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
+              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                  By landing page
+                </p>
+                <p className="mt-2 text-sm text-foreground/58">
+                  Track which first-touch landing pages are feeding the booking flow and where those sessions convert.
+                </p>
+              </div>
+              <div className="overflow-auto">
+                <table className="min-w-[760px] w-full border-collapse">
+                  <thead className="bg-[#17120f] text-white">
+                    <tr className="text-left">
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Landing page</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bookingFlowDashboard.landingPageRows.length > 0 ? (
+                      bookingFlowDashboard.landingPageRows.map((row) => (
+                        <tr
+                          key={row.landingPage}
+                          className="border-b border-black/6 bg-white last:border-b-0"
+                        >
+                          <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
+                            {row.landingPage}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.sheetOpenCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {formatPercent(row.openToSubmitRate)}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {formatPercent(row.submitCompletionRate)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
+                          No landing-page breakdown is available for this event-date range.
                         </td>
                       </tr>
                     )}

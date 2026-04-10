@@ -72,11 +72,31 @@ export interface BookingFlowMetricsSourceRow {
   submitCompletionRate: number | null;
 }
 
+export interface BookingFlowMetricsCampaignRow {
+  campaign: string;
+  sheetOpenCount: number;
+  whatsappSubmitCount: number;
+  completedWhatsappSubmitCount: number;
+  openToSubmitRate: number | null;
+  submitCompletionRate: number | null;
+}
+
+export interface BookingFlowMetricsLandingPageRow {
+  landingPage: string;
+  sheetOpenCount: number;
+  whatsappSubmitCount: number;
+  completedWhatsappSubmitCount: number;
+  openToSubmitRate: number | null;
+  submitCompletionRate: number | null;
+}
+
 export interface BookingFlowMetricsDashboard {
   summary: BookingFlowMetricsSummary;
   dailyRows: BookingFlowMetricsDailyRow[];
   bookingTypeRows: BookingFlowMetricsBookingTypeRow[];
   sourceRows: BookingFlowMetricsSourceRow[];
+  campaignRows: BookingFlowMetricsCampaignRow[];
+  landingPageRows: BookingFlowMetricsLandingPageRow[];
   activeFrom: string | null;
   activeTo: string | null;
 }
