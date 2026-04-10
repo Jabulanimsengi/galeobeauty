@@ -310,7 +310,7 @@ export function trackBookingSubmit({
   hasRequiredTreatments,
   hasOptionalEmail,
 }: TrackBookingSubmitOptions) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+  if (typeof window === "undefined") {
     return;
   }
 
@@ -339,13 +339,24 @@ export function trackBookingSubmit({
     has_optional_email: hasOptionalEmail,
   };
 
-  window.gtag("event", "booking_whatsapp_submit", sharedPayload);
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_whatsapp_submit", sharedPayload);
 
-  if (requirementsComplete) {
-    window.gtag("event", "booking_requirements_completed_whatsapp_submit", sharedPayload);
+    if (requirementsComplete) {
+      window.gtag("event", "booking_requirements_completed_whatsapp_submit", sharedPayload);
+    }
+
+    window.gtag("event", "generate_lead", sharedPayload);
   }
 
-  window.gtag("event", "generate_lead", sharedPayload);
+  recordBookingFlowEventToServer("booking_whatsapp_submit", sharedPayload);
+
+  if (requirementsComplete) {
+    recordBookingFlowEventToServer(
+      "booking_requirements_completed_whatsapp_submit",
+      sharedPayload
+    );
+  }
 }
 
 export function trackExternalLinkClick({
@@ -409,12 +420,84 @@ function buildBookingFlowPayload({
   };
 }
 
-export function trackBookingSheetOpen(options: TrackBookingFlowOptions) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+function recordBookingFlowEventToServer(
+  eventName:
+    | "booking_sheet_open"
+    | "booking_whatsapp_submit"
+    | "booking_requirements_completed_whatsapp_submit",
+  payload: ReturnType<typeof buildBookingFlowPayload> & {
+    value?: number;
+    currency?: string;
+    requirements_complete?: boolean;
+    required_fields_completed?: number;
+    required_fields_total?: number;
+    has_required_name?: boolean;
+    has_required_phone?: boolean;
+    has_required_date?: boolean;
+    has_required_time_slot?: boolean;
+    has_required_treatments?: boolean;
+    has_optional_email?: boolean;
+  }
+) {
+  if (typeof window === "undefined") {
     return;
   }
 
-  window.gtag("event", "booking_sheet_open", buildBookingFlowPayload(options));
+  const body = JSON.stringify({
+    eventName,
+    bookingType: payload.booking_type,
+    source: payload.source,
+    medium: payload.medium,
+    campaign: payload.campaign,
+    landingPage: payload.landing_page,
+    enquiryPage: payload.enquiry_page,
+    consultationContext: payload.consultation_context,
+    treatmentCount: payload.treatment_count,
+    treatmentNames: payload.treatment_names
+      ? payload.treatment_names.split(" | ").filter(Boolean)
+      : undefined,
+    totalValue: payload.value,
+    requirementsComplete: payload.requirements_complete,
+    requiredFieldsCompleted: payload.required_fields_completed,
+    requiredFieldsTotal: payload.required_fields_total,
+    hasRequiredName: payload.has_required_name,
+    hasRequiredPhone: payload.has_required_phone,
+    hasRequiredDate: payload.has_required_date,
+    hasRequiredTimeSlot: payload.has_required_time_slot,
+    hasRequiredTreatments: payload.has_required_treatments,
+    hasOptionalEmail: payload.has_optional_email,
+  });
+
+  if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+    const blob = new Blob([body], { type: "application/json" });
+    navigator.sendBeacon("/api/analytics/booking-flow", blob);
+    return;
+  }
+
+  void fetch("/api/analytics/booking-flow", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body,
+    keepalive: true,
+  }).catch(() => {
+    // Analytics failures should never block booking UX.
+  });
+}
+
+export function trackBookingSheetOpen(options: TrackBookingFlowOptions) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = buildBookingFlowPayload(options);
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_sheet_open", payload);
+  }
+
+  recordBookingFlowEventToServer("booking_sheet_open", payload);
 }
 
 export function trackBookingStepView({

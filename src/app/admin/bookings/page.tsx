@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdminAuth } from "@/lib/server/admin-auth";
 import { listBookings } from "@/lib/server/bookings-admin";
+import { getBookingFlowMetricsSummary } from "@/lib/server/booking-flow-analytics";
 import { BOOKING_STATUSES } from "@/lib/bookings-admin-shared";
 import { BookingsAdminClient } from "@/app/admin/bookings/BookingsAdminClient";
 import { LogoutButton } from "@/app/admin/bookings/LogoutButton";
@@ -156,6 +157,29 @@ function parsePositiveNumber(value?: string, fallback = 1) {
   return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : fallback;
 }
 
+function formatPercent(value: number | null) {
+  if (value === null) {
+    return "-";
+  }
+
+  return `${(value * 100).toFixed(1)}%`;
+}
+
+function formatTrackedAt(value: string | null) {
+  if (!value) {
+    return "Waiting for first tracked event";
+  }
+
+  return new Date(value).toLocaleString("en-ZA", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Africa/Johannesburg",
+  });
+}
+
 export default async function AdminBookingsPage({ searchParams }: BookingsPageProps) {
   const params = await searchParams;
   await requireAdminAuth("/admin/bookings");
@@ -175,21 +199,24 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
   const sortBy = params.sortBy?.trim() || "createdAt";
   const sortDirection = params.sortDirection?.trim() === "asc" ? "asc" : "desc";
 
-  const bookingResult = await listBookings({
-    status,
-    bookingType,
-    clientName,
-    phone,
-    email,
-    bookingReference,
-    source,
-    from,
-    to,
-    page: Number(page),
-    pageSize: Number(pageSize),
-    sortBy,
-    sortDirection,
-  });
+  const [bookingResult, bookingFlowMetrics] = await Promise.all([
+    listBookings({
+      status,
+      bookingType,
+      clientName,
+      phone,
+      email,
+      bookingReference,
+      source,
+      from,
+      to,
+      page: Number(page),
+      pageSize: Number(pageSize),
+      sortBy,
+      sortDirection,
+    }),
+    getBookingFlowMetricsSummary(),
+  ]);
 
   const exportHref = buildExportHref({
     status,
@@ -283,6 +310,44 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
             </div>
           </div>
         </header>
+
+        <section className="grid gap-4 lg:grid-cols-4">
+          {[
+            {
+              label: "Booking sheet opens",
+              value: bookingFlowMetrics.sheetOpenCount.toLocaleString("en-ZA"),
+              note: "Server-side tracked opens",
+            },
+            {
+              label: "WhatsApp submits",
+              value: bookingFlowMetrics.whatsappSubmitCount.toLocaleString("en-ZA"),
+              note: `Open to submit ${formatPercent(bookingFlowMetrics.openToSubmitRate)}`,
+            },
+            {
+              label: "True bookings",
+              value: bookingFlowMetrics.completedWhatsappSubmitCount.toLocaleString("en-ZA"),
+              note: "Requirements completed before WhatsApp submit",
+            },
+            {
+              label: "Submit completion rate",
+              value: formatPercent(bookingFlowMetrics.submitCompletionRate),
+              note: `Tracked since ${formatTrackedAt(bookingFlowMetrics.firstTrackedAt)}`,
+            },
+          ].map((card) => (
+            <div
+              key={card.label}
+              className="rounded-[1.25rem] border border-black/8 bg-white px-5 py-5 shadow-[0_18px_45px_-36px_rgba(23,18,15,0.34)]"
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                {card.label}
+              </p>
+              <p className="mt-3 text-[2rem] font-semibold leading-none text-[#17120f]">
+                {card.value}
+              </p>
+              <p className="mt-3 text-sm text-foreground/58">{card.note}</p>
+            </div>
+          ))}
+        </section>
 
         <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-4 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
           <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-black/8 pb-4">

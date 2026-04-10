@@ -173,6 +173,7 @@ export function BookingSheet({
   const turnstileSiteKey = getTurnstileSiteKey();
   const isTurnstileEnabled = Boolean(turnstileSiteKey);
   const dateRailRef = useRef<HTMLDivElement | null>(null);
+  const hasTrackedOpenRef = useRef(false);
   const dateOptions = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -266,8 +267,15 @@ export function BookingSheet({
 
   useEffect(() => {
     if (!isOpen) {
+      hasTrackedOpenRef.current = false;
       return;
     }
+
+    if (hasTrackedOpenRef.current) {
+      return;
+    }
+
+    hasTrackedOpenRef.current = true;
 
     const attribution = getStoredAttribution();
     const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
@@ -333,6 +341,7 @@ export function BookingSheet({
 
   // Reset state when closing
   const handleClose = () => {
+    hasTrackedOpenRef.current = false;
     setState({
       ...initialBookingState,
     });
