@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowUpRight, ZoomIn } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Lightbox } from "@/components/ui/lightbox";
 import type { GalleryItem } from "@/lib/gallery-utils";
@@ -42,52 +42,12 @@ function getSortedCategories(items: GalleryItem[]) {
     });
 }
 
-function getFeaturedItems(items: GalleryItem[], categories: string[]) {
-    const featured: GalleryItem[] = [];
-
-    for (const category of categories) {
-        const categoryItems = items.filter((item) => item.category === category);
-
-        if (categoryItems[0]) {
-            featured.push(categoryItems[0]);
-        }
-
-        if (featured.length >= 4) {
-            break;
-        }
-    }
-
-    if (featured.length < 4) {
-        for (const item of items) {
-            if (featured.some((featuredItem) => featuredItem.id === item.id)) {
-                continue;
-            }
-
-            featured.push(item);
-
-            if (featured.length >= 4) {
-                break;
-            }
-        }
-    }
-
-    return featured;
-}
-
 function getCategoryPreviewClass(index: number) {
     if (index === 0) {
         return "col-span-2 row-span-2 min-h-[16rem] sm:col-span-2 sm:min-h-[22rem] lg:col-span-3 lg:min-h-[25rem]";
     }
 
     return "col-span-1 row-span-1 min-h-[8.75rem] sm:min-h-[10.5rem] lg:min-h-[12rem]";
-}
-
-function getFeaturedCardClass(index: number) {
-    if (index === 0) {
-        return "col-span-2 row-span-2 min-h-[18rem] sm:min-h-[24rem] lg:col-span-3 lg:min-h-[31rem]";
-    }
-
-    return "col-span-1 row-span-1 min-h-[8.75rem] sm:min-h-[11.5rem] lg:min-h-[15rem]";
 }
 
 export function GalleryGrid({ items }: GalleryGridProps) {
@@ -99,7 +59,6 @@ export function GalleryGrid({ items }: GalleryGridProps) {
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
     const categories = getSortedCategories(items);
-    const featuredItems = getFeaturedItems(items, categories);
 
     const openLightbox = (index: number, galleryItems: GalleryItem[]) => {
         setCurrentLightboxImages(
@@ -124,43 +83,6 @@ export function GalleryGrid({ items }: GalleryGridProps) {
 
     return (
         <div className="space-y-14 md:space-y-20">
-            <section className="space-y-8">
-                <div className="grid auto-rows-[8.75rem] grid-cols-2 gap-3 sm:auto-rows-[11.5rem] sm:gap-4 lg:grid-cols-4 lg:auto-rows-[15rem]">
-                    {featuredItems.map((item, index) => (
-                        <motion.button
-                            key={item.id}
-                            type="button"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{ duration: 0.45, delay: index * 0.05 }}
-                            onClick={() => openLightbox(index, featuredItems)}
-                            className={`group relative overflow-hidden rounded-[1.65rem] text-left ${getFeaturedCardClass(index)}`}
-                        >
-                            <Image
-                                src={item.src}
-                                alt={item.alt}
-                                fill
-                                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                                priority={index < 2}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/18 to-transparent" />
-                            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-4 sm:p-5">
-                                <div>
-                                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/70">
-                                        {item.category}
-                                    </p>
-                                </div>
-                                <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/12 text-white backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
-                                    <ZoomIn className="h-4 w-4" />
-                                </span>
-                            </div>
-                        </motion.button>
-                    ))}
-                </div>
-            </section>
-
             {categories.map((category, categoryIndex) => {
                 const categoryItems = items.filter((item) => item.category === category);
                 const isExpanded = expandedCategories.includes(category);
@@ -233,15 +155,12 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/18 to-transparent" />
-                                            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-3.5 sm:p-4">
+                                            <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 p-3.5 sm:p-4">
                                                 <div>
                                                     <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-white/65">
                                                         {category}
                                                     </p>
                                                 </div>
-                                                <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/12 text-white backdrop-blur-sm">
-                                                    <ZoomIn className="h-4 w-4" />
-                                                </span>
                                             </div>
 
                                             {showMobileMoreOverlay ? (

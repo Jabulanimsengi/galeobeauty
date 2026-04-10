@@ -81,10 +81,6 @@ export default function GalleryPage() {
 
                 <section className="bg-amber-50/20 py-16 md:py-24">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <h2 className="mb-12 text-center font-serif text-3xl text-foreground md:text-4xl">
-                            Life at Galeo Beauty <span className="text-gold">Hartbeespoort</span>
-                        </h2>
-
                         {images.length > 0 ? (
                             <GalleryGrid items={images} />
                         ) : (

@@ -131,9 +131,9 @@ export function Header() {
                                 id={mobileMenuContentId}
                                 side="left"
                                 hideCloseButton
-                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] border-r border-black/8 bg-white p-0 text-foreground !gap-0 data-[state=closed]:duration-100 data-[state=open]:duration-100"
+                                className="safe-bottom left-0 w-[min(88vw,22rem)] max-w-[22rem] overflow-hidden border-r-0 bg-white p-0 text-foreground !gap-0 data-[state=closed]:duration-100 data-[state=open]:duration-100"
                             >
-                                <SheetHeader className="relative border-b border-black/8 bg-[#17120f] px-7 pt-7 pb-6">
+                                <SheetHeader className="relative w-full border-b border-black/8 bg-[#17120f] px-7 pt-7 pb-6">
                                     <SheetClose asChild>
                                         <button
                                             type="button"
