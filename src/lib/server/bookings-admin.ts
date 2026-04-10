@@ -75,48 +75,7 @@ function normalizeSortDirection(direction?: string): "asc" | "desc" {
   return direction === "asc" ? "asc" : "desc";
 }
 
-function mapRow(row: Record<string, unknown>): BookingAdminRecord {
-  return {
-    id: String(row.id),
-    createdAt: String(row.created_at),
-    updatedAt: String(row.updated_at),
-    status: String(row.status),
-    bookingType: String(row.booking_type),
-    consultationContext: (row.consultation_context as string | null) ?? null,
-    clientName: String(row.client_name),
-    phone: String(row.phone),
-    email: (row.email as string | null) ?? null,
-    preferredDate: String(row.preferred_date),
-    preferredTimeSlot: String(row.preferred_time_slot),
-    treatmentCount: Number(row.treatment_count ?? 0),
-    totalValue:
-      row.total_value === null || row.total_value === undefined
-        ? null
-        : Number(row.total_value),
-    currency: (row.currency as string | null) ?? null,
-    bookingReference: (row.booking_reference as string | null) ?? null,
-    whatsappMessage: String(row.whatsapp_message ?? ""),
-    whatsappDestination: (row.whatsapp_destination as string | null) ?? null,
-    source: (row.source as string | null) ?? null,
-    medium: (row.medium as string | null) ?? null,
-    campaign: (row.campaign as string | null) ?? null,
-    landingPage: (row.landing_page as string | null) ?? null,
-    enquiryPage: (row.enquiry_page as string | null) ?? null,
-    referrerHost: (row.referrer_host as string | null) ?? null,
-    adminNotes: (row.admin_notes as string | null) ?? null,
-    contactedAt: (row.contacted_at as string | null) ?? null,
-    treatmentsJson: row.treatments_json,
-  };
-}
-
-export function normalizeBookingStatus(input?: string) {
-  return BOOKING_STATUSES.includes(input as BookingStatus)
-    ? (input as BookingStatus)
-    : "new";
-}
-
-export async function listBookings(filters: BookingAdminFilters = {}): Promise<BookingAdminListResult> {
-  const pool = getPostgresPool();
+function buildBookingsBaseQuery(filters: BookingAdminFilters = {}) {
   const values: Array<string | number> = [];
   const conditions: string[] = [];
 
@@ -168,39 +127,43 @@ export async function listBookings(filters: BookingAdminFilters = {}): Promise<B
   }
 
   const from = cleanValue(filters.from);
-  if (isIsoDate(from)) {
-    values.push(from!);
+  if (from && isIsoDate(from)) {
+    values.push(from);
     conditions.push(`preferred_date >= $${values.length}::date`);
   }
 
   const to = cleanValue(filters.to);
-  if (isIsoDate(to)) {
-    values.push(to!);
+  if (to && isIsoDate(to)) {
+    values.push(to);
     conditions.push(`preferred_date <= $${values.length}::date`);
   }
 
-  const pageSize = normalizePageSize(filters.pageSize);
-  const page = normalizePage(filters.page);
-  const offset = (page - 1) * pageSize;
   const sortBy = normalizeSortBy(filters.sortBy);
   const sortDirection = normalizeSortDirection(filters.sortDirection);
   const sortColumn = SORTABLE_COLUMNS[sortBy as keyof typeof SORTABLE_COLUMNS];
   const whereClause = conditions.length > 0 ? `where ${conditions.join(" and ")}` : "";
 
-  values.push(pageSize);
-  const limitPlaceholder = `$${values.length}`;
-  values.push(offset);
-  const offsetPlaceholder = `$${values.length}`;
+  return {
+    values,
+    whereClause,
+    sortBy,
+    sortDirection,
+    sortColumn,
+  };
+}
 
-  const countResult = await pool.query<{ count: string }>(
-    `select count(*)::text as count
-     from bookings
-     ${whereClause}`,
-    values.slice(0, values.length - 2)
-  );
-
-  const result = await pool.query(
-    `select
+function getBookingsSelectSql({
+  whereClause,
+  sortColumn,
+  sortDirection,
+  limitClause = "",
+}: {
+  whereClause: string;
+  sortColumn: string;
+  sortDirection: "asc" | "desc";
+  limitClause?: string;
+}) {
+  return `select
       id,
       created_at,
       updated_at,
@@ -230,8 +193,77 @@ export async function listBookings(filters: BookingAdminFilters = {}): Promise<B
     from bookings
     ${whereClause}
     order by ${sortColumn} ${sortDirection}, created_at desc
-    limit ${limitPlaceholder}
+    ${limitClause}`;
+}
+
+function mapRow(row: Record<string, unknown>): BookingAdminRecord {
+  return {
+    id: String(row.id),
+    createdAt: String(row.created_at),
+    updatedAt: String(row.updated_at),
+    status: String(row.status),
+    bookingType: String(row.booking_type),
+    consultationContext: (row.consultation_context as string | null) ?? null,
+    clientName: String(row.client_name),
+    phone: String(row.phone),
+    email: (row.email as string | null) ?? null,
+    preferredDate: String(row.preferred_date),
+    preferredTimeSlot: String(row.preferred_time_slot),
+    treatmentCount: Number(row.treatment_count ?? 0),
+    totalValue:
+      row.total_value === null || row.total_value === undefined
+        ? null
+        : Number(row.total_value),
+    currency: (row.currency as string | null) ?? null,
+    bookingReference: (row.booking_reference as string | null) ?? null,
+    whatsappMessage: String(row.whatsapp_message ?? ""),
+    whatsappDestination: (row.whatsapp_destination as string | null) ?? null,
+    source: (row.source as string | null) ?? null,
+    medium: (row.medium as string | null) ?? null,
+    campaign: (row.campaign as string | null) ?? null,
+    landingPage: (row.landing_page as string | null) ?? null,
+    enquiryPage: (row.enquiry_page as string | null) ?? null,
+    referrerHost: (row.referrer_host as string | null) ?? null,
+    adminNotes: (row.admin_notes as string | null) ?? null,
+    contactedAt: (row.contacted_at as string | null) ?? null,
+    treatmentsJson: row.treatments_json,
+  };
+}
+
+export function normalizeBookingStatus(input?: string) {
+  return BOOKING_STATUSES.includes(input as BookingStatus)
+    ? (input as BookingStatus)
+    : "new";
+}
+
+export async function listBookings(filters: BookingAdminFilters = {}): Promise<BookingAdminListResult> {
+  const pool = getPostgresPool();
+  const { values, whereClause, sortBy, sortDirection, sortColumn } =
+    buildBookingsBaseQuery(filters);
+  const pageSize = normalizePageSize(filters.pageSize);
+  const page = normalizePage(filters.page);
+  const offset = (page - 1) * pageSize;
+
+  values.push(pageSize);
+  const limitPlaceholder = `$${values.length}`;
+  values.push(offset);
+  const offsetPlaceholder = `$${values.length}`;
+
+  const countResult = await pool.query<{ count: string }>(
+    `select count(*)::text as count
+     from bookings
+     ${whereClause}`,
+    values.slice(0, values.length - 2)
+  );
+
+  const result = await pool.query(
+    getBookingsSelectSql({
+      whereClause,
+      sortColumn,
+      sortDirection,
+      limitClause: `limit ${limitPlaceholder}
     offset ${offsetPlaceholder}`,
+    }),
     values
   );
 
@@ -247,6 +279,23 @@ export async function listBookings(filters: BookingAdminFilters = {}): Promise<B
     sortBy,
     sortDirection,
   };
+}
+
+export async function listBookingsForExport(filters: BookingAdminFilters = {}) {
+  const pool = getPostgresPool();
+  const { values, whereClause, sortColumn, sortDirection } =
+    buildBookingsBaseQuery(filters);
+
+  const result = await pool.query(
+    getBookingsSelectSql({
+      whereClause,
+      sortColumn,
+      sortDirection,
+    }),
+    values
+  );
+
+  return result.rows.map((row) => mapRow(row));
 }
 
 export async function updateBookingAdminFields({

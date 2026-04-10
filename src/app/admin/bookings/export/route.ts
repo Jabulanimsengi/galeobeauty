@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/server/admin-auth";
-import { buildBookingsCsv, listBookings } from "@/lib/server/bookings-admin";
+import { buildBookingsCsv, listBookingsForExport } from "@/lib/server/bookings-admin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   const url = new URL(request.url);
-  const bookings = await listBookings({
+  const bookings = await listBookingsForExport({
     status: url.searchParams.get("status") ?? undefined,
     bookingType: url.searchParams.get("bookingType") ?? undefined,
     clientName: url.searchParams.get("clientName") ?? undefined,
@@ -22,13 +22,11 @@ export async function GET(request: Request) {
     source: url.searchParams.get("source") ?? undefined,
     from: url.searchParams.get("from") ?? undefined,
     to: url.searchParams.get("to") ?? undefined,
-    page: 1,
-    pageSize: 1000,
     sortBy: url.searchParams.get("sortBy") ?? undefined,
     sortDirection: url.searchParams.get("sortDirection") ?? undefined,
   });
 
-  const csv = buildBookingsCsv(bookings.bookings);
+  const csv = buildBookingsCsv(bookings);
 
   return new NextResponse(csv, {
     status: 200,
