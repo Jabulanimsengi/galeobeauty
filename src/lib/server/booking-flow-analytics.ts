@@ -3,6 +3,9 @@ import "server-only";
 import { getPostgresPool } from "@/lib/server/postgres";
 import type {
   BookingFlowEventPayload,
+  BookingFlowMetricsDashboard,
+  BookingFlowMetricsFilters,
+  BookingFlowMetricsDailyRow,
   BookingFlowMetricsSummary,
 } from "@/lib/booking-flow-analytics";
 
@@ -17,6 +20,34 @@ function normalizeOptionalNumber(value?: number) {
 
 function normalizeOptionalBoolean(value?: boolean) {
   return typeof value === "boolean" ? value : null;
+}
+
+function isIsoDate(value?: string | null) {
+  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
+}
+
+function buildBookingFlowDateWhereClause(filters: BookingFlowMetricsFilters = {}) {
+  const values: string[] = [];
+  const conditions: string[] = [];
+  const from = cleanValue(filters.from);
+  const to = cleanValue(filters.to);
+
+  if (from && isIsoDate(from)) {
+    values.push(from);
+    conditions.push(`(created_at at time zone 'Africa/Johannesburg')::date >= $${values.length}::date`);
+  }
+
+  if (to && isIsoDate(to)) {
+    values.push(to);
+    conditions.push(`(created_at at time zone 'Africa/Johannesburg')::date <= $${values.length}::date`);
+  }
+
+  return {
+    values,
+    whereClause: conditions.length > 0 ? `where ${conditions.join(" and ")}` : "",
+    activeFrom: from && isIsoDate(from) ? from : null,
+    activeTo: to && isIsoDate(to) ? to : null,
+  };
 }
 
 function isMissingRelationError(error: unknown) {
@@ -94,31 +125,63 @@ export async function recordBookingFlowEvent(payload: BookingFlowEventPayload) {
 }
 
 export async function getBookingFlowMetricsSummary(): Promise<BookingFlowMetricsSummary> {
+  const dashboard = await getBookingFlowMetricsDashboard();
+  return dashboard.summary;
+}
+
+export async function getBookingFlowMetricsDashboard(
+  filters: BookingFlowMetricsFilters = {}
+): Promise<BookingFlowMetricsDashboard> {
   const pool = getPostgresPool();
+  const { values, whereClause, activeFrom, activeTo } =
+    buildBookingFlowDateWhereClause(filters);
 
   try {
-    const result = await pool.query<{
-      sheet_open_count: string;
-      whatsapp_submit_count: string;
-      completed_whatsapp_submit_count: string;
-      first_tracked_at: string | null;
-      last_tracked_at: string | null;
-    }>(
-      `select
-        count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
-        count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
-        count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count,
-        min(created_at)::text as first_tracked_at,
-        max(created_at)::text as last_tracked_at
-      from booking_flow_events`
-    );
+    const [summaryResult, dailyRowsResult] = await Promise.all([
+      pool.query<{
+        sheet_open_count: string;
+        whatsapp_submit_count: string;
+        completed_whatsapp_submit_count: string;
+        first_tracked_at: string | null;
+        last_tracked_at: string | null;
+      }>(
+        `select
+          count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
+          count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
+          count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count,
+          min(created_at)::text as first_tracked_at,
+          max(created_at)::text as last_tracked_at
+        from booking_flow_events
+        ${whereClause}`,
+        values
+      ),
+      pool.query<{
+        tracked_date: string;
+        sheet_open_count: string;
+        whatsapp_submit_count: string;
+        completed_whatsapp_submit_count: string;
+      }>(
+        `select
+          ((created_at at time zone 'Africa/Johannesburg')::date)::text as tracked_date,
+          count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
+          count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
+          count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count
+        from booking_flow_events
+        ${whereClause}
+        group by 1
+        order by tracked_date desc`,
+        values
+      ),
+    ]);
 
-    const row = result.rows[0];
+    const row = summaryResult.rows[0];
     const sheetOpenCount = Number(row?.sheet_open_count ?? 0);
     const whatsappSubmitCount = Number(row?.whatsapp_submit_count ?? 0);
-    const completedWhatsappSubmitCount = Number(row?.completed_whatsapp_submit_count ?? 0);
+    const completedWhatsappSubmitCount = Number(
+      row?.completed_whatsapp_submit_count ?? 0
+    );
 
-    return {
+    const summary: BookingFlowMetricsSummary = {
       sheetOpenCount,
       whatsappSubmitCount,
       completedWhatsappSubmitCount,
@@ -130,16 +193,51 @@ export async function getBookingFlowMetricsSummary(): Promise<BookingFlowMetrics
       firstTrackedAt: row?.first_tracked_at ?? null,
       lastTrackedAt: row?.last_tracked_at ?? null,
     };
+
+    const dailyRows: BookingFlowMetricsDailyRow[] = dailyRowsResult.rows.map((dailyRow) => {
+      const dailySheetOpenCount = Number(dailyRow.sheet_open_count ?? 0);
+      const dailyWhatsappSubmitCount = Number(dailyRow.whatsapp_submit_count ?? 0);
+      const dailyCompletedWhatsappSubmitCount = Number(
+        dailyRow.completed_whatsapp_submit_count ?? 0
+      );
+
+      return {
+        trackedDate: dailyRow.tracked_date,
+        sheetOpenCount: dailySheetOpenCount,
+        whatsappSubmitCount: dailyWhatsappSubmitCount,
+        completedWhatsappSubmitCount: dailyCompletedWhatsappSubmitCount,
+        openToSubmitRate:
+          dailySheetOpenCount > 0
+            ? dailyWhatsappSubmitCount / dailySheetOpenCount
+            : null,
+        submitCompletionRate:
+          dailyWhatsappSubmitCount > 0
+            ? dailyCompletedWhatsappSubmitCount / dailyWhatsappSubmitCount
+            : null,
+      };
+    });
+
+    return {
+      summary,
+      dailyRows,
+      activeFrom,
+      activeTo,
+    };
   } catch (error) {
     if (isMissingRelationError(error)) {
       return {
-        sheetOpenCount: 0,
-        whatsappSubmitCount: 0,
-        completedWhatsappSubmitCount: 0,
-        openToSubmitRate: null,
-        submitCompletionRate: null,
-        firstTrackedAt: null,
-        lastTrackedAt: null,
+        summary: {
+          sheetOpenCount: 0,
+          whatsappSubmitCount: 0,
+          completedWhatsappSubmitCount: 0,
+          openToSubmitRate: null,
+          submitCompletionRate: null,
+          firstTrackedAt: null,
+          lastTrackedAt: null,
+        },
+        dailyRows: [],
+        activeFrom,
+        activeTo,
       };
     }
 

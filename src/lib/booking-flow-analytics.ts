@@ -39,6 +39,27 @@ export interface BookingFlowMetricsSummary {
   lastTrackedAt: string | null;
 }
 
+export interface BookingFlowMetricsFilters {
+  from?: string;
+  to?: string;
+}
+
+export interface BookingFlowMetricsDailyRow {
+  trackedDate: string;
+  sheetOpenCount: number;
+  whatsappSubmitCount: number;
+  completedWhatsappSubmitCount: number;
+  openToSubmitRate: number | null;
+  submitCompletionRate: number | null;
+}
+
+export interface BookingFlowMetricsDashboard {
+  summary: BookingFlowMetricsSummary;
+  dailyRows: BookingFlowMetricsDailyRow[];
+  activeFrom: string | null;
+  activeTo: string | null;
+}
+
 export function isBookingFlowEventName(value: string): value is BookingFlowEventName {
   return BOOKING_FLOW_EVENT_NAMES.includes(value as BookingFlowEventName);
 }

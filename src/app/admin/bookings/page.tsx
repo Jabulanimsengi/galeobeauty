@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireAdminAuth } from "@/lib/server/admin-auth";
 import { listBookings } from "@/lib/server/bookings-admin";
-import { getBookingFlowMetricsSummary } from "@/lib/server/booking-flow-analytics";
+import { getBookingFlowMetricsDashboard } from "@/lib/server/booking-flow-analytics";
 import { BOOKING_STATUSES } from "@/lib/bookings-admin-shared";
 import { BookingsAdminClient } from "@/app/admin/bookings/BookingsAdminClient";
 import { LogoutButton } from "@/app/admin/bookings/LogoutButton";
@@ -21,6 +21,8 @@ interface BookingsPageProps {
     pageSize?: string;
     sortBy?: string;
     sortDirection?: string;
+    eventsFrom?: string;
+    eventsTo?: string;
   }>;
 }
 
@@ -82,6 +84,8 @@ function buildQueryString({
   pageSize,
   sortBy,
   sortDirection,
+  eventsFrom,
+  eventsTo,
 }: {
   status?: string;
   bookingType?: string;
@@ -96,6 +100,8 @@ function buildQueryString({
   pageSize?: string;
   sortBy?: string;
   sortDirection?: string;
+  eventsFrom?: string;
+  eventsTo?: string;
 }) {
   const params = new URLSearchParams();
 
@@ -137,6 +143,12 @@ function buildQueryString({
   }
   if (sortDirection && sortDirection !== "desc") {
     params.set("sortDirection", sortDirection);
+  }
+  if (eventsFrom) {
+    params.set("eventsFrom", eventsFrom);
+  }
+  if (eventsTo) {
+    params.set("eventsTo", eventsTo);
   }
 
   return params.toString();
@@ -180,6 +192,30 @@ function formatTrackedAt(value: string | null) {
   });
 }
 
+function formatTrackingWindow({
+  firstTrackedAt,
+  lastTrackedAt,
+}: {
+  firstTrackedAt: string | null;
+  lastTrackedAt: string | null;
+}) {
+  if (!firstTrackedAt || !lastTrackedAt) {
+    return "No tracked booking flow events recorded yet.";
+  }
+
+  return `Tracked between ${formatTrackedAt(firstTrackedAt)} and ${formatTrackedAt(lastTrackedAt)}.`;
+}
+
+function formatEventDate(value: string) {
+  return new Date(`${value}T00:00:00Z`).toLocaleDateString("en-ZA", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    timeZone: "Africa/Johannesburg",
+  });
+}
+
 export default async function AdminBookingsPage({ searchParams }: BookingsPageProps) {
   const params = await searchParams;
   await requireAdminAuth("/admin/bookings");
@@ -198,8 +234,10 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
   const pageSize = String(parsePositiveNumber(params.pageSize, 50));
   const sortBy = params.sortBy?.trim() || "createdAt";
   const sortDirection = params.sortDirection?.trim() === "asc" ? "asc" : "desc";
+  const eventsFrom = params.eventsFrom?.trim() || "";
+  const eventsTo = params.eventsTo?.trim() || "";
 
-  const [bookingResult, bookingFlowMetrics] = await Promise.all([
+  const [bookingResult, bookingFlowDashboard] = await Promise.all([
     listBookings({
       status,
       bookingType,
@@ -215,7 +253,10 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
       sortBy,
       sortDirection,
     }),
-    getBookingFlowMetricsSummary(),
+    getBookingFlowMetricsDashboard({
+      from: eventsFrom,
+      to: eventsTo,
+    }),
   ]);
 
   const exportHref = buildExportHref({
@@ -232,6 +273,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     pageSize,
     sortBy,
     sortDirection,
+    eventsFrom,
+    eventsTo,
   });
 
   const sortQueryBase = buildQueryString({
@@ -246,6 +289,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     to,
     page: "1",
     pageSize,
+    eventsFrom,
+    eventsTo,
   });
 
   const previousPageHref = buildPageHref({
@@ -262,6 +307,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     pageSize,
     sortBy,
     sortDirection,
+    eventsFrom,
+    eventsTo,
   });
 
   const nextPageHref = buildPageHref({
@@ -278,6 +325,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     pageSize,
     sortBy,
     sortDirection,
+    eventsFrom,
+    eventsTo,
   });
   const visibleFrom = bookingResult.totalCount === 0 ? 0 : (bookingResult.page - 1) * bookingResult.pageSize + 1;
   const visibleTo = bookingResult.totalCount === 0 ? 0 : Math.min(bookingResult.page * bookingResult.pageSize, bookingResult.totalCount);
@@ -311,42 +360,234 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
           </div>
         </header>
 
-        <section className="grid gap-4 lg:grid-cols-4">
-          {[
-            {
-              label: "Booking sheet opens",
-              value: bookingFlowMetrics.sheetOpenCount.toLocaleString("en-ZA"),
-              note: "Server-side tracked opens",
-            },
-            {
-              label: "WhatsApp submits",
-              value: bookingFlowMetrics.whatsappSubmitCount.toLocaleString("en-ZA"),
-              note: `Open to submit ${formatPercent(bookingFlowMetrics.openToSubmitRate)}`,
-            },
-            {
-              label: "True bookings",
-              value: bookingFlowMetrics.completedWhatsappSubmitCount.toLocaleString("en-ZA"),
-              note: "Requirements completed before WhatsApp submit",
-            },
-            {
-              label: "Submit completion rate",
-              value: formatPercent(bookingFlowMetrics.submitCompletionRate),
-              note: `Tracked since ${formatTrackedAt(bookingFlowMetrics.firstTrackedAt)}`,
-            },
-          ].map((card) => (
-            <div
-              key={card.label}
-              className="rounded-[1.25rem] border border-black/8 bg-white px-5 py-5 shadow-[0_18px_45px_-36px_rgba(23,18,15,0.34)]"
-            >
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                {card.label}
-              </p>
-              <p className="mt-3 text-[2rem] font-semibold leading-none text-[#17120f]">
-                {card.value}
-              </p>
-              <p className="mt-3 text-sm text-foreground/58">{card.note}</p>
+        <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-5 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
+          <div className="border-b border-black/8 pb-4">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                  Event Monitoring
+                </p>
+                <h2 className="mt-2 font-serif text-[1.8rem] leading-none text-[#17120f]">
+                  Booking flow dashboard
+                </h2>
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/62">
+                  This view groups booking sheet events by the tracked event date in Africa/Johannesburg so you can audit opens, WhatsApp submits, and completed booking submissions for any selected range.
+                </p>
+              </div>
+
+              <div className="max-w-md text-sm leading-6 text-foreground/58">
+                <p>{formatTrackingWindow(bookingFlowDashboard.summary)}</p>
+              </div>
             </div>
-          ))}
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="mr-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+              Event dates
+            </span>
+            {datePresets.map((preset) => {
+              const isActive = eventsFrom === preset.from && eventsTo === preset.to;
+              const href = buildPageHref({
+                status,
+                bookingType,
+                clientName,
+                phone,
+                email,
+                bookingReference,
+                source,
+                from,
+                to,
+                page,
+                pageSize,
+                sortBy,
+                sortDirection,
+                eventsFrom: preset.from,
+                eventsTo: preset.to,
+              });
+
+              return (
+                <Link
+                  key={`events-${preset.label}`}
+                  href={href}
+                  className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
+                    isActive
+                      ? "bg-[#17120f] text-white"
+                      : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
+                  }`}
+                >
+                  {preset.label}
+                </Link>
+              );
+            })}
+            <Link
+              href={buildPageHref({
+                status,
+                bookingType,
+                clientName,
+                phone,
+                email,
+                bookingReference,
+                source,
+                from,
+                to,
+                page,
+                pageSize,
+                sortBy,
+                sortDirection,
+                eventsFrom: undefined,
+                eventsTo: undefined,
+              })}
+              className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
+                !eventsFrom && !eventsTo
+                  ? "bg-[#17120f] text-white"
+                  : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
+              }`}
+            >
+              All event dates
+            </Link>
+          </div>
+
+          <form className="mt-4 grid gap-3 md:grid-cols-[0.9fr_0.9fr_auto_auto]">
+            <input type="hidden" name="status" value={status} />
+            <input type="hidden" name="bookingType" value={bookingType} />
+            <input type="hidden" name="clientName" value={clientName} />
+            <input type="hidden" name="phone" value={phone} />
+            <input type="hidden" name="email" value={email} />
+            <input type="hidden" name="bookingReference" value={bookingReference} />
+            <input type="hidden" name="source" value={source} />
+            <input type="hidden" name="from" value={from} />
+            <input type="hidden" name="to" value={to} />
+            <input type="hidden" name="page" value={page} />
+            <input type="hidden" name="pageSize" value={pageSize} />
+            <input type="hidden" name="sortBy" value={sortBy} />
+            <input type="hidden" name="sortDirection" value={sortDirection} />
+
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Event from
+              </label>
+              <input
+                type="date"
+                name="eventsFrom"
+                defaultValue={eventsFrom}
+                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Event to
+              </label>
+              <input
+                type="date"
+                name="eventsTo"
+                defaultValue={eventsTo}
+                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="self-end rounded-xl bg-[#17120f] px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-gold hover:text-[#17120f]"
+            >
+              Apply event filter
+            </button>
+
+            <Link
+              href={buildPageHref({
+                status,
+                bookingType,
+                clientName,
+                phone,
+                email,
+                bookingReference,
+                source,
+                from,
+                to,
+                page,
+                pageSize,
+                sortBy,
+                sortDirection,
+                eventsFrom: undefined,
+                eventsTo: undefined,
+              })}
+              className="self-end rounded-xl border border-black/10 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-foreground/65 transition hover:border-gold hover:text-gold"
+            >
+              Reset event filter
+            </Link>
+          </form>
+
+          <div className="mt-5 overflow-hidden rounded-[1.25rem] border border-black/8">
+            <div className="overflow-auto">
+              <table className="min-w-[980px] w-full border-collapse">
+                <thead className="bg-[#17120f] text-white">
+                  <tr className="text-left">
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Event date</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Booking sheet opens</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">WhatsApp submits</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-black/8 bg-[#fffaf3]">
+                    <td className="px-4 py-4 text-sm font-semibold text-[#17120f]">
+                      {bookingFlowDashboard.activeFrom || bookingFlowDashboard.activeTo
+                        ? "Selected range total"
+                        : "All tracked dates"}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.sheetOpenCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.whatsappSubmitCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {formatPercent(bookingFlowDashboard.summary.openToSubmitRate)}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {formatPercent(bookingFlowDashboard.summary.submitCompletionRate)}
+                    </td>
+                  </tr>
+
+                  {bookingFlowDashboard.dailyRows.length > 0 ? (
+                    bookingFlowDashboard.dailyRows.map((row) => (
+                      <tr key={row.trackedDate} className="border-b border-black/6 bg-white last:border-b-0">
+                        <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
+                          {formatEventDate(row.trackedDate)}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.sheetOpenCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {formatPercent(row.openToSubmitRate)}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {formatPercent(row.submitCompletionRate)}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="bg-white">
+                      <td colSpan={6} className="px-4 py-10 text-center text-sm text-foreground/62">
+                        No booking flow events matched the selected event date range.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-4 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
@@ -370,6 +611,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                 pageSize,
                 sortBy,
                 sortDirection,
+                eventsFrom,
+                eventsTo,
               });
 
               return (
@@ -401,6 +644,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                 pageSize,
                 sortBy,
                 sortDirection,
+                eventsFrom,
+                eventsTo,
               })}
               className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
                 !from && !to
@@ -416,6 +661,8 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
             <input type="hidden" name="sortBy" value={sortBy} />
             <input type="hidden" name="sortDirection" value={sortDirection} />
             <input type="hidden" name="page" value="1" />
+            <input type="hidden" name="eventsFrom" value={eventsFrom} />
+            <input type="hidden" name="eventsTo" value={eventsTo} />
             <div>
               <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
                 Client
@@ -560,7 +807,23 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                 Apply filters
               </button>
               <Link
-                href="/admin/bookings"
+                href={buildPageHref({
+                  status: undefined,
+                  bookingType: undefined,
+                  clientName: undefined,
+                  phone: undefined,
+                  email: undefined,
+                  bookingReference: undefined,
+                  source: undefined,
+                  from: undefined,
+                  to: undefined,
+                  page: "1",
+                  pageSize: "50",
+                  sortBy: undefined,
+                  sortDirection: undefined,
+                  eventsFrom,
+                  eventsTo,
+                })}
                 className="rounded-xl border border-black/10 px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/65 transition hover:border-gold hover:text-gold"
               >
                 Reset
