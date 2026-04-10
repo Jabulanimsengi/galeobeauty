@@ -53,9 +53,30 @@ export interface BookingFlowMetricsDailyRow {
   submitCompletionRate: number | null;
 }
 
+export interface BookingFlowMetricsBookingTypeRow {
+  bookingType: string;
+  sheetOpenCount: number;
+  whatsappSubmitCount: number;
+  completedWhatsappSubmitCount: number;
+  openToSubmitRate: number | null;
+  submitCompletionRate: number | null;
+}
+
+export interface BookingFlowMetricsSourceRow {
+  source: string;
+  medium: string;
+  sheetOpenCount: number;
+  whatsappSubmitCount: number;
+  completedWhatsappSubmitCount: number;
+  openToSubmitRate: number | null;
+  submitCompletionRate: number | null;
+}
+
 export interface BookingFlowMetricsDashboard {
   summary: BookingFlowMetricsSummary;
   dailyRows: BookingFlowMetricsDailyRow[];
+  bookingTypeRows: BookingFlowMetricsBookingTypeRow[];
+  sourceRows: BookingFlowMetricsSourceRow[];
   activeFrom: string | null;
   activeTo: string | null;
 }

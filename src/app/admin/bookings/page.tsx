@@ -216,6 +216,10 @@ function formatEventDate(value: string) {
   });
 }
 
+function formatBookingTypeLabel(value: string) {
+  return value.replace(/_/g, " ");
+}
+
 export default async function AdminBookingsPage({ searchParams }: BookingsPageProps) {
   const params = await searchParams;
   await requireAdminAuth("/admin/bookings");
@@ -372,6 +376,9 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                 </h2>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/62">
                   This view groups booking sheet events by the tracked event date in Africa/Johannesburg so you can audit opens, WhatsApp submits, and completed booking submissions for any selected range.
+                </p>
+                <p className="mt-2 text-sm leading-7 text-foreground/52">
+                  These same booking flow events are also emitted to Google Analytics 4 with `booking_type`, `source`, `medium`, `campaign`, and completion metadata.
                 </p>
               </div>
 
@@ -586,6 +593,121 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                   )}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-5 xl:grid-cols-2">
+            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
+              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                  By booking type
+                </p>
+                <p className="mt-2 text-sm text-foreground/58">
+                  Compare consultation and treatment booking-flow performance for the selected event-date range.
+                </p>
+              </div>
+              <div className="overflow-auto">
+                <table className="min-w-[620px] w-full border-collapse">
+                  <thead className="bg-[#17120f] text-white">
+                    <tr className="text-left">
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Booking type</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bookingFlowDashboard.bookingTypeRows.length > 0 ? (
+                      bookingFlowDashboard.bookingTypeRows.map((row) => (
+                        <tr key={row.bookingType} className="border-b border-black/6 bg-white last:border-b-0">
+                          <td className="px-4 py-4 text-sm font-medium capitalize text-[#17120f]">
+                            {formatBookingTypeLabel(row.bookingType)}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.sheetOpenCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {formatPercent(row.openToSubmitRate)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={5} className="px-4 py-8 text-center text-sm text-foreground/62">
+                          No booking-type breakdown is available for this event-date range.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
+              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                  By traffic source
+                </p>
+                <p className="mt-2 text-sm text-foreground/58">
+                  Review how tracked booking events are split across source and medium inside the same date window.
+                </p>
+              </div>
+              <div className="overflow-auto">
+                <table className="min-w-[760px] w-full border-collapse">
+                  <thead className="bg-[#17120f] text-white">
+                    <tr className="text-left">
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Source</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Medium</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
+                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bookingFlowDashboard.sourceRows.length > 0 ? (
+                      bookingFlowDashboard.sourceRows.map((row) => (
+                        <tr
+                          key={`${row.source}:${row.medium}`}
+                          className="border-b border-black/6 bg-white last:border-b-0"
+                        >
+                          <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
+                            {row.source}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/62">
+                            {row.medium}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.sheetOpenCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-4 text-sm text-foreground/78">
+                            {formatPercent(row.submitCompletionRate)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
+                          No source breakdown is available for this event-date range.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
