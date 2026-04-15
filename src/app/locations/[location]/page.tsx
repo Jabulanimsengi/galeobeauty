@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -115,9 +115,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const location = getLocationBySlug(canonicalLocationSlug);
 
     if (!location) {
-        return {
-            title: "Location Not Found",
-        };
+        notFound();
     }
 
     const relatedAreas = getLocationClusterLinks(canonicalLocationSlug, 4);
@@ -159,7 +157,7 @@ export default async function LocationHubPage({ params }: PageProps) {
     const location = getLocationBySlug(locationSlug);
 
     if (!location) {
-        redirect("/locations");
+        notFound();
     }
 
     const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);

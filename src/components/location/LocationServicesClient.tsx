@@ -8,7 +8,7 @@ import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
-import { getCanonicalLocationSlug, type SEOLocation } from "@/lib/seo-data";
+import { CANONICAL_LOCAL_SERVICE_LOCATION_SLUG, getCanonicalLocationSlug, isIndexableLocationService, type SEOLocation } from "@/lib/seo-data";
 
 interface LocationServicesClientProps {
     locationSlug: string;
@@ -17,6 +17,8 @@ interface LocationServicesClientProps {
 
 export function LocationServicesClient({ locationSlug, location }: LocationServicesClientProps) {
     const detailsLocationSlug = getCanonicalLocationSlug(locationSlug);
+    const canUseLocalServiceLinks =
+        detailsLocationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
 
     // Booking state
     const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -122,19 +124,25 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                                             </h3>
 
                                                             {/* Treatment Items */}
-                                                            {subcategory.items.map((item) => (
-                                                                <TreatmentListItem
-                                                                    key={item.id}
-                                                                    item={item}
-                                                                    categoryId={category.id}
-                                                                    categoryTitle={category.title}
-                                                                    subcategoryId={subcategory.id}
-                                                                    subcategoryTitle={subcategory.title}
-                                                                    isSelected={isItemSelected(item.id)}
-                                                                    onToggle={handleToggleTreatment}
-                                                                    detailsLink={`/locations/${detailsLocationSlug}/${item.id}`}
-                                                                />
-                                                            ))}
+                                                            {subcategory.items.map((item) => {
+                                                                const detailsLink = canUseLocalServiceLinks || isIndexableLocationService(detailsLocationSlug, item.id)
+                                                                    ? `/locations/${detailsLocationSlug}/${item.id}`
+                                                                    : `/prices/${category.id}/${item.id}`;
+
+                                                                return (
+                                                                    <TreatmentListItem
+                                                                        key={item.id}
+                                                                        item={item}
+                                                                        categoryId={category.id}
+                                                                        categoryTitle={category.title}
+                                                                        subcategoryId={subcategory.id}
+                                                                        subcategoryTitle={subcategory.title}
+                                                                        isSelected={isItemSelected(item.id)}
+                                                                        onToggle={handleToggleTreatment}
+                                                                        detailsLink={detailsLink}
+                                                                    />
+                                                                );
+                                                            })}
                                                         </div>
                                                     ))}
                                                 </div>

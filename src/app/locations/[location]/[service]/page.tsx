@@ -69,16 +69,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const service = getServiceBySlug(serviceSlug);
     const legacyService = resolveLegacyServiceRedirect(serviceSlug);
 
-    if (!location || (!service && !legacyService)) {
-        return { title: "Service Not Found" };
-    }
+    // Invalid location/service combinations should resolve as real 404s.
+    if (!location || !service || !canonicalLocation) {
+        if (!legacyService) {
+            notFound();
+        }
 
-    if (!service) {
-        return { title: "Service Not Found" };
-    }
-
-    if (!canonicalLocation) {
-        return { title: "Location Not Found" };
+        return {
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
     }
 
     const shouldIndex = isIndexableLocationService(locationSlug, serviceSlug);
@@ -170,8 +172,8 @@ export default async function LocationServicePage({ params }: PageProps) {
     const service = getServiceBySlug(serviceSlug);
     const legacyService = resolveLegacyServiceRedirect(serviceSlug);
 
-    if (!location && service) {
-        redirect(`/prices/${service.categoryId}/${service.slug}`);
+    if (!location) {
+        notFound();
     }
 
     if (location && !service && legacyService) {
@@ -179,17 +181,6 @@ export default async function LocationServicePage({ params }: PageProps) {
             redirect(`/locations/${locationSlug}/${legacyService.serviceSlug}`);
         }
         redirect(`/prices/${legacyService.categoryId}`);
-    }
-
-    if (!location && legacyService) {
-        if (legacyService.serviceSlug) {
-            redirect(`/prices/${legacyService.categoryId}/${legacyService.serviceSlug}`);
-        }
-        redirect(`/prices/${legacyService.categoryId}`);
-    }
-
-    if (!location) {
-        redirect("/locations");
     }
 
     if (!service) {
@@ -276,6 +267,14 @@ export default async function LocationServicePage({ params }: PageProps) {
     const commuterAreaLinks = commuterAreaCandidates.filter((candidate) =>
         isIndexableLocationService(candidate.slug, resolvedService.slug)
     );
+    const buildCurrentLocationServiceHref = (slug: string, categoryId?: string) =>
+        (locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG || isIndexableLocationService(locationSlug, slug))
+            ? `/locations/${locationSlug}/${slug}`
+            : `/prices/${categoryId ?? getCategoryForService(slug)?.id ?? resolvedService.categoryId}/${slug}`;
+    const buildNearbyAreaHref = (targetLocationSlug: string, slug: string) =>
+        isIndexableLocationService(targetLocationSlug, slug)
+            ? `/locations/${targetLocationSlug}/${slug}`
+            : `/locations/${targetLocationSlug}`;
 
     const whatsappMessage =
         `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`;
@@ -787,7 +786,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 {relatedServices.map((relatedService) => (
                                     <Link
                                         key={relatedService.slug}
-                                        href={`/locations/${locationSlug}/${relatedService.slug}`}
+                                        href={buildCurrentLocationServiceHref(relatedService.slug, relatedService.categoryId)}
                                         className="group bg-background rounded-xl p-5 border border-border hover:border-gold/40 transition-all duration-300 hover:shadow-lg"
                                     >
                                         <div className="flex justify-between items-start">
@@ -840,7 +839,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 {otherCategoryServices.map((otherService) => (
                                     <Link
                                         key={otherService.slug}
-                                        href={`/locations/${locationSlug}/${otherService.slug}`}
+                                        href={buildCurrentLocationServiceHref(otherService.slug, otherService.categoryId)}
                                         className="bg-secondary/50 hover:bg-gold hover:text-white rounded-full px-5 py-2.5 text-sm font-medium text-foreground transition-all duration-300"
                                     >
                                         {otherService.keyword}
@@ -872,7 +871,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 {nearbyLocations.map((nearbyLoc) => (
                                     <Link
                                         key={nearbyLoc.slug}
-                                        href={`/locations/${nearbyLoc.slug}/${serviceSlug}`}
+                                        href={buildNearbyAreaHref(nearbyLoc.slug, serviceSlug)}
                                         className="bg-background hover:bg-gold hover:text-white rounded-full px-5 py-2.5 text-sm font-medium text-foreground border border-border hover:border-gold transition-all duration-300"
                                     >
                                         {nearbyLoc.name}
@@ -898,7 +897,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                             {dynamicRelatedServices.map((relatedService) => (
                                 <Link
                                     key={relatedService.slug}
-                                    href={`/locations/${locationSlug}/${relatedService.slug}`}
+                                    href={buildCurrentLocationServiceHref(relatedService.slug, relatedService.categoryId)}
                                     className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
                                 >
                                     <div className="text-gold mb-2"><Sparkles className="w-6 h-6" /></div>

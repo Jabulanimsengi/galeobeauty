@@ -149,6 +149,56 @@ function validatePriorityContentPath() {
   }
 }
 
+function validateInvalidRouteHandling() {
+  const locationHubPage = readFile("src/app/locations/[location]/page.tsx");
+  const locationServicePage = readFile("src/app/locations/[location]/[service]/page.tsx");
+
+  if (locationHubPage.includes('redirect("/locations")')) {
+    addIssue("error", "src/app/locations/[location]/page.tsx still redirects invalid location hubs instead of returning notFound().");
+  }
+
+  if (!locationHubPage.includes("notFound()")) {
+    addIssue("error", "src/app/locations/[location]/page.tsx is missing notFound() handling for invalid location hubs.");
+  }
+
+  if (locationServicePage.includes("return { title: \"Service Not Found\" }")) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx still returns a soft Service Not Found metadata response.");
+  }
+
+  if (locationServicePage.includes("return { title: \"Location Not Found\" }")) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx still returns a soft Location Not Found metadata response.");
+  }
+
+  if (locationServicePage.includes("redirect(\"/locations\")")) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx still redirects invalid location-service URLs to /locations.");
+  }
+
+  if (locationServicePage.includes("if (!location && service)")) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx still redirects invalid locations to price pages instead of returning notFound().");
+  }
+}
+
+function validateLocationLinkHygiene() {
+  const locationServicesClient = readFile("src/components/location/LocationServicesClient.tsx");
+  const locationServicePage = readFile("src/app/locations/[location]/[service]/page.tsx");
+
+  if (!locationServicesClient.includes("isIndexableLocationService(detailsLocationSlug, item.id)")) {
+    addIssue("error", "src/components/location/LocationServicesClient.tsx is not checking whether local service detail links are indexable.");
+  }
+
+  if (!locationServicesClient.includes("`/prices/${category.id}/${item.id}`")) {
+    addIssue("error", "src/components/location/LocationServicesClient.tsx is missing the canonical /prices fallback for non-indexable local service links.");
+  }
+
+  if (!locationServicePage.includes("buildCurrentLocationServiceHref")) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is missing the helper that normalizes local related-service links.");
+  }
+
+  if (!locationServicePage.includes("buildNearbyAreaHref")) {
+    addIssue("error", "src/app/locations/[location]/[service]/page.tsx is missing the helper that normalizes nearby-area links.");
+  }
+}
+
 function validatePriorityLists() {
   const seoData = readFile("src/lib/seo-data.ts");
   const priorityLocationsBlock = seoData.match(/export const PRIORITY_LOCATIONS = \[(.*?)\];/s);
@@ -201,6 +251,8 @@ function main() {
   validateSitemapPolicy();
   validateLocationSeededContent();
   validatePriorityContentPath();
+  validateInvalidRouteHandling();
+  validateLocationLinkHygiene();
   validatePriorityLists();
   validateCanonicalOriginPolicy();
 
