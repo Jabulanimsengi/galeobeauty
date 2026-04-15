@@ -23,7 +23,7 @@ export function HeroSection() {
                     initial={prefersReducedMotion ? false : { scale: 1.06, opacity: 0.6 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: prefersReducedMotion ? 0 : 1.2, ease: "easeOut" }}
-                    className="absolute inset-0"
+                    className="absolute inset-0 origin-center"
                 >
                     <CloudinaryImage
                         src="/images/interior/galeo-beauty-interior-p1.jpg"
@@ -32,7 +32,8 @@ export function HeroSection() {
                         priority
                         fetchPriority="high"
                         sizes="100vw"
-                        className="object-cover object-center"
+                        className="object-cover"
+                        style={{ objectPosition: "50% 50%" }}
                         noSpinner
                     />
                 </motion.div>
