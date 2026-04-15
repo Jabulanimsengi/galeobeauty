@@ -243,6 +243,31 @@ function validateCanonicalOriginPolicy() {
   }
 }
 
+function validateProxy404Policy() {
+  const proxy = readFile("src/proxy.ts");
+  const locationManifest = readFile("src/lib/location-route-manifest.ts");
+
+  if (!proxy.includes("isKnownLocationSlug")) {
+    addIssue("error", "src/proxy.ts is not validating location slugs before rendering /locations routes.");
+  }
+
+  if (!proxy.includes("resolveLegacyServiceRedirect")) {
+    addIssue("error", "src/proxy.ts is not preserving legacy service redirects when validating /locations routes.");
+  }
+
+  if (!proxy.includes("status: 404")) {
+    addIssue("error", "src/proxy.ts is missing an explicit 404 response for invalid /locations routes.");
+  }
+
+  if (!proxy.includes("x-robots-tag': 'noindex, nofollow'") && !proxy.includes('x-robots-tag": "noindex, nofollow"')) {
+    addIssue("error", "src/proxy.ts is missing noindex headers on proxy-generated 404 responses.");
+  }
+
+  if (!locationManifest.includes("VALID_LOCATION_SLUGS")) {
+    addIssue("error", "src/lib/location-route-manifest.ts is missing the location slug manifest.");
+  }
+}
+
 function main() {
   validateAssetReferences();
   validateLocationsIndex();
@@ -255,6 +280,7 @@ function main() {
   validateLocationLinkHygiene();
   validatePriorityLists();
   validateCanonicalOriginPolicy();
+  validateProxy404Policy();
 
   if (issues.length === 0) {
     console.log("SEO validation passed.");
