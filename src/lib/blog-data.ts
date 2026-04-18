@@ -1553,6 +1553,79 @@ export const blogPosts: BlogPost[] = [
     },
 ];
 
+const CATEGORY_BLOG_POST_SLUGS: Partial<Record<string, string[]>> = {
+    hair: ["matric-ball-beauty-guide-2026", "hair-extensions-guide-south-africa"],
+    "hair-extensions": ["hair-extensions-guide-south-africa", "best-beauty-salon-near-pretoria"],
+    dermalogica: ["best-facials-pretoria", "acne-treatment-pretoria", "skincare-routine-guide"],
+    qms: ["best-facials-pretoria", "anti-aging-treatments-what-works", "skincare-routine-guide"],
+    medical: ["anti-aging-treatments-what-works", "acne-treatment-pretoria", "lip-fillers-south-africa-guide"],
+    "hart-aesthetics": ["lip-fillers-south-africa-guide", "anti-aging-treatments-what-works"],
+    "fat-freezing": ["fat-freezing-cost-south-africa", "best-beauty-salon-near-pretoria"],
+    slimming: ["fat-freezing-cost-south-africa", "best-beauty-salon-near-pretoria"],
+    "lashes-brows": ["lash-extensions-hartbeespoort", "microblading-vs-powder-brows"],
+    "permanent-makeup": ["microblading-vs-powder-brows", "best-beauty-salon-near-pretoria"],
+    waxing: ["waxing-guide-brazilian-hollywood", "spa-day-hartbeespoort-guide"],
+    makeup: ["wedding-makeup-artist-hartbeespoort", "matric-ball-beauty-guide-2026"],
+    nails: ["nail-trends-2026-south-africa", "matric-ball-beauty-guide-2026"],
+    ipl: ["ipl-laser-hair-removal-guide"],
+    massages: ["spa-day-hartbeespoort-guide"],
+    sunbed: ["spa-day-hartbeespoort-guide"],
+};
+
+const SERVICE_BLOG_POST_SLUGS: Partial<Record<string, string[]>> = {
+    "hair-colour": ["matric-ball-beauty-guide-2026"],
+    "brazilian-blowout": ["hair-extensions-guide-south-africa"],
+    "lash-extensions": ["lash-extensions-hartbeespoort"],
+    "ipl-hair-removal": ["ipl-laser-hair-removal-guide"],
+    "qms-facials": ["best-facials-pretoria", "anti-aging-treatments-what-works"],
+    "dermalogica-corrective-facials": ["best-facials-pretoria", "skincare-routine-guide", "acne-treatment-pretoria"],
+    "waxing-services": ["waxing-guide-brazilian-hollywood"],
+    "premium-hair-extensions": ["hair-extensions-guide-south-africa"],
+    "permanent-makeup-services": ["microblading-vs-powder-brows"],
+    "medical-aesthetic-treatments": ["anti-aging-treatments-what-works", "lip-fillers-south-africa-guide"],
+    "pro-skin-60": ["best-facials-pretoria", "skincare-routine-guide"],
+    "pro-power-peel": ["acne-treatment-pretoria", "best-facials-pretoria"],
+    "pro-microneedling": ["acne-treatment-pretoria", "anti-aging-treatments-what-works"],
+    "pro-clear": ["acne-treatment-pretoria", "skincare-routine-guide"],
+    "microblading": ["microblading-vs-powder-brows"],
+    "powder-brows": ["microblading-vs-powder-brows"],
+    "hybrid-brows": ["microblading-vs-powder-brows"],
+    "lip-fillers": ["lip-fillers-south-africa-guide"],
+    "cryolipolysis-fat-freezing": ["fat-freezing-cost-south-africa"],
+    "ladies-full-face": ["ipl-laser-hair-removal-guide"],
+    "classic-lashes": ["lash-extensions-hartbeespoort"],
+    "hybrid-lashes": ["lash-extensions-hartbeespoort"],
+    "volume-lashes": ["lash-extensions-hartbeespoort"],
+    "glamour-lashes": ["lash-extensions-hartbeespoort"],
+    "tint-roots": ["matric-ball-beauty-guide-2026"],
+};
+
+function getBlogPostsBySlugs(slugs: string[], limit: number): BlogPost[] {
+    const seen = new Set<string>();
+    const posts: BlogPost[] = [];
+
+    for (const slug of slugs) {
+        if (seen.has(slug)) {
+            continue;
+        }
+
+        const post = getBlogPostBySlug(slug);
+
+        if (!post) {
+            continue;
+        }
+
+        seen.add(slug);
+        posts.push(post);
+
+        if (posts.length >= limit) {
+            break;
+        }
+    }
+
+    return posts;
+}
+
 // Helper functions
 export function getAllBlogPosts(): BlogPost[] {
     return blogPosts;
@@ -1566,4 +1639,23 @@ export function getRelatedPosts(currentSlug: string, limit = 3): BlogPost[] {
     return blogPosts
         .filter((post) => post.slug !== currentSlug)
         .slice(0, limit);
+}
+
+export function getRelevantBlogPostsForCategory(categoryId: string, limit = 3): BlogPost[] {
+    return getBlogPostsBySlugs(CATEGORY_BLOG_POST_SLUGS[categoryId] ?? [], limit);
+}
+
+export function getRelevantBlogPostsForService(
+    serviceSlug: string,
+    categoryId: string,
+    additionalServiceSlugs: string[] = [],
+    limit = 3
+): BlogPost[] {
+    const candidateSlugs = [
+        ...(SERVICE_BLOG_POST_SLUGS[serviceSlug] ?? []),
+        ...additionalServiceSlugs.flatMap((slug) => SERVICE_BLOG_POST_SLUGS[slug] ?? []),
+        ...(CATEGORY_BLOG_POST_SLUGS[categoryId] ?? []),
+    ];
+
+    return getBlogPostsBySlugs(candidateSlugs, limit);
 }

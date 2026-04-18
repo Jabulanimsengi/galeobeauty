@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const matter = require("gray-matter");
 
 const repoRoot = path.resolve(__dirname, "..");
 const issues = [];
@@ -24,6 +25,40 @@ function getKnownLocationSlugs() {
 function getKnownServiceSlugs() {
   const content = readFile("src/lib/services-content.ts");
   return new Set([...content.matchAll(/id:\s*"([^"]+)"/g)].map((match) => match[1]));
+}
+
+function getIntentPageRecords() {
+  const contentDir = path.join(repoRoot, "src", "content", "intent-pages");
+
+  return fs
+    .readdirSync(contentDir)
+    .filter((file) => file.endsWith(".mdx"))
+    .map((file) => {
+      const raw = fs.readFileSync(path.join(contentDir, file), "utf8");
+      const parsed = matter(raw);
+
+      return {
+        file,
+        raw,
+        data: parsed.data,
+      };
+    });
+}
+
+function isIntentPageIndexableRecord(record) {
+  if (record.data.published === false || record.data.noindex === true || record.data.qualityStatus === "draft") {
+    return false;
+  }
+
+  if (/^aesthetics-authority-topic-\d+\.mdx$/i.test(record.file)) {
+    return false;
+  }
+
+  if (record.raw.includes("(Please add your article content here)")) {
+    return false;
+  }
+
+  return true;
 }
 
 function validateAssetReferences() {
@@ -268,6 +303,91 @@ function validateProxy404Policy() {
   }
 }
 
+function validateIntentPagePublishingControls() {
+  const intentPages = readFile("src/lib/intent-pages.ts");
+  const infoGenerator = readFile("scripts/generate-informational-mdx.ts");
+  const saturationGenerator = readFile("scripts/generate-saturation-content.ts");
+
+  if (!intentPages.includes("PLACEHOLDER_SLUG_PATTERN")) {
+    addIssue("error", "src/lib/intent-pages.ts is missing the placeholder-slug publish guard.");
+  }
+
+  if (!intentPages.includes("hasDraftContentMarkers")) {
+    addIssue("error", "src/lib/intent-pages.ts is missing draft content marker detection.");
+  }
+
+  if (!intentPages.includes("canonicalizeIntentPageHref")) {
+    addIssue("error", "src/lib/intent-pages.ts is missing the legacy MDX link canonicalization helper.");
+  }
+
+  if (!infoGenerator.includes("published: false") || !infoGenerator.includes('qualityStatus: "draft"')) {
+    addIssue("error", "scripts/generate-informational-mdx.ts must create draft, non-indexable pages by default.");
+  }
+
+  if (!saturationGenerator.includes("published: false") || !saturationGenerator.includes('qualityStatus: "draft"')) {
+    addIssue("error", "scripts/generate-saturation-content.ts must create draft, non-indexable pages by default.");
+  }
+}
+
+function validateIntentPageContentQuality() {
+  const records = getIntentPageRecords();
+  const genericHeroPattern = /heroDescription:\s*(>|")?\s*Everything you need to know about/i;
+  const genericTreatmentPattern = /treatmentApproach:\s*(>|")?\s*Read our comprehensive professional advice below\./i;
+  const genericFaqPattern = /question:\s*Is .* suitable for all types\?/i;
+  const mojibakePattern = /â€”|â€¢|â€™|â€œ|â€|Â/;
+  const legacySkinLinkPattern = /\/prices\/skin(?:\/|\b)/;
+
+  for (const record of records) {
+    if (!isIntentPageIndexableRecord(record)) {
+      continue;
+    }
+
+    if (legacySkinLinkPattern.test(record.raw)) {
+      addIssue("warn", `Intent page still contains legacy /prices/skin links that should be cleaned in source: src/content/intent-pages/${record.file}`);
+    }
+
+    if (mojibakePattern.test(record.raw)) {
+      addIssue("error", `Intent page contains mojibake characters: src/content/intent-pages/${record.file}`);
+    }
+
+    if (genericHeroPattern.test(record.raw) || genericTreatmentPattern.test(record.raw) || genericFaqPattern.test(record.raw)) {
+      addIssue("warn", `Intent page still uses generic boilerplate copy markers: src/content/intent-pages/${record.file}`);
+    }
+  }
+}
+
+function validateCommercialIndexingPolicy() {
+  const commercialSeo = readFile("src/lib/commercial-seo.ts");
+  const commercialPage = readFile("src/app/salons/[commercialSlug]/page.tsx");
+  const sitemapHelpers = readFile("src/lib/sitemap-helpers.ts");
+
+  if (!commercialSeo.includes("isCommercialPageIndexable")) {
+    addIssue("error", "src/lib/commercial-seo.ts is missing the commercial page indexing helper.");
+  }
+
+  if (!commercialPage.includes("index: isCommercialPageIndexable(page)")) {
+    addIssue("error", "src/app/salons/[commercialSlug]/page.tsx is missing explicit robots control for commercial pages.");
+  }
+
+  if (!sitemapHelpers.includes("getIndexableCommercialPages")) {
+    addIssue("error", "src/lib/sitemap-helpers.ts must only include indexable commercial pages.");
+  }
+}
+
+function validateMojibakeOutsideIntentPages() {
+  const files = [
+    "src/app/salons/[commercialSlug]/page.tsx",
+  ];
+  const mojibakePattern = /â€”|â€¢|â€™|â€œ|â€|Â/;
+
+  for (const file of files) {
+    const content = readFile(file);
+    if (mojibakePattern.test(content)) {
+      addIssue("error", `${file} contains mojibake characters.`);
+    }
+  }
+}
+
 function main() {
   validateAssetReferences();
   validateLocationsIndex();
@@ -281,6 +401,10 @@ function main() {
   validatePriorityLists();
   validateCanonicalOriginPolicy();
   validateProxy404Policy();
+  validateIntentPagePublishingControls();
+  validateIntentPageContentQuality();
+  validateCommercialIndexingPolicy();
+  validateMojibakeOutsideIntentPages();
 
   if (issues.length === 0) {
     console.log("SEO validation passed.");

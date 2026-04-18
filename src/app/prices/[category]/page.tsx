@@ -11,6 +11,9 @@ import { CategoryContent } from "./category-content";
 import { buildCategoryMetadataKeywords } from "@/lib/seo-keywords";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { toAbsoluteUrl } from "@/lib/site-url";
+import { getBespokeCategoryPage } from "@/lib/bespoke-category-pages";
+import { getBespokeServicePageBySlug, getBespokeServicePagesForCategory } from "@/lib/bespoke-service-pages";
+import { getRelevantBlogPostsForCategory } from "@/lib/blog-data";
 
 // Comprehensive SEO metadata for each category - optimized for South African search
 const categoryMeta: Record<string, {
@@ -216,6 +219,13 @@ const categoryMeta: Record<string, {
     },
 };
 
+function getLeadSentence(value: string) {
+    const trimmed = value.trim();
+    const match = trimmed.match(/^.*?[.!?](?:\s|$)/);
+
+    return match ? match[0].trim() : trimmed;
+}
+
 // Generate static paths for all categories
 export function generateStaticParams() {
     return serviceCategories.map((category) => ({
@@ -235,14 +245,15 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { category: categoryId } = await params;
     const category = getCategoryById(categoryId);
+    const categoryHub = getBespokeCategoryPage(categoryId);
     const meta = categoryMeta[categoryId];
 
     if (!category) {
         return { title: "Service Not Found" };
     }
 
-    const title = meta?.title || `${category.title} | Prices & Booking Hartbeespoort`;
-    let description = meta?.description || `${category.title} treatments at Galeo Beauty Hartbeespoort. ${category.subtitle}. View prices and book your appointment online.`;
+    const title = categoryHub?.metaTitle || meta?.title || `${category.title} | Prices & Booking Hartbeespoort`;
+    let description = categoryHub?.metaDescription || meta?.description || `${category.title} treatments at Galeo Beauty Hartbeespoort. ${category.subtitle}. View prices and book your appointment online.`;
     if (!description.toLowerCase().includes("hartbeespoort")) {
         description = `${description} Serving Hartbeespoort and nearby Pretoria, Centurion, and Johannesburg.`;
     }
@@ -278,12 +289,21 @@ export default async function CategoryPage({ params }: PageProps) {
         notFound();
     }
 
+    const categoryHub = getBespokeCategoryPage(category.id);
     const meta = categoryMeta[categoryId];
-    const h1 = meta?.h1 || category.title;
-    const intro = meta?.intro || `${category.subtitle}. Browse our treatments and book your appointment today.`;
-    const benefits = meta?.benefits || [];
-    const faqs = meta?.faqs || [];
-    const relatedIntentPages = getIntentPagesForCategory(category.id);
+    const h1 = categoryHub?.heroTitle || meta?.h1 || category.title;
+    const intro = categoryHub?.heroIntro || meta?.intro || `${category.subtitle}. Browse our treatments and book your appointment today.`;
+    const faqs = categoryHub?.faqs.map((faq) => ({ q: faq.question, a: faq.answer })) || meta?.faqs || [];
+    const familyPages = (categoryHub?.featuredFamilySlugs.length
+        ? categoryHub.featuredFamilySlugs.flatMap((slug) => {
+            const page = getBespokeServicePageBySlug(slug);
+
+            return page && page.categoryId === category.id ? [page] : [];
+        })
+        : getBespokeServicePagesForCategory(category.id)
+    );
+    const relatedIntentPages = getIntentPagesForCategory(category.id).slice(0, 4);
+    const relatedBlogPosts = getRelevantBlogPostsForCategory(category.id, 3);
     const categoryImageUrl = toAbsoluteUrl(category.image);
 
     // JSON-LD structured data for SEO
@@ -390,30 +410,94 @@ export default async function CategoryPage({ params }: PageProps) {
                             <p className="mt-4 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
                                 {intro}
                             </p>
-                            {/* Benefits */}
-                            {benefits.length > 0 && (
-                                <div className="flex flex-wrap gap-3 mt-6">
-                                    {benefits.map((benefit, index) => (
-                                        <span
-                                            key={index}
-                                            className="inline-flex items-center gap-2 border border-border/60 bg-background/80 px-4 py-1.5 rounded-full text-sm font-medium text-foreground/80 shadow-sm backdrop-blur-sm transition-colors hover:border-gold/30"
-                                        >
-                                            <div className="h-1.5 w-1.5 rounded-full bg-gold" />
-                                            {benefit}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
                         </div>
                     </div>
                 </section>
+
+                {familyPages.length > 0 && (
+                    <section className="border-y border-border/40 bg-secondary/10 py-14">
+                        <div className="container mx-auto px-4 sm:px-6">
+                            <div className="max-w-3xl">
+                                <h2 className="font-sans text-3xl font-semibold text-foreground">
+                                    {categoryHub?.familySectionTitle ?? `Popular ${category.title} Options`}
+                                </h2>
+                                <p className="mt-3 text-base leading-8 text-muted-foreground">
+                                    {categoryHub?.familySectionIntro ?? "Start with the option that best matches what you want, then use the full menu below when you are ready to choose the exact service."}
+                                </p>
+                            </div>
+
+                            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                                {familyPages.map((page) => (
+                                    <Link
+                                        key={page.slug}
+                                        href={`/prices/${page.categoryId}/${page.slug}`}
+                                        className="group overflow-hidden rounded-[0.4rem] border border-border/50 bg-background transition-all hover:border-gold/30 hover:shadow-sm"
+                                    >
+                                        <div className="relative aspect-[16/10]">
+                                            <CloudinaryImage
+                                                src={page.image}
+                                                alt={page.imageAlt}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                                            />
+                                        </div>
+                                        <div className="p-6">
+                                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">Popular option</p>
+                                            <h3 className="mt-3 font-sans text-2xl font-semibold text-foreground">
+                                                {page.title}
+                                            </h3>
+                                            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                                                {getLeadSentence(page.heroIntro)}
+                                            </p>
+                                            <span className="mt-6 inline-flex items-center text-sm font-medium text-gold group-hover:underline underline-offset-4">
+                                                View details <ArrowRight className="w-4 h-4 ml-1" />
+                                            </span>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* Treatment List with Booking - Client Component */}
                 <CategoryContent
                     subcategories={category.subcategories}
                     categoryId={category.id}
                     categoryTitle={category.title}
+                    directoryTitle={categoryHub?.directoryTitle}
+                    directoryDescription={categoryHub?.directoryDescription}
                 />
+
+                {categoryHub && (
+                    <section className="border-t border-border/40 bg-background py-16">
+                        <div className="container mx-auto px-4 sm:px-6">
+                            <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
+                                <div className="max-w-xl">
+                                    <h2 className="font-sans text-3xl font-semibold text-foreground">
+                                        {categoryHub.planningTitle}
+                                    </h2>
+                                    <p className="mt-4 text-base leading-8 text-muted-foreground">
+                                        {categoryHub.planningIntro}
+                                    </p>
+                                </div>
+                                <div className="space-y-3">
+                                    {categoryHub.planningPoints.map((point) => (
+                                        <div
+                                            key={point}
+                                            className="flex items-start gap-4 rounded-[0.4rem] border border-border/50 bg-secondary/10 p-5"
+                                        >
+                                            <div className="mt-1 h-2.5 w-2.5 shrink-0 rounded-[0.1rem] bg-gold" />
+                                            <p className="text-sm leading-7 text-muted-foreground sm:text-base">
+                                                {point}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* FAQ Section */}
                 {faqs.length > 0 && (
@@ -424,10 +508,39 @@ export default async function CategoryPage({ params }: PageProps) {
                             </h2>
                             <div className="space-y-4">
                                 {faqs.map((faq, index) => (
-                                    <div key={index} className="bg-white rounded-xl p-5 shadow-sm">
+                                    <div key={index} className="bg-white rounded-[0.4rem] p-5 shadow-sm">
                                         <h3 className="mb-2 font-sans font-semibold text-foreground">{faq.q}</h3>
                                         <p className="text-muted-foreground text-sm">{faq.a}</p>
                                     </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {relatedBlogPosts.length > 0 && (
+                    <section className="border-t border-border/30 bg-white py-16">
+                        <div className="container mx-auto px-4 sm:px-6">
+                            <div className="mx-auto mb-10 max-w-3xl text-center">
+                                <h2 className="mb-3 font-sans text-3xl font-semibold text-foreground">From The Blog</h2>
+                                <p className="text-base text-muted-foreground">
+                                    Helpful reads if you want a bit more context before choosing the right {category.title.toLowerCase()} treatment.
+                                </p>
+                            </div>
+                            <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-2 xl:grid-cols-3">
+                                {relatedBlogPosts.map((post) => (
+                                    <Link
+                                        key={post.slug}
+                                        href={`/blog/${post.slug}`}
+                                        className="group rounded-[0.4rem] border border-border/50 bg-secondary/5 p-8 transition-all hover:border-gold/30 hover:shadow-sm"
+                                    >
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">{post.category}</p>
+                                        <h3 className="mb-3 mt-3 font-sans text-xl font-semibold text-foreground">{post.title}</h3>
+                                        <p className="mb-6 text-sm leading-relaxed text-muted-foreground line-clamp-3">{post.excerpt}</p>
+                                        <span className="inline-flex items-center text-sm font-medium text-gold underline-offset-4 group-hover:underline">
+                                            Read article <ArrowRight className="ml-1 h-4 w-4" />
+                                        </span>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -449,7 +562,7 @@ export default async function CategoryPage({ params }: PageProps) {
                                     <Link
                                         key={page.slug}
                                         href={`/${page.slug}`}
-                                        className="group rounded-3xl border border-border/50 bg-secondary/5 p-8 transition-all hover:border-gold/30 hover:shadow-sm"
+                                        className="group rounded-[0.4rem] border border-border/50 bg-secondary/5 p-8 transition-all hover:border-gold/30 hover:shadow-sm"
                                     >
                                         <h3 className="mb-3 font-sans text-xl font-semibold text-foreground">{page.title}</h3>
                                         <p className="text-sm leading-relaxed text-muted-foreground mb-6 line-clamp-3">{page.metaDescription}</p>
@@ -473,13 +586,13 @@ export default async function CategoryPage({ params }: PageProps) {
                             Our specialists are ready to help you achieve your beauty goals.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground font-semibold px-10">
+                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground font-semibold px-10">
                                 <Link href="/contact">
                                     Contact Us
                                     <ArrowRight className="w-4 h-4 ml-2" />
                                 </Link>
                             </Button>
-                            <Button asChild size="lg" className="border border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background px-10">
+                            <Button asChild size="lg" className="border border-background/30 rounded-[0.35rem] bg-transparent text-background hover:bg-background/10 hover:text-background px-10">
                                 <Link href="/prices">
                                     View All Services
                                 </Link>

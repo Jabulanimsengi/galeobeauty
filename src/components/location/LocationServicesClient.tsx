@@ -93,10 +93,10 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                     const isExpanded = isCategoryExpanded(category.id);
                                     return (
                                         <div key={category.id} className="overflow-hidden">
-                                            {/* Category Header - Compact Pill Button */}
+                                            {/* Category Header */}
                                             <button
                                                 onClick={() => toggleCategoryExpansion(category.id)}
-                                                className={`w-full flex items-center justify-between px-5 py-3 rounded-full transition-all duration-200 ${isExpanded
+                                                className={`w-full flex items-center justify-between px-5 py-3 rounded-[0.4rem] transition-all duration-200 ${isExpanded
                                                     ? "bg-gold text-white"
                                                     : "bg-neutral-900 text-white hover:bg-gold"
                                                     }`}

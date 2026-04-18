@@ -62,6 +62,7 @@ const compileResult = runNode([
   "ES2022",
   "--outDir",
   tempDir,
+  "--skipLibCheck",
   "scripts/generate-sitemaps.ts",
 ]);
 

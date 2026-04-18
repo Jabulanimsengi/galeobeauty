@@ -1,4 +1,7 @@
 import { getAllBlogPosts } from './blog-data';
+import { getAllBespokeServicePages } from './bespoke-service-pages';
+import { getIndexableCommercialPages } from './commercial-seo';
+import { getPublishedIntentPages } from './intent-pages';
 import { getAllSEOServices, isIndexableLocationService } from './seo-data';
 import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from './sitemap-config';
 import { SITEMAP_STATIC_PAGES } from './sitemap-static-pages';
@@ -11,6 +14,7 @@ export const SITEMAP_MAX_URLS = 50000;
 
 const BUILD_DATE = new Date().toISOString();
 const blogPosts = getAllBlogPosts();
+const bespokeServicePages = getAllBespokeServicePages();
 const services = getAllSEOServices();
 
 export type SitemapSection = '0' | '1';
@@ -105,6 +109,16 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
     visitor(createEntry(`${BASE_URL}${page.path}`, page.priority, page.changefreq));
   }
 
+  for (const page of getPublishedIntentPages()) {
+    visitor(createEntry(`${BASE_URL}/${page.slug}`, 0.8, 'weekly'));
+  }
+
+  visitor(createEntry(`${BASE_URL}/salons`, 0.9, 'weekly'));
+
+  for (const page of getIndexableCommercialPages()) {
+    visitor(createEntry(`${BASE_URL}/salons/${page.slug}`, 0.85, 'monthly'));
+  }
+
   for (const post of blogPosts) {
     visitor({
       loc: `${BASE_URL}/blog/${post.slug}`,
@@ -112,6 +126,16 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
       changefreq: 'monthly',
       priority: 0.8,
     });
+  }
+
+  for (const page of bespokeServicePages) {
+    visitor(
+      createEntry(`${BASE_URL}/prices/${page.categoryId}/${page.slug}`, 0.85, 'monthly', {
+        loc: toAbsoluteUrl(page.image || FALLBACK_IMAGE),
+        title: page.title,
+        caption: page.imageAlt,
+      })
+    );
   }
 
   for (const service of services) {

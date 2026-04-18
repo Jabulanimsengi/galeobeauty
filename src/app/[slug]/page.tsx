@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ComponentPropsWithoutRef } from "react";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
@@ -13,7 +14,10 @@ import {
     getIntentPageBySlug,
     getIntentPageRedirectPath,
     getIntentPageServiceLinks,
+    canonicalizeIntentPageHref,
+    isIntentPageIndexable,
 } from "@/lib/intent-pages";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -22,6 +26,16 @@ interface PageProps {
 export const dynamic = "force-static";
 export const dynamicParams = true;
 export const revalidate = false;
+
+function IntentPageMdxLink({ href = "", ...props }: ComponentPropsWithoutRef<"a">) {
+    const resolvedHref = canonicalizeIntentPageHref(href);
+
+    if (resolvedHref.startsWith("/")) {
+        return <Link href={resolvedHref} {...props} />;
+    }
+
+    return <a href={resolvedHref} {...props} />;
+}
 
 export function generateStaticParams() {
     return getPublishedIntentPages().map((page) => ({ slug: page.slug }));
@@ -43,8 +57,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const page = getIntentPageBySlug(slug);
 
-    if (!page) {
-        return { title: "Page Not Found" };
+    if (!page || !isIntentPageIndexable(page)) {
+        return {
+            title: "Page Not Found",
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
     }
 
     return {
@@ -80,7 +100,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
 
     const page = getIntentPageBySlug(slug);
 
-    if (!page) {
+    if (!page || !isIntentPageIndexable(page)) {
         notFound();
     }
 
@@ -179,7 +199,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                             </div>
 
                             <div className="flex flex-wrap gap-3">
-                                <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground">
+                                <Button asChild size="lg" className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
                                     <TrackedWhatsAppLink
                                         message={whatsappMessage}
                                         trackingContext={`intent_page_hero_${page.slug}`}
@@ -189,7 +209,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         Book via WhatsApp
                                     </TrackedWhatsAppLink>
                                 </Button>
-                                <Button asChild size="lg" variant="outline">
+                                <Button asChild size="lg" variant="outline" className="rounded-[0.35rem]">
                                     <Link href="/contact">Contact the Salon</Link>
                                 </Button>
                             </div>
@@ -197,7 +217,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                         </div>
 
                         <div className="lg:sticky lg:top-28 lg:self-start">
-                            <div className="overflow-hidden rounded-[2rem] shadow-2xl">
+                            <div className="overflow-hidden rounded-[0.4rem] shadow-2xl">
                                 <div className="relative aspect-[4/5] w-full">
                                     <CloudinaryImage
                                         src={page.heroImage}
@@ -220,7 +240,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                 <a
                                     key={link.href}
                                     href={link.href}
-                                    className="rounded-full border border-gold/20 bg-secondary/20 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                    className="rounded-[0.35rem] border border-gold/20 bg-secondary/20 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
                                 >
                                     {link.label}
                                 </a>
@@ -239,13 +259,13 @@ export default async function IntentLandingPage({ params }: PageProps) {
                             </p>
                         </div>
 
-                        <div className="grid gap-6 lg:grid-cols-3">
-                            {page.sections.map((section) => (
-                                <article key={section.title} className="rounded-2xl border border-border bg-secondary/10 p-6">
-                                    <h3 className="mb-3 font-serif text-2xl text-foreground">{section.title}</h3>
-                                    <p className="text-sm leading-relaxed text-muted-foreground">{section.body}</p>
-                                </article>
-                            ))}
+                        <div className="prose prose-p:text-muted-foreground prose-headings:font-serif prose-headings:text-foreground prose-a:text-gold max-w-none rounded-[0.4rem] border border-border bg-secondary/10 p-8 md:p-12">
+                            <MDXRemote
+                                source={page.content}
+                                components={{
+                                    a: IntentPageMdxLink,
+                                }}
+                            />
                         </div>
                     </div>
                 </section>
@@ -264,7 +284,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         <Link
                                             key={link.href}
                                             href={link.href}
-                                            className="block rounded-2xl border border-border bg-background p-5 transition-colors hover:border-gold/50"
+                                            className="block rounded-[0.4rem] border border-border bg-background p-5 transition-colors hover:border-gold/50"
                                         >
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
@@ -289,7 +309,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         <Link
                                             key={link.href}
                                             href={link.href}
-                                            className="block rounded-2xl border border-border bg-background p-5 transition-colors hover:border-gold/50"
+                                            className="block rounded-[0.4rem] border border-border bg-background p-5 transition-colors hover:border-gold/50"
                                         >
                                             <h3 className="font-medium text-foreground">{link.label}</h3>
                                             <p className="mt-1 text-sm text-muted-foreground">{link.description}</p>
@@ -297,11 +317,11 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                     ))}
                                 </div>
 
-                                <div className="mt-8 rounded-2xl border border-gold/20 bg-background p-6">
+                                <div className="mt-8 rounded-[0.4rem] border border-gold/20 bg-background p-6">
                                     <h3 className="font-serif text-2xl text-foreground">Best For</h3>
                                     <div className="mt-4 flex flex-wrap gap-2">
                                         {page.bestFor.map((item) => (
-                                            <span key={item} className="rounded-full bg-gold/10 px-3 py-1.5 text-sm text-gold">
+                                            <span key={item} className="rounded-[0.35rem] bg-gold/10 px-3 py-1.5 text-sm text-gold">
                                                 {item}
                                             </span>
                                         ))}
@@ -317,7 +337,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                         <h2 className="mb-8 text-center font-serif text-3xl text-foreground sm:text-4xl">Frequently Asked Questions</h2>
                         <div className="space-y-4">
                             {page.faqs.map((faq) => (
-                                <details key={faq.question} className="rounded-2xl border border-border bg-background p-6 group">
+                                <details key={faq.question} className="group rounded-[0.4rem] border border-border bg-background p-6">
                                     <summary className="cursor-pointer list-none pr-8 text-lg font-semibold text-foreground marker:hidden">
                                         {faq.question}
                                     </summary>
@@ -335,7 +355,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                             Tell us what you&apos;d like to improve and the results you&apos;re looking for. Our team will recommend the most relevant next step instead of making you guess from the menu.
                         </p>
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
-                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark text-foreground">
+                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
                                 <TrackedWhatsAppLink
                                     message={whatsappMessage}
                                     trackingContext={`intent_page_cta_${page.slug}`}
@@ -345,7 +365,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                     Ask on WhatsApp
                                 </TrackedWhatsAppLink>
                             </Button>
-                            <Button asChild size="lg" variant="outline" className="border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background">
+                            <Button asChild size="lg" variant="outline" className="rounded-[0.35rem] border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background">
                                 <Link href="/prices">Browse All Services</Link>
                             </Button>
                         </div>

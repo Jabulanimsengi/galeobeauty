@@ -25,9 +25,4 @@ export const SITEMAP_STATIC_PAGES = [
   { path: "/prices/nails", priority: 0.85, changefreq: "weekly" },
   { path: "/prices/lashes-brows", priority: 0.85, changefreq: "weekly" },
   { path: "/prices/hair-extensions", priority: 0.85, changefreq: "weekly" },
-  { path: "/acne-treatment-hartbeespoort", priority: 0.82, changefreq: "weekly" },
-  { path: "/acne-scar-treatment-hartbeespoort", priority: 0.82, changefreq: "weekly" },
-  { path: "/stubborn-belly-fat-treatment-hartbeespoort", priority: 0.82, changefreq: "weekly" },
-  { path: "/dark-circles-treatment-hartbeespoort", priority: 0.78, changefreq: "weekly" },
-  { path: "/frizz-control-keratin-treatment-hartbeespoort", priority: 0.78, changefreq: "weekly" },
 ] as const;

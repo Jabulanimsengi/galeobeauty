@@ -637,15 +637,15 @@ ${bankingDetails}`;
         side={isMobile ? "bottom" : "right"}
         className={
           isMobile
-            ? "w-full p-0 flex flex-col overflow-hidden max-h-[90vh] rounded-t-2xl !gap-0"
-            : "w-full sm:max-w-md p-0 flex flex-col overflow-hidden h-auto max-h-[85vh] my-auto rounded-l-2xl sm:rounded-2xl sm:mr-4"
+            ? "w-full p-0 flex flex-col overflow-hidden max-h-[90vh] rounded-t-[0.5rem] !gap-0"
+            : "w-full sm:max-w-md p-0 flex flex-col overflow-hidden h-auto max-h-[85vh] my-auto rounded-l-[0.5rem] sm:rounded-[0.5rem] sm:mr-4"
         }
       >
         {/* Header - drag handle is inside the dark bg on mobile */}
         <SheetHeader className={`p-6 pb-4 border-b bg-foreground text-background ${isMobile ? "pt-0" : ""}`}>
           {isMobile && (
             <div className="flex justify-center pt-3 pb-2">
-              <div className="w-10 h-1 rounded-full bg-background/30" />
+              <div className="h-1 w-10 rounded-[0.15rem] bg-background/30" />
             </div>
           )}
           <SheetTitle className="text-background font-serif text-xl">
@@ -696,7 +696,7 @@ ${bankingDetails}`;
                     }`}
                 >
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${state.currentStep === step.number
+                    className={`flex h-7 w-7 items-center justify-center rounded-[0.3rem] text-xs font-semibold transition-all ${state.currentStep === step.number
                       ? "bg-gold text-foreground"
                       : state.currentStep > step.number
                         ? "bg-background/20 text-background"
@@ -745,7 +745,7 @@ ${bankingDetails}`;
                     placeholder="Nicole Smith"
                     value={state.userDetails.name}
                     onChange={(e) => updateUserDetails("name", e.target.value)}
-                    className={`w-full px-4 py-3 rounded-xl bg-secondary/30 border outline-none transition-all ${
+                    className={`w-full rounded-[0.4rem] border bg-secondary/30 px-4 py-3 outline-none transition-all ${
                       hasNameInput && fullNameError
                         ? "border-red-300 bg-red-50/60 focus:border-red-400"
                         : "border-transparent focus:bg-background focus:border-gold"
@@ -776,7 +776,7 @@ ${bankingDetails}`;
                       }
                     }}
                     onChange={(e) => updateUserDetails("phone", normalizeSouthAfricanPhone(e.target.value))}
-                    className={`w-full px-4 py-3 rounded-xl bg-secondary/30 border outline-none transition-all ${
+                    className={`w-full rounded-[0.4rem] border bg-secondary/30 px-4 py-3 outline-none transition-all ${
                       hasPhoneInput && phoneError
                         ? "border-red-300 bg-red-50/60 focus:border-red-400"
                         : "border-transparent focus:bg-background focus:border-gold"
@@ -795,7 +795,7 @@ ${bankingDetails}`;
                     placeholder="Enter your email"
                     value={state.userDetails.email}
                     onChange={(e) => updateUserDetails("email", e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl bg-secondary/30 border border-transparent focus:bg-background focus:border-gold outline-none transition-all"
+                    className="w-full rounded-[0.4rem] border border-transparent bg-secondary/30 px-4 py-3 outline-none transition-all focus:bg-background focus:border-gold"
                   />
                 </div>
               </motion.div>
@@ -813,14 +813,14 @@ ${bankingDetails}`;
               >
                 <div>
                   <h3 className="font-semibold text-foreground mb-4">Select Date</h3>
-                  <div className="rounded-[1.6rem] border border-border/50 bg-secondary/10 p-4">
+                  <div className="rounded-[0.4rem] border border-border/50 bg-secondary/10 p-4">
                     <div className="mb-4 flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-medium text-foreground">
                           {selectedDateOption ? selectedDateOption.fullLabel : "Choose your preferred day"}
                         </p>
                       </div>
-                      <div className="hidden rounded-full border border-gold/20 bg-gold/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold sm:inline-flex">
+                      <div className="hidden rounded-[0.3rem] border border-gold/20 bg-gold/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold sm:inline-flex">
                         Next 7 Days
                       </div>
                     </div>
@@ -835,7 +835,7 @@ ${bankingDetails}`;
                             key={option.value}
                             data-date={option.value}
                             onClick={() => updateAppointment("date", option.value)}
-                            className={`min-w-[76px] shrink-0 rounded-[1.15rem] border px-3 py-3 text-center transition-all ${
+                            className={`min-w-[76px] shrink-0 rounded-[0.35rem] border px-3 py-3 text-center transition-all ${
                               isSelected
                                 ? "border-gold bg-gold text-foreground shadow-[0_18px_40px_-26px_rgba(201,165,92,0.9)]"
                                 : "border-border/60 bg-background hover:border-gold/50 hover:bg-gold/5"
@@ -858,7 +858,7 @@ ${bankingDetails}`;
                         <button
                           type="button"
                           onClick={() => setShowMoreDates(true)}
-                          className="min-w-[82px] shrink-0 rounded-[1.15rem] border border-dashed border-gold/35 bg-background px-3 py-3 text-center transition-all hover:border-gold hover:bg-gold/5"
+                          className="min-w-[82px] shrink-0 rounded-[0.35rem] border border-dashed border-gold/35 bg-background px-3 py-3 text-center transition-all hover:border-gold hover:bg-gold/5"
                         >
                           <span className="block text-[11px] font-semibold uppercase tracking-[0.2em] text-gold/80">
                             More
@@ -892,7 +892,7 @@ ${bankingDetails}`;
                         type="button"
                         key={slot.value}
                         onClick={() => updateAppointment("timeSlot", slot.value)}
-                        className={`w-full p-4 rounded-xl border text-left transition-all ${state.appointment.timeSlot === slot.value
+                        className={`w-full rounded-[0.4rem] border p-4 text-left transition-all ${state.appointment.timeSlot === slot.value
                           ? "border-gold bg-gold/10 text-foreground"
                           : "border-border/40 bg-white hover:border-gold/50"
                           }`}
@@ -922,7 +922,7 @@ ${bankingDetails}`;
 
                 {/* Consultation Type (Consultation only) */}
                 {bookingType === "consultation" && (
-                  <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
+                  <div className="rounded-[0.4rem] border border-gold/30 bg-gold/10 p-4">
                     <p className="text-sm text-muted-foreground font-medium mb-2">Consultation Type</p>
                     <p className="text-lg font-semibold text-foreground">{consultationContext || "General Consultation"}</p>
                     <p className="text-sm text-green-700 font-medium mt-2">Free Consultation</p>
@@ -931,7 +931,7 @@ ${bankingDetails}`;
 
                 {/* Treatments Summary (Treatment bookings only) */}
                 {bookingType === "treatment" && treatmentCount > 0 && (
-                  <div className="bg-gold/10 border border-gold/30 rounded-xl p-4 space-y-3">
+                  <div className="rounded-[0.4rem] border border-gold/30 bg-gold/10 p-4 space-y-3">
                     <p className="text-sm text-muted-foreground font-medium">Treatments</p>
                     {treatments.map((t, i) => (
                       <div key={i} className="flex justify-between items-start text-sm">
@@ -990,7 +990,7 @@ ${bankingDetails}`;
 
                 {/* 50% Deposit Notice (Treatment only) */}
                 {bookingType === "treatment" && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+                  <div className="flex items-start gap-3 rounded-[0.4rem] border border-amber-200 bg-amber-50 p-4">
                     <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
                       <p className="font-semibold text-amber-800 text-sm">50% Deposit Required</p>
@@ -1003,14 +1003,14 @@ ${bankingDetails}`;
 
                 {/* Booking Reference (Treatment only) */}
                 {bookingType === "treatment" && bookingReference && (
-                  <div className="bg-gold/10 border border-gold/30 rounded-xl p-4">
+                  <div className="rounded-[0.4rem] border border-gold/30 bg-gold/10 p-4">
                     <p className="text-xs text-muted-foreground mb-1">Your Booking Reference</p>
                     <div className="flex items-center justify-between">
                       <p className="text-xl font-mono font-bold text-gold tracking-wider">{bookingReference}</p>
                       <button
                         type="button"
                         onClick={() => copyToClipboard(bookingReference, "reference")}
-                        className="p-2 rounded-lg bg-gold/20 hover:bg-gold/30 transition-colors"
+                        className="rounded-[0.3rem] bg-gold/20 p-2 transition-colors hover:bg-gold/30"
                       >
                         {copiedField === "reference" ? (
                           <CheckCircle className="w-4 h-4 text-green-600" />
@@ -1025,7 +1025,7 @@ ${bankingDetails}`;
 
                 {/* Banking Details (Treatment only) */}
                 {bookingType === "treatment" && businessInfo.banking && (
-                  <div className="bg-secondary/30 rounded-xl p-4 space-y-2">
+                  <div className="rounded-[0.4rem] bg-secondary/30 p-4 space-y-2">
                     <div className="flex items-center gap-2 mb-2">
                       <CreditCard className="w-4 h-4 text-foreground" />
                       <p className="font-semibold text-foreground text-sm">Banking Details</p>
@@ -1044,7 +1044,7 @@ ${bankingDetails}`;
                             <button
                               type="button"
                               onClick={() => copyToClipboard(item.value, item.label)}
-                              className="p-0.5 rounded hover:bg-secondary transition-colors"
+                              className="rounded-[0.2rem] p-0.5 transition-colors hover:bg-secondary"
                             >
                               {copiedField === item.label ? (
                                 <CheckCircle className="w-3 h-3 text-green-600" />

@@ -79,7 +79,7 @@ export function BookingCart({ items, onRemoveItem, onClearAll, onBook }: Booking
                   {items.map((item, index) => (
                     <div
                       key={`${item.item.id}-${index}`}
-                      className="flex items-center gap-3 p-3 bg-secondary/30 rounded-lg group"
+                      className="flex items-center gap-3 rounded-[0.4rem] bg-secondary/30 p-3 group"
                     >
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-foreground text-sm truncate">
@@ -100,7 +100,7 @@ export function BookingCart({ items, onRemoveItem, onClearAll, onBook }: Booking
                       </span>
                       <button
                         onClick={() => onRemoveItem(index)}
-                        className="p-1 rounded-full hover:bg-red-100 text-muted-foreground hover:text-red-500 transition-colors"
+                        className="rounded-[0.3rem] p-1 hover:bg-red-100 text-muted-foreground hover:text-red-500 transition-colors"
                         aria-label="Remove item"
                       >
                         <X className="w-4 h-4" />
@@ -124,7 +124,7 @@ export function BookingCart({ items, onRemoveItem, onClearAll, onBook }: Booking
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <ShoppingBag className="w-5 h-5 text-foreground" />
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-gold text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-[0.2rem] bg-gold text-[10px] font-bold text-white">
                     {items.length}
                   </span>
                 </div>
@@ -155,7 +155,7 @@ export function BookingCart({ items, onRemoveItem, onClearAll, onBook }: Booking
             {/* Book Now Button */}
             <Button
               onClick={onBook}
-              className="w-full py-6 text-base bg-foreground hover:bg-foreground/90 text-background font-semibold rounded-full"
+              className="w-full rounded-[0.35rem] bg-foreground py-6 text-base font-semibold text-background hover:bg-foreground/90"
             >
               Book now
             </Button>

@@ -35,7 +35,7 @@ export function ServiceBookingButton({
         <>
             <button
                 onClick={() => setIsBookingOpen(true)}
-                className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 border-gold bg-gold/10 text-gold hover:bg-gold hover:text-white transition-all duration-200"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.35rem] border-2 border-gold bg-gold/10 text-gold transition-all duration-200 hover:bg-gold hover:text-white"
                 aria-label={`Book ${item.name}`}
             >
                 <Plus className="w-5 h-5" strokeWidth={2.5} />

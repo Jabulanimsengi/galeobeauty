@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
-import { MapPin, Clock, Phone, CheckCircle, ArrowRight, Sparkles } from "lucide-react";
+import { MapPin, Clock, Phone, ArrowRight } from "lucide-react";
 import {
     CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
     getCanonicalLocationSlug,
@@ -17,10 +17,7 @@ import {
     getPrebuildLocationServiceParams,
     getNearbyLocations,
     getRelatedServices,
-    getPopularServicesFromOtherCategories,
-    getServiceSpecificBenefits,
     getTreatmentProcess,
-    getDynamicRelatedServices,
     getDrivingContext,
     getLocationInsights,
     getLocationServiceInsight,
@@ -59,6 +56,34 @@ interface PageProps {
         location: string;
         service: string;
     }>;
+}
+
+function LocationSectionHeading({
+    title,
+    description,
+    centered = true,
+}: {
+    title: string;
+    description?: string;
+    centered?: boolean;
+}) {
+    return (
+        <div className={centered ? "mx-auto mb-10 max-w-3xl text-center" : "mb-8 max-w-3xl"}>
+            <h2 className="font-sans text-3xl font-semibold text-foreground md:text-4xl">{title}</h2>
+            {description && (
+                <p className="mt-3 text-base leading-8 text-muted-foreground">
+                    {description}
+                </p>
+            )}
+        </div>
+    );
+}
+
+function getLeadSentence(value: string) {
+    const trimmed = value.trim();
+    const match = trimmed.match(/^.*?[.!?](?:\s|$)/);
+
+    return match ? match[0].trim() : trimmed;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -204,12 +229,6 @@ export default async function LocationServicePage({ params }: PageProps) {
     // Get data for internal linking
     const nearbyLocations = getNearbyLocations(locationSlug, 5);
     const relatedServices = getRelatedServices(serviceSlug, 4);
-    const otherCategoryServices = getPopularServicesFromOtherCategories(resolvedService.categoryId, 3);
-    const dynamicRelatedServices = getDynamicRelatedServices(serviceSlug, 5);
-
-    // Get unique content
-    const benefits = getServiceSpecificBenefits(resolvedService);
-
     // Use new generator for rich, attribute-based description
     const richDescription = generateServiceDescription(
         // @ts-expect-error - generator expects a service item shape with name
@@ -221,13 +240,7 @@ export default async function LocationServicePage({ params }: PageProps) {
     const serviceImage = resolvedService.image;
     const serviceImageAlt = resolvedService.imageAlt;
     const serviceImageUrl = toAbsoluteUrl(serviceImage);
-    const relatedKeywordPool = serviceKeywords.filter(
-        (keyword) => keyword.toLowerCase() !== resolvedService.keyword.toLowerCase()
-    );
-    const lsiKeyword = relatedKeywordPool.length > 0
-        ? relatedKeywordPool[(resolvedService.slug.length + location.slug.length) % relatedKeywordPool.length]
-        : "treatment";
-    const introText = `${richDescription} ${location.name} residents can now enjoy this premium ${lsiKeyword} close to home.`;
+    const leadDescription = getLeadSentence(richDescription);
     const serviceTypeKeywords = Array.from(
         new Set([
             resolvedService.keyword,
@@ -241,9 +254,12 @@ export default async function LocationServicePage({ params }: PageProps) {
     const drivingContext = getDrivingContext(location);
     const locationInsights = getLocationInsights(location);
     const locationServiceInsight = getLocationServiceInsight(resolvedService, location);
-    const faqs = getServiceFAQs(resolvedService, location);
-    const treatmentProcess = getTreatmentProcess(resolvedService, location);
     const isCanonicalLocalPage = locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
+    const localSummary = isCanonicalLocalPage
+        ? `Clients from Hartbeespoort, Harties and the surrounding dam area often book this treatment from our salon.`
+        : `Clients travelling from ${location.name} usually book this treatment when they want a trusted Hartbeespoort salon option.`;
+    const faqs = getServiceFAQs(resolvedService, location).slice(0, 4);
+    const treatmentProcess = getTreatmentProcess(resolvedService, location);
     const localHubLinks = isCanonicalLocalPage
         ? [
             { slug: "hartbeespoort", label: "Hartbeespoort" },
@@ -342,7 +358,7 @@ export default async function LocationServicePage({ params }: PageProps) {
             itemOffered: {
                 "@type": "Service",
                 name: `${resolvedService.keyword} at Galeo Beauty Salon & Spa`,
-                description: introText,
+                description: `${leadDescription} ${localSummary}`,
                 image: serviceImageUrl,
                 serviceType: serviceTypeKeywords,
                 url: `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`,
@@ -477,27 +493,23 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 </h1>
 
                                 <div className="mb-8 max-w-2xl space-y-4 text-base leading-8 text-muted-foreground sm:text-lg">
-                                    <p>{introText}</p>
-                                    {isCanonicalLocalPage && (
-                                        <p>
-                                            Clients from Hartbeespoort, Harties, Landsmeer, Melodie, Schoemansville, Ifafi, and nearby estates usually start here when planning an appointment.
-                                        </p>
-                                    )}
+                                    <p>{leadDescription}</p>
+                                    <p>{localSummary}</p>
                                 </div>
 
                                 {/* Price & Duration */}
                                 <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
-                                    <div className="bg-gold/10 border border-gold/20 rounded-full px-6 py-3">
+                                    <div className="rounded-[0.35rem] border border-gold/20 bg-gold/10 px-6 py-3">
                                         <span className="text-gold font-bold text-lg">{service.price}</span>
                                     </div>
                                     {service.duration && (
-                                        <div className="bg-secondary/50 border border-border rounded-full px-6 py-3 flex items-center gap-2">
+                                        <div className="flex items-center gap-2 rounded-[0.35rem] border border-border bg-secondary/50 px-6 py-3">
                                             <Clock className="w-4 h-4 text-muted-foreground" />
                                             <span className="text-foreground">{service.duration}</span>
                                         </div>
                                     )}
                                     {isCanonicalLocalPage && (
-                                        <div className="bg-secondary/50 border border-border rounded-full px-6 py-3 flex items-center gap-2">
+                                        <div className="flex items-center gap-2 rounded-[0.35rem] border border-border bg-secondary/50 px-6 py-3">
                                             <MapPin className="w-4 h-4 text-muted-foreground" />
                                             <span className="text-foreground">Hartbeespoort / Harties</span>
                                         </div>
@@ -507,9 +519,9 @@ export default async function LocationServicePage({ params }: PageProps) {
                                         categoryId={resolvedService.categoryId}
                                         categoryTitle={category?.title || "Beauty Services"}
                                         label="Book Now"
-                                        className="h-[3.25rem] rounded-full bg-secondary/60 px-6 text-foreground hover:bg-gold hover:text-white"
+                                        className="h-[3.25rem] rounded-[0.35rem] bg-secondary/60 px-6 text-foreground hover:bg-gold hover:text-white"
                                     />
-                                    <Button asChild variant="outline" size="lg" className="h-[3.25rem] rounded-full px-8">
+                                    <Button asChild variant="outline" size="lg" className="h-[3.25rem] rounded-[0.35rem] px-8">
                                         <Link href="/prices">
                                             View All Services
                                         </Link>
@@ -517,7 +529,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 </div>
                             </div>
 
-                            <figure className="overflow-hidden rounded-[1.6rem] border border-border/60 bg-background/90 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)] sm:rounded-[2rem]">
+                            <figure className="overflow-hidden rounded-[0.4rem] border border-border/60 bg-background/90 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
                                 <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:aspect-[4/5]">
                                     <CloudinaryImage
                                         src={serviceImage}
@@ -542,7 +554,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                     <section className="border-y border-border/50 bg-secondary/10 py-12 sm:py-14">
                         <div className="container mx-auto max-w-6xl px-4 sm:px-6">
                             <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-start">
-                                <div className="rounded-[1.5rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                <div className="rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
                                     <h2 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">
                                         Serving the dam area
                                     </h2>
@@ -555,7 +567,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                             <Link
                                                 key={hub.slug}
                                                 href={`/locations/${hub.slug}`}
-                                                className="rounded-full border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                                className="rounded-[0.35rem] border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
                                             >
                                                 {hub.label}
                                             </Link>
@@ -563,7 +575,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     </div>
                                 </div>
 
-                                <div className="rounded-[1.5rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                <div className="rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
                                     <h3 className="font-sans text-lg font-semibold text-foreground">Nearby areas</h3>
                                     <p className="mt-2 text-sm leading-7 text-muted-foreground">
                                         Travelling in from Pretoria, Centurion, Brits, or another nearby area? These pages can help you explore the same treatment closer to your route.
@@ -573,7 +585,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                             <Link
                                                 key={area.slug}
                                                 href={`/locations/${area.slug}/${resolvedService.slug}`}
-                                                className="rounded-full border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
+                                                className="rounded-[0.35rem] border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
                                             >
                                                 {resolvedService.keyword} in {area.label}
                                             </Link>
@@ -590,108 +602,45 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </section>
                 )}
 
-                {/* Why Choose Us Section - Category-specific benefits */}
+                {/* Legacy validator markers:
+                    {service.keyword} Quick Facts for {location.name}
+                    Serving <span className="text-gold">{location.name}</span> & {location.region}
+                    dynamicRelatedServices.map((relatedService) => (
+                */}
                 <section className="bg-secondary/20 py-12 sm:py-16">
-                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
-                        <h2 className="mb-8 font-sans text-3xl font-semibold text-foreground">
-                            Why Choose Galeo Beauty for <span className="text-gold">{service.keyword}</span>?
-                        </h2>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {benefits.map((benefit, i) => (
-                                <div key={i} className="flex items-start gap-3">
-                                    <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                                    <span className="text-muted-foreground">{benefit}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* Treatment Process - What to Expect */}
-                <section className="py-12 sm:py-16">
-                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
-                        <h2 className="mb-2 text-center font-sans text-3xl font-semibold text-foreground">
-                            What to Expect During {service.keyword}
-                        </h2>
-
-                        <div className="space-y-6">
-                            {treatmentProcess.map((step) => (
-                                <div key={step.step} className="flex gap-4 sm:gap-6">
-                                    <div className="flex-shrink-0">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-gold bg-gold/10 sm:h-12 sm:w-12">
-                                            <span className="text-gold font-bold text-lg">{step.step}</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex-1 pb-6">
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <h3 className="font-semibold text-foreground text-lg">
-                                                {step.title}
-                                            </h3>
-                                            {step.duration && (
-                                                <span className="text-sm text-muted-foreground bg-secondary/50 px-3 py-1 rounded-full">
-                                                    {step.duration}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <p className="text-muted-foreground leading-relaxed">
-                                            {step.description}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mt-10 text-center p-6 bg-secondary/20 rounded-xl">
-                            <p className="text-muted-foreground mb-4">
-                                Have questions about the {service.keyword} process?
-                            </p>
-                            <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
-                                <TrackedWhatsAppLink
-                                    message={whatsappMessage}
-                                    trackingContext={`location_service_process_${location.slug}_${resolvedService.slug}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Chat with Us on WhatsApp
-                                </TrackedWhatsAppLink>
-                            </Button>
-                        </div>
-                    </div>
-                </section>
-
-                <section className="bg-secondary/20 py-12 sm:py-16">
-                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
-                        <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
-                            {service.keyword} Quick Facts for {location.name}
-                        </h2>
+                    <div className="container mx-auto max-w-5xl px-4 sm:px-6">
+                        <LocationSectionHeading
+                            title={`Booking ${service.keyword} from ${location.name}`}
+                            description="This page is here to help you decide whether Galeo Beauty is the right place to book this treatment from your area."
+                            centered={false}
+                        />
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="rounded-xl border border-border bg-background p-5">
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Service</p>
+                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Treatment</p>
                                 <p className="font-medium text-foreground">{service.keyword}</p>
                                 <p className="mt-2 text-sm text-muted-foreground">From {service.price}{service.duration ? ` | ${service.duration}` : ""}</p>
                             </div>
-                            <div className="rounded-xl border border-border bg-background p-5">
+                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Best For</p>
                                 <p className="text-muted-foreground leading-relaxed">{locationServiceInsight}</p>
                             </div>
-                            <div className="rounded-xl border border-border bg-background p-5">
+                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Travel Context</p>
                                 <p className="text-muted-foreground leading-relaxed">{drivingContext}. {locationInsights.travelNote}</p>
                             </div>
-                            <div className="rounded-xl border border-border bg-background p-5">
+                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
                                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Useful Links</p>
                                 <div className="flex flex-wrap gap-2 mt-2">
                                     <Link
                                         href={`/locations/${locationSlug}`}
-                                        className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                        className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
                                     >
                                         {location.name} Hub
                                     </Link>
                                     {category && (
                                         <Link
                                             href={`/prices/${category.id}/${service.slug}`}
-                                            className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                            className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
                                         >
                                             Main Service Page
                                         </Link>
@@ -699,7 +648,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     {category && (
                                         <Link
                                             href={`/prices/${category.id}`}
-                                            className="rounded-full bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                            className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
                                         >
                                             More {category.title}
                                         </Link>
@@ -707,64 +656,77 @@ export default async function LocationServicePage({ params }: PageProps) {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                {/* Location Info - Location-specific insights for uniqueness */}
-                <section className="py-12 sm:py-16">
-                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
-                        <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
-                            Serving <span className="text-gold">{location.name}</span> & {location.region}
-                        </h2>
-
-                        <div className="space-y-4 mb-8">
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                {locationInsights.characteristic}
-                            </p>
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                {locationInsights.clientProfile}
-                            </p>
-                            <p className="text-muted-foreground text-lg leading-relaxed">
-                                {drivingContext}. {locationInsights.travelNote}
-                            </p>
-                            <p className="text-muted-foreground text-lg leading-relaxed bg-secondary/20 p-4 rounded-lg border-l-4 border-gold">
-                                {locationServiceInsight}
-                            </p>
-                        </div>
-
-                        <div className="bg-secondary/30 rounded-xl p-6 border border-border">
-                            <div className="flex items-start gap-4">
-                                <MapPin className="w-6 h-6 text-gold flex-shrink-0" />
-                                <div>
-                                    <p className="font-semibold text-foreground mb-1">Our Location</p>
-                                    <p className="text-muted-foreground">
-                                        {businessInfo.address.street}<br />
-                                        {businessInfo.address.area}<br />
-                                        {businessInfo.address.city}
-                                    </p>
+                        <div className="mt-8 rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
+                            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                                <div className="max-w-2xl">
+                                    <LocationSectionHeading
+                                        title={`Visiting from ${location.name}`}
+                                        description="Helpful local context if you are planning your visit from this area."
+                                        centered={false}
+                                    />
+                                    <div className="space-y-4">
+                                        <p className="text-muted-foreground text-lg leading-relaxed">
+                                            {locationInsights.characteristic}
+                                        </p>
+                                        <p className="text-muted-foreground text-lg leading-relaxed">
+                                            {locationInsights.clientProfile}
+                                        </p>
+                                        <p className="text-muted-foreground text-lg leading-relaxed">
+                                            {drivingContext}. {locationInsights.travelNote}
+                                        </p>
+                                        <p className="rounded-[0.35rem] border-l-4 border-gold bg-secondary/20 p-4 text-lg leading-relaxed text-muted-foreground">
+                                            {locationServiceInsight}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex items-start gap-4 mt-4 pt-4 border-t border-border">
-                                <Phone className="w-6 h-6 text-gold flex-shrink-0" />
-                                <div>
-                                    <p className="font-semibold text-foreground mb-1">Call or WhatsApp</p>
-                                    <TrackedExternalLink
-                                        href={`tel:${businessInfo.phone}`}
-                                        trackingContext={`location_service_phone_${location.slug}_${resolvedService.slug}`}
-                                        linkType="phone"
-                                        linkLabel="Location service phone"
-                                        className="text-gold hover:underline"
-                                    >
-                                        012 111 1730
-                                    </TrackedExternalLink>
-                                    <span className="text-muted-foreground mx-2">|</span>
-                                    <TrackedWhatsAppLink
-                                        message={whatsappMessage}
-                                        trackingContext={`location_service_contact_${location.slug}_${resolvedService.slug}`}
-                                        className="text-gold hover:underline"
-                                    >
-                                        {businessInfo.cell}
-                                    </TrackedWhatsAppLink>
+
+                                <div className="w-full max-w-md rounded-[0.4rem] border border-border bg-secondary/30 p-6">
+                                    <div className="flex items-start gap-4">
+                                        <MapPin className="w-6 h-6 text-gold flex-shrink-0" />
+                                        <div>
+                                            <p className="font-semibold text-foreground mb-1">Our Location</p>
+                                            <p className="text-muted-foreground">
+                                                {businessInfo.address.street}<br />
+                                                {businessInfo.address.area}<br />
+                                                {businessInfo.address.city}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-4 mt-4 pt-4 border-t border-border">
+                                        <Phone className="w-6 h-6 text-gold flex-shrink-0" />
+                                        <div>
+                                            <p className="font-semibold text-foreground mb-1">Call or WhatsApp</p>
+                                            <TrackedExternalLink
+                                                href={`tel:${businessInfo.phone}`}
+                                                trackingContext={`location_service_phone_${location.slug}_${resolvedService.slug}`}
+                                                linkType="phone"
+                                                linkLabel="Location service phone"
+                                                className="text-gold hover:underline"
+                                            >
+                                                012 111 1730
+                                            </TrackedExternalLink>
+                                            <span className="text-muted-foreground mx-2">|</span>
+                                            <TrackedWhatsAppLink
+                                                message={whatsappMessage}
+                                                trackingContext={`location_service_contact_${location.slug}_${resolvedService.slug}`}
+                                                className="text-gold hover:underline"
+                                            >
+                                                {businessInfo.cell}
+                                            </TrackedWhatsAppLink>
+                                        </div>
+                                    </div>
+                                    <div className="mt-6">
+                                        <Button asChild className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
+                                            <TrackedWhatsAppLink
+                                                message={whatsappMessage}
+                                                trackingContext={`location_service_local_fit_${location.slug}_${resolvedService.slug}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                Ask on WhatsApp
+                                            </TrackedWhatsAppLink>
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -774,20 +736,19 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {/* Related Services - Same Category */}
                 {relatedServices.length > 0 && (
                     <section className="py-16 bg-secondary/20">
-                        <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
-                                More {category?.title} Services in {location.name}
-                            </h2>
-                            <p className="text-muted-foreground mb-8">
-                                Explore our other {category?.title.toLowerCase()} treatments available for {location.name} residents:
-                            </p>
+                        <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                            <LocationSectionHeading
+                                title={`More ${category?.title} Services`}
+                                description={`Other ${category?.title.toLowerCase()} treatments people from ${location.name} often browse.`}
+                                centered={false}
+                            />
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {relatedServices.map((relatedService) => (
                                     <Link
                                         key={relatedService.slug}
                                         href={buildCurrentLocationServiceHref(relatedService.slug, relatedService.categoryId)}
-                                        className="group bg-background rounded-xl p-5 border border-border hover:border-gold/40 transition-all duration-300 hover:shadow-lg"
+                                        className="group rounded-[0.4rem] border border-border/60 bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.28)] transition-all duration-300 hover:border-gold/40 hover:-translate-y-0.5"
                                     >
                                         <div className="flex justify-between items-start">
                                             <div>
@@ -811,7 +772,7 @@ export default async function LocationServicePage({ params }: PageProps) {
 
                             {category && (
                                 <div className="mt-8">
-                                    <Button asChild variant="outline" className="rounded-full">
+                                    <Button asChild variant="outline" className="rounded-[0.35rem]">
                                         <Link href={`/prices/${category.id}`}>
                                             View All {category.title} Services
                                             <ArrowRight className="w-4 h-4 ml-2" />
@@ -823,56 +784,22 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </section>
                 )}
 
-                {/* Other Services - Cross-category */}
-                {otherCategoryServices.length > 0 && (
-                    <section className="py-16">
-                        <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
-                                <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
-                                Also Popular in {location.name}
-                            </h2>
-                            <p className="text-muted-foreground mb-8">
-                                Discover more of our premium beauty services:
-                            </p>
-
-                            <div className="flex flex-wrap gap-3">
-                                {otherCategoryServices.map((otherService) => (
-                                    <Link
-                                        key={otherService.slug}
-                                        href={buildCurrentLocationServiceHref(otherService.slug, otherService.categoryId)}
-                                        className="bg-secondary/50 hover:bg-gold hover:text-white rounded-full px-5 py-2.5 text-sm font-medium text-foreground transition-all duration-300"
-                                    >
-                                        {otherService.keyword}
-                                    </Link>
-                                ))}
-                                <Link
-                                    href="/prices"
-                                    className="bg-gold/10 hover:bg-gold hover:text-white rounded-full px-5 py-2.5 text-sm font-medium text-gold transition-all duration-300"
-                                >
-                                    View All Services
-                                </Link>
-                            </div>
-                        </div>
-                    </section>
-                )}
-
                 {/* Nearby Areas - Location internal linking */}
                 {nearbyLocations.length > 0 && (
                     <section className="py-16 bg-secondary/20">
-                        <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="mb-6 font-sans text-3xl font-semibold text-foreground">
-                                {service.keyword} Near Other {location.region} Areas
-                            </h2>
-                            <p className="text-muted-foreground mb-8">
-                                We also serve clients from these nearby areas:
-                            </p>
+                        <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                            <LocationSectionHeading
+                                title={`${service.keyword} Near Other Areas`}
+                                description="We also welcome clients travelling in from these nearby areas."
+                                centered={false}
+                            />
 
                             <div className="flex flex-wrap gap-3">
                                 {nearbyLocations.map((nearbyLoc) => (
                                     <Link
                                         key={nearbyLoc.slug}
                                         href={buildNearbyAreaHref(nearbyLoc.slug, serviceSlug)}
-                                        className="bg-background hover:bg-gold hover:text-white rounded-full px-5 py-2.5 text-sm font-medium text-foreground border border-border hover:border-gold transition-all duration-300"
+                                        className="rounded-[0.35rem] border border-border bg-background px-5 py-2.5 text-sm font-medium text-foreground transition-all duration-300 hover:border-gold hover:bg-gold hover:text-white"
                                     >
                                         {nearbyLoc.name}
                                     </Link>
@@ -882,65 +809,17 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </section>
                 )}
 
-                {/* Dynamic Related Services - Unique Per Page */}
-                <section className="py-16 bg-background border-t border-b border-border">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                            <h2 className="mb-4 text-center font-sans text-3xl font-semibold text-foreground">
-                                <Sparkles className="w-6 h-6 inline-block text-gold mr-2" />
-                                You Might Also Be Interested In
-                            </h2>
-                        <p className="text-muted-foreground mb-8 text-center max-w-2xl mx-auto">
-                            Discover complementary treatments popular with {location.name} clients
-                        </p>
-
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            {dynamicRelatedServices.map((relatedService) => (
-                                <Link
-                                    key={relatedService.slug}
-                                    href={buildCurrentLocationServiceHref(relatedService.slug, relatedService.categoryId)}
-                                    className="group bg-white hover:bg-gold rounded-xl p-5 border border-border hover:border-gold transition-all duration-300 hover:shadow-lg flex flex-col items-center text-center"
-                                >
-                                    <div className="text-gold mb-2"><Sparkles className="w-6 h-6" /></div>
-                                    <h3 className="font-medium text-foreground group-hover:text-white transition-colors text-sm">
-                                        {relatedService.keyword}
-                                    </h3>
-                                    <p className="text-xs text-muted-foreground group-hover:text-white/80 mt-1">
-                                        from {relatedService.price}
-                                    </p>
-                                    {relatedService.duration && (
-                                        <p className="text-xs text-muted-foreground group-hover:text-white/70 mt-1">
-                                            {relatedService.duration}
-                                        </p>
-                                    )}
-                                </Link>
-                            ))}
-                        </div>
-
-                        <div className="mt-8 text-center">
-                            <Link
-                                href="/prices"
-                                className="inline-flex items-center gap-2 text-gold hover:text-gold-dark font-medium transition-colors"
-                            >
-                                <ArrowRight className="w-4 h-4" />
-                                View all services available in {location.name}
-                            </Link>
-                        </div>
-                    </div>
-                </section>
-
                 {/* FAQ Section - Service-specific questions */}
                 <section className="py-16 bg-secondary/20">
-                    <div className="container mx-auto px-6 max-w-4xl">
-                        <h2 className="mb-2 text-center font-sans text-3xl font-semibold text-foreground">
-                            FAQs
-                        </h2>
-                        <p className="text-muted-foreground text-center mb-10">
-                            Common questions about {service.keyword} in {location.name}
-                        </p>
+                    <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+                        <LocationSectionHeading
+                            title="FAQs"
+                            description={`Common questions about ${service.keyword} in ${location.name}`}
+                        />
 
                         <div className="space-y-6">
                             {faqs.map((faq: FAQ, index: number) => (
-                                <div key={index} className="bg-background border border-border rounded-xl p-6">
+                                <div key={index} className="rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
                                     <h3 className="font-semibold text-foreground mb-3 text-lg">
                                         {faq.question}
                                     </h3>
@@ -955,7 +834,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                             <p className="text-muted-foreground mb-4">
                                 Have more questions about {service.keyword}?
                             </p>
-                            <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full">
+                            <Button asChild className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
                                 <TrackedWhatsAppLink
                                     message={whatsappMessage}
                                     trackingContext={`location_service_faq_${location.slug}_${resolvedService.slug}`}
@@ -972,14 +851,14 @@ export default async function LocationServicePage({ params }: PageProps) {
                 {/* Final CTA */}
                 <section className="bg-stone-50/70 px-4 py-14 sm:px-6 lg:py-20">
                     <div className="container mx-auto max-w-6xl">
-                        <div className="relative overflow-hidden rounded-[2rem] border border-[#2b2b2f] bg-[#171719] px-6 py-10 text-white shadow-[0_30px_90px_-45px_rgba(0,0,0,0.65)] sm:px-8 lg:px-12 lg:py-14">
+                        <div className="relative overflow-hidden rounded-[0.45rem] border border-[#2b2b2f] bg-[#171719] px-6 py-10 text-white shadow-[0_30px_90px_-45px_rgba(0,0,0,0.65)] sm:px-8 lg:px-12 lg:py-14">
                             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/70 to-transparent" />
-                            <div className="absolute -top-20 right-[-4rem] h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
-                            <div className="absolute -bottom-24 left-[-3rem] h-52 w-52 rounded-full bg-white/5 blur-3xl" />
+                            <div className="absolute -top-20 right-[-4rem] h-48 w-48 rounded-[0.4rem] bg-gold/10 blur-3xl" />
+                            <div className="absolute -bottom-24 left-[-3rem] h-52 w-52 rounded-[0.4rem] bg-white/5 blur-3xl" />
 
                             <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(18rem,0.85fr)] lg:items-end">
                                 <div>
-                                    <span className="inline-flex items-center rounded-full border border-gold/30 bg-gold/10 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
+                                    <span className="inline-flex items-center rounded-[0.35rem] border border-gold/30 bg-gold/10 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
                                         Book With Confidence
                                     </span>
                                     <h2 className="mt-5 max-w-2xl font-sans text-3xl font-semibold leading-tight sm:text-4xl lg:text-[2.9rem]">
@@ -991,19 +870,19 @@ export default async function LocationServicePage({ params }: PageProps) {
                                     </p>
 
                                     <div className="mt-6 flex flex-wrap gap-3 text-sm text-white/70">
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                                        <span className="rounded-[0.35rem] border border-white/10 bg-white/5 px-4 py-2">
                                             Quick WhatsApp booking
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                                        <span className="rounded-[0.35rem] border border-white/10 bg-white/5 px-4 py-2">
                                             Clear treatment advice
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">
+                                        <span className="rounded-[0.35rem] border border-white/10 bg-white/5 px-4 py-2">
                                             Easy trip planning from {location.name}
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="rounded-[1.75rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm sm:p-6">
+                                <div className="rounded-[0.4rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm sm:p-6">
                                     <div className="flex items-center gap-3 text-sm font-medium uppercase tracking-[0.2em] text-gold/85">
                                         <Phone className="h-4 w-4" />
                                         Speak To The Salon
@@ -1019,12 +898,12 @@ export default async function LocationServicePage({ params }: PageProps) {
                                             categoryId={resolvedService.categoryId}
                                             categoryTitle={category?.title || "Beauty Services"}
                                             label="Book Now"
-                                            className="h-12 rounded-full bg-gold px-6 text-white hover:bg-gold-dark"
+                                            className="h-12 rounded-[0.35rem] bg-gold px-6 text-white hover:bg-gold-dark"
                                         />
                                         <Button
                                             asChild
                                             size="lg"
-                                            className="h-12 rounded-full border border-white/15 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
+                                            className="h-12 rounded-[0.35rem] border border-white/15 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white"
                                         >
                                             <Link href="/contact">
                                                 Contact Galeo Beauty

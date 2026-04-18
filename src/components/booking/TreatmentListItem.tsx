@@ -44,7 +44,7 @@ export function TreatmentListItem({
 
   return (
     <div
-      className={`group w-full rounded-xl border-2 p-4 transition-all ${isSelected
+      className={`group w-full rounded-[0.4rem] border-2 p-4 transition-all ${isSelected
           ? "border-gold bg-gold/5"
           : "border-border/40 bg-white hover:border-gold/50"
         }`}
@@ -109,7 +109,7 @@ export function TreatmentListItem({
           onClick={handleToggle}
           aria-pressed={isSelected}
           aria-label={isSelected ? `Remove ${item.name} from your booking` : `Add ${item.name} to your booking`}
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all ${isSelected
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.3rem] transition-all ${isSelected
               ? "bg-foreground text-white"
               : "border-2 border-border/60 text-transparent hover:border-gold"
             }`}

@@ -29,10 +29,10 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
   const compactAddress = `${businessInfo.name}, ${businessInfo.address.street}, ${businessInfo.address.area}`;
 
   return (
-    <div className="flex max-h-[calc(100vh-140px)] min-h-0 flex-col overflow-hidden rounded-[1.2rem] border border-border/50 bg-white shadow-[0_26px_65px_-38px_rgba(0,0,0,0.3)]">
+    <div className="flex max-h-[calc(100vh-140px)] min-h-0 flex-col overflow-hidden rounded-[0.4rem] border border-border/50 bg-white shadow-[0_26px_65px_-38px_rgba(0,0,0,0.3)]">
       <div className="shrink-0 p-5">
         <div className="flex items-start gap-4">
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-border/50 bg-stone-100">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[0.4rem] border border-border/50 bg-stone-100">
             <CloudinaryImage
               src="/images/interior/galeo-beauty-interior-p1.jpg"
               alt="Galeo Beauty salon interior"
@@ -91,7 +91,7 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
                           </div>
                           <button
                             onClick={() => onRemoveItem(index)}
-                            className="rounded-full p-1.5 text-muted-foreground opacity-60 transition-all group-hover:opacity-100 hover:bg-red-100 hover:text-red-500"
+                            className="rounded-[0.3rem] p-1.5 text-muted-foreground opacity-60 transition-all group-hover:opacity-100 hover:bg-red-100 hover:text-red-500"
                             aria-label="Remove item"
                           >
                             <X className="h-4 w-4" />
@@ -115,7 +115,7 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
               </div>
             </>
           ) : (
-            <div className="rounded-2xl bg-stone-50 px-5 py-4 text-sm leading-6 text-muted-foreground">
+            <div className="rounded-[0.4rem] bg-stone-50 px-5 py-4 text-sm leading-6 text-muted-foreground">
               Select a treatment from the menu and it will appear here before you continue to booking.
             </div>
           )}
@@ -126,7 +126,7 @@ export function BookingSummary({ items, onRemoveItem, onBook }: BookingSummaryPr
         <Button
           onClick={onBook}
           disabled={items.length === 0}
-          className="h-14 w-full rounded-full bg-[#111111] text-[1.02rem] font-semibold text-white hover:bg-black disabled:opacity-50"
+          className="h-14 w-full rounded-[0.35rem] bg-[#111111] text-[1.02rem] font-semibold text-white hover:bg-black disabled:opacity-50"
         >
           Continue
         </Button>

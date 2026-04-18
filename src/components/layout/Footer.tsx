@@ -32,7 +32,7 @@ const InstagramIcon = ({ className }: { className?: string }) => (
 );
 
 const socialLinkClassName =
-    "group flex h-12 w-12 items-center justify-center rounded-2xl border border-[#1d1d1f]/10 bg-white text-[#1d1d1f] shadow-[0_16px_34px_-24px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/35 hover:bg-[#1d1d1f] hover:text-white";
+    "group flex h-12 w-12 items-center justify-center rounded-[0.35rem] border border-[#1d1d1f]/10 bg-white text-[#1d1d1f] shadow-[0_16px_34px_-24px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/35 hover:bg-[#1d1d1f] hover:text-white";
 
 const footerLocations = [
     { name: "Hartbeespoort", href: "/locations/hartbeespoort" },
@@ -127,12 +127,20 @@ export function Footer() {
                                 </NavLink>
                             ))}
                         </div>
-                        <NavLink
-                            href="/locations"
-                            className="inline-flex items-center rounded-full border border-foreground/18 px-4 py-2 font-sans text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
-                        >
-                            View All Areas
-                        </NavLink>
+                        <div className="flex flex-col gap-3">
+                            <NavLink
+                                href="/locations"
+                                className="inline-flex items-center rounded-[0.35rem] border border-foreground/18 px-4 py-2 font-sans text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                            >
+                                View All Areas
+                            </NavLink>
+                            <NavLink
+                                href="/salons"
+                                className="inline-flex items-center rounded-[0.35rem] border border-gold/40 bg-gold/5 px-4 py-2 font-sans text-sm font-medium text-gold transition-colors hover:bg-gold hover:text-white"
+                            >
+                                Salon Directory
+                            </NavLink>
+                        </div>
                     </div>
 
                     <div className="space-y-4 lg:justify-self-end">
@@ -187,6 +195,25 @@ export function Footer() {
                                 <WhatsAppIcon className="h-5 w-5" />
                             </TrackedWhatsAppLink>
                         </div>
+                    </div>
+                </div>
+
+                <div className="mt-12 border-t border-border/20 pt-10">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                        <div className="space-y-2">
+                            <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
+                                From The Blog
+                            </h3>
+                            <p className="max-w-2xl font-sans text-sm leading-relaxed text-foreground/68">
+                                Explore every beauty guide, treatment article, and planning post we have published so far.
+                            </p>
+                        </div>
+                        <NavLink
+                            href="/blog"
+                            className="inline-flex items-center rounded-[0.35rem] border border-foreground/18 px-4 py-2 font-sans text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                        >
+                            View Blog Hub
+                        </NavLink>
                     </div>
                 </div>
             </div>
