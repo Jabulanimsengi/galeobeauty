@@ -37,10 +37,6 @@ export interface CommercialPageSpec {
     intent: "premium" | "budget";
 }
 
-// Keep doorway-style directory pages accessible for navigation while we rewrite them
-// with unique local proof and intent-specific copy before re-enabling indexing.
-const INDEXABLE_COMMERCIAL_PAGE_SLUGS = new Set<string>();
-
 export function getAllCommercialPages(): CommercialPageSpec[] {
     const pages: CommercialPageSpec[] = [];
 
@@ -77,9 +73,9 @@ export function getCommercialPageBySlug(slug: string): CommercialPageSpec | unde
 }
 
 export function isCommercialPageIndexable(page: CommercialPageSpec): boolean {
-    return INDEXABLE_COMMERCIAL_PAGE_SLUGS.has(page.slug);
+    return Boolean(page.slug);
 }
 
 export function getIndexableCommercialPages(): CommercialPageSpec[] {
-    return getAllCommercialPages().filter(isCommercialPageIndexable);
+    return getAllCommercialPages();
 }

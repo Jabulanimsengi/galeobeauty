@@ -101,12 +101,12 @@ export default async function CommercialPage({ params }: { params: Promise<{ com
 
                             <div className="mb-8 space-y-4 text-base text-muted-foreground sm:text-lg">
                                 <p className="font-medium leading-8 text-foreground/80">
-                                    Looking for a trusted {page.categoryName.toLowerCase()} option within reach of {page.locationName}?
+                                    Looking for a trusted {page.categoryName.toLowerCase()} option in or around {page.locationName}?
                                 </p>
                                 <p className="leading-8">
                                     {isBudget
-                                        ? "This directory page highlights services that give budget-conscious clients a practical place to start. We keep it live for navigation, but we only plan to index pages once they have enough unique local proof and comparisons to earn search visibility."
-                                        : "This page gives you a quick overview of the category, the nearby service mix, and the treatments most relevant to this area. We are keeping commercial directory pages accessible while we upgrade them with stronger location-specific proof."}
+                                        ? `This page brings together treatments that are often a good fit for clients who want to compare value, pricing, and practical options before they book in ${page.locationName}.`
+                                        : `This page gives you a simple way to explore popular ${page.categoryName.toLowerCase()} treatments linked to ${page.locationName}, compare options, and move straight to the service that suits you best.`}
                                 </p>
                             </div>
 
@@ -159,23 +159,23 @@ export default async function CommercialPage({ params }: { params: Promise<{ com
                         <div className="grid gap-10 md:grid-cols-3">
                             <div className="flex flex-col gap-3">
                                 <Star className="h-8 w-8 text-gold" />
-                                <h3 className="font-serif text-xl font-semibold">Trusted Service Mix</h3>
+                                <h3 className="font-serif text-xl font-semibold">Popular Services</h3>
                                 <p className="text-muted-foreground">
-                                    Use this page as a quick way to compare the treatments in this category before you move into the detailed service pages.
+                                    Start here to compare some of the treatments people most often browse in this category.
                                 </p>
                             </div>
                             <div className="flex flex-col gap-3">
                                 <CheckCircle className="h-8 w-8 text-gold" />
-                                <h3 className="font-serif text-xl font-semibold">Canonical Next Steps</h3>
+                                <h3 className="font-serif text-xl font-semibold">Easy Next Steps</h3>
                                 <p className="text-muted-foreground">
-                                    Every card above takes you to the actual treatment page, so you can check pricing, fit, and booking details without guesswork.
+                                    Each card above opens the full treatment page so you can check pricing, details, and booking information.
                                 </p>
                             </div>
                             <div className="flex flex-col gap-3">
                                 <MapPin className="h-8 w-8 text-gold" />
-                                <h3 className="font-serif text-xl font-semibold">Location Context</h3>
+                                <h3 className="font-serif text-xl font-semibold">Helpful for Local Clients</h3>
                                 <p className="text-muted-foreground">
-                                    We keep directory pages live for nearby-area discovery while we rewrite them with stronger proof, travel context, and local relevance.
+                                    If you are comparing beauty options around {page.locationName}, this page helps you narrow down the services that match what you need.
                                 </p>
                             </div>
                         </div>
