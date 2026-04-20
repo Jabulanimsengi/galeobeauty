@@ -860,7 +860,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                         <ArrowRight className="h-4 w-4" />
                                     </Link>
                                     <Link
-                                        href="/locations/harties"
+                                        href="/locations/hartbeespoort"
                                         className="inline-flex items-center gap-2 rounded-[0.35rem] border border-border bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
                                     >
                                         Harties Salon Page

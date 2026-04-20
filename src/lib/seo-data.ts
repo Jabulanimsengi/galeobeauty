@@ -991,16 +991,14 @@ function supportsExpandedLocationServiceCoverage(locationSlug: string): boolean 
         return false;
     }
 
-    if (locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG) {
-        return true;
-    }
-
     const location = getLocationBySlug(locationSlug);
 
-    if (!location || !supportsLocationServicePages(location) || isHartbeespoortClusterLocation(locationSlug)) {
+    if (!location || !supportsLocationServicePages(location)) {
         return false;
     }
 
+    // Real Hartbeespoort-area suburbs and estates should be indexable local service pages.
+    // Only alias slugs such as "harties" are collapsed to the canonical local slug.
     return true;
 }
 

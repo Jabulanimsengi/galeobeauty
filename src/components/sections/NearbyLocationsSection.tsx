@@ -65,7 +65,7 @@ export function NearbyLocationsSection({
                         const canonicalSlug = getCanonicalLocationSlug(location.slug);
                         const href = serviceSlug && (canonicalSlug === "hartbeespoort" || isIndexableLocationService(canonicalSlug, serviceSlug))
                             ? `/locations/${canonicalSlug}/${serviceSlug}`
-                            : `/locations/${location.slug}`;
+                            : `/locations/${canonicalSlug}`;
 
                         return (
                         <Link

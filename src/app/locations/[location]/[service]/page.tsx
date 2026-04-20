@@ -212,15 +212,12 @@ export default async function LocationServicePage({ params }: PageProps) {
         notFound();
     }
 
-    if (isBroadLocationHub(location)) {
-        redirect(`/prices/${service.categoryId}/${service.slug}`);
+    if (locationSlug !== canonicalLocationSlug) {
+        permanentRedirect(`/locations/${canonicalLocationSlug}/${service.slug}`);
     }
 
-    if (
-        isHartbeespoortClusterLocation(locationSlug) &&
-        locationSlug !== CANONICAL_LOCAL_SERVICE_LOCATION_SLUG
-    ) {
-        permanentRedirect(`/prices/${service.categoryId}/${service.slug}`);
+    if (isBroadLocationHub(location)) {
+        redirect(`/prices/${service.categoryId}/${service.slug}`);
     }
 
     const resolvedService = service;
@@ -256,33 +253,10 @@ export default async function LocationServicePage({ params }: PageProps) {
     const locationServiceInsight = getLocationServiceInsight(resolvedService, location);
     const isCanonicalLocalPage = locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
     const localSummary = isCanonicalLocalPage
-        ? `Clients from Hartbeespoort, Harties and the surrounding dam area often book this treatment from our salon.`
-        : `Clients travelling from ${location.name} usually book this treatment when they want a trusted Hartbeespoort salon option.`;
+        ? `A strong option for Hartbeespoort and Harties clients who want a trusted salon without leaving the dam area.`
+        : `A strong option for clients coming from ${location.name} who want a trusted Hartbeespoort salon visit.`;
     const faqs = getServiceFAQs(resolvedService, location).slice(0, 4);
     const treatmentProcess = getTreatmentProcess(resolvedService, location);
-    const localHubLinks = isCanonicalLocalPage
-        ? [
-            { slug: "hartbeespoort", label: "Hartbeespoort" },
-            { slug: "harties", label: "Harties" },
-            { slug: "landsmeer", label: "Landsmeer" },
-            { slug: "melodie", label: "Melodie" },
-            { slug: "schoemansville", label: "Schoemansville" },
-            { slug: "ifafi", label: "Ifafi" },
-            { slug: "pecanwood", label: "Pecanwood" },
-        ]
-        : [];
-    const commuterAreaCandidates = isCanonicalLocalPage
-        ? [
-            { slug: "pretoria", label: "Pretoria" },
-            { slug: "centurion", label: "Centurion" },
-            { slug: "brits", label: "Brits" },
-            { slug: "midstream", label: "Midstream" },
-            { slug: "johannesburg", label: "Johannesburg" },
-        ]
-        : [];
-    const commuterAreaLinks = commuterAreaCandidates.filter((candidate) =>
-        isIndexableLocationService(candidate.slug, resolvedService.slug)
-    );
     const buildCurrentLocationServiceHref = (slug: string, categoryId?: string) =>
         (locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG || isIndexableLocationService(locationSlug, slug))
             ? `/locations/${locationSlug}/${slug}`
@@ -290,7 +264,7 @@ export default async function LocationServicePage({ params }: PageProps) {
     const buildNearbyAreaHref = (targetLocationSlug: string, slug: string) =>
         isIndexableLocationService(targetLocationSlug, slug)
             ? `/locations/${targetLocationSlug}/${slug}`
-            : `/locations/${targetLocationSlug}`;
+            : `/locations/${getCanonicalLocationSlug(targetLocationSlug)}`;
 
     const whatsappMessage =
         `Hi! I found you on www.galeobeauty.com and I'm interested in ${resolvedService.keyword}. I'm based in ${location.name}. Can I book an appointment?`;
@@ -550,152 +524,89 @@ export default async function LocationServicePage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {isCanonicalLocalPage && (
-                    <section className="border-y border-border/50 bg-secondary/10 py-12 sm:py-14">
-                        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-                            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-start">
-                                <div className="rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
-                                    <h2 className="font-sans text-2xl font-semibold text-foreground sm:text-3xl">
-                                        Serving the dam area
-                                    </h2>
-                                    <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-foreground sm:text-base">
-                                        Browse local hubs around Hartbeespoort and Harties if you want to explore nearby areas before you book.
-                                    </p>
-
-                                    <div className="mt-5 flex flex-wrap gap-3">
-                                        {localHubLinks.map((hub) => (
-                                            <Link
-                                                key={hub.slug}
-                                                href={`/locations/${hub.slug}`}
-                                                className="rounded-[0.35rem] border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
-                                            >
-                                                {hub.label}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
-                                    <h3 className="font-sans text-lg font-semibold text-foreground">Nearby areas</h3>
-                                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                                        Travelling in from Pretoria, Centurion, Brits, or another nearby area? These pages can help you explore the same treatment closer to your route.
-                                    </p>
-                                    <div className="mt-5 flex flex-wrap gap-3">
-                                        {commuterAreaLinks.map((area) => (
-                                            <Link
-                                                key={area.slug}
-                                                href={`/locations/${area.slug}/${resolvedService.slug}`}
-                                                className="rounded-[0.35rem] border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:text-gold"
-                                            >
-                                                {resolvedService.keyword} in {area.label}
-                                            </Link>
-                                        ))}
-                                        {commuterAreaLinks.length === 0 && (
-                                            <p className="text-sm text-muted-foreground">
-                                                More nearby area pages for this treatment will be added over time.
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                )}
-
                 {/* Legacy validator markers:
                     {service.keyword} Quick Facts for {location.name}
                     Serving <span className="text-gold">{location.name}</span> & {location.region}
                     dynamicRelatedServices.map((relatedService) => (
                 */}
-                <section className="bg-secondary/20 py-12 sm:py-16">
-                    <div className="container mx-auto max-w-5xl px-4 sm:px-6">
-                        <LocationSectionHeading
-                            title={`Booking ${service.keyword} from ${location.name}`}
-                            description="This page is here to help you decide whether Galeo Beauty is the right place to book this treatment from your area."
-                            centered={false}
-                        />
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Treatment</p>
-                                <p className="font-medium text-foreground">{service.keyword}</p>
-                                <p className="mt-2 text-sm text-muted-foreground">From {service.price}{service.duration ? ` | ${service.duration}` : ""}</p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Best For</p>
-                                <p className="text-muted-foreground leading-relaxed">{locationServiceInsight}</p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Travel Context</p>
-                                <p className="text-muted-foreground leading-relaxed">{drivingContext}. {locationInsights.travelNote}</p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-border bg-background p-5">
-                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold mb-2">Useful Links</p>
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    <Link
-                                        href={`/locations/${locationSlug}`}
-                                        className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
-                                    >
-                                        {location.name} Hub
-                                    </Link>
-                                    {category && (
-                                        <Link
-                                            href={`/prices/${category.id}/${service.slug}`}
-                                            className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
-                                        >
-                                            Main Service Page
-                                        </Link>
-                                    )}
-                                    {category && (
-                                        <Link
-                                            href={`/prices/${category.id}`}
-                                            className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
-                                        >
-                                            More {category.title}
-                                        </Link>
-                                    )}
+                <section className="border-y border-border/50 bg-secondary/15 py-12 sm:py-16">
+                    <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+                        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)] lg:items-start">
+                            <div>
+                                <LocationSectionHeading
+                                    title={isCanonicalLocalPage
+                                        ? `Why Hartbeespoort clients book ${service.keyword} here`
+                                        : `Why ${location.name} clients book ${service.keyword} here`}
+                                    description="A shorter local overview so you can quickly judge fit, travel, and next steps."
+                                    centered={false}
+                                />
+
+                                <div className="grid gap-4 md:grid-cols-2">
+                                    <div className="rounded-[0.4rem] border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
+                                        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Best Fit</p>
+                                        <p className="text-sm leading-7 text-muted-foreground">{locationServiceInsight}</p>
+                                    </div>
+                                    <div className="rounded-[0.4rem] border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
+                                        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Travel Context</p>
+                                        <p className="text-sm leading-7 text-muted-foreground">{drivingContext}. {locationInsights.travelNote}</p>
+                                    </div>
+                                    <div className="rounded-[0.4rem] border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
+                                        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Local Insight</p>
+                                        <p className="text-sm leading-7 text-muted-foreground">{locationInsights.characteristic}</p>
+                                    </div>
+                                    <div className="rounded-[0.4rem] border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
+                                        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Typical Clients</p>
+                                        <p className="text-sm leading-7 text-muted-foreground">{locationInsights.clientProfile}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="mt-8 rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)]">
-                            <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-                                <div className="max-w-2xl">
-                                    <LocationSectionHeading
-                                        title={`Visiting from ${location.name}`}
-                                        description="Helpful local context if you are planning your visit from this area."
-                                        centered={false}
-                                    />
-                                    <div className="space-y-4">
-                                        <p className="text-muted-foreground text-lg leading-relaxed">
-                                            {locationInsights.characteristic}
-                                        </p>
-                                        <p className="text-muted-foreground text-lg leading-relaxed">
-                                            {locationInsights.clientProfile}
-                                        </p>
-                                        <p className="text-muted-foreground text-lg leading-relaxed">
-                                            {drivingContext}. {locationInsights.travelNote}
-                                        </p>
-                                        <p className="rounded-[0.35rem] border-l-4 border-gold bg-secondary/20 p-4 text-lg leading-relaxed text-muted-foreground">
-                                            {locationServiceInsight}
+
+                            <aside className="rounded-[0.4rem] border border-border bg-background p-6 shadow-[0_20px_60px_-45px_rgba(0,0,0,0.35)]">
+                                <div className="flex items-start gap-4">
+                                    <MapPin className="h-6 w-6 flex-shrink-0 text-gold" />
+                                    <div>
+                                        <p className="mb-1 font-semibold text-foreground">Visit Galeo Beauty</p>
+                                        <p className="text-sm leading-7 text-muted-foreground">
+                                            {businessInfo.address.street}<br />
+                                            {businessInfo.address.area}<br />
+                                            {businessInfo.address.city}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="w-full max-w-md rounded-[0.4rem] border border-border bg-secondary/30 p-6">
-                                    <div className="flex items-start gap-4">
-                                        <MapPin className="w-6 h-6 text-gold flex-shrink-0" />
-                                        <div>
-                                            <p className="font-semibold text-foreground mb-1">Our Location</p>
-                                            <p className="text-muted-foreground">
-                                                {businessInfo.address.street}<br />
-                                                {businessInfo.address.area}<br />
-                                                {businessInfo.address.city}
-                                            </p>
-                                        </div>
+                                <div className="mt-5 border-t border-border pt-5">
+                                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold">Quick Links</p>
+                                    <div className="flex flex-wrap gap-2">
+                                        <Link
+                                            href={`/locations/${locationSlug}`}
+                                            className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                        >
+                                            {location.name} Hub
+                                        </Link>
+                                        {category && (
+                                            <Link
+                                                href={`/prices/${category.id}/${service.slug}`}
+                                                className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                            >
+                                                Main Service Page
+                                            </Link>
+                                        )}
+                                        {category && (
+                                            <Link
+                                                href={`/prices/${category.id}`}
+                                                className="rounded-[0.35rem] bg-secondary/60 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-gold hover:text-white"
+                                            >
+                                                More {category.title}
+                                            </Link>
+                                        )}
                                     </div>
-                                    <div className="flex items-start gap-4 mt-4 pt-4 border-t border-border">
-                                        <Phone className="w-6 h-6 text-gold flex-shrink-0" />
+                                </div>
+
+                                <div className="mt-5 border-t border-border pt-5">
+                                    <div className="flex items-start gap-4">
+                                        <Phone className="h-6 w-6 flex-shrink-0 text-gold" />
                                         <div>
-                                            <p className="font-semibold text-foreground mb-1">Call or WhatsApp</p>
+                                            <p className="mb-1 font-semibold text-foreground">Call or WhatsApp</p>
                                             <TrackedExternalLink
                                                 href={`tel:${businessInfo.phone}`}
                                                 trackingContext={`location_service_phone_${location.slug}_${resolvedService.slug}`}
@@ -705,7 +616,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                             >
                                                 012 111 1730
                                             </TrackedExternalLink>
-                                            <span className="text-muted-foreground mx-2">|</span>
+                                            <span className="mx-2 text-muted-foreground">|</span>
                                             <TrackedWhatsAppLink
                                                 message={whatsappMessage}
                                                 trackingContext={`location_service_contact_${location.slug}_${resolvedService.slug}`}
@@ -715,8 +626,9 @@ export default async function LocationServicePage({ params }: PageProps) {
                                             </TrackedWhatsAppLink>
                                         </div>
                                     </div>
+
                                     <div className="mt-6">
-                                        <Button asChild className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
+                                        <Button asChild className="rounded-[0.35rem] bg-gold text-foreground hover:bg-gold-dark">
                                             <TrackedWhatsAppLink
                                                 message={whatsappMessage}
                                                 trackingContext={`location_service_local_fit_${location.slug}_${resolvedService.slug}`}
@@ -728,7 +640,7 @@ export default async function LocationServicePage({ params }: PageProps) {
                                         </Button>
                                     </div>
                                 </div>
-                            </div>
+                            </aside>
                         </div>
                     </div>
                 </section>

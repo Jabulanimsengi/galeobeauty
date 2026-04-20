@@ -239,7 +239,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                             </span>
                         </div>
 
-                        <div className="relative mt-8 overflow-hidden rounded-[2rem] border border-border/60 bg-secondary/20 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
+                        <div className="relative mt-8 overflow-hidden rounded-[0.4rem] border border-border/60 bg-secondary/20 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.45)]">
                             <div className="relative aspect-[16/9]">
                                 <CloudinaryImage
                                     src={post.featuredImage}
@@ -261,7 +261,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                             className="prose prose-lg max-w-none"
                             dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
                         />
-                        <div className="mt-10 rounded-2xl border border-gold/20 bg-secondary/20 p-6">
+                        <div className="mt-10 rounded-[0.4rem] border border-gold/20 bg-secondary/20 p-6">
                             <h2 className="font-serif text-2xl text-foreground mb-3">
                                 Explore Related Services
                             </h2>
@@ -273,7 +273,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                                     <Link
                                         key={link.href}
                                         href={link.href}
-                                        className="rounded-full border border-gold/30 bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                        className="rounded-[0.35rem] border border-gold/30 bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
                                     >
                                         {link.label}
                                     </Link>
@@ -293,10 +293,10 @@ export default async function BlogPostPage({ params }: PageProps) {
                             Experience the treatments mentioned in this article at Galeo Beauty.
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
-                            <Button asChild className="bg-gold hover:bg-gold-dark text-foreground rounded-full px-8">
+                            <Button asChild className="rounded-[0.35rem] bg-gold px-8 text-foreground hover:bg-gold-dark">
                                 <Link href="/prices">Explore Treatments</Link>
                             </Button>
-                            <Button asChild variant="outline" className="rounded-full px-8">
+                            <Button asChild variant="outline" className="rounded-[0.35rem] px-8">
                                 <Link href="/contact">Contact Us</Link>
                             </Button>
                         </div>
@@ -315,7 +315,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                                     <Link
                                         key={relatedPost.slug}
                                         href={`/blog/${relatedPost.slug}`}
-                                        className="group bg-secondary/30 rounded-xl p-6 border border-border hover:border-gold/30 transition-all"
+                                        className="group rounded-[0.4rem] border border-border bg-secondary/30 p-6 transition-all hover:border-gold/30"
                                     >
                                         <span className="text-gold text-xs font-medium">
                                             {relatedPost.category}
