@@ -62,6 +62,9 @@ else
   npm run build:production
 fi
 
+# Automatically submit newly built sitemaps to IndexNow
+npm run submit:indexnow
+
 cat > "$app_dir/release-metadata.json" <<EOF
 {
   "releaseId": "$release_id",
