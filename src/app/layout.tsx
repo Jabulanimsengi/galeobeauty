@@ -202,6 +202,8 @@ export default function RootLayout({
             }),
           }}
         />
+        {/* Ahrefs Analytics */}
+        <script src="https://analytics.ahrefs.com/analytics.js" data-key="lp8LKEaPrlWIfaZkAYTlWg" async></script>
       </head>
       <body className="antialiased">
         <Script
