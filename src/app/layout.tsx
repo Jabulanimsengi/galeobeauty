@@ -5,7 +5,6 @@ import { AttributionTracker } from "@/components/providers/AttributionTracker";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
 import { AppBootLoader } from "@/components/providers/AppBootLoader";
 import { DeferredFloatingSocials } from "@/components/ui/DeferredFloatingSocials";
-import { CartProvider } from "@/components/providers/CartProvider";
 import { AGGREGATE_RATING } from "@/lib/reviews-data";
 import { buildGlobalKeywords, buildOfferCatalogEntries } from "@/lib/seo-keywords";
 import { businessInfo } from "@/lib/constants";
@@ -221,12 +220,10 @@ export default function RootLayout({
         </Script>
 
         <NavigationLoadingProvider>
-          <CartProvider>
           <AttributionTracker />
           <AppBootLoader />
           {children}
           <DeferredFloatingSocials />
-          </CartProvider>
         </NavigationLoadingProvider>
       </body>
     </html>
