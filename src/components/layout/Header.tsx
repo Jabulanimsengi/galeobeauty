@@ -2,6 +2,7 @@
 
 import { startTransition, useCallback, useEffect, useState } from "react";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import { CartIndicator } from "@/components/ui/CartIndicator";
 import { Phone, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -219,10 +220,9 @@ export function Header() {
                             />
                         </NavLink>
 
-                        <div className="h-12 w-12 shrink-0" aria-hidden="true" />
+                        <CartIndicator />
                     </div>
-
-                    <div className="hidden h-[5.8rem] items-center lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-8">
+                    <div className="hidden h-[5.8rem] items-center lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-6">
                         <NavLink href="/" className="relative z-10 justify-self-start">
                             <CloudinaryImage
                                 src="/images/logo.png"
@@ -235,7 +235,7 @@ export function Header() {
                             />
                         </NavLink>
 
-                        <nav className="relative flex items-center justify-center gap-1">
+                        <nav className="relative flex items-center justify-center gap-0">
                             {navItems.map((item) => {
                                 return (
                                     <NavLink
@@ -244,28 +244,31 @@ export function Header() {
                                         className="group relative"
                                     >
                                         <span className={cn(
-                                            "relative z-10 flex items-center gap-1.5 px-4 py-2 text-[0.8rem] font-medium uppercase tracking-[0.24em] transition-colors duration-300",
+                                            "relative z-10 flex items-center gap-1.5 px-3 py-2 text-[0.74rem] font-medium uppercase tracking-[0.18em] transition-colors duration-300",
                                             "group-hover:text-gold",
                                             "text-foreground/78"
                                         )}>
                                             {item.label}
                                         </span>
 
-                                        <span className="absolute inset-x-4 bottom-0 h-px origin-center scale-x-0 bg-gold/90 transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                                        <span className="absolute inset-x-3 bottom-0 h-px origin-center scale-x-0 bg-gold/90 transition-transform duration-300 ease-out group-hover:scale-x-100" />
                                     </NavLink>
                                 );
                             })}
                         </nav>
 
-                        <Button
-                            asChild
-                            className={cn(
-                                "justify-self-end rounded-none px-6 text-[0.72rem] font-semibold uppercase tracking-[0.24em] transition-colors",
-                                "bg-[#17120f] text-white hover:bg-gold hover:text-white"
-                            )}
-                        >
-                            <NavLink href="/prices">Book</NavLink>
-                        </Button>
+                        <div className="flex items-center gap-3 justify-self-end">
+                            <CartIndicator />
+                            <Button
+                                asChild
+                                className={cn(
+                                    "rounded-none px-5 text-[0.7rem] font-semibold uppercase tracking-[0.2em] transition-colors",
+                                    "bg-[#17120f] text-white hover:bg-gold hover:text-white"
+                                )}
+                            >
+                                <NavLink href="/prices">Book</NavLink>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </header>

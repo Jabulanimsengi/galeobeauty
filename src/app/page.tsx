@@ -4,6 +4,7 @@ import { NavLink } from "@/components/ui/nav-link";
 import {
   HomepageBrandsMarqueeSection,
   HomepageCategoriesSection,
+  HomepageProductsSection,
   HeroSection,
   HomepageFaqSection,
   ReviewsSection,
@@ -115,6 +116,7 @@ export default function HomePage() {
       <main className="bg-[#f6efe6]">
         <HeroSection />
         <HomepageBrandsMarqueeSection />
+        <HomepageProductsSection />
         <HomepageCategoriesSection />
         <section className="bg-[#17120f] py-12 text-[#f6efe6] sm:py-16 lg:py-20">
           <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">

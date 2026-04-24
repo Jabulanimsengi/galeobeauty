@@ -3,6 +3,7 @@ import type { NavItem, BusinessInfo } from "@/types";
 export const navItems: NavItem[] = [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
+    { label: "Shop", href: "/shop" },
     { label: "Services", href: "/prices" },
     { label: "Specials", href: "/specials" },
     { label: "Gallery", href: "/gallery" },
