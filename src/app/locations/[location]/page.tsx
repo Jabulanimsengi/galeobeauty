@@ -205,10 +205,10 @@ function getLocationHeroContent(
 }
 
 // Pre-build a deterministic nearby-location hub set.
-export const dynamic = "force-static";
 export const dynamicParams = true;
 
 export function generateStaticParams() {
+    if (process.env.NODE_ENV === "development") return [];
     return getPrebuildLocationHubParams();
 }
 

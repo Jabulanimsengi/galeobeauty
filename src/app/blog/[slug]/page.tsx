@@ -10,16 +10,14 @@ import { toAbsoluteUrl } from "@/lib/site-url";
 
 // Generate static params for all blog posts
 export function generateStaticParams() {
+    if (process.env.NODE_ENV === "development") return [];
     const posts = getAllBlogPosts();
     return posts.map((post) => ({
         slug: post.slug,
     }));
 }
 
-// Fully static - no ISR
 export const dynamicParams = true;
-export const dynamic = "force-static";
-export const revalidate = false;
 
 interface PageProps {
     params: Promise<{ slug: string }>;

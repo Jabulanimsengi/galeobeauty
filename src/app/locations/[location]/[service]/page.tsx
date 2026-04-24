@@ -39,11 +39,11 @@ import { toAbsoluteUrl } from "@/lib/site-url";
 // Pre-build only the explicit hero location-service pages for Hartbeespoort and nearby areas.
 // The rest of the valid location-service URLs generate on-demand via ISR.
 
-export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = 43200; // ISR: Revalidate every 12 hours
+export const revalidate = 43200; // ISR: 12 hours
 
 export function generateStaticParams() {
+    if (process.env.NODE_ENV === "development") return [];
     return getPrebuildLocationServiceParams();
 }
 

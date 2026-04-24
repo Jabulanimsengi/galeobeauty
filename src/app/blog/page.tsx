@@ -49,9 +49,6 @@ export const metadata: Metadata = {
     },
 };
 
-// Fully static - no ISR
-export const dynamic = "force-static";
-export const revalidate = false;
 
 export default function BlogPage() {
     const posts = getAllBlogPosts();
@@ -94,7 +91,7 @@ export default function BlogPage() {
                                 Galeo Beauty Hartbeespoort Blog
                             </span>
                             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
-                                Beauty <span className="text-gold italic">Tips & Guides</span> from Hartbeespoort
+                                Beauty <span className="text-gold italic">Tips &amp; Guides</span> from Hartbeespoort
                             </h1>
                             <p className="text-muted-foreground text-lg leading-relaxed">
                                 Skincare guidance, treatment insights, and beauty inspiration from the Galeo Beauty team in Hartbeespoort.
@@ -169,9 +166,6 @@ export default function BlogPage() {
                         </div>
                     </div>
                 </section>
-
-                {/* Reviews Section */}
-
 
                 {/* CTA Section */}
                 <section className="py-20 bg-foreground text-background text-center">

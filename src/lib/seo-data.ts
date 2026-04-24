@@ -1003,7 +1003,16 @@ function supportsExpandedLocationServiceCoverage(locationSlug: string): boolean 
 }
 
 export function isIndexableLocationService(locationSlug: string, serviceSlug: string): boolean {
-    if (!getServiceBySlug(serviceSlug)) {
+    const service = getServiceBySlug(serviceSlug);
+
+    if (!service) {
+        return false;
+    }
+
+    // Hair extension SKU pages are useful for shoppers, but multiplying every
+    // length/colour/method by every location creates too many near-duplicate
+    // URLs for Google to meaningfully index.
+    if (service.categoryId === "hair-extensions") {
         return false;
     }
 

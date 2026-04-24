@@ -13,11 +13,10 @@ import {
 import { getAllSEOServices } from "@/lib/seo-data";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 
-export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = false;
 
 export function generateStaticParams() {
+    if (process.env.NODE_ENV === "development") return [];
     return getCommercialPageParams();
 }
 

@@ -9,6 +9,7 @@ import { ArrowRight } from "lucide-react";
 import { serviceCategories, getCategoryById } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
 import { buildCategoryMetadataKeywords } from "@/lib/seo-keywords";
+import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { toAbsoluteUrl } from "@/lib/site-url";
 import { getBespokeCategoryPage } from "@/lib/bespoke-category-pages";
@@ -228,15 +229,14 @@ function getLeadSentence(value: string) {
 
 // Generate static paths for all categories
 export function generateStaticParams() {
+    // Skip eager param generation in dev — pages render on-demand via dynamicParams
+    if (process.env.NODE_ENV === "development") return [];
     return serviceCategories.map((category) => ({
         category: category.id,
     }));
 }
 
-// Fully static - no ISR
-export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = false;
 
 interface PageProps {
     params: Promise<{ category: string }>;
