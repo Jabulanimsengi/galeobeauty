@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { getAllSEOServices } from "./seo-data";
+import { getCachedSEOServices } from "./seo-data";
 
 export interface IntentFaq {
     question: string;
@@ -58,7 +58,7 @@ const LEGACY_INTENT_HREF_REWRITES: Record<string, string> = {
 };
 
 function buildServiceLinks(serviceSlugs: string[]): IntentLink[] {
-    const services = getAllSEOServices();
+    const services = getCachedSEOServices();
 
     return serviceSlugs
         .map((serviceSlug) => services.find((service) => service.slug === serviceSlug))
@@ -86,6 +86,10 @@ export const INTENT_PAGE_REDIRECTS: Record<string, string> = {
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/intent-pages");
+let _allIntentPages: IntentPageSpec[] | null = null;
+let _publishedIntentPages: IntentPageSpec[] | null = null;
+let _intentPagesByCategory: Map<string, IntentPageSpec[]> | null = null;
+let _intentPagesByService: Map<string, IntentPageSpec[]> | null = null;
 
 function hasDraftContentMarkers(content: string): boolean {
     return DRAFT_CONTENT_MARKERS.some((marker) => content.includes(marker));
@@ -123,22 +127,30 @@ export function canonicalizeIntentPageHref(href: string): string {
 }
 
 export function getAllIntentPages(): IntentPageSpec[] {
-    const files = fs.readdirSync(CONTENT_DIR);
-    return files
-        .filter((file) => file.endsWith(".mdx"))
-        .map((file) => {
-            const rawContent = fs.readFileSync(path.join(CONTENT_DIR, file), "utf-8");
-            const { data, content } = matter(rawContent);
+    if (!_allIntentPages) {
+        const files = fs.readdirSync(CONTENT_DIR);
+        _allIntentPages = files
+            .filter((file) => file.endsWith(".mdx"))
+            .map((file) => {
+                const rawContent = fs.readFileSync(path.join(CONTENT_DIR, file), "utf-8");
+                const { data, content } = matter(rawContent);
 
-            return {
-                ...(data as Omit<IntentPageSpec, "content">),
-                content,
-            };
-        });
+                return {
+                    ...(data as Omit<IntentPageSpec, "content">),
+                    content,
+                };
+            });
+    }
+
+    return _allIntentPages;
 }
 
 export function getPublishedIntentPages(): IntentPageSpec[] {
-    return getAllIntentPages().filter(isIntentPageIndexable);
+    if (!_publishedIntentPages) {
+        _publishedIntentPages = getAllIntentPages().filter(isIntentPageIndexable);
+    }
+
+    return _publishedIntentPages;
 }
 
 export function getIntentPageBySlug(slug: string): IntentPageSpec | undefined {
@@ -165,9 +177,39 @@ export function getIntentPageServiceLinks(page: IntentPageSpec): IntentLink[] {
 }
 
 export function getIntentPagesForCategory(categoryId: string): IntentPageSpec[] {
-    return getPublishedIntentPages().filter((page) => page.categoryIds.includes(categoryId));
+    if (!_intentPagesByCategory) {
+        _intentPagesByCategory = new Map<string, IntentPageSpec[]>();
+
+        for (const page of getPublishedIntentPages()) {
+            for (const id of page.categoryIds) {
+                const existing = _intentPagesByCategory.get(id);
+                if (existing) {
+                    existing.push(page);
+                } else {
+                    _intentPagesByCategory.set(id, [page]);
+                }
+            }
+        }
+    }
+
+    return _intentPagesByCategory.get(categoryId) ?? [];
 }
 
 export function getIntentPagesForService(serviceSlug: string): IntentPageSpec[] {
-    return getPublishedIntentPages().filter((page) => page.serviceSlugs.includes(serviceSlug));
+    if (!_intentPagesByService) {
+        _intentPagesByService = new Map<string, IntentPageSpec[]>();
+
+        for (const page of getPublishedIntentPages()) {
+            for (const slug of page.serviceSlugs) {
+                const existing = _intentPagesByService.get(slug);
+                if (existing) {
+                    existing.push(page);
+                } else {
+                    _intentPagesByService.set(slug, [page]);
+                }
+            }
+        }
+    }
+
+    return _intentPagesByService.get(serviceSlug) ?? [];
 }

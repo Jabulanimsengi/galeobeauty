@@ -13,7 +13,7 @@ import { CheckCircle, Clock, MapPin, ArrowRight, Star } from "lucide-react";
 import { serviceCategories } from "@/lib/services-data";
 import {
     CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
-    getAllSEOServices,
+    getCachedSEOServices,
     getPrebuildServiceParams,
     getServiceFAQs,
     getTreatmentProcess,
@@ -41,9 +41,7 @@ import {
 // Canonical URL: /prices/[category]/[service]
 // Targets generic keywords like "gel nails", "microblading", etc.
 
-export const dynamic = "force-static";
 export const dynamicParams = true;
-export const revalidate = false;
 
 type IntentPageCard = ReturnType<typeof getIntentPagesForService>[number];
 
@@ -89,6 +87,8 @@ function collectRelatedIntentPages(serviceSlugs: string[]): IntentPageCard[] {
 // Pre-build all canonical service pages deterministically.
 // Location-targeted long-tail pages stay on-demand elsewhere.
 export function generateStaticParams() {
+    // Skip eager param generation in dev — pages render on-demand via dynamicParams
+    if (process.env.NODE_ENV === "development") return [];
     return [...getPrebuildServiceParams(), ...getAllBespokeServicePageParams()];
 }
 
@@ -151,7 +151,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
         };
     }
 
-    const allServices = getAllSEOServices();
+    const allServices = getCachedSEOServices();
     const service = allServices.find((s) => s.slug === serviceSlug && s.categoryId === categoryId);
 
     if (!service) {
@@ -640,7 +640,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     }
 
     // Validate that category matches the service
-    const allServices = getAllSEOServices();
+    const allServices = getCachedSEOServices();
     const service = allServices.find((s) => s.slug === serviceSlug);
 
     if (!service || service.categoryId !== categoryId) {

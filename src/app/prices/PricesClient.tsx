@@ -3,16 +3,21 @@
 import { Header, Footer } from "@/components/layout";
 import { motion, AnimatePresence } from "framer-motion";
 import { serviceCategories } from "@/lib/services-data";
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { TreatmentListItem } from "@/components/booking/TreatmentListItem";
-import { BookingSheet } from "@/components/booking/BookingSheet";
-import { BookingSummary } from "@/components/booking/BookingSummary";
-import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
 import { ChevronDown } from "lucide-react";
 
-import { useSearchParams } from "next/navigation";
-
+const BookingSheet = dynamic(
+    () => import("@/components/booking/BookingSheet").then((mod) => mod.BookingSheet)
+);
+const BookingSummary = dynamic(
+    () => import("@/components/booking/BookingSummary").then((mod) => mod.BookingSummary)
+);
+const BookingCart = dynamic(
+    () => import("@/components/booking/BookingCart").then((mod) => mod.BookingCart)
+);
 
 // Helper function to format titles with proper capitalization
 const formatTitle = (title: string): string => {
@@ -29,10 +34,13 @@ const formatTitle = (title: string): string => {
         .join(' ');
 };
 
-export function PricesClient() {
-    const searchParams = useSearchParams();
-    const categoryParam = searchParams.get("category");
-    const queryParam = searchParams.get("q")?.toLowerCase() ?? ""; // Support Sitelinks Searchbox
+interface PricesClientProps {
+    categoryParam?: string;
+    queryParam?: string;
+}
+
+export function PricesClient({ categoryParam, queryParam = "" }: PricesClientProps) {
+    const normalizedQueryParam = queryParam.toLowerCase();
 
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
@@ -40,11 +48,11 @@ export function PricesClient() {
         Record<string, { expanded: string[]; collapsed: string[] }>
     >({});
 
-    const searchQuery = queryParam;
-    const paramsKey = `${categoryParam ?? ""}::${queryParam}`;
+    const searchQuery = normalizedQueryParam;
+    const paramsKey = `${categoryParam ?? ""}::${normalizedQueryParam}`;
 
     const categoriesWithMatches = useMemo(() => {
-        if (!queryParam) {
+        if (!normalizedQueryParam) {
             return [];
         }
 
@@ -52,13 +60,13 @@ export function PricesClient() {
             .filter((cat) =>
                 cat.subcategories.some((sub) =>
                     sub.items.some((item) =>
-                        item.name.toLowerCase().includes(queryParam) ||
-                        item.description?.toLowerCase().includes(queryParam)
+                        item.name.toLowerCase().includes(normalizedQueryParam) ||
+                        item.description?.toLowerCase().includes(normalizedQueryParam)
                     )
                 )
             )
             .map((category) => category.id);
-    }, [queryParam]);
+    }, [normalizedQueryParam]);
 
     const autoExpandedCategories = useMemo(() => {
         const expanded = new Set<string>();
@@ -210,6 +218,9 @@ export function PricesClient() {
                         <div className="flex gap-8 lg:gap-12">
                             {/* Left Column - Accordion Categories */}
                             <div className={`flex-1 lg:max-w-2xl ${selectedTreatments.length === 0 ? "lg:mx-auto" : ""}`}>
+                                <div className="mb-4 rounded-[0.4rem] border border-border/60 bg-secondary/10 px-4 py-3 text-sm text-muted-foreground">
+                                    Select a category below to view the available treatments and prices.
+                                </div>
                                 <div className="space-y-2">
                                     {serviceCategories.map((category) => {
                                         // Filter items if search query exists

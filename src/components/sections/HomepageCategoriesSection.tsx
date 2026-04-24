@@ -81,21 +81,6 @@ const HOMEPAGE_CATEGORY_IDS = [
     "nails",
 ] as const;
 
-function splitHeadline(title: string): string[] {
-    const words = title.toUpperCase().split(/\s+/).filter(Boolean);
-
-    if (words.length <= 2) {
-        return [words.join(" ")];
-    }
-
-    if (words.length === 3) {
-        return [words.slice(0, 2).join(" "), words[2]];
-    }
-
-    const midpoint = Math.ceil(words.length / 2);
-    return [words.slice(0, midpoint).join(" "), words.slice(midpoint).join(" ")];
-}
-
 export function HomepageCategoriesSection() {
     const prefersReducedMotion = useReducedMotion();
     const homepageCategories = HOMEPAGE_CATEGORY_IDS
@@ -122,7 +107,6 @@ export function HomepageCategoriesSection() {
                         const copy = categoryCardCopy[category.id] ?? {
                             cta: "Explore Category",
                         };
-                        const headlineLines = splitHeadline(category.title);
                         const imageSrc = categoryCardImages[category.id] ?? category.image;
                         const isLastOddCard =
                             homepageCategories.length % 2 === 1 && index === homepageCategories.length - 1;
@@ -156,13 +140,9 @@ export function HomepageCategoriesSection() {
                                         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,6,5,0.16),rgba(8,6,5,0.36)_42%,rgba(8,6,5,0.62)_100%)]" />
                                         <div className="absolute inset-0 bg-black/18 transition-colors duration-300 group-hover:bg-black/24" />
 
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center sm:px-10 lg:px-12">
-                                            <h3 className="font-sans text-[1.72rem] font-light uppercase leading-[0.94] tracking-[0.03em] text-white sm:text-[3rem] lg:text-[4.2rem] xl:text-[4.8rem]">
-                                                {headlineLines.map((line) => (
-                                                    <span key={line} className="block">
-                                                        {line}
-                                                    </span>
-                                                ))}
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center sm:px-10 lg:px-10 xl:px-12">
+                                            <h3 className="mx-auto max-w-[11ch] text-balance font-sans text-[1.72rem] font-light uppercase leading-[0.94] tracking-[0.03em] text-white sm:text-[3rem] lg:text-[3.7rem] xl:text-[4.4rem]">
+                                                {category.title}
                                             </h3>
                                             <div className="mt-5 sm:mt-8">
                                                 <span className="inline-flex items-center justify-center bg-white px-5 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#17120f] transition-colors duration-300 group-hover:bg-gold group-hover:text-white sm:px-8 sm:py-3 sm:text-xs sm:tracking-[0.24em]">

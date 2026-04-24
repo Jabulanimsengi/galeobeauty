@@ -1,7 +1,5 @@
 
 import { Metadata } from "next";
-import { Suspense } from "react";
-import { RouteLoadingScreen } from "@/components/ui/RouteLoadingScreen";
 import { PricesClient } from "./PricesClient";
 import { buildPricesPageKeywords } from "@/lib/seo-keywords";
 
@@ -14,10 +12,23 @@ export const metadata: Metadata = {
     },
 };
 
-export default function PricesPage() {
+type PricesPageProps = {
+    searchParams: Promise<{
+        category?: string | string[];
+        q?: string | string[];
+    }>;
+};
+
+export default async function PricesPage({ searchParams }: PricesPageProps) {
+    const resolvedSearchParams = await searchParams;
+    const categoryParam = Array.isArray(resolvedSearchParams.category)
+        ? resolvedSearchParams.category[0]
+        : resolvedSearchParams.category;
+    const queryParam = Array.isArray(resolvedSearchParams.q)
+        ? resolvedSearchParams.q[0]
+        : resolvedSearchParams.q;
+
     return (
-        <Suspense fallback={<RouteLoadingScreen message="Loading treatments..." />}>
-            <PricesClient />
-        </Suspense>
+        <PricesClient categoryParam={categoryParam} queryParam={queryParam} />
     );
 }
