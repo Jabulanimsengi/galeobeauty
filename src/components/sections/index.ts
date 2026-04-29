@@ -1,7 +1,6 @@
 export { HeroSection } from "./HeroSection";
 export { HomepageBrandsMarqueeSection } from "./HomepageBrandsMarqueeSection";
 export { HomepageCategoriesSection } from "./HomepageCategoriesSection";
-export { HomepageProductsSection } from "./HomepageProductsSection";
 export { HomepageShowcaseSection } from "./HomepageShowcaseSection";
 export { StatsSection } from "./StatsSection";
 export { ServicesSection } from "./ServicesSection";
