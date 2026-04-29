@@ -12,6 +12,15 @@ const VALID_SERVICE_SLUGS = new Set<string>(
     )
   )
 );
+const SERVICE_CATEGORY_BY_SLUG = new Map<string, string>();
+
+serviceCategoriesContent.forEach((category) => {
+  category.subcategories.forEach((subcategory) => {
+    subcategory.items.forEach((item) => {
+      SERVICE_CATEGORY_BY_SLUG.set(item.id, category.id);
+    });
+  });
+});
 
 const CATEGORY_IDS = [
   'hart-aesthetics', 'fat-freezing', 'slimming', 'massages', 'dermalogica',
@@ -53,7 +62,7 @@ const NOT_FOUND_HTML = `<!doctype html>
         <h1>Page Not Found</h1>
         <p>The page you are looking for is unavailable. Continue browsing Galeo Beauty using one of the links below.</p>
         <div class="actions">
-          <a class="button button-primary" href="/prices">View Services</a>
+          <a class="button button-primary" href="/services">View Services</a>
           <a class="button button-secondary" href="/gallery">View Gallery</a>
           <a class="button button-secondary" href="/specials">View Specials</a>
           <a class="button button-secondary" href="/">Return Home</a>
@@ -103,6 +112,17 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(newUrl, 301);
   }
 
+  if (pathname === '/prices' || pathname.startsWith('/prices/')) {
+    const newUrl = new URL(request.url);
+    newUrl.pathname = pathname
+      .replace(/^\/prices\/lashes(?=\/|$)/, '/services/lashes-brows')
+      .replace(/^\/prices\/qms-facial(?=\/|$)/, '/services/qms')
+      .replace(/^\/prices\/pro-skin(?=\/|$)/, '/services/dermalogica')
+      .replace(/^\/prices\/skin(?=\/|$)/, '/services/dermalogica')
+      .replace(/^\/prices/, '/services');
+    return NextResponse.redirect(newUrl, 301);
+  }
+
   const oldSitemapPatterns = [
     '/sitemap-seo/0.xml',
     '/sitemap-seo/1.xml',
@@ -134,12 +154,29 @@ export function proxy(request: NextRequest) {
     );
   }
 
-  const pricesMatch = pathname.match(/^\/prices\/([^/]+)$/);
-  if (pricesMatch) {
-    const segment = pricesMatch[1];
+  const singleServiceSegmentMatch = pathname.match(/^\/services\/([^/]+)$/);
+  if (singleServiceSegmentMatch) {
+    const segment = singleServiceSegmentMatch[1];
     if (!VALID_CATEGORIES.has(segment)) {
+      const canonicalCategoryId = SERVICE_CATEGORY_BY_SLUG.get(segment);
+      if (canonicalCategoryId) {
+        return NextResponse.redirect(
+          new URL(`/services/${canonicalCategoryId}/${segment}`, request.url),
+          301
+        );
+      }
+
+      const legacyRedirectPath = resolveLegacyServiceRedirect(segment);
+      if (legacyRedirectPath) {
+        const canonicalSlug = legacyRedirectPath.serviceSlug ?? segment;
+        return NextResponse.redirect(
+          new URL(`/services/${legacyRedirectPath.categoryId}/${canonicalSlug}`, request.url),
+          301
+        );
+      }
+
       return NextResponse.redirect(
-        new URL('/prices', request.url),
+        new URL('/services', request.url),
         301
       );
     }

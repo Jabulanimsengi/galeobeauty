@@ -16,6 +16,9 @@ import {
     getIntentPageServiceLinks,
     canonicalizeIntentPageHref,
     isIntentPageIndexable,
+    getGuideCategoryLabel,
+    getPrimaryGuideCategoryId,
+    getRelatedIntentPages,
 } from "@/lib/intent-pages";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
@@ -108,14 +111,17 @@ export default async function IntentLandingPage({ params }: PageProps) {
         .filter((category): category is NonNullable<typeof category> => Boolean(category))
         .map((category) => ({
             label: category.title,
-            href: `/prices/${category.id}`,
+            href: `/services/${category.id}`,
             description: category.subtitle,
         }));
 
     const serviceLinks = getIntentPageServiceLinks(page);
+    const primaryGuideCategoryId = getPrimaryGuideCategoryId(page);
+    const relatedGuides = getRelatedIntentPages(page, 6);
     const breadcrumbs: BreadcrumbItem[] = [
         { label: "Home", href: "/" },
-        { label: "Services", href: "/prices" },
+        { label: "Guides", href: "/guides" },
+        { label: getGuideCategoryLabel(primaryGuideCategoryId), href: `/guides/${primaryGuideCategoryId}` },
         { label: page.h1 },
     ];
     const sectionLinks = [
@@ -146,8 +152,9 @@ export default async function IntentLandingPage({ params }: PageProps) {
         "@type": "BreadcrumbList",
         itemListElement: [
             { "@type": "ListItem", position: 1, name: "Home", item: "https://www.galeobeauty.com" },
-            { "@type": "ListItem", position: 2, name: "Services", item: "https://www.galeobeauty.com/prices" },
-            { "@type": "ListItem", position: 3, name: page.h1, item: `https://www.galeobeauty.com/${page.slug}` },
+            { "@type": "ListItem", position: 2, name: "Guides", item: "https://www.galeobeauty.com/guides" },
+            { "@type": "ListItem", position: 3, name: getGuideCategoryLabel(primaryGuideCategoryId), item: `https://www.galeobeauty.com/guides/${primaryGuideCategoryId}` },
+            { "@type": "ListItem", position: 4, name: page.h1, item: `https://www.galeobeauty.com/${page.slug}` },
         ],
     };
 
@@ -186,7 +193,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         {page.eyebrow}
                                     </span>
                                 </div>
-                                <h1 className="font-serif text-4xl text-foreground sm:text-5xl lg:text-6xl">
+                                <h1 className="font-sans text-4xl text-foreground sm:text-5xl lg:text-6xl">
                                     {page.h1}
                                 </h1>
                             </div>
@@ -198,7 +205,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                             </div>
 
                             <div className="flex flex-wrap gap-3">
-                                <Button asChild size="lg" className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
+                                <Button asChild size="lg" className="rounded-none bg-gold text-foreground hover:bg-gold-dark">
                                     <TrackedWhatsAppLink
                                         message={whatsappMessage}
                                         trackingContext={`intent_page_hero_${page.slug}`}
@@ -208,7 +215,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         Book via WhatsApp
                                     </TrackedWhatsAppLink>
                                 </Button>
-                                <Button asChild size="lg" variant="outline" className="rounded-[0.35rem]">
+                                <Button asChild size="lg" variant="outline" className="rounded-none">
                                     <Link href="/contact">Contact the Salon</Link>
                                 </Button>
                             </div>
@@ -216,7 +223,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                         </div>
 
                         <div className="lg:sticky lg:top-28 lg:self-start">
-                            <div className="overflow-hidden rounded-[0.4rem] shadow-2xl">
+                            <div className="overflow-hidden border border-border shadow-2xl">
                                 <div className="relative aspect-[4/5] w-full">
                                     <CloudinaryImage
                                         src={page.heroImage}
@@ -239,7 +246,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                 <a
                                     key={link.href}
                                     href={link.href}
-                                    className="rounded-[0.35rem] border border-gold/20 bg-secondary/20 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                    className="border border-gold/20 bg-secondary/20 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
                                 >
                                     {link.label}
                                 </a>
@@ -251,14 +258,14 @@ export default async function IntentLandingPage({ params }: PageProps) {
                 <section className="py-16">
                     <div className="container mx-auto max-w-6xl px-4 sm:px-6">
                         <div className="mb-10 max-w-3xl">
-                            <h2 className="font-serif text-3xl text-foreground sm:text-4xl">How Galeo Guides This Journey</h2>
+                            <h2 className="font-sans text-3xl text-foreground sm:text-4xl">How Galeo Guides This Journey</h2>
                             <p className="mt-3 text-muted-foreground">
                                 Every concern needs a thoughtful treatment path. We use consultation, skin or treatment assessment,
                                 and realistic planning to guide clients toward the most suitable next step.
                             </p>
                         </div>
 
-                        <div className="prose prose-p:text-muted-foreground prose-headings:font-serif prose-headings:text-foreground prose-a:text-gold max-w-none rounded-[0.4rem] border border-border bg-secondary/10 p-8 md:p-12">
+                        <div className="prose prose-p:text-muted-foreground prose-headings:font-sans prose-headings:text-foreground prose-a:text-gold max-w-none border border-border bg-secondary/10 p-8 md:p-12">
                             <MDXRemote
                                 source={page.content}
                                 components={{
@@ -273,7 +280,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                     <div className="container mx-auto max-w-6xl px-4 sm:px-6">
                         <div className="grid gap-8 lg:grid-cols-2">
                             <div>
-                                <h2 className="mb-4 font-serif text-3xl text-foreground">Recommended Treatment Options</h2>
+                                <h2 className="mb-4 font-sans text-3xl text-foreground">Recommended Treatment Options</h2>
                                 <p className="mb-6 text-muted-foreground">
                                     These treatment options are often the most relevant next step for this concern, depending on
                                     your goals, comfort level, maintenance preference and desired result.
@@ -283,7 +290,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         <Link
                                             key={link.href}
                                             href={link.href}
-                                            className="block rounded-[0.4rem] border border-border bg-background p-5 transition-colors hover:border-gold/50"
+                                            className="block border border-border bg-background p-5 transition-colors hover:border-gold/50"
                                         >
                                             <div className="flex items-start justify-between gap-4">
                                                 <div>
@@ -298,7 +305,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                             </div>
 
                             <div>
-                                <h2 className="mb-4 font-serif text-3xl text-foreground">Explore Related Services</h2>
+                                <h2 className="mb-4 font-sans text-3xl text-foreground">Explore Related Services</h2>
                                 <p className="mb-6 text-muted-foreground">
                                     If you are still exploring, these broader service collections can help you compare treatments,
                                     understand the menu more clearly, and decide what feels like the right fit.
@@ -308,7 +315,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         <Link
                                             key={link.href}
                                             href={link.href}
-                                            className="block rounded-[0.4rem] border border-border bg-background p-5 transition-colors hover:border-gold/50"
+                                            className="block border border-border bg-background p-5 transition-colors hover:border-gold/50"
                                         >
                                             <h3 className="font-medium text-foreground">{link.label}</h3>
                                             <p className="mt-1 text-sm text-muted-foreground">{link.description}</p>
@@ -316,11 +323,11 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                     ))}
                                 </div>
 
-                                <div className="mt-8 rounded-[0.4rem] border border-gold/20 bg-background p-6">
-                                    <h3 className="font-serif text-2xl text-foreground">Best For</h3>
+                                <div className="mt-8 border border-gold/20 bg-background p-6">
+                                    <h3 className="font-sans text-2xl text-foreground">Best For</h3>
                                     <div className="mt-4 flex flex-wrap gap-2">
                                         {page.bestFor.map((item) => (
-                                            <span key={item} className="rounded-[0.35rem] bg-gold/10 px-3 py-1.5 text-sm text-gold">
+                                            <span key={item} className="bg-gold/10 px-3 py-1.5 text-sm text-gold">
                                                 {item}
                                             </span>
                                         ))}
@@ -333,10 +340,10 @@ export default async function IntentLandingPage({ params }: PageProps) {
 
                 <section id="faq" className="py-16">
                     <div className="container mx-auto max-w-4xl px-4 sm:px-6">
-                        <h2 className="mb-8 text-center font-serif text-3xl text-foreground sm:text-4xl">Frequently Asked Questions</h2>
+                        <h2 className="mb-8 text-center font-sans text-3xl text-foreground sm:text-4xl">Frequently Asked Questions</h2>
                         <div className="space-y-4">
                             {page.faqs.map((faq) => (
-                                <details key={faq.question} className="group rounded-[0.4rem] border border-border bg-background p-6">
+                                <details key={faq.question} className="group border border-border bg-background p-6">
                                     <summary className="cursor-pointer list-none pr-8 text-lg font-semibold text-foreground marker:hidden">
                                         {faq.question}
                                     </summary>
@@ -347,14 +354,46 @@ export default async function IntentLandingPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                <section id="book" className="bg-foreground py-20 text-background">
-                    <div className="container mx-auto max-w-4xl px-4 text-center sm:px-6">
-                        <h2 className="font-serif text-3xl sm:text-4xl">Need help choosing the right treatment?</h2>
-                        <p className="mx-auto mt-4 max-w-2xl text-background/70">
+                {relatedGuides.length > 0 && (
+                    <section className="border-y border-border/40 bg-stone-50/70 py-16">
+                        <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+                            <div className="mx-auto mb-10 max-w-3xl text-center">
+                                <h2 className="font-sans text-3xl text-foreground sm:text-4xl">Related Guides</h2>
+                                <p className="mt-3 text-muted-foreground">
+                                    Continue reading related Galeo Beauty guides before choosing your treatment.
+                                </p>
+                            </div>
+                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                {relatedGuides.map((guide) => (
+                                    <Link
+                                        key={guide.slug}
+                                        href={`/${guide.slug}`}
+                                        className="group border border-border bg-background p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50"
+                                    >
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+                                            {getGuideCategoryLabel(getPrimaryGuideCategoryId(guide))}
+                                        </p>
+                                        <h3 className="mt-3 font-semibold text-foreground transition-colors group-hover:text-gold">
+                                            {guide.h1}
+                                        </h3>
+                                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                                            {guide.heroDescription}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                <section id="book" className="bg-stone-50/70 px-4 py-16 sm:px-6 lg:py-20">
+                    <div className="mx-auto max-w-4xl border border-[#2b2b2f] bg-[#171719] p-8 text-center text-white sm:p-10 lg:p-12">
+                        <h2 className="font-sans text-3xl sm:text-4xl">Need help choosing the right treatment?</h2>
+                        <p className="mx-auto mt-4 max-w-2xl text-white/70">
                             Tell us what you&apos;d like to improve and the results you&apos;re looking for. Our team will recommend the most relevant next step instead of making you guess from the menu.
                         </p>
                         <div className="mt-8 flex flex-wrap justify-center gap-4">
-                            <Button asChild size="lg" className="bg-gold hover:bg-gold-dark rounded-[0.35rem] text-foreground">
+                            <Button asChild size="lg" className="rounded-none bg-gold text-foreground hover:bg-gold-dark">
                                 <TrackedWhatsAppLink
                                     message={whatsappMessage}
                                     trackingContext={`intent_page_cta_${page.slug}`}
@@ -364,8 +403,8 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                     Ask on WhatsApp
                                 </TrackedWhatsAppLink>
                             </Button>
-                            <Button asChild size="lg" variant="outline" className="rounded-[0.35rem] border-background/30 bg-transparent text-background hover:bg-background/10 hover:text-background">
-                                <Link href="/prices">Browse All Services</Link>
+                            <Button asChild size="lg" variant="outline" className="rounded-none border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white">
+                                <Link href="/services">Browse All Services</Link>
                             </Button>
                         </div>
                     </div>

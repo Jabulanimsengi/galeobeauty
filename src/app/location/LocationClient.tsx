@@ -19,7 +19,7 @@ export function LocationClient() {
                         <span className="mb-4 block text-xs font-medium uppercase tracking-widest text-gold sm:text-sm">
                             Visit Galeo Beauty
                         </span>
-                        <h1 className="mb-6 font-serif text-4xl text-foreground sm:text-5xl lg:text-6xl">
+                        <h1 className="mb-6 font-sans text-[2.5rem] font-semibold leading-tight text-foreground sm:text-5xl lg:text-6xl">
                             Our <span className="text-gold">Salon Location</span> in Hartbeespoort
                         </h1>
                         <p className="mx-auto max-w-2xl text-base font-light leading-relaxed text-muted-foreground">
@@ -42,7 +42,7 @@ export function LocationClient() {
                                 <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-gold/10">
                                     <MapPin className="h-7 w-7 text-gold" />
                                 </div>
-                                <h2 className="mb-2 font-serif text-2xl text-foreground">
+                                <h2 className="mb-2 font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground">
                                     Visit Our Salon
                                 </h2>
                                 <p className="mb-1 text-muted-foreground">{businessInfo.address.street}</p>

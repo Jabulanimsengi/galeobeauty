@@ -88,7 +88,7 @@ export function HomepageCategoriesSection() {
         .filter((category): category is (typeof serviceCategories)[number] => Boolean(category));
 
     return (
-        <section className="bg-[#f5eee6] py-12 sm:py-16 lg:py-20">
+        <section className="bg-[#f6f7f7] py-12 sm:py-16 lg:py-20">
             <div className="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
@@ -125,7 +125,7 @@ export function HomepageCategoriesSection() {
                                 className={`group ${isLastOddCard ? "lg:col-span-2 lg:mx-auto lg:w-full lg:max-w-[calc(50%-0.5rem)]" : ""}`}
                             >
                                 <NavLink
-                                    href={`/prices/${category.id}`}
+                                    href={`/services/${category.id}`}
                                     className="block overflow-hidden bg-[#1a1411] text-white"
                                 >
                                     <div className="relative aspect-[5/4] min-h-[16rem] overflow-hidden sm:aspect-[16/11] sm:min-h-[24rem] lg:aspect-[5/4] lg:min-h-[30rem]">

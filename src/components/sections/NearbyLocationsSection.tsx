@@ -51,7 +51,7 @@ export function NearbyLocationsSection({
                         <MapPin className="w-4 h-4" />
                         <span className="text-sm font-medium">Easy to Reach From Nearby Areas</span>
                     </div>
-                    <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+                    <h2 className="mb-4 font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
                         {title || defaultTitle}
                     </h2>
                     <p className="text-muted-foreground text-lg max-w-3xl mx-auto">

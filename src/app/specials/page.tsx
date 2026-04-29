@@ -147,7 +147,7 @@ export default function SpecialsPage() {
                         <span className="text-gold font-medium uppercase tracking-widest text-xs sm:text-sm block mb-4">
                             Galeo Beauty Hartbeespoort Specials
                         </span>
-                        <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
+                        <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
                             Beauty <span className="text-gold">Specials</span> in Hartbeespoort
                         </h1>
                         <p className="text-muted-foreground text-base leading-relaxed font-light max-w-2xl mx-auto">
@@ -198,7 +198,7 @@ export default function SpecialsPage() {
                                                     <span className="text-gold text-sm font-medium uppercase tracking-wider block mb-2">
                                                         {special.subtitle}
                                                     </span>
-                                                    <h2 className="font-serif text-3xl sm:text-4xl text-foreground mb-6">
+                                                    <h2 className="font-sans text-3xl sm:text-4xl text-foreground mb-6">
                                                         {special.title}
                                                     </h2>
 
@@ -288,7 +288,7 @@ export default function SpecialsPage() {
                 {/* Simple CTA */}
                 <section className="py-16 bg-foreground text-background">
                     <div className="container mx-auto px-4 sm:px-6 text-center">
-                        <h2 className="font-serif text-2xl sm:text-3xl text-background mb-4">
+                        <h2 className="font-sans text-2xl sm:text-3xl text-background mb-4">
                             Need Help Choosing? Contact Galeo Beauty Hartbeespoort
                         </h2>
                         <p className="text-background/70 max-w-lg mx-auto mb-6">

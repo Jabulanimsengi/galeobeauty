@@ -87,6 +87,10 @@ function toCanonicalRedirectDestination(destination: string): string {
 
   return `${CANONICAL_ORIGIN}${destination}`;
 }
+
+function toServicesPath(pathname: string): string {
+  return pathname.replace(/^\/prices(?=\/|$)/, "/services");
+}
 const IMAGE_ASSET_REDIRECTS = [
   ...LASH_BROW_DUPLICATE_FILES.map((file) => ({
     source: `/images/lashes-brows/${file}`,
@@ -401,7 +405,7 @@ const nextConfig: NextConfig = {
         // Current service: redirect flat URL to canonical category/slug page
         flatServiceRedirects.push({
           source: `/prices/${slug}`,
-          destination: `/prices/${currentCat}/${slug}`,
+          destination: `/services/${currentCat}/${slug}`,
           permanent: true,
         });
       } else {
@@ -411,8 +415,8 @@ const nextConfig: NextConfig = {
         flatServiceRedirects.push({
           source: `/prices/${slug}`,
           destination: fallbackCat
-            ? (remappedSlug ? `/prices/${fallbackCat}/${remappedSlug}` : `/prices/${fallbackCat}`)
-            : `/prices`,
+            ? (remappedSlug ? `/services/${fallbackCat}/${remappedSlug}` : `/services/${fallbackCat}`)
+            : `/services`,
           permanent: true,
         });
       }
@@ -423,7 +427,7 @@ const nextConfig: NextConfig = {
       if (!seen.has(slug)) {
         flatServiceRedirects.push({
           source: `/prices/${slug}`,
-          destination: `/prices/${cat}/${slug}`,
+          destination: `/services/${cat}/${slug}`,
           permanent: true,
         });
       }
@@ -431,14 +435,14 @@ const nextConfig: NextConfig = {
 
     const flatServicesRedirects = flatServiceRedirects.map((redirect) => ({
       source: redirect.source.replace('/prices/', '/services/'),
-      destination: redirect.destination,
+      destination: toServicesPath(redirect.destination),
       permanent: redirect.permanent,
     }));
 
     // 4. Generate /prices/[category]/[staleSlug] redirects for ALL stale slugs.
     //    This is the key fix: Google indexed category/service URLs with old slugs.
     //    Since dynamicParams=false, any unrecognised slug in the [service] segment 404s.
-    //    We must redirect /prices/[cat]/[oldSlug] → /prices/[cat]/[currentSlug or just /prices/[cat].
+    //    Redirect /prices/[cat]/[oldSlug] to the current /services destination.
     const staleCategoryServiceRedirects: Array<{ source: string; destination: string; permanent: boolean }> = [];
     for (const [staleSlug, cat] of Object.entries(staleCategoryMap)) {
       // If this slug still exists as a current service, no redirect needed — the page still works
@@ -446,7 +450,7 @@ const nextConfig: NextConfig = {
       const remappedSlug = staleSlugRemaps[staleSlug] || null;
       staleCategoryServiceRedirects.push({
         source: `/prices/${cat}/${staleSlug}`,
-        destination: remappedSlug ? `/prices/${cat}/${remappedSlug}` : `/prices/${cat}`,
+        destination: remappedSlug ? `/services/${cat}/${remappedSlug}` : `/services/${cat}`,
         permanent: true,
       });
     }
@@ -465,7 +469,7 @@ const nextConfig: NextConfig = {
       const remappedSlug = staleSlugRemaps[staleSlug] || null;
       staleLocationServiceRedirects.push({
         source: `/locations/:location/${staleSlug}`,
-        destination: remappedSlug ? `/locations/:location/${remappedSlug}` : `/prices/${cat}`,
+        destination: remappedSlug ? `/locations/:location/${remappedSlug}` : `/services/${cat}`,
         permanent: true,
       });
     }
@@ -475,7 +479,7 @@ const nextConfig: NextConfig = {
     for (const cat of Array.from(new Set(Array.from(slugToCat.values())))) {
       staleLocationServiceRedirects.push({
         source: `/locations/:location/${cat}`,
-        destination: `/prices/${cat}`,
+        destination: `/services/${cat}`,
         permanent: true,
       });
     }
@@ -483,34 +487,34 @@ const nextConfig: NextConfig = {
     return [
       ...IMAGE_ASSET_REDIRECTS,
       ...flatServicesRedirects,
-      // === /services → /prices consolidation ===
-      { source: '/services', destination: '/prices', permanent: true },
-      { source: '/services/:category', destination: '/prices/:category', permanent: true },
-      { source: '/services/:category/:service', destination: '/prices/:category/:service', permanent: true },
-
       // === Category URL corrections (old wrong slugs → correct category IDs) ===
-      { source: '/prices/lashes', destination: '/prices/lashes-brows', permanent: true },
-      { source: '/prices/lashes/:service', destination: '/prices/lashes-brows/:service', permanent: true },
-      { source: '/prices/qms-facial', destination: '/prices/qms', permanent: true },
-      { source: '/prices/qms-facial/:service', destination: '/prices/qms/:service', permanent: true },
-      { source: '/prices/pro-skin', destination: '/prices/dermalogica', permanent: true },
-      { source: '/prices/pro-skin/:service', destination: '/prices/dermalogica/:service', permanent: true },
+      { source: '/prices/lashes', destination: '/services/lashes-brows', permanent: true },
+      { source: '/prices/lashes/:service', destination: '/services/lashes-brows/:service', permanent: true },
+      { source: '/prices/qms-facial', destination: '/services/qms', permanent: true },
+      { source: '/prices/qms-facial/:service', destination: '/services/qms/:service', permanent: true },
+      { source: '/prices/pro-skin', destination: '/services/dermalogica', permanent: true },
+      { source: '/prices/pro-skin/:service', destination: '/services/dermalogica/:service', permanent: true },
 
-      // === Root-level service page consolidation → /prices/ ===
-      { source: '/laser-hair-removal', destination: '/prices/ipl', permanent: true },
-      { source: '/anti-aging', destination: '/prices/hart-aesthetics', permanent: true },
-      { source: '/body-contouring', destination: '/prices/fat-freezing', permanent: true },
-      { source: '/medical-spa', destination: '/prices/medical', permanent: true },
-      { source: '/permanent-makeup', destination: '/prices/permanent-makeup', permanent: true },
-      { source: '/bridal-beauty', destination: '/prices', permanent: true },
-      { source: '/matric-dance', destination: '/prices', permanent: true },
+      // === Root-level service page consolidation to /services ===
+      { source: '/laser-hair-removal', destination: '/services/ipl', permanent: true },
+      { source: '/anti-aging', destination: '/services/hart-aesthetics', permanent: true },
+      { source: '/body-contouring', destination: '/services/fat-freezing', permanent: true },
+      { source: '/medical-spa', destination: '/services/medical', permanent: true },
+      { source: '/permanent-makeup', destination: '/services/permanent-makeup', permanent: true },
+      { source: '/bridal-beauty', destination: '/services', permanent: true },
+      { source: '/matric-dance', destination: '/services', permanent: true },
 
-      // === Programmatically generated: /prices/[category]/[staleSlug] → correct page ===
+      // === Programmatically generated: old /prices service URLs to correct /services pages ===
       ...staleCategoryServiceRedirects,
       ...staleLocationServiceRedirects,
 
-      // === Flat /prices/[slug] → /prices/[category]/[slug] or /prices/[category] ===
+      // === Flat /prices/[slug] to /services/[category]/[slug] or /services/[category] ===
       ...flatServiceRedirects,
+
+      // === Generic /prices to /services consolidation. Keep these last. ===
+      { source: '/prices', destination: '/services', permanent: true },
+      { source: '/prices/:category', destination: '/services/:category', permanent: true },
+      { source: '/prices/:category/:service', destination: '/services/:category/:service', permanent: true },
     ].map((redirect) => ({
       ...redirect,
       destination: toCanonicalRedirectDestination(redirect.destination),

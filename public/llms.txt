@@ -11,12 +11,12 @@ Clients often visit from Hartbeespoort, Pretoria, Centurion, Johannesburg, and n
 - Location: Shop 6, Landsmeer, Jan Smuts Rd, Hartbeespoort, 0216, North West, South Africa
 - Phone: +27 12 111 1730
 - Email: info@galeobeauty.com
-- Primary booking and service information: https://www.galeobeauty.com/prices
+- Primary booking and service information: https://www.galeobeauty.com/services
 
 ## Key Pages
 
 - Home: https://www.galeobeauty.com/
-- Services overview: https://www.galeobeauty.com/prices
+- Services overview: https://www.galeobeauty.com/services
 - Contact and directions: https://www.galeobeauty.com/contact
 - About Galeo Beauty: https://www.galeobeauty.com/about
 - Beauty blog and treatment guides: https://www.galeobeauty.com/blog
@@ -25,18 +25,18 @@ Clients often visit from Hartbeespoort, Pretoria, Centurion, Johannesburg, and n
 
 ## Main Service Categories
 
-- Hair salon and styling: https://www.galeobeauty.com/prices/hair
-- Hair extensions: https://www.galeobeauty.com/prices/hair-extensions
-- Nails: https://www.galeobeauty.com/prices/nails
-- Lashes and brows: https://www.galeobeauty.com/prices/lashes-brows
-- Permanent makeup: https://www.galeobeauty.com/prices/permanent-makeup
-- Dermalogica facials and peels: https://www.galeobeauty.com/prices/dermalogica
-- QMS facials: https://www.galeobeauty.com/prices/qms
-- Massage therapy: https://www.galeobeauty.com/prices/massages
-- Waxing: https://www.galeobeauty.com/prices/waxing
-- IPL hair removal: https://www.galeobeauty.com/prices/ipl
-- Medical aesthetics and injectables: https://www.galeobeauty.com/prices/hart-aesthetics
-- Fat freezing and body contouring: https://www.galeobeauty.com/prices/fat-freezing
+- Hair salon and styling: https://www.galeobeauty.com/services/hair
+- Hair extensions: https://www.galeobeauty.com/services/hair-extensions
+- Nails: https://www.galeobeauty.com/services/nails
+- Lashes and brows: https://www.galeobeauty.com/services/lashes-brows
+- Permanent makeup: https://www.galeobeauty.com/services/permanent-makeup
+- Dermalogica facials and peels: https://www.galeobeauty.com/services/dermalogica
+- QMS facials: https://www.galeobeauty.com/services/qms
+- Massage therapy: https://www.galeobeauty.com/services/massages
+- Waxing: https://www.galeobeauty.com/services/waxing
+- IPL hair removal: https://www.galeobeauty.com/services/ipl
+- Medical aesthetics and injectables: https://www.galeobeauty.com/services/hart-aesthetics
+- Fat freezing and body contouring: https://www.galeobeauty.com/services/fat-freezing
 
 ## Useful Guides
 

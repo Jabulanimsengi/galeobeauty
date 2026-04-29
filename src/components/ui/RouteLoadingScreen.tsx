@@ -24,6 +24,7 @@ export function RouteLoadingScreen({
                     width={200}
                     height={80}
                     className="h-20 w-auto animate-pulse"
+                    style={{ width: "auto" }}
                     priority
                     noSpinner
                 />

@@ -24,7 +24,7 @@ export function HomepageFaqSection({ faqs }: HomepageFaqSectionProps) {
     const prefersReducedMotion = useReducedMotion();
 
     return (
-        <section className="bg-stone-50 py-10 md:py-12">
+        <section className="bg-[#f6f7f7] py-10 md:py-12">
             <div className="container mx-auto px-4 sm:px-6">
                 <div className="mx-auto max-w-5xl">
                     <div className="mb-6 text-center">
@@ -40,18 +40,18 @@ export function HomepageFaqSection({ faqs }: HomepageFaqSectionProps) {
                             return (
                                 <div
                                     key={faq.question}
-                                    className="overflow-hidden rounded-[1.35rem] border border-border/60 bg-white"
+                                    className="overflow-hidden border border-border/60 bg-white"
                                 >
                                     <button
                                         type="button"
                                         aria-expanded={isOpen}
                                         onClick={() => setOpenIndex(isOpen ? -1 : index)}
-                                        className="flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5"
+                                        className="group flex w-full items-center justify-between gap-4 px-4 py-4 text-left sm:px-5"
                                     >
                                         <span className="font-sans text-lg font-semibold text-foreground sm:text-[1.2rem]">
                                             {faq.question}
                                         </span>
-                                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/20 bg-secondary/10 text-xl font-bold leading-none text-gold">
+                                        <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-foreground/20 bg-white text-xl font-bold leading-none text-foreground transition-colors group-hover:border-gold group-hover:text-gold">
                                             {isOpen ? "-" : "+"}
                                         </span>
                                     </button>
@@ -80,7 +80,7 @@ export function HomepageFaqSection({ faqs }: HomepageFaqSectionProps) {
                                                                     linkLabel={link.label}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="inline-flex items-center gap-2 rounded-full border border-gold/25 bg-secondary/10 px-3 py-2 text-xs font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:border-gold hover:text-gold"
+                                                                    className="inline-flex items-center gap-2 border border-gold/25 bg-white px-3 py-2 text-xs font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:border-gold hover:text-gold"
                                                                 >
                                                                     <span>{link.label}</span>
                                                                     <span className="text-base font-bold leading-none text-gold">+</span>

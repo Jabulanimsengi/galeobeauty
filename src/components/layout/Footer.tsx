@@ -32,7 +32,7 @@ const InstagramIcon = ({ className }: { className?: string }) => (
 );
 
 const socialLinkClassName =
-    "group flex h-12 w-12 items-center justify-center rounded-[0.35rem] border border-[#1d1d1f]/10 bg-white text-[#1d1d1f] shadow-[0_16px_34px_-24px_rgba(0,0,0,0.45)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/35 hover:bg-[#1d1d1f] hover:text-white";
+    "group flex h-9 w-9 items-center justify-center border border-[#d8dce0] bg-white text-[#1d1d1f] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#5d6a72] hover:bg-[#1d1d1f] hover:text-white";
 
 const footerLocations = [
     { name: "Hartbeespoort", href: "/locations/hartbeespoort" },
@@ -45,30 +45,31 @@ export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-t border-border/30 bg-[#f7f4ef] text-foreground">
-            <div className="container mx-auto px-4 py-14 sm:px-6 md:py-20">
-                <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(0,0.95fr)_minmax(0,0.95fr)_auto] lg:gap-12 xl:gap-14">
-                    <div className="space-y-5">
+        <footer className="border-t border-[#d8dce0] bg-[#f6f7f7] text-foreground">
+            <div className="container mx-auto px-4 py-10 sm:px-6 md:py-12">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,0.85fr)_minmax(0,0.9fr)_auto] lg:gap-8 xl:gap-10">
+                    <div className="space-y-4">
                         <NavLink href="/" className="inline-block">
                             <CloudinaryImage
                                 src="/images/logo.png"
                                 alt="Galeo Beauty logo"
                                 width={200}
                                 height={80}
-                                className="h-16 w-auto object-contain sm:h-20"
+                                className="h-12 w-auto object-contain sm:h-14"
+                                style={{ width: "auto" }}
                                 noSpinner
                             />
                         </NavLink>
-                        <p className="max-w-sm font-sans text-sm leading-relaxed text-foreground/68">
+                        <p className="max-w-sm font-sans text-[0.82rem] leading-6 text-foreground/68">
                             A calm Hartbeespoort beauty destination for hair, nails, facials, massage, and advanced aesthetics at Landsmeer near Hartbeespoort Dam.
                         </p>
                     </div>
 
-                    <div className="space-y-5">
-                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
+                    <div className="space-y-3">
+                        <h3 className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-foreground/55">
                             Visit Us
                         </h3>
-                        <div className="space-y-4 font-sans text-[1rem] leading-relaxed text-foreground/88">
+                        <div className="space-y-2.5 font-sans text-[0.86rem] leading-6 text-foreground/82">
                             <p>
                                 {businessInfo.address.street}<br />
                                 {businessInfo.address.area}<br />
@@ -101,22 +102,22 @@ export function Footer() {
                         </div>
                     </div>
 
-                    <div className="space-y-5">
-                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
+                    <div className="space-y-3">
+                        <h3 className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-foreground/55">
                             Working Hours
                         </h3>
-                        <div className="space-y-4 font-sans text-[1rem] leading-relaxed text-foreground/88">
+                        <div className="space-y-2.5 font-sans text-[0.86rem] leading-6 text-foreground/82">
                             <p>{businessInfo.hours.weekday}</p>
                             <p>{businessInfo.hours.saturday}</p>
                             <p>{businessInfo.hours.publicHoliday}</p>
                         </div>
                     </div>
 
-                    <div className="space-y-5">
-                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
+                    <div className="space-y-3">
+                        <h3 className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-foreground/55">
                             Areas We Serve
                         </h3>
-                        <div className="space-y-3 font-sans text-[1rem] leading-relaxed text-foreground/88">
+                        <div className="space-y-2 font-sans text-[0.86rem] leading-6 text-foreground/82">
                             {footerLocations.map((location) => (
                                 <NavLink
                                     key={location.href}
@@ -127,27 +128,21 @@ export function Footer() {
                                 </NavLink>
                             ))}
                         </div>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-wrap gap-2">
                             <NavLink
                                 href="/locations"
-                                className="inline-flex items-center rounded-[0.35rem] border border-foreground/18 px-4 py-2 font-sans text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
+                                className="inline-flex items-center border border-[#d8dce0] bg-white px-3 py-2 font-sans text-[0.78rem] font-medium text-foreground transition-colors hover:border-[#5d6a72] hover:text-[#5d6a72]"
                             >
                                 View All Areas
-                            </NavLink>
-                            <NavLink
-                                href="/salons"
-                                className="inline-flex items-center rounded-[0.35rem] border border-gold/40 bg-gold/5 px-4 py-2 font-sans text-sm font-medium text-gold transition-colors hover:bg-gold hover:text-white"
-                            >
-                                Salon Directory
                             </NavLink>
                         </div>
                     </div>
 
-                    <div className="space-y-4 lg:justify-self-end">
-                        <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
+                    <div className="space-y-3 lg:justify-self-end">
+                        <h3 className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-foreground/55">
                             Follow Us
                         </h3>
-                        <div className="flex flex-wrap items-start gap-3 lg:max-w-[7.5rem] lg:justify-end">
+                        <div className="flex flex-wrap items-start gap-2 lg:max-w-[5rem] lg:justify-end">
                             <TrackedExternalLink
                                 href={businessInfo.socials.facebook || "#"}
                                 trackingContext="footer_facebook"
@@ -158,7 +153,7 @@ export function Footer() {
                                 aria-label="Facebook"
                                 className={socialLinkClassName}
                             >
-                                <FacebookIcon className="h-5 w-5" />
+                                <FacebookIcon className="h-4 w-4" />
                             </TrackedExternalLink>
                             <TrackedExternalLink
                                 href={businessInfo.socials.instagram || "#"}
@@ -170,7 +165,7 @@ export function Footer() {
                                 aria-label="Instagram"
                                 className={socialLinkClassName}
                             >
-                                <InstagramIcon className="h-5 w-5" />
+                                <InstagramIcon className="h-4 w-4" />
                             </TrackedExternalLink>
                             <TrackedExternalLink
                                 href={businessInfo.socials.tiktok || "#"}
@@ -182,7 +177,7 @@ export function Footer() {
                                 aria-label="TikTok"
                                 className={socialLinkClassName}
                             >
-                                <TikTokIcon className="h-5 w-5" />
+                                <TikTokIcon className="h-4 w-4" />
                             </TrackedExternalLink>
                             <TrackedWhatsAppLink
                                 message="Hi, I found you on www.galeobeauty.com and would like to enquire about your services."
@@ -192,36 +187,27 @@ export function Footer() {
                                 aria-label="WhatsApp"
                                 className={socialLinkClassName}
                             >
-                                <WhatsAppIcon className="h-5 w-5" />
+                                <WhatsAppIcon className="h-4 w-4" />
                             </TrackedWhatsAppLink>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-12 border-t border-border/20 pt-10">
-                    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                        <div className="space-y-2">
-                            <h3 className="font-sans text-sm font-semibold uppercase tracking-[0.18em] text-foreground/60">
-                                From The Blog
-                            </h3>
-                            <p className="max-w-2xl font-sans text-sm leading-relaxed text-foreground/68">
-                                Explore every beauty guide, treatment article, and planning post we have published so far.
-                            </p>
-                        </div>
-                        <NavLink
-                            href="/blog"
-                            className="inline-flex items-center rounded-[0.35rem] border border-foreground/18 px-4 py-2 font-sans text-sm font-medium text-foreground transition-colors hover:border-gold hover:text-gold"
-                        >
-                            View Blog Hub
-                        </NavLink>
-                    </div>
-                </div>
             </div>
 
-            <div className="border-t border-border/25">
-                <div className="container mx-auto flex flex-col gap-4 px-4 py-6 font-sans text-sm text-foreground/52 sm:px-6 md:flex-row md:items-center md:justify-between">
+            <div className="border-t border-[#d8dce0] bg-white">
+                <div className="container mx-auto flex flex-col gap-3 px-4 py-4 font-sans text-[0.78rem] text-foreground/52 sm:px-6 md:flex-row md:items-center md:justify-between">
                     <p>&copy; {currentYear} Galeo Beauty Hartbeespoort. All rights reserved.</p>
-                    <div className="flex gap-6">
+                    <div className="flex flex-wrap gap-x-6 gap-y-2">
+                        <NavLink href="/services" className="transition-colors hover:text-gold">
+                            Services
+                        </NavLink>
+                        <NavLink href="/guides" className="transition-colors hover:text-gold">
+                            Guides
+                        </NavLink>
+                        <NavLink href="/blog" className="transition-colors hover:text-gold">
+                            Blog
+                        </NavLink>
                         <NavLink href="/privacy-policy" className="transition-colors hover:text-gold">
                             Privacy Policy
                         </NavLink>

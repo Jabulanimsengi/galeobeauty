@@ -41,11 +41,11 @@ const values = [
 ];
 
 const priorityLinks = [
-    { href: "/prices/hair", label: "Hair Salon" },
-    { href: "/prices/nails", label: "Nail Salon" },
-    { href: "/prices/massages", label: "Massage" },
-    { href: "/prices/permanent-makeup", label: "Permanent Makeup" },
-    { href: "/prices/lashes-brows", label: "Lashes & Brows" },
+    { href: "/services/hair", label: "Hair Salon" },
+    { href: "/services/nails", label: "Nail Salon" },
+    { href: "/services/massages", label: "Massage" },
+    { href: "/services/permanent-makeup", label: "Permanent Makeup" },
+    { href: "/services/lashes-brows", label: "Lashes & Brows" },
 ];
 
 export function AboutClient() {
@@ -64,7 +64,7 @@ export function AboutClient() {
                             <span className="mb-6 block text-xs font-bold uppercase tracking-[0.22em] text-gold sm:tracking-[0.3em]">
                                 About Galeo Beauty
                             </span>
-                            <h1 className="mb-6 font-serif text-[2.55rem] leading-[0.92] text-foreground sm:mb-8 sm:text-5xl lg:text-6xl">
+                            <h1 className="mb-6 font-sans text-[2.55rem] leading-[0.92] text-foreground sm:mb-8 sm:text-5xl lg:text-6xl">
                                 A Refined <span className="text-gold italic">Beauty Destination</span><br />
                                 in <span className="text-gold italic">Hartbeespoort</span>
                             </h1>
@@ -95,7 +95,7 @@ export function AboutClient() {
                                     <div className="absolute inset-0 bg-black/10" />
                                 </div>
                                 <div className="absolute -bottom-10 -right-10 hidden max-w-xs border border-gold/20 bg-background p-8 shadow-2xl lg:block">
-                                    <p className="font-serif text-xl italic text-gold">&quot;Beauty is about enhancing what you have.&quot;</p>
+                                    <p className="font-sans text-xl italic text-gold">&quot;Beauty is about enhancing what you have.&quot;</p>
                                     <p className="mt-2 text-sm text-muted-foreground">- Dandi Meyer, Founder</p>
                                 </div>
                             </motion.div>
@@ -106,7 +106,7 @@ export function AboutClient() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
-                                <h2 className="mb-6 font-serif text-3xl text-foreground sm:mb-8 sm:text-4xl lg:text-5xl">
+                                <h2 className="mb-6 font-sans text-3xl text-foreground sm:mb-8 sm:text-4xl lg:text-5xl">
                                     Our <span className="text-gold">Philosophy</span> at Galeo Beauty
                                 </h2>
                                 <div className="space-y-5 text-base leading-relaxed text-muted-foreground sm:space-y-6 sm:text-lg sm:font-light">
@@ -125,7 +125,7 @@ export function AboutClient() {
                                 </div>
                                 <div className="mt-10">
                                     <Button asChild size="lg" className="w-full rounded-full bg-gold px-8 text-white hover:bg-gold-dark sm:w-auto">
-                                        <NavLink href="/prices">Explore Our Treatments</NavLink>
+                                        <NavLink href="/services">Explore Our Treatments</NavLink>
                                     </Button>
                                 </div>
                                 <div className="mt-6 flex flex-wrap gap-2.5 sm:gap-3">
@@ -156,7 +156,7 @@ export function AboutClient() {
                             <span className="mb-4 block text-xs font-bold uppercase tracking-[0.22em] text-gold sm:tracking-[0.3em]">
                                 Why Trust Galeo Beauty
                             </span>
-                            <h2 className="font-serif text-3xl text-foreground md:text-4xl">
+                            <h2 className="font-sans text-3xl text-foreground md:text-4xl">
                                 Why Trust Galeo Beauty <span className="text-gold">Hartbeespoort</span>
                             </h2>
                         </motion.div>
@@ -168,7 +168,7 @@ export function AboutClient() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6 }}
                             >
-                                <h3 className="mb-6 font-serif text-2xl text-foreground">Meet Our Founder</h3>
+                                <h3 className="mb-6 font-sans text-2xl text-foreground">Meet Our Founder</h3>
                                 <div className="mb-6 rounded-xl border border-border/40 bg-secondary/10 p-6">
                                     <p className="mb-1 text-lg font-semibold text-foreground">Dandi Meyer</p>
                                     <p className="mb-4 text-sm font-medium text-gold">Founder & Lead Practitioner</p>
@@ -195,7 +195,7 @@ export function AboutClient() {
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6, delay: 0.2 }}
                             >
-                                <h3 className="mb-6 font-serif text-2xl text-foreground">Salon Credentials</h3>
+                                <h3 className="mb-6 font-sans text-2xl text-foreground">Salon Credentials</h3>
                                 <div className="space-y-4">
                                     {[
                                         { icon: Star, title: "4.9 Star Rating", desc: "Based on 190+ verified client reviews across Google and Fresha" },
@@ -230,7 +230,7 @@ export function AboutClient() {
                             <span className="mb-4 block text-xs font-bold uppercase tracking-[0.22em] text-gold sm:tracking-[0.3em]">
                                 Our Location
                             </span>
-                            <h2 className="mb-4 font-serif text-3xl text-foreground md:text-4xl">
+                            <h2 className="mb-4 font-sans text-3xl text-foreground md:text-4xl">
                                 Visit Our <span className="text-gold">Salon in Hartbeespoort</span>
                             </h2>
                             <p className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground">
@@ -268,7 +268,7 @@ export function AboutClient() {
                                             <MapPin className="h-6 w-6 text-gold" />
                                         </div>
                                         <div>
-                                            <h3 className="mb-2 font-serif text-xl text-foreground">Salon Address</h3>
+                                            <h3 className="mb-2 font-sans text-xl text-foreground">Salon Address</h3>
                                             <address className="not-italic leading-relaxed text-muted-foreground">
                                                 <strong className="text-foreground">Shop 6, Landsmeer</strong><br />
                                                 Jan Smuts Road<br />
@@ -283,7 +283,7 @@ export function AboutClient() {
                                             <Clock className="h-6 w-6 text-gold" />
                                         </div>
                                         <div>
-                                            <h3 className="mb-2 font-serif text-xl text-foreground">Opening Hours</h3>
+                                            <h3 className="mb-2 font-sans text-xl text-foreground">Opening Hours</h3>
                                             <div className="space-y-1 text-muted-foreground">
                                                 <p>Monday - Friday: <span className="font-medium text-foreground">8:00 AM - 6:00 PM</span></p>
                                                 <p>Saturday: <span className="font-medium text-foreground">8:00 AM - 4:00 PM</span></p>
@@ -297,7 +297,7 @@ export function AboutClient() {
                                             <Phone className="h-6 w-6 text-gold" />
                                         </div>
                                         <div>
-                                            <h3 className="mb-2 font-serif text-xl text-foreground">Contact Us</h3>
+                                            <h3 className="mb-2 font-sans text-xl text-foreground">Contact Us</h3>
                                             <p className="text-muted-foreground">
                                                 Call or WhatsApp: <TrackedExternalLink href="tel:+27121111730" trackingContext="about_phone" linkType="phone" linkLabel="About page phone" className="font-medium text-gold hover:underline">012 111 1730</TrackedExternalLink>
                                             </p>
@@ -340,7 +340,7 @@ export function AboutClient() {
                                     transition={{ duration: 0.5, delay: i * 0.1 }}
                                     className="rounded-xl border border-transparent p-6 text-center transition-colors duration-300 hover:border-gold/20"
                                 >
-                                    <h3 className="mb-3 font-serif text-xl text-foreground">{value.title}</h3>
+                                    <h3 className="mb-3 font-sans text-xl text-foreground">{value.title}</h3>
                                     <p className="text-sm leading-relaxed text-muted-foreground">{value.description}</p>
                                 </motion.div>
                             ))}
@@ -350,12 +350,12 @@ export function AboutClient() {
 
                 <section className="bg-foreground py-16 text-center text-background sm:py-20 lg:py-32">
                     <div className="container mx-auto px-4">
-                        <h2 className="mb-6 font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Experience Galeo Beauty in Hartbeespoort</h2>
+                        <h2 className="mb-6 font-sans text-3xl sm:text-4xl md:text-5xl lg:text-6xl">Experience Galeo Beauty in Hartbeespoort</h2>
                         <p className="mx-auto mb-8 max-w-xl text-base font-light text-white/70 sm:mb-10 sm:text-lg">
                             Your next appointment starts with calm, thoughtful care at our Hartbeespoort salon.
                         </p>
                         <Button asChild size="lg" className="h-14 w-full rounded-full bg-gold px-8 text-base text-foreground hover:bg-gold-dark sm:w-auto sm:px-10 sm:text-lg">
-                            <NavLink href="/prices">Book Your Visit</NavLink>
+                            <NavLink href="/services">Book Your Visit</NavLink>
                         </Button>
                     </div>
                 </section>

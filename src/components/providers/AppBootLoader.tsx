@@ -30,6 +30,7 @@ export function AppBootLoader() {
                     width={220}
                     height={88}
                     className="h-20 w-auto"
+                    style={{ width: "auto" }}
                     priority
                     noSpinner
                 />

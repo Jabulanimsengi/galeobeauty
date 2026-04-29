@@ -17,9 +17,9 @@ const RETRY_INTERVAL = 2000;
 // Critical pages to warm up — these are the ones with heavy module graphs
 const WARMUP_PATHS = [
   '/',                                           // Home (heaviest - compiles framework + services-data)
-  '/prices',                                     // Prices index (compiles framer-motion client bundle)
-  '/prices/nails/gel-hands',                     // Service detail (compiles seo-data, bespoke-service-pages)
-  '/prices/lashes-brows',                        // Category page (compiles seo-keywords, category-pages)
+  '/services',                                     // Prices index (compiles framer-motion client bundle)
+  '/services/nails/gel-hands',                     // Service detail (compiles seo-data, bespoke-service-pages)
+  '/services/lashes-brows',                        // Category page (compiles seo-keywords, category-pages)
   '/blog',                                       // Blog index (compiles blog-data)
 ];
 

@@ -21,7 +21,7 @@ const featuredServices = [
             { name: "EMS Package (4x)", price: "R6,290" },
             { name: "EMS Package (6x)", price: "R13,500+" },
         ],
-        priceLink: "/prices/fat-freezing",
+        priceLink: "/services/fat-freezing",
     },
     {
         title: "Anti-Aging",
@@ -37,7 +37,7 @@ const featuredServices = [
             { name: "Dermal Filler 1ml", price: "R2,800" },
             { name: "Tox Per Unit", price: "R59.60" },
         ],
-        priceLink: "/prices/hart-aesthetics",
+        priceLink: "/services/hart-aesthetics",
     },
     {
         title: "Permanent Makeup",
@@ -53,7 +53,7 @@ const featuredServices = [
             { name: "Full Lips Contour", price: "R2,430" },
             { name: "Eyeliner Top", price: "R720" },
         ],
-        priceLink: "/prices/permanent-makeup",
+        priceLink: "/services/permanent-makeup",
     },
     {
         title: "Medical Spa",
@@ -69,7 +69,7 @@ const featuredServices = [
             { name: "Vaginal Tightening", price: "R4,950" },
             { name: "Plasmage", price: "R899" },
         ],
-        priceLink: "/prices/medical",
+        priceLink: "/services/medical",
     },
     {
         title: "Bridal Beauty",
@@ -85,7 +85,7 @@ const featuredServices = [
             { name: "Day Makeup", price: "R486" },
             { name: "Long Hair Upstyle", price: "R900" },
         ],
-        priceLink: "/prices/makeup",
+        priceLink: "/services/makeup",
     },
     {
         title: "Laser Hair Removal",
@@ -101,7 +101,7 @@ const featuredServices = [
             { name: "Full Leg IPL", price: "R2,070" },
             { name: "Under Arm IPL", price: "R495" },
         ],
-        priceLink: "/prices/ipl",
+        priceLink: "/services/ipl",
     },
 ];
 
@@ -119,7 +119,7 @@ function CardFront({ service }: { service: typeof featuredServices[0] }) {
                 />
             </div>
             <div className="p-6 sm:p-7">
-                <h3 className="font-serif text-xl sm:text-2xl text-foreground mb-1.5">
+                <h3 className="font-sans text-xl sm:text-2xl text-foreground mb-1.5">
                     {service.title}
                 </h3>
                 <p className="text-sm text-gold font-medium mb-2.5">
@@ -145,7 +145,7 @@ function CardBack({ service }: { service: typeof featuredServices[0] }) {
         <div className="h-full bg-gradient-to-br from-[#1a1a1a] to-[#111] border-2 border-gold/40 rounded-2xl overflow-hidden shadow-xl flex flex-col">
             <div className="px-6 pt-6 pb-4 border-b border-white/10">
                 <p className="text-gold text-xs font-bold uppercase tracking-[0.15em] mb-1">Popular Treatments</p>
-                <h3 className="font-serif text-xl sm:text-2xl text-white">
+                <h3 className="font-sans text-xl sm:text-2xl text-white">
                     {service.title}
                 </h3>
             </div>
@@ -163,7 +163,7 @@ function CardBack({ service }: { service: typeof featuredServices[0] }) {
                     href={service.priceLink}
                     className="flex items-center justify-center gap-2 w-full bg-gold hover:bg-gold/90 text-white font-semibold py-3 rounded-full text-sm transition-colors"
                 >
-                    <span>View All Prices</span>
+                    <span>View All Services</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                     </svg>
@@ -204,7 +204,7 @@ export function FeaturedServicesSection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.1 }}
-                            className="font-serif text-3xl md:text-4xl lg:text-5xl text-foreground mb-6"
+                            className="font-sans text-3xl md:text-4xl lg:text-5xl text-foreground mb-6"
                         >
                             Hartbeespoort&apos;s Leading Beauty &amp; Wellness Destination
                         </motion.h2>

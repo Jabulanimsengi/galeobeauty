@@ -9,13 +9,13 @@ const LEGACY_STALE_REDIRECTS = {
 };
 
 const ROOT_REDIRECTS = [
-  ["/laser-hair-removal", "/prices/ipl"],
-  ["/anti-aging", "/prices/hart-aesthetics"],
-  ["/body-contouring", "/prices/fat-freezing"],
-  ["/medical-spa", "/prices/medical"],
-  ["/permanent-makeup", "/prices/permanent-makeup"],
-  ["/bridal-beauty", "/prices"],
-  ["/matric-dance", "/prices"],
+  ["/laser-hair-removal", "/services/ipl"],
+  ["/anti-aging", "/services/hart-aesthetics"],
+  ["/body-contouring", "/services/fat-freezing"],
+  ["/medical-spa", "/services/medical"],
+  ["/permanent-makeup", "/services/permanent-makeup"],
+  ["/bridal-beauty", "/services"],
+  ["/matric-dance", "/services"],
   ["/sitemap_index.xml", "/sitemap.xml"],
 ];
 
@@ -154,20 +154,20 @@ function dedupeExpectations(expectations) {
 function buildRedirectExpectations(pagePaths) {
   const expectations = [
     {
-      path: "/services",
+      path: "/prices",
       kind: "redirect",
       expectedStatuses: [301, 308],
-      expectedPath: "/prices",
-      source: "legacy services hub",
+      expectedPath: "/services",
+      source: "legacy prices hub",
     },
   ];
 
-  const categoryPaths = pagePaths.filter((path) => /^\/prices\/[^/]+$/.test(path));
-  const servicePaths = pagePaths.filter((path) => /^\/prices\/[^/]+\/[^/]+$/.test(path));
+  const categoryPaths = pagePaths.filter((path) => /^\/services\/[^/]+$/.test(path));
+  const servicePaths = pagePaths.filter((path) => /^\/services\/[^/]+\/[^/]+$/.test(path));
 
   for (const categoryPath of categoryPaths) {
     expectations.push({
-      path: categoryPath.replace("/prices/", "/services/"),
+      path: categoryPath.replace("/services/", "/prices/"),
       kind: "redirect",
       expectedStatuses: [301, 308],
       expectedPath: categoryPath,
@@ -179,7 +179,7 @@ function buildRedirectExpectations(pagePaths) {
     const [, , category, service] = servicePath.split("/");
 
     expectations.push({
-      path: servicePath.replace("/prices/", "/services/"),
+      path: servicePath.replace("/services/", "/prices/"),
       kind: "redirect",
       expectedStatuses: [301, 308],
       expectedPath: servicePath,
@@ -190,7 +190,7 @@ function buildRedirectExpectations(pagePaths) {
       path: `/prices/${service}`,
       kind: "redirect",
       expectedStatuses: [301, 308],
-      expectedPath: `/prices/${category}/${service}`,
+      expectedPath: `/services/${category}/${service}`,
       source: "flat service redirect",
     });
   }
@@ -215,8 +215,8 @@ function buildRedirectExpectations(pagePaths) {
       kind: "redirect",
       expectedStatuses: [301, 308],
       expectedPath: redirect.serviceSlug
-        ? `/prices/${redirect.categoryId}/${redirect.serviceSlug}`
-        : `/prices/${redirect.categoryId}`,
+        ? `/services/${redirect.categoryId}/${redirect.serviceSlug}`
+        : `/services/${redirect.categoryId}`,
       source: "stale category-service redirect",
     });
 
@@ -226,7 +226,7 @@ function buildRedirectExpectations(pagePaths) {
       expectedStatuses: [307, 308],
       expectedPath: redirect.serviceSlug
         ? `/locations/${sampleLocationPath}/${redirect.serviceSlug}`
-        : `/prices/${redirect.categoryId}`,
+        : `/services/${redirect.categoryId}`,
       source: "stale location-service redirect",
     });
   }

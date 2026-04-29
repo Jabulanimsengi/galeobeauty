@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createHash, timingSafeEqual } from "node:crypto";
 
 const ADMIN_COOKIE_NAME = "galeo_admin_session";
-const ADMIN_COOKIE_SCOPE = "/admin";
+const ADMIN_COOKIE_SCOPE = "/";
 
 function getAdminPassword() {
   const password = process.env.BOOKINGS_ADMIN_PASSWORD?.trim();

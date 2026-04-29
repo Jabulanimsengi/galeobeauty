@@ -1,6 +1,5 @@
 import { getAllBlogPosts } from './blog-data';
 import { getAllBespokeServicePages } from './bespoke-service-pages';
-import { getIndexableCommercialPages } from './commercial-seo';
 import { getPublishedIntentPages } from './intent-pages';
 import { getAllSEOServices, isIndexableLocationService } from './seo-data';
 import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from './sitemap-config';
@@ -113,12 +112,6 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
     visitor(createEntry(`${BASE_URL}/${page.slug}`, 0.8, 'weekly'));
   }
 
-  visitor(createEntry(`${BASE_URL}/salons`, 0.9, 'weekly'));
-
-  for (const page of getIndexableCommercialPages()) {
-    visitor(createEntry(`${BASE_URL}/salons/${page.slug}`, 0.85, 'monthly'));
-  }
-
   for (const post of blogPosts) {
     visitor({
       loc: `${BASE_URL}/blog/${post.slug}`,
@@ -130,7 +123,7 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
 
   for (const page of bespokeServicePages) {
     visitor(
-      createEntry(`${BASE_URL}/prices/${page.categoryId}/${page.slug}`, 0.85, 'monthly', {
+      createEntry(`${BASE_URL}/services/${page.categoryId}/${page.slug}`, 0.85, 'monthly', {
         loc: toAbsoluteUrl(page.image || FALLBACK_IMAGE),
         title: page.title,
         caption: page.imageAlt,
@@ -140,7 +133,7 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
 
   for (const service of services) {
     visitor(
-      createEntry(`${BASE_URL}/prices/${service.categoryId}/${service.slug}`, 0.85, 'monthly', {
+      createEntry(`${BASE_URL}/services/${service.categoryId}/${service.slug}`, 0.85, 'monthly', {
         loc: toAbsoluteUrl(service.image || FALLBACK_IMAGE),
         title: `${service.keyword} at Galeo Beauty`,
         caption: service.imageAlt,
@@ -221,7 +214,9 @@ export function getSectionSitemapUrl(section: SitemapSection): string {
 }
 
 export function getTopLevelSitemapUrls(): string[] {
-  return [`${BASE_URL}/sitemaps/0.xml`, `${BASE_URL}/sitemaps/1.xml`];
+  return (['0', '1'] as SitemapSection[])
+    .filter((section) => countSectionEntries(section) > 0)
+    .map((section) => getSectionSitemapUrl(section));
 }
 
 export function assertSectionFitsSitemapLimit(section: SitemapSection): number {

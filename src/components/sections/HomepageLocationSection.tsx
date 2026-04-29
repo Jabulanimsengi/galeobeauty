@@ -11,9 +11,9 @@ export function HomepageLocationSection() {
         <section className="bg-white py-14 sm:py-16 lg:py-20">
             <div className="container mx-auto px-4 sm:px-6">
                 <div className="grid gap-6 lg:grid-cols-[minmax(18rem,0.82fr)_minmax(0,1.08fr)] lg:items-stretch lg:gap-8">
-                    <div className="flex flex-col justify-between bg-stone-50 px-6 py-7 sm:px-7 lg:px-8">
+                    <div className="flex flex-col justify-between bg-[#f6f7f7] px-6 py-7 sm:px-7 lg:px-8">
                         <div>
-                            <h2 className="font-serif text-2xl leading-[0.98] text-foreground sm:text-3xl lg:max-w-[11ch]">
+                            <h2 className="font-sans text-2xl leading-[0.98] text-foreground sm:text-3xl lg:max-w-[11ch]">
                                 Visit Our Salon
                             </h2>
 

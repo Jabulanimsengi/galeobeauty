@@ -26,6 +26,10 @@ async function writeFile(targetPath: string, contents: string) {
 async function writeSection(section: '0' | '1') {
   const urlCount = assertSectionFitsSitemapLimit(section);
 
+  if (urlCount === 0) {
+    return urlCount;
+  }
+
   await writeFile(
     path.join(sitemapRoot, `${section}.xml`),
     buildSitemapXml(getSitemapEntries(section))
@@ -50,9 +54,13 @@ async function main() {
     writeSection('1'),
   ]);
 
-  console.log('Generated sitemap.xml with 2 direct sitemap files.');
-  console.log(`Generated ${getSectionSitemapUrl('0')} with ${sitemap0Count.toLocaleString()} URLs.`);
-  console.log(`Generated ${getSectionSitemapUrl('1')} with ${sitemap1Count.toLocaleString()} URLs.`);
+  console.log(`Generated sitemap.xml with ${getTopLevelSitemapUrls().length.toLocaleString()} direct sitemap file(s).`);
+  if (sitemap0Count > 0) {
+    console.log(`Generated ${getSectionSitemapUrl('0')} with ${sitemap0Count.toLocaleString()} URLs.`);
+  }
+  if (sitemap1Count > 0) {
+    console.log(`Generated ${getSectionSitemapUrl('1')} with ${sitemap1Count.toLocaleString()} URLs.`);
+  }
 }
 
 main().catch((error) => {

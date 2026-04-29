@@ -10,6 +10,7 @@ import {
   HomepageLocationSection,
 } from "@/components/sections";
 import { businessInfo } from "@/lib/constants";
+import { getPublishedIntentPages } from "@/lib/intent-pages";
 import { buildHomepageKeywords } from "@/lib/seo-keywords";
 import { serviceCategories } from "@/lib/services-data";
 
@@ -57,7 +58,7 @@ const featuredPopularServices = featuredPopularServiceSelections.map(
     }
 
     return {
-      href: `/prices/${category.id}/${service.id}`,
+      href: `/services/${category.id}/${service.id}`,
       label: label ?? service.name,
       price: service.price,
     };
@@ -92,6 +93,7 @@ const homepageFaqs = [
 ];
 
 export default function HomePage() {
+  const featuredGuides = getPublishedIntentPages().slice(0, 6);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -112,15 +114,15 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <Header />
-      <main className="bg-[#f6efe6]">
+      <main className="bg-white">
         <HeroSection />
         <HomepageBrandsMarqueeSection />
         <HomepageCategoriesSection />
-        <section className="bg-[#17120f] py-12 text-[#f6efe6] sm:py-16 lg:py-20">
+        <section className="bg-[#17120f] py-12 text-[#f6f7f7] sm:py-16 lg:py-20">
           <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
             <div className="mb-8 text-center sm:mb-10">
               <div>
-                <h2 className="mx-auto whitespace-nowrap font-serif text-[1.9rem] leading-[0.94] tracking-[-0.045em] text-white sm:text-[3.4rem] lg:text-[4rem]">
+                <h2 className="mx-auto whitespace-nowrap font-sans text-[1.9rem] leading-[0.94] tracking-[-0.045em] text-white sm:text-[3.4rem] lg:text-[4rem]">
                   Popular Services
                 </h2>
               </div>
@@ -131,7 +133,7 @@ export default function HomePage() {
                 <NavLink
                   key={service.href}
                   href={service.href}
-                  className="flex items-center justify-between gap-4 border-b border-white/10 py-3.5 text-[#f6efe6] transition-colors duration-300 hover:text-[#cfb284] sm:py-4"
+                  className="flex items-center justify-between gap-4 border-b border-white/10 py-3.5 text-[#f6f7f7] transition-colors duration-300 hover:text-[#cfb284] sm:py-4"
                 >
                   <span className="text-[0.94rem] leading-6 sm:text-[1.02rem]">
                     {service.label}
@@ -145,7 +147,7 @@ export default function HomePage() {
 
             <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/10 pt-6">
               <NavLink
-                href="/prices"
+                href="/services"
                 className="inline-flex items-center justify-center bg-white px-8 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#17120f] transition-colors duration-300 hover:bg-gold hover:text-white sm:text-sm"
               >
                 All Services
@@ -153,6 +155,49 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        {featuredGuides.length > 0 && (
+          <section className="bg-stone-50/70 py-12 sm:py-16 lg:py-20">
+            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+              <div className="mb-8 text-center sm:mb-10">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
+                  Beauty Guides
+                </p>
+                <h2 className="mx-auto mt-4 font-sans text-[1.9rem] font-bold uppercase leading-[1.04] tracking-[0.08em] text-foreground sm:text-[2.5rem] lg:text-[3rem]">
+                  Helpful Before You Book
+                </h2>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {featuredGuides.map((guide) => (
+                  <NavLink
+                    key={guide.slug}
+                    href={`/${guide.slug}`}
+                    className="group border border-border bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50"
+                  >
+                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+                      Guide
+                    </p>
+                    <h3 className="mt-3 font-semibold text-foreground transition-colors group-hover:text-gold">
+                      {guide.h1}
+                    </h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                      {guide.heroDescription}
+                    </p>
+                  </NavLink>
+                ))}
+              </div>
+
+              <div className="mt-8 text-center">
+                <NavLink
+                  href="/guides"
+                  className="inline-flex items-center justify-center border border-border bg-white px-8 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-foreground transition-colors duration-300 hover:border-gold hover:text-gold sm:text-sm"
+                >
+                  All Guides
+                </NavLink>
+              </div>
+            </div>
+          </section>
+        )}
         <ReviewsSection />
         <HomepageLocationSection />
         <HomepageFaqSection faqs={homepageFaqs} />

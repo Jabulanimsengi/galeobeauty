@@ -10,7 +10,7 @@ import { Sparkles, Heart, Eye, Scissors, Zap, ChevronRight, ArrowRight, Plus } f
 const services = [
     {
         id: "facials",
-        slug: "dermalogica", // Links to /prices/dermalogica
+        slug: "dermalogica", // Links to /services/dermalogica
                         title: "Facials",
         subtitle: "Premium Skincare",
         description: "From deep hydration to advanced skin renewal, our facial treatments are designed to leave skin visibly fresher, calmer, and more refined.",
@@ -30,7 +30,7 @@ const services = [
     },
     {
         id: "makeup",
-        slug: "makeup", // Links to /prices/makeup
+        slug: "makeup", // Links to /services/makeup
         title: "Make-up",
         subtitle: "Kryolan Professional",
         description: "From occasion makeup to permanent artistry, our team creates polished, lasting looks with precision and care.",
@@ -50,7 +50,7 @@ const services = [
     },
     {
         id: "ipl-hair-removal",
-        slug: "ipl", // Links to /prices/ipl
+        slug: "ipl", // Links to /services/ipl
         title: "IPL Hair Removal",
         subtitle: "Ladies & Gents",
         description: "Advanced Intense Pulsed Light (IPL) hair removal treatments for smoother skin, with targeted sessions for face and body in a professional, comfortable setting.",
@@ -71,7 +71,7 @@ const services = [
     },
     {
         id: "massages",
-        slug: "massages", // Links to /prices/massages
+        slug: "massages", // Links to /services/massages
         title: "Massages",
         subtitle: "Therapeutic & Relaxing",
         description: "Relaxing and restorative massage treatments designed to ease tension, support recovery, and create a deeper sense of calm.",
@@ -95,7 +95,7 @@ const services = [
     },
     {
         id: "lashes",
-        slug: "lashes-brows", // Links to /prices/lashes-brows
+        slug: "lashes-brows", // Links to /services/lashes-brows
         title: "Lash Extensions & Brow Styling",
         subtitle: "Eye Enhancement",
         description: "Soft enhancement or bold definition, with lash and brow treatments that frame the face beautifully and feel expertly finished.",
@@ -117,7 +117,7 @@ const services = [
     },
     {
         id: "waxing",
-        slug: "waxing", // Links to /prices/waxing
+        slug: "waxing", // Links to /services/waxing
         title: "Waxing",
         subtitle: "Smooth Skin",
         description: "Professional face and body waxing with careful technique, clean prep, and beautifully smooth results.",
@@ -135,7 +135,7 @@ const services = [
     },
     {
         id: "fat-freezing",
-        slug: "fat-freezing", // Links to /prices/fat-freezing
+        slug: "fat-freezing", // Links to /services/fat-freezing
         title: "Fat Freezing",
         subtitle: "Cryolipolysis",
         description: "Non-invasive cryolipolysis designed to target stubborn areas and support a more sculpted body contour over time.",
@@ -153,7 +153,7 @@ const services = [
     },
     {
         id: "slimming",
-        slug: "slimming", // Links to /prices/slimming
+        slug: "slimming", // Links to /services/slimming
         title: "Tesla EMS Slimming",
         subtitle: "Max Muscle, Min Fat",
         description: "High-intensity muscle stimulation technology that supports toning, contouring, and a stronger-feeling silhouette without downtime.",
@@ -171,7 +171,7 @@ const services = [
     },
     {
         id: "hair-extensions",
-        slug: "hair-extensions", // Links to /prices/hair-extensions
+        slug: "hair-extensions", // Links to /services/hair-extensions
         title: "Hair Extensions",
         subtitle: "European Remy Human Hair",
         description: "Premium extension services for fuller, longer, more dimensional hair with a polished salon finish.",
@@ -387,7 +387,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`} className="block group">
+                    <NavLink href={`/services/${service.slug}`} className="block group">
                         <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-2xl sm:aspect-[4/3] lg:aspect-[6/5] xl:aspect-[5/4]">
                             <div className="absolute inset-0 bg-stone-950/10" />
 
@@ -487,7 +487,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         </span>
 
                         {/* Title */}
-                        <h3 className="font-serif text-4xl leading-[0.98] text-foreground md:text-5xl lg:text-[3.35rem] xl:text-[3.6rem]">
+                        <h3 className="font-sans text-4xl leading-[0.98] text-foreground md:text-5xl lg:text-[3.35rem] xl:text-[3.6rem]">
                             {service.title}
                         </h3>
 
@@ -516,7 +516,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 size="lg"
                                 className="group bg-foreground px-7 font-medium text-background transition-all duration-300 hover:bg-gold hover:text-white"
                             >
-                                <NavLink href={service.slug === "prices" ? "/prices" : `/prices/${service.slug}`}>
+                                <NavLink href={`/services/${service.slug}`}>
                                     {service.ctaText || "Explore Treatment"}
                                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </NavLink>
@@ -551,7 +551,7 @@ export function ServicesSection() {
                         viewport={{ once: true }}
                         transition={{ duration: prefersReducedMotion ? 0 : 0.5 }}
                     >
-                        <h2 className="mx-auto max-w-[18ch] font-serif text-[1.55rem] leading-[0.98] text-white sm:max-w-none sm:whitespace-nowrap sm:text-[2.5rem] lg:text-[3.1rem]">
+                        <h2 className="mx-auto max-w-[18ch] font-sans text-[1.55rem] leading-[0.98] text-white sm:max-w-none sm:whitespace-nowrap sm:text-[2.5rem] lg:text-[3.1rem]">
                             <span className="block sm:inline">Explore Galeo Beauty&apos;s</span>{" "}
                             <span className="block text-white italic sm:inline">Signature Treatments</span>
                         </h2>
@@ -619,11 +619,11 @@ export function ServicesSection() {
                                         <span className="mb-4 inline-flex rounded-full border border-gold/30 bg-background/80 px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold/90">
                                             Inside Galeo Beauty
                                         </span>
-                                        <h3 className="font-serif text-3xl text-foreground sm:text-4xl lg:max-w-[11ch]">
+                                        <h3 className="font-sans text-3xl text-foreground sm:text-4xl lg:max-w-[11ch]">
                                             Explore the full treatment menu
                                         </h3>
                                         <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
-                                            Browse every treatment category, current pricing page, and bookable service available at Galeo Beauty,
+                                            Browse every treatment category, service menu, and bookable treatment available at Galeo Beauty,
                                             from advanced aesthetics and facials to nails, lashes, body treatments, and more.
                                         </p>
                                         <Button
@@ -632,7 +632,7 @@ export function ServicesSection() {
                                             variant="outline"
                                             className="mt-8 border-2 border-foreground px-10 font-medium text-foreground hover:bg-foreground hover:text-background"
                                         >
-                                            <NavLink href="/prices">
+                                            <NavLink href="/services">
                                                 Explore Full Menu
                                                 <Plus className="ml-2 h-4 w-4" />
                                             </NavLink>

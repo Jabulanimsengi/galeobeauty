@@ -34,6 +34,16 @@ export function NavigationLoadingProvider({ children }: { children: React.ReactN
         stopNavigation();
     }, [pathname]);
 
+    useEffect(() => {
+        if (!isNavigating) return;
+
+        const fallbackTimer = window.setTimeout(() => {
+            stopNavigation();
+        }, 7000);
+
+        return () => window.clearTimeout(fallbackTimer);
+    }, [isNavigating]);
+
     return (
         <NavigationLoadingContext.Provider value={{ isNavigating, startNavigation }}>
             {children}

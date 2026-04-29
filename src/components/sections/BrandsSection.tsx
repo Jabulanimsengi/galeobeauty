@@ -34,7 +34,7 @@ export const BrandsSection = () => {
                         <span className="mb-4 block text-[0.78rem] font-semibold uppercase tracking-[0.42em] text-white/75 sm:mb-6">
                             Galeo Beauty
                         </span>
-                        <h2 className="text-center font-serif text-[3.35rem] font-medium leading-[0.88] tracking-[-0.035em] text-white sm:text-[4.9rem] md:text-[6.1rem] lg:text-[7.6rem] xl:text-[8.6rem]">
+                        <h2 className="text-center font-sans text-[3.35rem] font-medium leading-[0.88] tracking-[-0.035em] text-white sm:text-[4.9rem] md:text-[6.1rem] lg:text-[7.6rem] xl:text-[8.6rem]">
                             This is where
                             <br />
                             <span className="italic">beauty</span> &amp; wellness

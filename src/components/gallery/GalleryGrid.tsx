@@ -107,7 +107,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                         {categoryItems.length} images
                                     </p>
                                 </div>
-                                <h3 className="font-serif text-2xl leading-tight text-foreground sm:text-3xl lg:text-4xl">
+                                <h3 className="font-sans text-2xl leading-tight text-foreground sm:text-3xl lg:text-4xl">
                                     {category}
                                 </h3>
                                 <p className="max-w-md text-sm leading-7 text-muted-foreground sm:text-base">

@@ -75,7 +75,7 @@ export function NewsletterSignup({
                         <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
                             <Check className="w-6 h-6 text-green-600" />
                         </div>
-                        <h4 className="font-serif text-xl text-foreground mb-2">You&apos;re In!</h4>
+                        <h4 className="font-sans text-xl text-foreground mb-2">You&apos;re In!</h4>
                         <p className="text-sm text-muted-foreground">
                             Check your inbox for your 10% off code.
                         </p>
@@ -95,7 +95,7 @@ export function NewsletterSignup({
                             </span>
                         </div>
 
-                        <h4 className="font-serif text-xl sm:text-2xl text-foreground mb-2">
+                        <h4 className="font-sans text-xl sm:text-2xl text-foreground mb-2">
                             Join Our Beauty Circle
                         </h4>
                         <p className="text-sm text-muted-foreground mb-6">

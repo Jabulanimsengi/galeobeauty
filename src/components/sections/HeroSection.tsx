@@ -8,9 +8,9 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
 
 const spotlightLinks = [
-    { href: "/prices/hair", label: "Hair & Colour" },
-    { href: "/prices/lashes-brows", label: "Lashes & Brows" },
-    { href: "/prices/dermalogica", label: "Facials & Skin" },
+    { href: "/services/hair", label: "Hair & Colour" },
+    { href: "/services/lashes-brows", label: "Lashes & Brows" },
+    { href: "/services/dermalogica", label: "Facials & Skin" },
 ];
 
 export function HeroSection() {
@@ -49,7 +49,7 @@ export function HeroSection() {
                         transition={{ duration: prefersReducedMotion ? 0 : 0.7, ease: "easeOut" }}
                         className="mx-auto max-w-3xl text-center sm:mx-0 sm:text-left"
                     >
-                        <p className="font-serif text-[2.35rem] leading-none tracking-[-0.06em] text-white sm:text-[4.4rem] lg:text-[6.1rem] xl:text-[7rem]">
+                        <p className="font-sans text-[2.35rem] leading-none tracking-[-0.06em] text-white sm:text-[4.4rem] lg:text-[6.1rem] xl:text-[7rem]">
                             Galeo Beauty
                         </p>
                         <h1 className="mx-auto mt-3 max-w-[10ch] font-sans text-[1.8rem] font-light uppercase leading-[0.94] tracking-[0.03em] text-white sm:mx-0 sm:text-[3.4rem] sm:tracking-[0.04em] lg:text-[4.6rem]">
@@ -72,7 +72,7 @@ export function HeroSection() {
                             </Button>
 
                             <NavLink
-                                href="/prices"
+                                href="/services"
                                 className="inline-flex w-full items-center justify-center border border-white/25 px-7 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-white transition-colors hover:border-white hover:bg-white/10 sm:w-auto sm:text-sm"
                             >
                                 Explore Services

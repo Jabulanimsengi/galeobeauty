@@ -1,6 +1,7 @@
 import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from "./sitemap-config";
 import { getAllBespokeServicePages } from "./bespoke-service-pages";
 import { getAllBlogPosts } from "./blog-data";
+import { getPublishedIntentPages } from "./intent-pages";
 import { getAllSEOServices, isIndexableLocationService } from "./seo-data";
 import { SITEMAP_STATIC_PAGES } from "./sitemap-static-pages";
 
@@ -12,6 +13,7 @@ const STATIC_PAGES = SITEMAP_STATIC_PAGES.length;
 
 export function calculateSitemapURLCounts() {
     const blogPosts = getAllBlogPosts();
+    const intentPages = getPublishedIntentPages();
     const bespokeServicePages = getAllBespokeServicePages();
     const services = getAllSEOServices();
     const indexableSitemap0LocationServices = SITEMAP_0_LOCATIONS.flatMap((location) =>
@@ -24,7 +26,8 @@ export function calculateSitemapURLCounts() {
     // Sitemap 0: Primary Local & Northwest
     const sitemap0Locations = SITEMAP_0_LOCATIONS.length;
     const sitemap0LocationServices = indexableSitemap0LocationServices.length;
-    const sitemap0Total = STATIC_PAGES + blogPosts.length + bespokeServicePages.length + 1 + sitemap0Locations + sitemap0LocationServices;
+    const sitemap0ServicePages = services.length;
+    const sitemap0Total = STATIC_PAGES + intentPages.length + blogPosts.length + bespokeServicePages.length + sitemap0ServicePages + 1 + sitemap0Locations + sitemap0LocationServices;
     // 1 = /locations index page
 
     // Sitemap 1: Extended Gauteng
@@ -36,8 +39,10 @@ export function calculateSitemapURLCounts() {
     return {
         sitemap0: {
             staticPages: STATIC_PAGES,
+            intentPages: intentPages.length,
             blogPosts: blogPosts.length,
             bespokeServicePages: bespokeServicePages.length,
+            servicePages: sitemap0ServicePages,
             locationIndexPage: 1,
             locationHubs: sitemap0Locations,
             locationServicePages: sitemap0LocationServices,
@@ -78,8 +83,10 @@ export function printSitemapCounts() {
     console.log('SITEMAP 0: Primary Local & Northwest Areas');
     console.log('------------------------------------------');
     console.log(`Static pages:              ${counts.sitemap0.staticPages.toLocaleString()}`);
+    console.log(`Intent pages:              ${counts.sitemap0.intentPages.toLocaleString()}`);
     console.log(`Blog posts:                ${counts.sitemap0.blogPosts.toLocaleString()}`);
     console.log(`Bespoke service pages:     ${counts.sitemap0.bespokeServicePages.toLocaleString()}`);
+    console.log(`Service pages:             ${counts.sitemap0.servicePages.toLocaleString()}`);
     console.log(`Location index:            ${counts.sitemap0.locationIndexPage.toLocaleString()}`);
     console.log(`Location hubs:             ${counts.sitemap0.locationHubs.toLocaleString()}`);
     console.log(`Location service pages:    ${counts.sitemap0.locationServicePages.toLocaleString()}`);

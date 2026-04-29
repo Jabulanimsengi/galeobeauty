@@ -186,7 +186,7 @@ export function SEOLandingPage({
                                         </span>
                                     </div>
 
-                                    <h1 className="font-serif text-4xl lg:text-5xl lg:leading-tight text-foreground mb-6">
+                                    <h1 className="font-sans text-4xl lg:text-5xl lg:leading-tight text-foreground mb-6">
                                         {heroTitle}
                                     </h1>
 
@@ -250,7 +250,7 @@ export function SEOLandingPage({
                     <section id="pricing" className="py-24 bg-white">
                         <div className="container mx-auto px-4 sm:px-6">
                             <div className="text-center mb-16">
-                                <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+                                <h2 className="font-sans text-3xl md:text-4xl text-foreground mb-4">
                                     {pricing.title}
                                 </h2>
                             </div>
@@ -265,7 +265,7 @@ export function SEOLandingPage({
                                         transition={{ delay: idx * 0.1 }}
                                         className="bg-white border-b border-border pb-6"
                                     >
-                                        <h3 className="font-serif text-xl text-foreground mb-3">
+                                        <h3 className="font-sans text-xl text-foreground mb-3">
                                             {item.name}
                                         </h3>
                                         {item.description && (
@@ -305,7 +305,7 @@ export function SEOLandingPage({
                     <section id="services" className="py-24 bg-secondary/10">
                         <div className="container mx-auto px-4 sm:px-6">
                             <div className="text-center mb-16">
-                                <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-4">
+                                <h2 className="font-sans text-3xl md:text-4xl text-foreground mb-4">
                                     {services.title}
                                 </h2>
                             </div>
@@ -325,7 +325,7 @@ export function SEOLandingPage({
                                             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gold/10 mb-6">
                                                 <Icon className="w-8 h-8 text-gold" />
                                             </div>
-                                            <h3 className="font-serif text-xl text-foreground mb-3">
+                                            <h3 className="font-sans text-xl text-foreground mb-3">
                                                 {item.title}
                                             </h3>
                                             <p className="text-muted-foreground leading-relaxed">
@@ -352,7 +352,7 @@ export function SEOLandingPage({
                                         viewport={{ once: true }}
                                         transition={{ duration: 0.6 }}
                                     >
-                                        <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">
+                                        <h2 className="font-sans text-3xl md:text-4xl text-foreground mb-6">
                                             {secondaryContent.title}
                                         </h2>
                                         <p className="text-lg text-muted-foreground leading-relaxed mb-8">
@@ -401,7 +401,7 @@ export function SEOLandingPage({
                                     <span className="text-gold font-medium uppercase tracking-widest text-sm block mb-3">
                                         More Treatments
                                     </span>
-                                    <h2 className="font-serif text-3xl md:text-4xl text-foreground">
+                                    <h2 className="font-sans text-3xl md:text-4xl text-foreground">
                                         Explore Other Treatments
                                     </h2>
                                 </div>
@@ -428,7 +428,7 @@ export function SEOLandingPage({
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                                     </div>
                                                     <div className="p-5">
-                                                        <h3 className="font-serif text-lg text-foreground group-hover:text-gold transition-colors mb-1">
+                                                        <h3 className="font-sans text-lg text-foreground group-hover:text-gold transition-colors mb-1">
                                                             {service.title}
                                                         </h3>
                                                         <p className="text-sm text-muted-foreground">
@@ -446,7 +446,7 @@ export function SEOLandingPage({
 
                                 <div className="text-center mt-10">
                                     <Link
-                                        href="/prices"
+                                        href="/services"
                                         className="inline-flex items-center gap-2 text-foreground hover:text-gold transition-colors font-medium"
                                     >
                                         View All Treatments & Prices
@@ -466,7 +466,7 @@ export function SEOLandingPage({
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="font-serif text-3xl md:text-4xl text-foreground mb-6">
+                            <h2 className="font-sans text-3xl md:text-4xl text-foreground mb-6">
                                 {ctaTitle}
                             </h2>
                             <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">

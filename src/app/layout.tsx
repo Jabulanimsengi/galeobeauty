@@ -85,7 +85,7 @@ export default function RootLayout({
   ].filter(Boolean);
 
   return (
-    <html lang="en" className={montserrat.variable}>
+    <html lang="en" className={montserrat.variable} suppressHydrationWarning>
       <head>
         {/* JSON-LD Structured Data for Local Business */}
         <script
@@ -196,7 +196,7 @@ export default function RootLayout({
               },
               potentialAction: {
                 "@type": "SearchAction",
-                target: "https://www.galeobeauty.com/prices?q={search_term_string}",
+                target: "https://www.galeobeauty.com/services?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),

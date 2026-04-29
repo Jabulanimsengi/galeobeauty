@@ -1278,7 +1278,7 @@ export function buildHomepageKeywords(): string[] {
     ]);
 }
 
-export function buildPricesPageKeywords(): string[] {
+export function buildServicesPageKeywords(): string[] {
     return dedupeKeywords([
         "galeo beauty services",
         "services offered by galeo beauty",
@@ -1542,7 +1542,7 @@ export function buildOfferCatalogEntries() {
             "@type": "Service",
             name: `${strategy.catalogLabel} hartbeespoort`,
             description: strategy.catalogDescription,
-            url: `https://www.galeobeauty.com/prices/${categoryId}`,
+            url: `https://www.galeobeauty.com/services/${categoryId}`,
         },
     }));
 }

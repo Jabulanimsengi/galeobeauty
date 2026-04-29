@@ -44,7 +44,7 @@ export function AboutSection() {
                                         </div>
                                         <div>
                                             <p className="text-sm text-muted-foreground uppercase tracking-wider font-semibold">Excellence</p>
-                                            <p className="font-serif text-xl text-foreground">Award Winning Care</p>
+                                            <p className="font-sans text-xl text-foreground">Award Winning Care</p>
                                         </div>
                                     </div>
                                     <p className="text-sm text-foreground/70 leading-relaxed">
@@ -68,7 +68,7 @@ export function AboutSection() {
                                 <span className="text-gold font-medium uppercase tracking-widest text-sm">About Galeo</span>
                             </div>
 
-                            <h2 className="font-serif text-4xl lg:text-5xl lg:leading-tight text-foreground mb-6">
+                            <h2 className="font-sans text-4xl lg:text-5xl lg:leading-tight text-foreground mb-6">
                                 Where Medical Science <br />
                                 <span className="text-gold italic">Elevates Artistry</span>
                             </h2>
@@ -79,13 +79,13 @@ export function AboutSection() {
 
                             <div className="grid sm:grid-cols-2 gap-6 mb-8">
                                 <div className="space-y-4">
-                                    <h3 className="font-serif text-xl text-foreground">Clinical Precision</h3>
+                                    <h3 className="font-sans text-xl text-foreground">Clinical Precision</h3>
                                     <p className="text-sm text-muted-foreground leading-relaxed">
                                         Every treatment is overseen by medical professionals using FDA-approved technology and pharmaceutical-grade products.
                                     </p>
                                 </div>
                                 <div className="space-y-4">
-                                    <h3 className="font-serif text-xl text-foreground">Holistic Wellness</h3>
+                                    <h3 className="font-sans text-xl text-foreground">Holistic Wellness</h3>
                                     <p className="text-sm text-muted-foreground leading-relaxed">
                                         We create a sanctuary where stress dissolves, allowing your body's natural healing processes to flourish.
                                     </p>

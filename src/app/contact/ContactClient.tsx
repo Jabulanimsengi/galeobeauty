@@ -96,7 +96,7 @@ export function ContactClient() {
                                     <p className="text-[0.72rem] font-semibold uppercase tracking-[0.26em] text-gold/95">
                                         Contact Galeo Beauty
                                     </p>
-                                    <h1 className="mt-5 max-w-[9.5ch] font-serif text-[2.85rem] leading-[0.92] tracking-[-0.05em] text-[#17120f] sm:text-[3.7rem] lg:text-[4.25rem] xl:text-[4.6rem]">
+                                    <h1 className="mt-5 max-w-[9.5ch] font-sans text-[2.85rem] leading-[0.92] tracking-[-0.05em] text-[#17120f] sm:text-[3.7rem] lg:text-[4.25rem] xl:text-[4.6rem]">
                                         Book the visit,
                                         <br />
                                         ask the question,
@@ -189,7 +189,7 @@ export function ContactClient() {
                                     <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-white/72">
                                         Visit In Person
                                     </p>
-                                    <p className="mt-3 font-serif text-2xl leading-tight">
+                                    <p className="mt-3 font-sans text-2xl leading-tight">
                                         A calm Hartbeespoort setting for the full Galeo Beauty experience.
                                     </p>
                                 </div>
@@ -216,7 +216,7 @@ export function ContactClient() {
                                         </p>
                                     </div>
                                     <div>
-                                        <p className="font-serif text-2xl leading-tight text-[#17120f] sm:text-[2rem]">
+                                        <p className="font-sans text-2xl leading-tight text-[#17120f] sm:text-[2rem]">
                                             {method.detail}
                                         </p>
                                         <p className="mt-1 text-sm leading-7 text-foreground/62 sm:text-[0.96rem]">
@@ -272,7 +272,7 @@ export function ContactClient() {
                                     <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-gold/95">
                                         Find Galeo Beauty
                                     </p>
-                                    <h2 className="mt-4 font-serif text-3xl leading-[0.95] text-[#17120f] sm:text-4xl lg:max-w-[12ch]">
+                                    <h2 className="mt-4 font-sans text-3xl leading-[0.95] text-[#17120f] sm:text-4xl lg:max-w-[12ch]">
                                         Visit the salon with confidence.
                                     </h2>
                                     <p className="mt-4 max-w-md text-sm leading-7 text-foreground/66 sm:text-[0.96rem]">
@@ -349,7 +349,7 @@ export function ContactClient() {
                                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-gold/95">
                                     Stay Connected
                                 </p>
-                                <h2 className="mt-4 font-serif text-3xl leading-[0.96] text-[#17120f] sm:text-4xl">
+                                <h2 className="mt-4 font-sans text-3xl leading-[0.96] text-[#17120f] sm:text-4xl">
                                     Follow the salon, see new work, or book straight from Fresha.
                                 </h2>
                             </div>

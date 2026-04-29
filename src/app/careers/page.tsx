@@ -92,7 +92,7 @@ export default function CareersPage() {
                             <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-6 block">
                                 Join Our Team
                             </span>
-                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
+                            <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl text-foreground leading-[0.9] mb-8">
                                 Build Your <span className="text-gold italic">Career</span><br />
                                 With Us
                             </h1>
@@ -117,7 +117,7 @@ export default function CareersPage() {
                                     className="text-center p-6 border border-transparent hover:border-gold/20 rounded-xl transition-colors duration-300"
                                 >
                                     <benefit.icon className="w-10 h-10 text-gold mx-auto mb-4" />
-                                    <h3 className="font-serif text-xl text-foreground mb-3">{benefit.title}</h3>
+                                    <h3 className="font-sans text-xl text-foreground mb-3">{benefit.title}</h3>
                                     <p className="text-muted-foreground text-sm leading-relaxed">{benefit.description}</p>
                                 </motion.div>
                             ))}
@@ -132,7 +132,7 @@ export default function CareersPage() {
                             <span className="text-gold font-bold tracking-[0.2em] uppercase text-xs mb-3 block">
                                 Current Openings
                             </span>
-                            <h2 className="font-serif text-4xl lg:text-5xl text-foreground">
+                            <h2 className="font-sans text-4xl lg:text-5xl text-foreground">
                                 Available <span className="text-gold">Positions</span>
                             </h2>
                         </div>
@@ -150,7 +150,7 @@ export default function CareersPage() {
                                     >
                                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                                             <div>
-                                                <h3 className="font-serif text-2xl text-foreground mb-2">{job.title}</h3>
+                                                <h3 className="font-sans text-2xl text-foreground mb-2">{job.title}</h3>
                                                 <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
                                                     <span className="flex items-center gap-1">
                                                         <Briefcase className="w-4 h-4 text-gold" />
@@ -200,7 +200,7 @@ export default function CareersPage() {
                         ) : (
                             <div className="text-center py-16 bg-secondary/20 rounded-xl max-w-2xl mx-auto">
                                 <Briefcase className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-                                <h3 className="font-serif text-2xl text-foreground mb-3">No Open Positions</h3>
+                                <h3 className="font-sans text-2xl text-foreground mb-3">No Open Positions</h3>
                                 <p className="text-muted-foreground max-w-md mx-auto">
                                     We don&apos;t have any open positions right now, but we&apos;re always looking for talented individuals. Send us your CV and we&apos;ll keep it on file!
                                 </p>
@@ -228,7 +228,7 @@ export default function CareersPage() {
                 {/* CTA Section */}
                 <section className="py-20 lg:py-32 text-center bg-foreground text-background">
                     <div className="container mx-auto px-4">
-                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6">Ready to Join Us?</h2>
+                        <h2 className="font-sans text-4xl md:text-5xl lg:text-6xl mb-6">Ready to Join Us?</h2>
                         <p className="text-white/70 max-w-xl mx-auto mb-10 text-lg font-light">
                             Take the first step towards an exciting career in beauty and wellness.
                         </p>

@@ -48,10 +48,10 @@ function StatItem({ value, suffix, label, description, delay = 0 }: StatItemProp
             transition={{ duration: 0.5, delay }}
         >
             <div className="flex items-baseline justify-center gap-1 mb-1">
-                <span className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground">
+                <span className="font-sans text-3xl sm:text-4xl md:text-5xl font-semibold text-foreground">
                     {count}
                 </span>
-                <span className="font-serif text-xl sm:text-2xl text-gold">
+                <span className="font-sans text-xl sm:text-2xl text-gold">
                     {suffix}
                 </span>
             </div>
@@ -111,7 +111,7 @@ export function StatsSection() {
                     <span className="text-gold text-xs uppercase tracking-[0.3em] mb-3 block font-sans font-semibold">
                         By The Numbers
                     </span>
-                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-semibold">
+                    <h2 className="font-sans text-2xl sm:text-3xl md:text-4xl font-semibold">
                         Trusted Beauty &amp; Aesthetic Care in <span className="text-gold">Hartbeespoort</span>
                     </h2>
                 </motion.div>

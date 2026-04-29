@@ -18,6 +18,7 @@ type GoogleMapsApi = {
         event: {
             clearInstanceListeners: (instance: object) => void;
         };
+        importLibrary?: (libraryName: "maps" | "marker") => Promise<Record<string, unknown>>;
         InfoWindow: new (options?: Record<string, unknown>) => {
             addListener: (eventName: string, handler: () => void) => GoogleMapsListener;
             close: () => void;
@@ -41,6 +42,7 @@ type GoogleMapsApi = {
 declare global {
     interface Window {
         google?: GoogleMapsApi;
+        __galeoGoogleMapsReady?: () => void;
     }
 }
 
@@ -64,13 +66,43 @@ const MARKER_ICON_URL = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
 
 let googleMapsPromise: Promise<GoogleMapsApi> | null = null;
 
+async function ensureGoogleMapsLibraries(google: GoogleMapsApi): Promise<GoogleMapsApi> {
+    const maps = google.maps;
+
+    if (typeof maps.Map !== "function" && typeof maps.importLibrary === "function") {
+        const mapsLibrary = await maps.importLibrary("maps");
+
+        if (typeof mapsLibrary.Map === "function") {
+            maps.Map = mapsLibrary.Map as GoogleMapsApi["maps"]["Map"];
+        }
+
+        if (typeof mapsLibrary.InfoWindow === "function") {
+            maps.InfoWindow = mapsLibrary.InfoWindow as GoogleMapsApi["maps"]["InfoWindow"];
+        }
+    }
+
+    if (typeof maps.Marker !== "function" && typeof maps.importLibrary === "function") {
+        const markerLibrary = await maps.importLibrary("marker");
+
+        if (typeof markerLibrary.Marker === "function") {
+            maps.Marker = markerLibrary.Marker as GoogleMapsApi["maps"]["Marker"];
+        }
+    }
+
+    if (typeof maps.Map !== "function") {
+        throw new Error("Google Maps loaded, but the maps library was unavailable.");
+    }
+
+    return google;
+}
+
 function loadGoogleMapsApi(apiKey: string) {
     if (typeof window === "undefined") {
         return Promise.reject(new Error("Google Maps can only load in the browser."));
     }
 
     if (window.google?.maps) {
-        return Promise.resolve(window.google);
+        return ensureGoogleMapsLibraries(window.google);
     }
 
     if (googleMapsPromise) {
@@ -80,9 +112,12 @@ function loadGoogleMapsApi(apiKey: string) {
     googleMapsPromise = new Promise<GoogleMapsApi>((resolve, reject) => {
         const existingScript = document.getElementById(GOOGLE_MAPS_SCRIPT_ID) as HTMLScriptElement | null;
 
-        const handleLoad = () => {
+        const handleReady = () => {
             if (window.google?.maps) {
-                resolve(window.google);
+                ensureGoogleMapsLibraries(window.google).then(resolve).catch((error: unknown) => {
+                    googleMapsPromise = null;
+                    reject(error);
+                });
                 return;
             }
 
@@ -92,21 +127,25 @@ function loadGoogleMapsApi(apiKey: string) {
 
         const handleError = () => {
             googleMapsPromise = null;
+            delete window.__galeoGoogleMapsReady;
             reject(new Error("Failed to load Google Maps."));
         };
 
+        window.__galeoGoogleMapsReady = handleReady;
+
         if (existingScript) {
-            existingScript.addEventListener("load", handleLoad, { once: true });
+            if (window.google?.maps) {
+                handleReady();
+            }
             existingScript.addEventListener("error", handleError, { once: true });
             return;
         }
 
         const script = document.createElement("script");
         script.id = GOOGLE_MAPS_SCRIPT_ID;
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly&libraries=maps,marker&loading=async&callback=__galeoGoogleMapsReady`;
         script.async = true;
         script.defer = true;
-        script.addEventListener("load", handleLoad, { once: true });
         script.addEventListener("error", handleError, { once: true });
         document.head.appendChild(script);
     });

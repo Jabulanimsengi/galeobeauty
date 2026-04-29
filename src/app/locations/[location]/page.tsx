@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Header, Footer } from "@/components/layout";
 import { Button } from "@/components/ui/button";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import {
     getCanonicalLocationSlug,
     getLocationBySlug,
@@ -15,9 +16,10 @@ import {
     type SEOLocation,
 } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
-import { CheckCircle, ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { buildLocationHubKeywords } from "@/lib/seo-keywords";
 import { serviceCategories } from "@/lib/services-data";
+import { getIntentPagesForCategory } from "@/lib/intent-pages";
 
 function getBroadHubCopy(location: SEOLocation) {
     if (location.slug === "south-africa") {
@@ -283,6 +285,13 @@ export default async function LocationHubPage({ params }: PageProps) {
     const heroContent = broadHub
         ? null
         : getLocationHeroContent(location, nearbyAreas, popularTreatmentGroups, drivingContext);
+    const locationGuideCategoryIds = Array.from(
+        new Set(popularTreatmentGroups.flatMap((group) => group.services.map((service) => service.categoryId)))
+    ).slice(0, 4);
+    const locationGuides = locationGuideCategoryIds
+        .flatMap((categoryId) => getIntentPagesForCategory(categoryId).slice(0, 2))
+        .filter((guide, index, guides) => guides.findIndex((item) => item.slug === guide.slug) === index)
+        .slice(0, 6);
 
     // JSON-LD Structured Data
     const localBusinessSchema = {
@@ -347,22 +356,37 @@ export default async function LocationHubPage({ params }: PageProps) {
             />
             <Header />
             <main className="bg-background min-h-screen">
-                {/* Hero Section */}
-                <section className="relative overflow-hidden bg-secondary/20 px-6 pb-16 pt-32 lg:pb-24 lg:pt-40">
-                    <div className="absolute top-0 left-1/2 -z-10 h-full w-full -translate-x-1/2 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent" />
+                <section className="border-b border-border/60 bg-white pt-24 sm:pt-28 lg:pt-32">
+                    <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+                        <div className="overflow-hidden border-x border-border/60">
+                            <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]">
+                                <CloudinaryImage
+                                    src="/images/interior/galeo-beauty-interior-p1.jpg"
+                                    alt="Galeo Beauty salon interior in Hartbeespoort"
+                                    fill
+                                    priority
+                                    className="object-cover"
+                                    sizes="100vw"
+                                    noSpinner
+                                />
+                                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,8,6,0.08),rgba(10,8,6,0.32))]" />
+                            </div>
+                        </div>
+                    </div>
+
                     {broadHub ? (
-                        <div className="container mx-auto max-w-5xl text-center">
+                        <div className="container mx-auto max-w-5xl px-6 py-10 text-center sm:py-12 lg:py-14">
                             <span className="mb-4 block text-sm font-bold uppercase tracking-[0.2em] text-gold">
                                 {broadHubCopy!.eyebrow}
                             </span>
-                            <h1 className="mb-6 font-sans text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
+                            <h1 className="mx-auto mb-6 max-w-4xl font-sans text-[2.5rem] font-semibold leading-tight text-foreground sm:text-5xl lg:text-6xl">
                                 {broadHubCopy!.title}
                             </h1>
                             <p className="mx-auto mb-8 max-w-2xl text-lg leading-8 text-muted-foreground">
                                 {broadHubCopy!.heroDescription}
                             </p>
                             <div className="flex justify-center gap-4">
-                                <Button asChild size="lg" className="rounded-[0.35rem] bg-gold px-8 text-white hover:bg-gold-dark">
+                                <Button asChild size="lg" className="rounded-none bg-gold px-8 text-white hover:bg-gold-dark">
                                     <Link href="/contact">
                                         Visit Us
                                     </Link>
@@ -370,129 +394,54 @@ export default async function LocationHubPage({ params }: PageProps) {
                             </div>
                         </div>
                     ) : (
-                        <div className="container mx-auto max-w-6xl">
-                            <div className="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(18rem,0.92fr)] lg:items-start">
-                                <div className="max-w-4xl">
-                                    <span className="mb-4 block text-sm font-bold uppercase tracking-[0.2em] text-gold">
-                                        {heroContent!.eyebrow}
-                                    </span>
-                                    <h1 className="mb-6 font-sans text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl lg:text-6xl">
-                                        Beauty Services for <span className="text-gold">{location.name}</span>
-                                    </h1>
-                                    <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-                                        {heroContent!.description}
-                                    </p>
+                        <div className="container mx-auto max-w-5xl px-6 py-10 text-center sm:py-12 lg:py-14">
+                            <span className="mb-4 block text-sm font-bold uppercase tracking-[0.2em] text-gold">
+                                {heroContent!.eyebrow}
+                            </span>
+                            <h1 className="mx-auto mb-6 max-w-4xl font-sans text-[2.5rem] font-semibold leading-tight text-foreground sm:text-5xl lg:text-6xl">
+                                Beauty Services for <span className="text-gold">{location.name}</span>
+                            </h1>
+                            <p className="mx-auto max-w-2xl text-lg leading-8 text-muted-foreground">
+                                {heroContent!.description}
+                            </p>
 
-                                    <div className="mt-8 flex flex-wrap gap-3">
-                                        <Button asChild size="lg" className="rounded-[0.35rem] bg-gold px-8 text-white hover:bg-gold-dark">
-                                            <Link href="/contact">
-                                                Visit Us
-                                            </Link>
-                                        </Button>
-                                        <Button asChild variant="outline" size="lg" className="rounded-[0.35rem] px-8">
-                                            <Link href="/prices">
-                                                View Services
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </div>
-
-                                <aside className="border border-border/60 bg-background/90 p-5 shadow-[0_24px_80px_-48px_rgba(0,0,0,0.32)]">
-                                    <div className="space-y-4">
-                                        {heroContent!.highlights.map((item) => (
-                                            <div key={item.label} className="border border-border/70 bg-secondary/10 p-4">
-                                                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-gold/85">
-                                                    {item.label}
-                                                </p>
-                                                <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                                                    {item.text}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </aside>
+                            <div className="mt-8 flex flex-wrap justify-center gap-3">
+                                <Button asChild size="lg" className="rounded-none bg-gold px-8 text-white hover:bg-gold-dark">
+                                    <Link href="/contact">
+                                        Visit Us
+                                    </Link>
+                                </Button>
+                                <Button asChild variant="outline" size="lg" className="rounded-none px-8">
+                                    <Link href="/services">
+                                        View Services
+                                    </Link>
+                                </Button>
                             </div>
                         </div>
                     )}
                 </section>
 
-                {nearbyAreas.length > 0 && (
-                    <section className="py-14 border-y border-border/60 bg-background">
-                        <div className="container mx-auto max-w-5xl px-6">
-                            <div className="max-w-3xl">
-                                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                    {broadHub ? "Nearby Places" : `Near ${location.name}`}
-                                </span>
-                                <h2 className="mt-3 font-sans text-3xl font-semibold text-foreground md:text-4xl">
-                                    {broadHub ? broadHubCopy!.coverageHeading : `Nearby places to consider around ${location.name}`}
-                                </h2>
-                                <p className="mt-3 max-w-2xl text-base leading-8 text-muted-foreground">
-                                    {broadHub
-                                        ? broadHubCopy!.coverageDescription
-                                        : (
-                                            <>
-                                                If you are comparing nearby areas before you book, these location pages can help you find
-                                                the one that fits your area best.
-                                            </>
-                                        )}
-                                </p>
-                            </div>
-
-                            <div className="mt-8 flex flex-wrap gap-3">
-                                {nearbyAreas.map((area) => (
-                                    <Link
-                                        key={area.slug}
-                                        href={`/locations/${area.slug}`}
-                                        className="rounded-[0.35rem] border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:bg-background hover:text-gold"
-                                    >
-                                        {area.name}
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                <section className="py-16 bg-background">
+                <section className="bg-background py-14">
                     <div className="container mx-auto max-w-5xl px-6">
-                        <div className="grid gap-6 lg:grid-cols-3">
-                            <div className="rounded-[0.4rem] border border-border bg-secondary/10 p-6 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.22)]">
-                                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                    About {location.name}
-                                </span>
-                                <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                                    {locationInsights.characteristic}
-                                </p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-border bg-secondary/10 p-6 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.22)]">
-                                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                    What People Usually Book
-                                </span>
-                                <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                                    {locationInsights.clientProfile}
-                                </p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-border bg-secondary/10 p-6 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.22)]">
-                                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                    Getting Here
-                                </span>
-                                <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                                    {locationInsights.travelNote}
-                                </p>
+                        <div className="border border-border bg-white p-6 sm:p-8 lg:p-10">
+                            <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                What This Area Page Covers
+                            </h2>
+                            <div className="mt-6 grid gap-6 text-sm leading-7 text-muted-foreground md:grid-cols-3">
+                                <p>{broadHub ? broadHubCopy!.coverageDescription : locationInsights.characteristic}</p>
+                                <p>{broadHub ? broadHubCopy!.servicesDescription : locationInsights.clientProfile}</p>
+                                <p>{broadHub ? broadHubCopy!.worthDescription : `${drivingContext}. ${locationInsights.travelNote}`}</p>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 {popularTreatmentGroups.length > 0 && (
-                    <section className="py-16 bg-stone-50/70">
+                    <section className="bg-stone-50/70 py-16">
                         <div className="container mx-auto max-w-5xl px-6">
-                            <div className="max-w-3xl">
-                                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                    Popular Services
-                                </span>
-                                <h2 className="mt-3 font-sans text-3xl font-semibold text-foreground md:text-4xl">
-                                    {broadHub ? broadHubCopy!.servicesHeading : `Popular beauty services near ${location.name}`}
+                            <div className="mx-auto max-w-3xl text-center">
+                                <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                    {broadHub ? broadHubCopy!.servicesHeading : `Popular Beauty Services Near ${location.name}`}
                                 </h2>
                                 <p className="mt-3 max-w-2xl text-base leading-8 text-muted-foreground">
                                     {broadHub
@@ -511,7 +460,7 @@ export default async function LocationHubPage({ params }: PageProps) {
                                 {popularTreatmentGroups.map((group) => (
                                     <article
                                         key={group.id}
-                                        className="rounded-[0.4rem] border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_22px_60px_-38px_rgba(0,0,0,0.32)]"
+                                        className="border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_22px_60px_-38px_rgba(0,0,0,0.32)]"
                                     >
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
@@ -532,8 +481,8 @@ export default async function LocationHubPage({ params }: PageProps) {
                                             {group.services.map((service) => (
                                                 <Link
                                                     key={service.slug}
-                                                    href={broadHub ? `/prices/${service.categoryId}/${service.slug}` : `/locations/${canonicalLocationSlug}/${service.slug}`}
-                                                    className="group flex items-center justify-between gap-4 rounded-[0.35rem] border border-border/70 bg-secondary/10 px-4 py-3 text-sm transition-colors hover:border-gold/30 hover:bg-secondary/20"
+                                                    href={broadHub ? `/services/${service.categoryId}/${service.slug}` : `/locations/${canonicalLocationSlug}/${service.slug}`}
+                                                    className="group flex items-center justify-between gap-4 border border-border/70 bg-secondary/10 px-4 py-3 text-sm transition-colors hover:border-gold/30 hover:bg-secondary/20"
                                                 >
                                                     <div>
                                                         <p className="font-medium text-foreground group-hover:text-gold">
@@ -563,19 +512,76 @@ export default async function LocationHubPage({ params }: PageProps) {
                     </section>
                 )}
 
-                <section className="py-16 bg-background border-y border-border/60">
-                    <div className="container mx-auto max-w-5xl px-6">
-                        <div className="max-w-3xl">
-                            <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold/80">
-                                More Services
-                            </span>
-                                <h2 className="mt-3 font-sans text-3xl font-semibold text-foreground md:text-4xl">
-                                    {broadHub ? "See all treatment categories" : `Looking for something else near ${location.name}?`}
-                                </h2>
-                            <p className="mt-3 max-w-2xl text-base leading-8 text-muted-foreground">
+                {nearbyAreas.length > 0 && (
+                    <section className="border-y border-border/60 bg-background py-14">
+                        <div className="container mx-auto max-w-5xl px-6 text-center">
+                            <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                {broadHub ? broadHubCopy!.coverageHeading : `Nearby Areas Around ${location.name}`}
+                            </h2>
+                            <p className="mx-auto mt-3 max-w-2xl text-base leading-8 text-muted-foreground">
                                 {broadHub
-                                    ? "Choose a category below to compare treatments, prices, and service details."
-                                    : "Choose a category below to compare treatments, prices, and service details."}
+                                    ? broadHubCopy!.coverageDescription
+                                    : "Compare nearby area pages before you book, especially if you are planning travel time or looking for the closest service fit."}
+                            </p>
+
+                            <div className="mt-8 flex flex-wrap justify-center gap-3">
+                                {nearbyAreas.map((area) => (
+                                    <Link
+                                        key={area.slug}
+                                        href={`/locations/${area.slug}`}
+                                        className="border border-border bg-secondary/10 px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-gold/40 hover:bg-background hover:text-gold"
+                                    >
+                                        {area.name}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {locationGuides.length > 0 && (
+                    <section className="bg-stone-50/70 py-16">
+                        <div className="container mx-auto max-w-6xl px-6">
+                            <div className="mx-auto max-w-3xl text-center">
+                                <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                    Beauty Guides for {location.name} Clients
+                                </h2>
+                                <p className="mt-3 max-w-2xl text-base leading-8 text-muted-foreground">
+                                    Helpful guides for comparing treatments before planning a visit to Galeo Beauty.
+                                </p>
+                            </div>
+
+                            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                {locationGuides.map((guide) => (
+                                    <Link
+                                        key={guide.slug}
+                                        href={`/${guide.slug}`}
+                                        className="group border border-border bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50"
+                                    >
+                                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+                                            Guide
+                                        </p>
+                                        <h3 className="mt-3 font-semibold text-foreground transition-colors group-hover:text-gold">
+                                            {guide.h1}
+                                        </h3>
+                                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                                            {guide.heroDescription}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                <section className="bg-background py-16">
+                    <div className="container mx-auto max-w-5xl px-6">
+                        <div className="mx-auto max-w-3xl text-center">
+                            <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                {broadHub ? "See All Treatment Categories" : `More Services Near ${location.name}`}
+                            </h2>
+                            <p className="mt-3 max-w-2xl text-base leading-8 text-muted-foreground">
+                                Choose a category below to compare treatments, prices, and service details.
                             </p>
                         </div>
 
@@ -589,8 +595,8 @@ export default async function LocationHubPage({ params }: PageProps) {
                                 return (
                                     <Link
                                         key={category.id}
-                                        href={`/prices/${category.id}`}
-                                        className="rounded-[0.4rem] border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_22px_60px_-38px_rgba(0,0,0,0.32)]"
+                                        href={`/services/${category.id}`}
+                                        className="border border-border bg-background p-5 shadow-[0_18px_50px_-40px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_22px_60px_-38px_rgba(0,0,0,0.32)]"
                                     >
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
@@ -614,29 +620,24 @@ export default async function LocationHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                {/* Why Choose Us */}
-                <section className="py-16 bg-foreground text-background">
-                    <div className="container mx-auto px-6 max-w-4xl text-center">
-                        <h2 className="mb-12 font-sans text-3xl font-semibold tracking-[-0.03em] text-white md:text-4xl">
-                            {broadHub ? broadHubCopy!.whyTitle : `Why ${location.name} clients choose Galeo Beauty`}
-                        </h2>
-                        <div className="grid md:grid-cols-3 gap-8 text-left">
-                            <div className="rounded-[0.4rem] border border-white/10 bg-white/5 p-6">
-                                <MapPin className="w-8 h-8 text-gold mb-4" />
-                                <h3 className="font-bold mb-2">{broadHub ? broadHubCopy!.worthTitle : "Easy To Plan"}</h3>
-                                <p className="text-sm text-white/70">
-                                    {broadHub ? broadHubCopy!.worthDescription : `${drivingContext} and easy to pair with a day out in Hartbeespoort.`}
-                                </p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-white/10 bg-white/5 p-6">
-                                <CheckCircle className="w-8 h-8 text-gold mb-4" />
-                                <h3 className="font-bold mb-2">Experienced Care</h3>
-                                <p className="text-sm text-white/70">{broadHub ? broadHubCopy!.expertDescription : locationInsights.clientProfile}</p>
-                            </div>
-                            <div className="rounded-[0.4rem] border border-white/10 bg-white/5 p-6">
-                                <CheckCircle className="w-8 h-8 text-gold mb-4" />
-                                <h3 className="font-bold mb-2">A Relaxed Visit</h3>
-                                <p className="text-sm text-white/70">{broadHub ? broadHubCopy!.luxuryDescription : locationInsights.travelNote}</p>
+                <section className="bg-stone-50/70 px-6 py-14">
+                    <div className="container mx-auto max-w-4xl">
+                        <div className="border border-[#2b2b2f] bg-[#171719] px-6 py-10 text-center text-white shadow-[0_30px_90px_-45px_rgba(0,0,0,0.65)] sm:px-10">
+                            <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-white sm:text-[2rem] lg:text-[2.25rem]">
+                                {broadHub ? broadHubCopy!.whyTitle : `Ready To Book Near ${location.name}?`}
+                            </h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-white/70">
+                                {broadHub
+                                    ? broadHubCopy!.worthDescription
+                                    : `${drivingContext}. Book with Galeo Beauty when you want clear pricing, polished treatment care, and a calmer Hartbeespoort salon visit.`}
+                            </p>
+                            <div className="mt-7 flex flex-wrap justify-center gap-3">
+                                <Button asChild size="lg" className="rounded-none bg-gold px-8 text-white hover:bg-gold-dark">
+                                    <Link href="/contact">Contact Galeo Beauty</Link>
+                                </Button>
+                                <Button asChild size="lg" className="rounded-none border border-white/15 bg-transparent px-8 text-white hover:bg-white/10 hover:text-white">
+                                    <Link href="/services">View Services</Link>
+                                </Button>
                             </div>
                         </div>
                     </div>

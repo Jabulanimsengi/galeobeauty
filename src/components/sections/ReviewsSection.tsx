@@ -225,7 +225,7 @@ export function ReviewsSection() {
     const prefersReducedMotion = useReducedMotion();
 
     return (
-        <section className="relative overflow-hidden bg-[#f7f1e9] py-14 text-foreground sm:py-16 md:py-24">
+        <section className="relative overflow-hidden bg-[#f6f7f7] py-14 text-foreground sm:py-16 md:py-24">
             <div
                 className="absolute inset-0"
                 style={{
@@ -249,7 +249,7 @@ export function ReviewsSection() {
                     className="mb-8 text-center sm:mb-10"
                 >
                     <div>
-                        <h2 className="font-serif text-[2.4rem] leading-[0.95] tracking-[-0.04em] text-foreground sm:text-[3rem]">
+                        <h2 className="font-sans text-[2.4rem] leading-[0.95] tracking-[-0.04em] text-foreground sm:text-[3rem]">
                             Reviews
                         </h2>
                     </div>

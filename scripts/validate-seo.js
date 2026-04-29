@@ -221,8 +221,8 @@ function validateLocationLinkHygiene() {
     addIssue("error", "src/components/location/LocationServicesClient.tsx is not checking whether local service detail links are indexable.");
   }
 
-  if (!locationServicesClient.includes("`/prices/${category.id}/${item.id}`")) {
-    addIssue("error", "src/components/location/LocationServicesClient.tsx is missing the canonical /prices fallback for non-indexable local service links.");
+  if (!locationServicesClient.includes("`/services/${category.id}/${item.id}`")) {
+    addIssue("error", "src/components/location/LocationServicesClient.tsx is missing the canonical /services fallback for non-indexable local service links.");
   }
 
   if (!locationServicePage.includes("buildCurrentLocationServiceHref")) {
@@ -335,7 +335,7 @@ function validateIntentPageContentQuality() {
   const genericTreatmentPattern = /treatmentApproach:\s*(>|")?\s*Read our comprehensive professional advice below\./i;
   const genericFaqPattern = /question:\s*Is .* suitable for all types\?/i;
   const mojibakePattern = /â€”|â€¢|â€™|â€œ|â€|Â/;
-  const legacySkinLinkPattern = /\/prices\/skin(?:\/|\b)/;
+  const legacySkinLinkPattern = /\/services\/skin(?:\/|\b)/;
 
   for (const record of records) {
     if (!isIntentPageIndexableRecord(record)) {
@@ -343,7 +343,7 @@ function validateIntentPageContentQuality() {
     }
 
     if (legacySkinLinkPattern.test(record.raw)) {
-      addIssue("warn", `Intent page still contains legacy /prices/skin links that should be cleaned in source: src/content/intent-pages/${record.file}`);
+      addIssue("warn", `Intent page still contains legacy /services/skin links that should be cleaned in source: src/content/intent-pages/${record.file}`);
     }
 
     if (mojibakePattern.test(record.raw)) {

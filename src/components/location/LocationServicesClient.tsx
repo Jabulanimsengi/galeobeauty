@@ -127,7 +127,7 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
                                                             {subcategory.items.map((item) => {
                                                                 const detailsLink = canUseLocalServiceLinks || isIndexableLocationService(detailsLocationSlug, item.id)
                                                                     ? `/locations/${detailsLocationSlug}/${item.id}`
-                                                                    : `/prices/${category.id}/${item.id}`;
+                                                                    : `/services/${category.id}/${item.id}`;
 
                                                                 return (
                                                                     <TreatmentListItem

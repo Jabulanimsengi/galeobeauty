@@ -45,7 +45,7 @@ export function Countdown({ targetDate, variant = "light" }: CountdownProps) {
 
         timerComponents.push(
             <div key={interval} className="flex flex-col items-center mx-2 sm:mx-4">
-                <span className={`text-2xl sm:text-4xl font-serif font-bold ${numberColor}`}>
+                <span className={`text-2xl sm:text-4xl font-sans font-bold ${numberColor}`}>
                     {timeLeft[interval as keyof typeof timeLeft]}
                 </span>
                 <span className={`text-[10px] sm:text-xs uppercase tracking-widest mt-1 ${labelColor}`}>
@@ -57,7 +57,7 @@ export function Countdown({ targetDate, variant = "light" }: CountdownProps) {
 
     return (
         <div className="flex items-center">
-            {timerComponents.length ? timerComponents : <span className={`text-xl font-serif ${numberColor}`}>Offer Expired</span>}
+            {timerComponents.length ? timerComponents : <span className={`text-xl font-sans ${numberColor}`}>Offer Expired</span>}
         </div>
     );
 }

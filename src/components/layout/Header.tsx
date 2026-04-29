@@ -147,14 +147,16 @@ export function Header() {
                                         Galeo Beauty
                                     </div>
                                     <SheetTitle className="text-left">
+                                        <span className="relative block h-16 w-40">
                                         <CloudinaryImage
                                             src="/images/logo.png"
                                             alt="Galeo Beauty"
-                                            width={200}
-                                            height={80}
-                                            className="h-16 w-auto brightness-0 invert"
+                                            fill
+                                            className="object-contain object-left brightness-0 invert"
+                                            sizes="10rem"
                                             noSpinner
                                         />
+                                        </span>
                                     </SheetTitle>
                                 </SheetHeader>
 
@@ -184,7 +186,7 @@ export function Header() {
                                             <Button
                                                 size="lg"
                                                 className="w-full rounded-none bg-[#17120f] py-6 text-base font-semibold text-white hover:bg-black"
-                                                onClick={() => handleMobileNavigation("/prices")}
+                                                onClick={() => handleMobileNavigation("/services")}
                                             >
                                                 Book Now
                                             </Button>
@@ -207,13 +209,13 @@ export function Header() {
                             </SheetContent>
                         </Sheet>
 
-                        <NavLink href="/" className="absolute left-1/2 z-10 -translate-x-1/2">
+                        <NavLink href="/" className="absolute left-1/2 z-10 block h-[4.1rem] w-[9.75rem] -translate-x-1/2 sm:h-[4.6rem] sm:w-[10.75rem]">
                             <CloudinaryImage
                                 src="/images/logo.png"
                                 alt="Galeo Beauty"
-                                width={170}
-                                height={70}
-                                className="h-[4.1rem] w-auto transition-all duration-300 sm:h-[4.6rem]"
+                                fill
+                                className="object-contain"
+                                sizes="(max-width: 640px) 9.75rem, 10.75rem"
                                 priority
                                 noSpinner
                             />
@@ -222,20 +224,20 @@ export function Header() {
                         <div className="h-12 w-12 shrink-0" aria-hidden="true" />
                     </div>
 
-                    <div className="hidden h-[5.8rem] items-center lg:grid lg:grid-cols-[auto_1fr_auto] lg:gap-8">
-                        <NavLink href="/" className="relative z-10 justify-self-start">
+                    <div className="hidden h-[5.8rem] items-center lg:grid lg:grid-cols-[10.5rem_minmax(0,1fr)_auto] lg:gap-6 xl:grid-cols-[11rem_minmax(0,1fr)_auto] xl:gap-8">
+                        <NavLink href="/" className="relative z-10 block h-[5.1rem] w-[10.5rem] shrink-0 justify-self-start xl:w-[11rem]">
                             <CloudinaryImage
                                 src="/images/logo.png"
                                 alt="Galeo Beauty"
-                                width={200}
-                                height={80}
-                                className="h-[5.1rem] w-auto transition-all duration-300"
+                                fill
+                                className="object-contain object-left"
+                                sizes="(max-width: 1280px) 10.5rem, 11rem"
                                 priority
                                 noSpinner
                             />
                         </NavLink>
 
-                        <nav className="relative flex items-center justify-center gap-1">
+                        <nav className="relative flex min-w-0 items-center justify-center gap-0.5 xl:gap-1">
                             {navItems.map((item) => {
                                 return (
                                     <NavLink
@@ -244,7 +246,7 @@ export function Header() {
                                         className="group relative"
                                     >
                                         <span className={cn(
-                                            "relative z-10 flex items-center gap-1.5 px-4 py-2 text-[0.8rem] font-medium uppercase tracking-[0.24em] transition-colors duration-300",
+                                            "relative z-10 flex items-center gap-1.5 px-2.5 py-2 text-[0.72rem] font-medium uppercase tracking-[0.18em] transition-colors duration-300 xl:px-4 xl:text-[0.8rem] xl:tracking-[0.24em]",
                                             "group-hover:text-gold",
                                             "text-foreground/78"
                                         )}>
@@ -257,15 +259,17 @@ export function Header() {
                             })}
                         </nav>
 
-                        <Button
-                            asChild
-                            className={cn(
-                                "justify-self-end rounded-none px-6 text-[0.72rem] font-semibold uppercase tracking-[0.24em] transition-colors",
-                                "bg-[#17120f] text-white hover:bg-gold hover:text-white"
-                            )}
-                        >
-                            <NavLink href="/prices">Book</NavLink>
-                        </Button>
+                        <div className="flex items-center justify-self-end gap-3 pl-4 xl:pl-6">
+                            <Button
+                                asChild
+                                className={cn(
+                                    "rounded-none px-6 text-[0.72rem] font-semibold uppercase tracking-[0.24em] transition-colors",
+                                    "bg-[#17120f] text-white hover:bg-gold hover:text-white"
+                                )}
+                            >
+                                <NavLink href="/services">Book</NavLink>
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </header>

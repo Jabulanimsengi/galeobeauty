@@ -3317,7 +3317,7 @@ const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
     {
         id: "nails",
         title: "Nails",
-        categoryHref: "/prices/nails",
+        categoryHref: "/services/nails",
         categoryLabel: "Explore all nail services",
         serviceSlugs: ["gel-overlay-hands", "acrylic-tips", "rubber-base"],
         buildDescription: (location: SEOLocation) =>
@@ -3326,7 +3326,7 @@ const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
     {
         id: "hair-extensions",
         title: "Hair Extensions",
-        categoryHref: "/prices/hair-extensions",
+        categoryHref: "/services/hair-extensions",
         categoryLabel: "Explore all hair extensions",
         serviceSlugs: ["tape-45cm-dark", "clip-45cm-dark", "halo-45cm-dark"],
         buildDescription: (location: SEOLocation) =>
@@ -3335,7 +3335,7 @@ const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
     {
         id: "lashes",
         title: "Lashes",
-        categoryHref: "/prices/lashes-brows",
+        categoryHref: "/services/lashes-brows",
         categoryLabel: "Explore all lash and brow services",
         serviceSlugs: ["lash-lift-tint", "lash-lamination", "brow-tint"],
         buildDescription: (location: SEOLocation) =>
@@ -3344,7 +3344,7 @@ const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
     {
         id: "eyelash-extensions",
         title: "Eyelash Extensions",
-        categoryHref: "/prices/lashes-brows",
+        categoryHref: "/services/lashes-brows",
         categoryLabel: "Explore all eyelash extension options",
         serviceSlugs: ["classic-lashes", "hybrid-lashes", "volume-lashes"],
         buildDescription: (location: SEOLocation) =>
@@ -3353,7 +3353,7 @@ const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
     {
         id: "facial-treatments",
         title: "Facial Treatments",
-        categoryHref: "/prices/dermalogica",
+        categoryHref: "/services/dermalogica",
         categoryLabel: "Explore all facial treatments",
         serviceSlugs: ["pro-skin-60", "pro-clear", "pro-microneedling"],
         buildDescription: (location: SEOLocation) =>
@@ -3362,7 +3362,7 @@ const LOCATION_POPULAR_TREATMENT_GROUP_CONFIG = [
     {
         id: "hair-treatments",
         title: "Hair Treatments",
-        categoryHref: "/prices/hair",
+        categoryHref: "/services/hair",
         categoryLabel: "Explore all hair treatments",
         serviceSlugs: ["brazilian-medium", "keratin", "botox"],
         buildDescription: (location: SEOLocation) =>
@@ -3510,3 +3510,98 @@ export function getPriorityLocationServiceContent(service: SEOService, location:
     return playbook;
 }
 
+
+
+/**
+ * Generate a specific 'Best For' description based on service name and category
+ */
+export function generateDynamicBestFor(itemName: string, itemDescription: string = "", categoryId: string): string {
+    const text = (itemName + " " + itemDescription).toLowerCase();
+    
+    if (categoryId === "hair-color") {
+        if (text.includes("root") || text.includes("regrowth")) return "People with visible roots or greys who need coverage without coloring their full length.";
+        if (text.includes("highlight") || text.includes("foil")) return "People who want dimensional brightness and varied tones in their hair.";
+        if (text.includes("balayage") || text.includes("ombre")) return "People who want a lived-in, low-maintenance colour with natural-looking depth.";
+        return "People who want a fresh hair colour transformation.";
+    }
+    
+    if (categoryId === "waxing") {
+        if (text.includes("leg")) return "People who want smooth legs and long-lasting hair removal.";
+        if (text.includes("bikini") || text.includes("brazilian") || text.includes("hollywood") || text.includes("intimate")) return "People who want clean, long-lasting hair removal in the intimate area.";
+        if (text.includes("arm") || text.includes("underarm")) return "People who want smooth, hair-free arms or underarms.";
+        if (text.includes("brow") || text.includes("lip") || text.includes("chin") || text.includes("face")) return "People who want precise facial hair removal for a smoother complexion.";
+        if (text.includes("back") || text.includes("chest")) return "People who want broad body hair reduction and a smoother torso.";
+        return "People who want long-lasting hair removal and smooth skin.";
+    }
+
+    if (categoryId === "nails") {
+        if (text.includes("acrylic") || text.includes("extension")) return "People who want to add length, strength, and durability to their natural nails.";
+        if (text.includes("gel") || text.includes("overlay")) return "People who want a chip-resistant, glossy finish that lasts for weeks.";
+        if (text.includes("pedi") || text.includes("feet")) return "People who want clean, polished, and beautifully groomed feet.";
+        if (text.includes("mani") || text.includes("hands")) return "People who want neat, well-groomed hands and cuticles.";
+        return "People who want clean, polished, and beautifully groomed nails.";
+    }
+
+    if (categoryId === "massages") {
+        if (text.includes("deep") || text.includes("sports")) return "People with chronic muscle tension or knots who need targeted, firm relief.";
+        if (text.includes("hot stone")) return "People who want deep relaxation and heat therapy to melt away stress.";
+        if (text.includes("neck") || text.includes("back")) return "People with localized upper body stiffness from desk work or stress.";
+        if (text.includes("pregnancy")) return "Expectant mothers seeking safe, soothing relief from pregnancy-related tension.";
+        return "People who want to unwind, reduce stress, and relieve muscle tension.";
+    }
+
+    if (categoryId === "lashes-brows") {
+        if (text.includes("lift") || text.includes("lamination")) return "People who want their natural lashes or brows to look fuller and more lifted without extensions.";
+        if (text.includes("tint")) return "People with fair hair who want darker, more defined lashes or brows without daily makeup.";
+        if (text.includes("volume") || text.includes("glamour")) return "People who love a dense, dramatic, and highly glamorous eye look.";
+        if (text.includes("classic") || text.includes("hybrid")) return "People who want to enhance their eyes with a beautiful, everyday mascara look.";
+        return "People who want defined, polished eyes and brows that require zero daily makeup.";
+    }
+
+    if (categoryId === "dermalogica" || categoryId === "qms" || categoryId === "skin-treatments" || categoryId === "peels") {
+        if (text.includes("acne") || text.includes("clear") || text.includes("purify")) return "People with oily, congested skin struggling with blackheads and active breakouts.";
+        if (text.includes("peel") || text.includes("pigment") || text.includes("bright")) return "People with uneven skin tone, dark spots, or dullness who want a radiant complexion.";
+        if (text.includes("anti-aging") || text.includes("firm") || text.includes("collagen") || text.includes("neo")) return "People noticing fine lines, volume loss, or dullness who want plumper, firmer-looking skin.";
+        if (text.includes("calm") || text.includes("sensitive")) return "People with highly reactive, red, or easily irritated skin who need gentle barrier support.";
+        if (text.includes("micro") || text.includes("dermaplaning")) return "People who want an instantly smoother texture and flawless makeup application.";
+        return "People who want a professional, targeted treatment to improve their skin's health and appearance.";
+    }
+
+    if (categoryId === "hair-styling" || categoryId === "hair-care" || categoryId === "brazilian-blowout") {
+        if (text.includes("blow") && text.includes("out")) return "People who want a polished, bouncy, and professional finish for their hair.";
+        if (text.includes("brazilian") || text.includes("smooth") || text.includes("keratin")) return "People with frizzy or unmanageable hair who want long-lasting smoothness and easier styling.";
+        if (text.includes("cut") || text.includes("trim")) return "People who need to maintain their hair's health, shape, and style.";
+        if (text.includes("treatment") || text.includes("mask") || text.includes("repair")) return "People with dry, damaged, or over-processed hair that needs intensive nourishment.";
+        return "People who want fresh, styled, and beautifully maintained hair.";
+    }
+
+    if (categoryId === "fat-freezing") {
+        return "People with stubborn, localized pockets of fat that are resistant to diet and exercise.";
+    }
+
+    if (categoryId === "ipl" || categoryId === "laser") {
+        return "People who want a long-term, permanent reduction in unwanted face or body hair.";
+    }
+
+    if (categoryId === "spraytan" || categoryId === "sunbed") {
+        return "People who want a quick, even, and healthy-looking sunless glow.";
+    }
+
+    if (categoryId === "permanent-makeup") {
+        if (text.includes("brow") || text.includes("microblading")) return "People with sparse or uneven brows who want long-lasting, smudge-proof definition.";
+        if (text.includes("lip")) return "People who want a subtle, permanent tint to enhance their lip shape and colour.";
+        if (text.includes("liner")) return "People who want perfectly defined eyes without the hassle of daily eyeliner application.";
+        return "People who want to wake up with flawless, smudge-proof makeup every day.";
+    }
+    
+    if (categoryId === "hart-aesthetics") {
+        if (text.includes("tox") || text.includes("wrinkle")) return "People who want to soften expression lines and prevent the formation of deeper wrinkles.";
+        if (text.includes("filler") || text.includes("volume") || text.includes("lip") || text.includes("cheek")) return "People who want to restore lost facial volume, enhance contours, or plump their lips.";
+        if (text.includes("thread") || text.includes("lift")) return "People experiencing mild to moderate skin laxity who want a non-surgical lifting effect.";
+        if (text.includes("iv") || text.includes("drip")) return "People who need an instant boost of hydration, vitamins, and energy.";
+        return "People seeking advanced, medical-grade aesthetic enhancements with natural-looking results.";
+    }
+
+    // Generic fallback if no specific category/keyword matches
+    return "People looking for a high-quality, professional beauty service tailored to their needs.";
+}

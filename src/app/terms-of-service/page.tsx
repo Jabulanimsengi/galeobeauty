@@ -18,7 +18,7 @@ export default function TermsOfServicePage() {
                 {/* Hero Section */}
                 <section className="pt-32 pb-16 lg:pt-40 lg:pb-20 px-6 bg-gradient-to-b from-secondary/20 to-background">
                     <div className="container mx-auto max-w-4xl">
-                        <h1 className="font-serif text-4xl sm:text-5xl text-foreground mb-4">
+                        <h1 className="font-sans text-4xl sm:text-5xl text-foreground mb-4">
                             Terms of <span className="text-gold">Service</span>
                         </h1>
                         <p className="text-muted-foreground">

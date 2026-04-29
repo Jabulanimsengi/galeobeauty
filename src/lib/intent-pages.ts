@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { getCachedSEOServices } from "./seo-data";
+import { serviceCategories } from "./services-data";
 
 export interface IntentFaq {
     question: string;
@@ -47,14 +48,14 @@ export interface IntentPageSpec {
 const PLACEHOLDER_SLUG_PATTERN = /^aesthetics-authority-topic-\d+$/;
 const DRAFT_CONTENT_MARKERS = ["(Please add your article content here)"];
 const LEGACY_INTENT_HREF_REWRITES: Record<string, string> = {
-    "/prices/skin": "/prices/dermalogica",
-    "/prices/skin/": "/prices/dermalogica",
-    "/prices/skin/acne-solutions": "/prices/dermalogica/skin-clearing-facial",
-    "/prices/skin/chemical-peel": "/prices/dermalogica/pro-power-peel",
-    "/prices/skin/chemical-peels": "/prices/dermalogica/pro-power-peel",
-    "/prices/skin/facial-proskin": "/prices/dermalogica/pro-skin-60",
-    "/prices/skin/ipl-laser": "/prices/dermalogica/pro-clear",
-    "/prices/skin/microneedling": "/prices/dermalogica/pro-microneedling",
+    "/services/skin": "/services/dermalogica",
+    "/services/skin/": "/services/dermalogica",
+    "/services/skin/acne-solutions": "/services/dermalogica/skin-clearing-facial",
+    "/services/skin/chemical-peel": "/services/dermalogica/pro-power-peel",
+    "/services/skin/chemical-peels": "/services/dermalogica/pro-power-peel",
+    "/services/skin/facial-proskin": "/services/dermalogica/pro-skin-60",
+    "/services/skin/ipl-laser": "/services/dermalogica/pro-clear",
+    "/services/skin/microneedling": "/services/dermalogica/pro-microneedling",
 };
 
 function buildServiceLinks(serviceSlugs: string[]): IntentLink[] {
@@ -65,24 +66,24 @@ function buildServiceLinks(serviceSlugs: string[]): IntentLink[] {
         .filter((service): service is NonNullable<typeof service> => Boolean(service))
         .map((service) => ({
             label: service.keyword,
-            href: `/prices/${service.categoryId}/${service.slug}`,
+            href: `/services/${service.categoryId}/${service.slug}`,
             description: `${service.price}${service.duration ? ` | ${service.duration}` : ""}`,
         }));
 }
 
 export const INTENT_PAGE_REDIRECTS: Record<string, string> = {
-    "lip-filler-hartbeespoort": "/prices/hart-aesthetics",
-    "ipl-hair-removal-hartbeespoort": "/prices/ipl",
-    "lash-extensions-hartbeespoort": "/prices/lashes-brows",
-    "hair-salon-hartbeespoort": "/prices/hair",
-    "nail-salon-hartbeespoort": "/prices/nails",
-    "event-makeup-hartbeespoort": "/prices/makeup",
-    "permanent-makeup-brows-hartbeespoort": "/prices/permanent-makeup",
-    "qms-facial-hartbeespoort": "/prices/qms",
-    "spray-tan-hartbeespoort": "/prices/sunbed",
-    "waxing-hair-removal-hartbeespoort": "/prices/waxing",
-    "massage-hartbeespoort": "/prices/massages",
-    "hair-extensions-hartbeespoort": "/prices/hair-extensions",
+    "lip-filler-hartbeespoort": "/services/hart-aesthetics",
+    "ipl-hair-removal-hartbeespoort": "/services/ipl",
+    "lash-extensions-hartbeespoort": "/services/lashes-brows",
+    "hair-salon-hartbeespoort": "/services/hair",
+    "nail-salon-hartbeespoort": "/services/nails",
+    "event-makeup-hartbeespoort": "/services/makeup",
+    "permanent-makeup-brows-hartbeespoort": "/services/permanent-makeup",
+    "qms-facial-hartbeespoort": "/services/qms",
+    "spray-tan-hartbeespoort": "/services/sunbed",
+    "waxing-hair-removal-hartbeespoort": "/services/waxing",
+    "massage-hartbeespoort": "/services/massages",
+    "hair-extensions-hartbeespoort": "/services/hair-extensions",
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/intent-pages");
@@ -90,6 +91,8 @@ let _allIntentPages: IntentPageSpec[] | null = null;
 let _publishedIntentPages: IntentPageSpec[] | null = null;
 let _intentPagesByCategory: Map<string, IntentPageSpec[]> | null = null;
 let _intentPagesByService: Map<string, IntentPageSpec[]> | null = null;
+
+export const GUIDE_CATEGORY_SLUGS = serviceCategories.map((category) => category.id);
 
 function hasDraftContentMarkers(content: string): boolean {
     return DRAFT_CONTENT_MARKERS.some((marker) => content.includes(marker));
@@ -195,6 +198,36 @@ export function getIntentPagesForCategory(categoryId: string): IntentPageSpec[] 
     return _intentPagesByCategory.get(categoryId) ?? [];
 }
 
+export function getGuideCategoryLabel(categoryId: string): string {
+    return serviceCategories.find((category) => category.id === categoryId)?.title ?? categoryId;
+}
+
+export function getPrimaryGuideCategoryId(page: IntentPageSpec): string {
+    const categoryId = page.categoryIds.find((id) => GUIDE_CATEGORY_SLUGS.includes(id));
+    return categoryId ?? "beauty-guides";
+}
+
+export function getGuideCategorySummaries() {
+    return GUIDE_CATEGORY_SLUGS
+        .map((categoryId) => {
+            const category = serviceCategories.find((item) => item.id === categoryId);
+            const guides = getIntentPagesForCategory(categoryId);
+
+            return {
+                id: categoryId,
+                title: category?.title ?? categoryId,
+                description: category?.subtitle ?? "Treatment guides and beauty advice from Galeo Beauty.",
+                count: guides.length,
+                guides,
+            };
+        })
+        .filter((category) => category.count > 0);
+}
+
+export function getIntentPagesForGuideCategory(categoryId: string): IntentPageSpec[] {
+    return getIntentPagesForCategory(categoryId).sort((left, right) => left.title.localeCompare(right.title));
+}
+
 export function getIntentPagesForService(serviceSlug: string): IntentPageSpec[] {
     if (!_intentPagesByService) {
         _intentPagesByService = new Map<string, IntentPageSpec[]>();
@@ -212,4 +245,45 @@ export function getIntentPagesForService(serviceSlug: string): IntentPageSpec[] 
     }
 
     return _intentPagesByService.get(serviceSlug) ?? [];
+}
+
+export function getIntentPagesForServices(serviceSlugs: string[], limit = 6): IntentPageSpec[] {
+    const seen = new Set<string>();
+    const pages: IntentPageSpec[] = [];
+
+    for (const serviceSlug of serviceSlugs) {
+        for (const page of getIntentPagesForService(serviceSlug)) {
+            if (seen.has(page.slug)) {
+                continue;
+            }
+
+            seen.add(page.slug);
+            pages.push(page);
+
+            if (pages.length >= limit) {
+                return pages;
+            }
+        }
+    }
+
+    return pages;
+}
+
+export function getRelatedIntentPages(page: IntentPageSpec, limit = 6): IntentPageSpec[] {
+    const candidates = getPublishedIntentPages()
+        .filter((candidate) => candidate.slug !== page.slug)
+        .map((candidate) => {
+            const sharedCategories = candidate.categoryIds.filter((id) => page.categoryIds.includes(id)).length;
+            const sharedServices = candidate.serviceSlugs.filter((slug) => page.serviceSlugs.includes(slug)).length;
+            const sharedKeywords = candidate.primaryKeywords.filter((keyword) => page.primaryKeywords.includes(keyword)).length;
+
+            return {
+                page: candidate,
+                score: sharedServices * 4 + sharedCategories * 3 + sharedKeywords,
+            };
+        })
+        .filter((candidate) => candidate.score > 0)
+        .sort((left, right) => right.score - left.score || left.page.title.localeCompare(right.page.title));
+
+    return candidates.slice(0, limit).map((candidate) => candidate.page);
 }

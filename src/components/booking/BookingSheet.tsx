@@ -648,7 +648,7 @@ ${bankingDetails}`;
               <div className="h-1 w-10 rounded-[0.15rem] bg-background/30" />
             </div>
           )}
-          <SheetTitle className="text-background font-serif text-xl">
+          <SheetTitle className="text-background font-sans text-xl">
             {bookingType === "consultation" ? "Book Free Consultation" : "Book Treatments"}
           </SheetTitle>
           <SheetDescription className="text-background/70">

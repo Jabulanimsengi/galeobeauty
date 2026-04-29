@@ -26,19 +26,19 @@ interface PageProps {
 function getRelevantServiceLinks(slug: string, category: string) {
     const bySlug: Record<string, { href: string; label: string }[]> = {
         "microblading-vs-powder-brows": [
-            { href: "/prices/permanent-makeup", label: "Permanent Makeup Prices" },
-            { href: "/prices/lashes-brows", label: "Lashes & Brows Treatments" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/permanent-makeup", label: "Permanent Makeup Services" },
+            { href: "/services/lashes-brows", label: "Lashes & Brows Treatments" },
+            { href: "/services", label: "All Beauty Services" },
         ],
         "lash-extensions-hartbeespoort": [
-            { href: "/prices/lashes-brows", label: "Lash Extensions & Brows" },
-            { href: "/prices/nails", label: "Nail Salon Services" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/lashes-brows", label: "Lash Extensions & Brows" },
+            { href: "/services/nails", label: "Nail Salon Services" },
+            { href: "/services", label: "All Beauty Services" },
         ],
         "hair-extensions-guide-south-africa": [
-            { href: "/prices/hair-extensions", label: "Hair Extensions Prices" },
-            { href: "/prices/hair", label: "Hair Salon Services" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/hair-extensions", label: "Hair Extensions Services" },
+            { href: "/services/hair", label: "Hair Salon Services" },
+            { href: "/services", label: "All Beauty Services" },
         ],
     };
 
@@ -48,31 +48,31 @@ function getRelevantServiceLinks(slug: string, category: string) {
 
     const byCategory: Record<string, { href: string; label: string }[]> = {
         Hair: [
-            { href: "/prices/hair", label: "Hair Salon Services" },
-            { href: "/prices/hair-extensions", label: "Hair Extensions" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/hair", label: "Hair Salon Services" },
+            { href: "/services/hair-extensions", label: "Hair Extensions" },
+            { href: "/services", label: "All Beauty Services" },
         ],
         Lashes: [
-            { href: "/prices/lashes-brows", label: "Lashes & Brows Treatments" },
-            { href: "/prices/permanent-makeup", label: "Permanent Makeup" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/lashes-brows", label: "Lashes & Brows Treatments" },
+            { href: "/services/permanent-makeup", label: "Permanent Makeup" },
+            { href: "/services", label: "All Beauty Services" },
         ],
         "Permanent Makeup": [
-            { href: "/prices/permanent-makeup", label: "Permanent Makeup Prices" },
-            { href: "/prices/lashes-brows", label: "Lashes & Brows Treatments" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/permanent-makeup", label: "Permanent Makeup Services" },
+            { href: "/services/lashes-brows", label: "Lashes & Brows Treatments" },
+            { href: "/services", label: "All Beauty Services" },
         ],
         Skincare: [
-            { href: "/prices/dermalogica", label: "Dermalogica Treatments" },
-            { href: "/prices/qms", label: "QMS Facials" },
-            { href: "/prices", label: "All Beauty Prices" },
+            { href: "/services/dermalogica", label: "Dermalogica Treatments" },
+            { href: "/services/qms", label: "QMS Facials" },
+            { href: "/services", label: "All Beauty Services" },
         ],
     };
 
     return byCategory[category] || [
-        { href: "/prices/hair", label: "Hair Salon Services" },
-        { href: "/prices/nails", label: "Nail Salon Services" },
-        { href: "/prices", label: "All Beauty Prices" },
+        { href: "/services/hair", label: "Hair Salon Services" },
+        { href: "/services/nails", label: "Nail Salon Services" },
+        { href: "/services", label: "All Beauty Services" },
     ];
 }
 
@@ -134,10 +134,10 @@ export default async function BlogPostPage({ params }: PageProps) {
             .map((line) => {
                 // Headers
                 if (line.startsWith('## ')) {
-                    return `<h2 class="font-serif text-2xl text-foreground mt-8 mb-4">${line.slice(3)}</h2>`;
+                    return `<h2 class="font-sans text-2xl text-foreground mt-8 mb-4">${line.slice(3)}</h2>`;
                 }
                 if (line.startsWith('### ')) {
-                    return `<h3 class="font-serif text-xl text-foreground mt-6 mb-3">${line.slice(4)}</h3>`;
+                    return `<h3 class="font-sans text-xl text-foreground mt-6 mb-3">${line.slice(4)}</h3>`;
                 }
                 // Bold text
                 let formatted = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -214,7 +214,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                             {post.category}
                         </span>
 
-                        <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-foreground leading-tight mb-6">
+                        <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl text-foreground leading-tight mb-6">
                             {post.title}
                         </h1>
 
@@ -260,7 +260,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                             dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
                         />
                         <div className="mt-10 rounded-[0.4rem] border border-gold/20 bg-secondary/20 p-6">
-                            <h2 className="font-serif text-2xl text-foreground mb-3">
+                            <h2 className="font-sans text-2xl text-foreground mb-3">
                                 Explore Related Services
                             </h2>
                             <p className="text-muted-foreground mb-5">
@@ -284,7 +284,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {/* CTA Section */}
                 <section className="py-12 bg-secondary/30 border-y border-border">
                     <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
-                        <h2 className="font-serif text-2xl text-foreground mb-4">
+                        <h2 className="font-sans text-2xl text-foreground mb-4">
                             Ready to Book Your Treatment?
                         </h2>
                         <p className="text-muted-foreground mb-6">
@@ -292,7 +292,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                         </p>
                         <div className="flex flex-wrap justify-center gap-4">
                             <Button asChild className="rounded-[0.35rem] bg-gold px-8 text-foreground hover:bg-gold-dark">
-                                <Link href="/prices">Explore Treatments</Link>
+                                <Link href="/services">Explore Treatments</Link>
                             </Button>
                             <Button asChild variant="outline" className="rounded-[0.35rem] px-8">
                                 <Link href="/contact">Contact Us</Link>
@@ -305,7 +305,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 {relatedPosts.length > 0 && (
                     <section className="py-16">
                         <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-                            <h2 className="font-serif text-2xl text-foreground mb-8 text-center">
+                            <h2 className="font-sans text-2xl text-foreground mb-8 text-center">
                                 Related Articles
                             </h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -318,7 +318,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                                         <span className="text-gold text-xs font-medium">
                                             {relatedPost.category}
                                         </span>
-                                        <h3 className="font-serif text-lg text-foreground mt-2 mb-2 group-hover:text-gold transition-colors line-clamp-2">
+                                        <h3 className="font-sans text-lg text-foreground mt-2 mb-2 group-hover:text-gold transition-colors line-clamp-2">
                                             {relatedPost.title}
                                         </h3>
                                         <p className="text-muted-foreground text-sm line-clamp-2">

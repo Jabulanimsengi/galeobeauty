@@ -82,7 +82,7 @@ export function DeferredMap({
                         <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-foreground/55">
                             Salon Map
                         </p>
-                        <h3 className="mt-3 font-serif text-2xl text-foreground">
+                        <h3 className="mt-3 font-sans text-2xl text-foreground">
                             {previewTitle ?? markerTitle}
                         </h3>
                         <p className="mt-3 max-w-sm text-sm leading-6 text-muted-foreground">

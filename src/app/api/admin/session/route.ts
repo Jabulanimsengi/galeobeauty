@@ -104,5 +104,11 @@ export async function DELETE() {
     value: "",
     maxAge: 0,
   });
+  response.cookies.set({
+    ...getAdminCookieConfig(),
+    path: "/admin",
+    value: "",
+    maxAge: 0,
+  });
   return response;
 }

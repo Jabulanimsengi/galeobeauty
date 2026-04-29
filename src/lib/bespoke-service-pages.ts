@@ -14,6 +14,7 @@ export interface BespokeServiceVariantGroup {
 }
 
 export interface BespokeServicePage {
+    pageBestFor?: string;
     slug: string;
     categoryId: string;
     title: string;
@@ -120,6 +121,19 @@ const bespokeServicePages: BespokeServicePage[] = [
                 answer:
                     "A toner can be a useful standalone refresh when the main issue is unwanted warmth, dullness or faded tone. In other cases it works best after lightening or highlighting, so the right answer depends on what your hair currently looks like.",
             },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             {
@@ -167,27 +181,27 @@ const bespokeServicePages: BespokeServicePage[] = [
                     {
                         serviceSlug: "tint-roots",
                         summary: "A focused regrowth service for grey coverage or root maintenance without recolouring the full length every time.",
-                        bestFor: "Existing colour clients who mainly need regrowth coverage.",
+                        bestFor: "People with existing colour who mainly need regrowth coverage.",
                     },
                     {
                         serviceSlug: "tint-short",
                         summary: "Full all-over colour for shorter lengths when the goal is one even shade and a cleaner overall refresh.",
-                        bestFor: "Short hair that needs solid colour rather than highlights.",
+                        bestFor: "People with short hair that needs solid colour rather than highlights.",
                     },
                     {
                         serviceSlug: "tint-medium",
                         summary: "Full tint for medium hair where more product and sectioning are needed than a short cut.",
-                        bestFor: "Shoulder-length hair needing complete colour coverage.",
+                        bestFor: "People with shoulder-length hair who need complete colour coverage.",
                     },
                     {
                         serviceSlug: "tint-long",
                         summary: "A full-colour service for longer lengths where the job extends well beyond a simple root refresh.",
-                        bestFor: "Long hair needing even colour from roots through the length.",
+                        bestFor: "People with long hair who need even colour from roots through the length.",
                     },
                     {
                         serviceSlug: "tint-xl",
                         summary: "The most comprehensive full tint option for extra-long hair, with extra time built in for product saturation and application.",
-                        bestFor: "Very long or very dense hair that needs a full-colour service.",
+                        bestFor: "People with very long or very dense hair that needs a full-colour service.",
                     },
                 ],
             },
@@ -199,47 +213,47 @@ const bespokeServicePages: BespokeServicePage[] = [
                     {
                         serviceSlug: "highlights-half-short",
                         summary: "A lighter top-section refresh for short hair when you want brightness around the visible layers without doing the full head.",
-                        bestFor: "Short hair that needs a lighter refresh through the crown and top.",
+                        bestFor: "People with short hair that needs a lighter refresh through the crown and top.",
                     },
                     {
                         serviceSlug: "highlights-half-medium",
                         summary: "Half-head foils for medium hair when the front and top need more lightness but a full foil service is not necessary.",
-                        bestFor: "Medium hair needing a maintenance highlight refresh.",
+                        bestFor: "People with medium hair who need a maintenance highlight refresh.",
                     },
                     {
                         serviceSlug: "highlights-half-long",
                         summary: "A softer long-hair foil service focused on the most visible sections, often chosen for a sun-kissed lift.",
-                        bestFor: "Long hair clients not ready for a full-head foil appointment.",
+                        bestFor: "People with long hair who are not ready for a full-head foil appointment.",
                     },
                     {
                         serviceSlug: "highlights-half-xl",
                         summary: "Half-head foils adapted for extra-long hair where more time is still needed even for a partial highlight service.",
-                        bestFor: "Extra-long hair needing strategic brightness through the visible sections.",
+                        bestFor: "People with extra-long hair who need strategic brightness through the visible sections.",
                     },
                     {
                         serviceSlug: "highlights-full-short",
                         summary: "Full-head foils for short hair when the goal is overall brightness and full highlight coverage.",
-                        bestFor: "Short cuts that need a stronger all-over highlighted effect.",
+                        bestFor: "People with short cuts that need a stronger all-over highlighted effect.",
                     },
                     {
                         serviceSlug: "highlights-full-medium",
                         summary: "A complete foil service for medium hair, suited to clients who want a more noticeable dimensional result.",
-                        bestFor: "Medium hair needing brighter or more complete highlight coverage.",
+                        bestFor: "People with medium hair who need brighter or more complete highlight coverage.",
                     },
                     {
                         serviceSlug: "highlights-full-long",
                         summary: "A longer, fuller foil appointment designed for long hair where brightness needs to run through the full head.",
-                        bestFor: "Long hair clients wanting a fuller highlighted transformation.",
+                        bestFor: "People with long hair who want a fuller highlighted transformation.",
                     },
                     {
                         serviceSlug: "highlights-full-xl",
                         summary: "The most extensive foil option for extra-long hair, where full-head lightening takes more time and section work.",
-                        bestFor: "Extra-long hair needing a high-impact highlight result.",
+                        bestFor: "People with extra-long hair who need a high-impact highlight result.",
                     },
                     {
                         serviceSlug: "balayage",
                         summary: "Freehand colour placement for a softer, more diffused result with a more forgiving grow-out than traditional highlights.",
-                        bestFor: "Clients who want a lived-in colour result rather than visible root-to-tip foil structure.",
+                        bestFor: "People who want a lived-in colour result rather than visible root-to-tip foil structure.",
                     },
                     {
                         serviceSlug: "foil-per",
@@ -256,22 +270,22 @@ const bespokeServicePages: BespokeServicePage[] = [
                     {
                         serviceSlug: "toner-short",
                         summary: "A shorter-length toner service for refining warmth and restoring a cleaner tone on short hair.",
-                        bestFor: "Short blondes or lightened hair needing a tone refresh.",
+                        bestFor: "People with short blondes or lightened hair who need a tone refresh.",
                     },
                     {
                         serviceSlug: "toner-medium",
                         summary: "Tone refinement for medium-length hair when the issue is more about colour balance than a new full colour service.",
-                        bestFor: "Medium hair with brassiness or faded salon tone.",
+                        bestFor: "People with medium hair with brassiness or faded salon tone.",
                     },
                     {
                         serviceSlug: "toner-long",
                         summary: "A longer-hair toner service for restoring a cleaner, glossier shade after fading or unwanted warmth sets in.",
-                        bestFor: "Long hair needing shade correction more than a full recolour.",
+                        bestFor: "People with long hair who need shade correction more than a full recolour.",
                     },
                     {
                         serviceSlug: "toner-xl",
                         summary: "The extra-long toner option for clients with more hair to refine and gloss over.",
-                        bestFor: "Extra-long hair that needs a full tone refresh without a major colour change.",
+                        bestFor: "People with extra-long hair that needs a full tone refresh without a major colour change.",
                     },
                 ],
             },
@@ -302,6 +316,7 @@ const bespokeServicePages: BespokeServicePage[] = [
     {
         slug: "brazilian-blowout",
         categoryId: "hair",
+    pageBestFor: "People with frizzy, unmanageable, or humidity-prone hair who want long-lasting smoothness and dramatically reduced styling time.",
         title: "Brazilian Blowout",
         heroTitle: "Brazilian Blowout And Smoothing Treatments In Hartbeespoort",
         metaTitle: "Brazilian Blowout And Keratin Treatments | Galeo Beauty",
@@ -360,6 +375,19 @@ const bespokeServicePages: BespokeServicePage[] = [
                 answer:
                     "Start with the result you want most. If the main complaint is frizz and difficult styling, compare the Brazilian options first. If the hair feels damaged and needs softness, keratin or botox may make more sense. If your aim is a more committed straightening result, chemical straightening is the better conversation to have.",
             },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Hair Assessment And Goal Setting", description: "We start by looking at your current texture, density, damage level and how you usually wear your hair. That helps us separate a smoothing appointment from a stronger straightening or restorative treatment.", duration: "10-15 min" },
@@ -373,19 +401,19 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Brazilian Blowout By Hair Length",
                 description: "These are the core smoothing services when the goal is easier styling, less frizz and a more polished finish. The main difference here is the amount of hair being treated.",
                 variants: [
-                    { serviceSlug: "brazilian-short", summary: "Brazilian Blowout for shorter lengths where the goal is smoother styling and less frizz without a long appointment window.", bestFor: "Short hair needing a cleaner, easier finish." },
-                    { serviceSlug: "brazilian-medium", summary: "A medium-length smoothing appointment with more time built in for coverage through the full head.", bestFor: "Shoulder-length hair needing more control and polish." },
-                    { serviceSlug: "brazilian-long", summary: "Brazilian Blowout for long hair where the focus is usually humidity control, smoother styling and less daily effort.", bestFor: "Long hair that puffs, frizzes or feels hard to manage." },
-                    { serviceSlug: "brazilian-xl", summary: "The extra-long version for thicker or very long hair that needs the same smoothing result across a larger amount of hair.", bestFor: "Extra-long or dense hair needing full smoothing coverage." },
+                    { serviceSlug: "brazilian-short", summary: "Brazilian Blowout for shorter lengths where the goal is smoother styling and less frizz without a long appointment window.", bestFor: "People with short hair who need a cleaner, easier finish." },
+                    { serviceSlug: "brazilian-medium", summary: "A medium-length smoothing appointment with more time built in for coverage through the full head.", bestFor: "People with shoulder-length hair who need more control and polish." },
+                    { serviceSlug: "brazilian-long", summary: "Brazilian Blowout for long hair where the focus is usually humidity control, smoother styling and less daily effort.", bestFor: "People with long hair that puffs, frizzes or feels hard to manage." },
+                    { serviceSlug: "brazilian-xl", summary: "The extra-long version for thicker or very long hair that needs the same smoothing result across a larger amount of hair.", bestFor: "People with extra-long or dense hair who need full smoothing coverage." },
                 ],
             },
             {
                 title: "Supportive Smoothing And Straightening Options",
                 description: "These services sit next to Brazilian Blowout when the hair needs a slightly different outcome, such as more restorative support or a stronger straightening direction.",
                 variants: [
-                    { serviceSlug: "keratin", summary: "A smoothing and strengthening option often considered when softness and repair matter alongside frizz control.", bestFor: "Dry or damaged hair that also needs better manageability." },
-                    { serviceSlug: "botox", summary: "Hair botox is generally chosen when the hair needs a softer, more conditioned finish rather than a purely sleek result.", bestFor: "Hair that feels rough, tired or overprocessed." },
-                    { serviceSlug: "chem-straight", summary: "A stronger straightening option for clients who want a more committed reduction in curl or movement.", bestFor: "Clients aiming for a straighter result rather than just smoother styling." },
+                    { serviceSlug: "keratin", summary: "A smoothing and strengthening option often considered when softness and repair matter alongside frizz control.", bestFor: "People with dry or damaged hair that also needs better manageability." },
+                    { serviceSlug: "botox", summary: "Hair botox is generally chosen when the hair needs a softer, more conditioned finish rather than a purely sleek result.", bestFor: "People with hair that feels rough, tired or overprocessed." },
+                    { serviceSlug: "chem-straight", summary: "A stronger straightening option for clients who want a more committed reduction in curl or movement.", bestFor: "People aiming for a straighter result rather than just smoother styling." },
                 ],
             },
         ],
@@ -433,6 +461,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "How do I know if I need a fill or a new set?", answer: "A fill makes sense when you still have enough healthy extension coverage left and mainly need to refresh gaps. If retention is very low, the set has grown out unevenly or you want a different style altogether, starting fresh may be the better move." },
             { question: "Is lash removal worth booking separately?", answer: "Yes, if the set needs to come off safely without damaging the natural lashes. Removal is also useful when you want to switch styles, reset after poor retention or take a break from extensions altogether." },
             { question: "Which lash set looks the most natural?", answer: "Classic and silk styles are usually the first options to compare for a softer everyday finish. The most natural choice depends on your own lashes, eye shape and how noticeable you want the result to be." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Style Consultation", description: "We start by talking through the finish you want, whether you wear lashes every day or only for occasions, and whether you are booking a fresh set, a fill or a removal.", duration: "5-10 min" },
@@ -446,10 +487,10 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Full Sets",
                 description: "These are the options to compare when you are booking a fresh extension set and want to choose the overall finish first.",
                 variants: [
-                    { serviceSlug: "classic-lashes", summary: "A cleaner one-to-one lash style that gives definition without aiming for the fullest possible result.", bestFor: "Clients who want an everyday, lighter-looking set." },
-                    { serviceSlug: "silk-lashes", summary: "A soft glossy lash finish that still stays on the natural side of the spectrum.", bestFor: "Clients who want polish without heavy density." },
-                    { serviceSlug: "hybrid-lashes", summary: "A textured blend of classic and volume styling for more fullness without going to maximum drama.", bestFor: "Clients who want visible texture and more fullness than classic." },
-                    { serviceSlug: "volume-lashes", summary: "A fuller, fluffier extension style for clients who want more density and noticeable lash presence.", bestFor: "Clients who prefer a bolder set than hybrid." },
+                    { serviceSlug: "classic-lashes", summary: "A cleaner one-to-one lash style that gives definition without aiming for the fullest possible result.", bestFor: "People who want an everyday, lighter-looking set." },
+                    { serviceSlug: "silk-lashes", summary: "A soft glossy lash finish that still stays on the natural side of the spectrum.", bestFor: "People who want polish without heavy density." },
+                    { serviceSlug: "hybrid-lashes", summary: "A textured blend of classic and volume styling for more fullness without going to maximum drama.", bestFor: "People who want visible texture and more fullness than classic." },
+                    { serviceSlug: "volume-lashes", summary: "A fuller, fluffier extension style for clients who want more density and noticeable lash presence.", bestFor: "People who prefer a bolder set than hybrid." },
                     { serviceSlug: "glamour-lashes", summary: "The higher-impact option in the family when the goal is maximum lash drama and presence.", bestFor: "Events, glam styling or clients who love a dramatic finish." },
                 ],
             },
@@ -457,9 +498,9 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Maintenance And Reset",
                 description: "These services matter once you are already wearing extensions and need to maintain the look or remove the set safely.",
                 variants: [
-                    { serviceSlug: "lash-fill-2", summary: "A lighter maintenance appointment for clients returning fairly soon after the original set.", bestFor: "Clients keeping up with fills consistently." },
-                    { serviceSlug: "lash-fill-3", summary: "A slightly longer maintenance appointment for sets that need more work than a two-week refresh.", bestFor: "Clients returning later in the wear cycle." },
-                    { serviceSlug: "lash-removal", summary: "A safe removal service when extensions need to come off cleanly before a break or style change.", bestFor: "Clients removing an old set or starting over." },
+                    { serviceSlug: "lash-fill-2", summary: "A lighter maintenance appointment for clients returning fairly soon after the original set.", bestFor: "People keeping up with fills consistently." },
+                    { serviceSlug: "lash-fill-3", summary: "A slightly longer maintenance appointment for sets that need more work than a two-week refresh.", bestFor: "People returning later in the wear cycle." },
+                    { serviceSlug: "lash-removal", summary: "A safe removal service when extensions need to come off cleanly before a break or style change.", bestFor: "People removing an old set or starting over." },
                 ],
             },
         ],
@@ -507,6 +548,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is underarm IPL a good place to start?", answer: "Often yes. Underarm is a straightforward area and is commonly one of the first zones clients choose when they want to move away from regular shaving or waxing." },
             { question: "What if I only want one small area treated?", answer: "That is exactly why the smaller facial and targeted body zones are listed separately. You do not need to book a larger treatment if the real concern is just the upper lip, chin, underarm or another focused area." },
             { question: "How do I choose between full leg and half leg IPL?", answer: "Choose based on the area you actually want reduced. Full leg is the better fit when you want hip-to-ankle coverage, while half leg works when your priority is only the lower or upper portion." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Area Consultation", description: "We confirm which zone you want to treat, how much coverage you need and whether a smaller targeted area or a larger body service is the better fit for your goal.", duration: "5-10 min" },
@@ -520,35 +574,35 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Face And Neck Areas",
                 description: "These are the smaller, more targeted services when the goal is reducing facial hair or defining a focused visible zone.",
                 variants: [
-                    { serviceSlug: "ipl-lip", summary: "A quick focused session for upper lip hair reduction.", bestFor: "Clients targeting a small facial zone first." },
-                    { serviceSlug: "ipl-chin", summary: "A chin-specific IPL option when the issue is localized stubborn chin hair.", bestFor: "Clients dealing with a focused chin area." },
-                    { serviceSlug: "ipl-full-face", summary: "A fuller facial treatment covering the visible face rather than only one small spot.", bestFor: "Clients wanting broader facial hair reduction." },
-                    { serviceSlug: "ipl-full-face-neck", summary: "An expanded face-and-neck option when both zones need to be treated together.", bestFor: "Clients wanting a more complete facial coverage area." },
-                    { serviceSlug: "ipl-beardline", summary: "A shaping service for the beardline where the goal is cleaner long-term definition.", bestFor: "Clients wanting a tidier beard outline." },
-                    { serviceSlug: "ipl-neck", summary: "A neck-focused session for a cleaner neckline and less daily maintenance.", bestFor: "Clients targeting the neck area only." },
-                    { serviceSlug: "ipl-neck-men", summary: "A neck service tailored for coarser male hair growth patterns.", bestFor: "Men dealing with neck shaving irritation or heavier regrowth." },
+                    { serviceSlug: "ipl-lip", summary: "A quick focused session for upper lip hair reduction.", bestFor: "People who are targeting a small facial zone first." },
+                    { serviceSlug: "ipl-chin", summary: "A chin-specific IPL option when the issue is localized stubborn chin hair.", bestFor: "People who are dealing with a focused chin area." },
+                    { serviceSlug: "ipl-full-face", summary: "A fuller facial treatment covering the visible face rather than only one small spot.", bestFor: "People who want broader facial hair reduction." },
+                    { serviceSlug: "ipl-full-face-neck", summary: "An expanded face-and-neck option when both zones need to be treated together.", bestFor: "People who want a more complete facial coverage area." },
+                    { serviceSlug: "ipl-beardline", summary: "A shaping service for the beardline where the goal is cleaner long-term definition.", bestFor: "People who want a tidier beard outline." },
+                    { serviceSlug: "ipl-neck", summary: "A neck-focused session for a cleaner neckline and less daily maintenance.", bestFor: "People who are targeting the neck area only." },
+                    { serviceSlug: "ipl-neck-men", summary: "A neck service tailored for coarser male hair growth patterns.", bestFor: "Men who are dealing with neck shaving irritation or heavier regrowth." },
                 ],
             },
             {
                 title: "Underarm And Intimate Areas",
                 description: "These are common maintenance zones where the main question is usually how much of the area you want covered.",
                 variants: [
-                    { serviceSlug: "ipl-underarm", summary: "A popular maintenance zone for clients wanting smoother underarms with less ongoing upkeep.", bestFor: "Clients starting with a quick high-value area." },
-                    { serviceSlug: "ipl-bikini-sides", summary: "A lighter bikini-area option focused on tidying the edges rather than broader removal.", bestFor: "Clients who want a cleaner bikini line only." },
-                    { serviceSlug: "ipl-brazilian", summary: "A more complete intimate-area reduction service that goes further than bikini sides.", bestFor: "Clients wanting broader intimate-area hair reduction without full removal." },
-                    { serviceSlug: "ipl-hollywood", summary: "The most complete intimate-area option in the IPL family.", bestFor: "Clients who want the fullest intimate-area coverage." },
+                    { serviceSlug: "ipl-underarm", summary: "A popular maintenance zone for clients wanting smoother underarms with less ongoing upkeep.", bestFor: "People starting with a quick high-value area." },
+                    { serviceSlug: "ipl-bikini-sides", summary: "A lighter bikini-area option focused on tidying the edges rather than broader removal.", bestFor: "People who want a cleaner bikini line only." },
+                    { serviceSlug: "ipl-brazilian", summary: "A more complete intimate-area reduction service that goes further than bikini sides.", bestFor: "People who want broader intimate-area hair reduction without full removal." },
+                    { serviceSlug: "ipl-hollywood", summary: "The most complete intimate-area option in the IPL family.", bestFor: "People who want the fullest intimate-area coverage." },
                 ],
             },
             {
                 title: "Larger Body Areas",
                 description: "These appointments cover more surface area and are the better comparison when the goal extends beyond smaller maintenance zones.",
                 variants: [
-                    { serviceSlug: "ipl-half-leg", summary: "A lower-commitment leg option when only part of the leg needs treatment.", bestFor: "Clients targeting only lower or upper leg coverage." },
-                    { serviceSlug: "ipl-full-leg", summary: "The full leg appointment for hip-to-ankle coverage.", bestFor: "Clients wanting one comprehensive leg service." },
-                    { serviceSlug: "ipl-half-arm", summary: "A more focused arm option when only part of the arm is the priority.", bestFor: "Clients who do not need full arm coverage." },
-                    { serviceSlug: "ipl-full-arm", summary: "The complete arm option from shoulder to wrist.", bestFor: "Clients wanting full arm smoothness." },
-                    { serviceSlug: "ipl-back", summary: "A larger-area session for the back where broader coverage matters.", bestFor: "Clients wanting back hair reduction." },
-                    { serviceSlug: "ipl-stomach", summary: "A torso-area option for hair reduction across the stomach.", bestFor: "Clients targeting the stomach area specifically." },
+                    { serviceSlug: "ipl-half-leg", summary: "A lower-commitment leg option when only part of the leg needs treatment.", bestFor: "People who are targeting only lower or upper leg coverage." },
+                    { serviceSlug: "ipl-full-leg", summary: "The full leg appointment for hip-to-ankle coverage.", bestFor: "People who want one comprehensive leg service." },
+                    { serviceSlug: "ipl-half-arm", summary: "A more focused arm option when only part of the arm is the priority.", bestFor: "People who do not need full arm coverage." },
+                    { serviceSlug: "ipl-full-arm", summary: "The complete arm option from shoulder to wrist.", bestFor: "People who want full arm smoothness." },
+                    { serviceSlug: "ipl-back", summary: "A larger-area session for the back where broader coverage matters.", bestFor: "People who want back hair reduction." },
+                    { serviceSlug: "ipl-stomach", summary: "A torso-area option for hair reduction across the stomach.", bestFor: "People who are targeting the stomach area specifically." },
                 ],
             },
         ],
@@ -596,6 +650,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is deep pore cleansing only for oily skin?", answer: "Not necessarily. It is most relevant when congestion, blocked pores or buildup are the bigger issue, but the real question is whether cleansing and clarity matter more than hydration or anti-ageing support." },
             { question: "Which QMS option is gentlest for sensitive skin?", answer: "Sensitive Skin Facial is the clearest starting point when the skin is reactive or easily irritated. It gives the gentler side of the QMS family a more appropriate place than jumping into a peel or more active treatment too quickly." },
             { question: "Do I need a collagen facial or just a maintenance facial?", answer: "That depends on whether your goal is basic upkeep or more specific collagen-focused support. If the skin mainly needs a comfortable maintenance treatment, the simpler facials may be enough. If firmness and plumpness are the bigger priority, collagen-led options are more relevant." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Skin Consultation", description: "We begin by looking at whether the skin needs anti-ageing support, a glow reset, deeper cleansing or gentler calming care before matching you to the right QMS facial.", duration: "10 min" },
@@ -609,25 +676,25 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Collagen And Rejuvenation",
                 description: "These are the QMS options to compare when the skin needs more freshness, firmness or general revitalising support.",
                 variants: [
-                    { serviceSlug: "collagen-facial", summary: "The signature collagen-focused option when the main goal is plumper, firmer-looking skin support.", bestFor: "Clients prioritising firmness and anti-ageing support." },
-                    { serviceSlug: "rejuvenating-facial", summary: "A revitalising treatment when the skin feels dull, tired or generally in need of a fresher look.", bestFor: "Clients wanting an overall revived finish." },
-                    { serviceSlug: "activator-treatment", summary: "A more activation-led facial when the skin needs a stronger push toward renewal and freshness.", bestFor: "Clients wanting more than a basic maintenance appointment." },
+                    { serviceSlug: "collagen-facial", summary: "The signature collagen-focused option when the main goal is plumper, firmer-looking skin support.", bestFor: "People who prioritise firmness and anti-ageing support." },
+                    { serviceSlug: "rejuvenating-facial", summary: "A revitalising treatment when the skin feels dull, tired or generally in need of a fresher look.", bestFor: "People who want an overall revived finish." },
+                    { serviceSlug: "activator-treatment", summary: "A more activation-led facial when the skin needs a stronger push toward renewal and freshness.", bestFor: "People who want more than a basic maintenance appointment." },
                 ],
             },
             {
                 title: "Clarifying And Surface Renewal",
                 description: "These are the options to compare when pores, buildup, dull texture or a stronger reset are the main concerns.",
                 variants: [
-                    { serviceSlug: "deep-pore-cleansing", summary: "A pore-focused facial for clients whose skin feels clogged, oily or congested.", bestFor: "Congestion and blocked pores." },
-                    { serviceSlug: "chemical-peel", summary: "A stronger surface-renewal option for clients needing a more active texture or tone reset.", bestFor: "Uneven texture or skin that needs a more corrective refresh." },
+                    { serviceSlug: "deep-pore-cleansing", summary: "A pore-focused facial for clients whose skin feels clogged, oily or congested.", bestFor: "People with congestion and blocked pores." },
+                    { serviceSlug: "chemical-peel", summary: "A stronger surface-renewal option for clients needing a more active texture or tone reset.", bestFor: "People with uneven texture or skin that needs a more corrective refresh." },
                 ],
             },
             {
                 title: "Gentler Maintenance Options",
                 description: "These are the softer QMS options when the skin needs a simpler upkeep facial or more comfort-focused support.",
                 variants: [
-                    { serviceSlug: "basic-facial", summary: "A classic maintenance facial when the goal is straightforward upkeep and refreshment.", bestFor: "Clients wanting a simpler maintenance treatment." },
-                    { serviceSlug: "sensitive-skin-facial", summary: "A gentler QMS option for reactive skin that needs calm support rather than stronger actives.", bestFor: "Sensitive or easily irritated skin." },
+                    { serviceSlug: "basic-facial", summary: "A classic maintenance facial when the goal is straightforward upkeep and refreshment.", bestFor: "People who want a simpler maintenance treatment." },
+                    { serviceSlug: "sensitive-skin-facial", summary: "A gentler QMS option for reactive skin that needs calm support rather than stronger actives.", bestFor: "People with sensitive or easily irritated skin." },
                 ],
             },
         ],
@@ -675,6 +742,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "When is a peel more relevant than a facial?", answer: "A peel becomes more relevant when the skin needs stronger surface renewal than a maintenance facial is likely to give. If texture, pigment or a more corrective reset is the main goal, peels are often the better comparison than a standard facial alone." },
             { question: "Where do Hydraderm, Luminfusion and Nanoinfusion fit?", answer: "Those treatments tend to sit in the technology-led or finish-led part of the family. They are often chosen when the client wants hydration, infusion, glow or a polished surface result rather than only a traditional facial experience." },
             { question: "When is microneedling worth considering in this menu?", answer: "Microneedling usually enters the conversation when the concern is more corrective, especially around texture, post-acne change or collagen-focused improvement. It is not usually the first answer for every skin concern, which is why it helps to compare it inside the broader Dermalogica family." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Skin Concern Assessment", description: "We begin by working out whether your skin needs a custom facial, a concern-led treatment or a more corrective resurfacing option before choosing the right Dermalogica treatment.", duration: "10 min" },
@@ -688,25 +768,25 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Customised Pro Skin And Foundational Facials",
                 description: "These are the starting points when the skin needs a tailored facial, a glow reset or a more general skin-maintenance treatment.",
                 variants: [
-                    { serviceSlug: "pro-skin-30", summary: "A shorter custom facial when the goal is a focused skin reset in less time.", bestFor: "Clients wanting a quicker tailored treatment." },
-                    { serviceSlug: "pro-skin-60", summary: "A fuller custom facial when the skin needs more treatment time and a broader reset.", bestFor: "Clients wanting a more complete tailored facial." },
-                    { serviceSlug: "multivitamin-treatment", summary: "A nutrient-led facial for dull or tired-looking skin needing a healthier-looking boost.", bestFor: "Dull, tired skin." },
-                    { serviceSlug: "age-smart-facial", summary: "A facial aimed at skin showing more visible age-related change.", bestFor: "Clients focused on ageing support." },
-                    { serviceSlug: "ultra-calming-facial", summary: "A calmer facial direction for skin that feels reactive or easily irritated.", bestFor: "Sensitive or reactive skin." },
-                    { serviceSlug: "skin-clearing-facial", summary: "A facial option when congestion and breakouts are the bigger concern.", bestFor: "Breakout-prone or clogged skin." },
+                    { serviceSlug: "pro-skin-30", summary: "A shorter custom facial when the goal is a focused skin reset in less time.", bestFor: "People who want a quicker tailored treatment." },
+                    { serviceSlug: "pro-skin-60", summary: "A fuller custom facial when the skin needs more treatment time and a broader reset.", bestFor: "People who want a more complete tailored facial." },
+                    { serviceSlug: "multivitamin-treatment", summary: "A nutrient-led facial for dull or tired-looking skin needing a healthier-looking boost.", bestFor: "People with dull, tired skin." },
+                    { serviceSlug: "age-smart-facial", summary: "A facial aimed at skin showing more visible age-related change.", bestFor: "People who are focused on ageing support." },
+                    { serviceSlug: "ultra-calming-facial", summary: "A calmer facial direction for skin that feels reactive or easily irritated.", bestFor: "People with sensitive or reactive skin." },
+                    { serviceSlug: "skin-clearing-facial", summary: "A facial option when congestion and breakouts are the bigger concern.", bestFor: "People with breakout-prone or clogged skin." },
                 ],
             },
             {
                 title: "Concern-Led Corrective Facials",
                 description: "These are the options to compare when the skin concern is more specific than a general facial reset.",
                 variants: [
-                    { serviceSlug: "pro-bright", summary: "A brightening facial choice when tone, dullness or pigment are higher on the list.", bestFor: "Pigmentation and radiance goals." },
-                    { serviceSlug: "pro-firm", summary: "A firmer, more lifting-focused facial option when elasticity support matters most.", bestFor: "Clients wanting stronger firming support." },
-                    { serviceSlug: "pro-clear", summary: "A concern-led facial for breakouts, congestion and oilier skin patterns.", bestFor: "Persistent congestion and acne-prone skin." },
-                    { serviceSlug: "pro-calm", summary: "A more targeted calm-and-barrier treatment for reactive or easily irritated skin.", bestFor: "Red, reactive or sensitised skin." },
-                    { serviceSlug: "eye-peel", summary: "A more focused treatment for the eye area when tiredness, puffiness or fine lines around the eyes are the issue.", bestFor: "Clients targeting the eye area specifically." },
-                    { serviceSlug: "neurosculpt-30", summary: "A shorter sculpting-oriented option when the focus is facial tension and contour support.", bestFor: "Clients wanting a shorter sculpting facial." },
-                    { serviceSlug: "neurosculpt-full", summary: "A longer sculpting treatment when contour and facial tension work need more time.", bestFor: "Clients wanting a fuller contour-focused treatment." },
+                    { serviceSlug: "pro-bright", summary: "A brightening facial choice when tone, dullness or pigment are higher on the list.", bestFor: "People with pigmentation and radiance goals." },
+                    { serviceSlug: "pro-firm", summary: "A firmer, more lifting-focused facial option when elasticity support matters most.", bestFor: "People who want stronger firming support." },
+                    { serviceSlug: "pro-clear", summary: "A concern-led facial for breakouts, congestion and oilier skin patterns.", bestFor: "People with persistent congestion and acne-prone skin." },
+                    { serviceSlug: "pro-calm", summary: "A more targeted calm-and-barrier treatment for reactive or easily irritated skin.", bestFor: "People with red, reactive or sensitised skin." },
+                    { serviceSlug: "eye-peel", summary: "A more focused treatment for the eye area when tiredness, puffiness or fine lines around the eyes are the issue.", bestFor: "People who are targeting the eye area specifically." },
+                    { serviceSlug: "neurosculpt-30", summary: "A shorter sculpting-oriented option when the focus is facial tension and contour support.", bestFor: "People who want a shorter sculpting facial." },
+                    { serviceSlug: "neurosculpt-full", summary: "A longer sculpting treatment when contour and facial tension work need more time.", bestFor: "People who want a fuller contour-focused treatment." },
                 ],
             },
             {
@@ -714,15 +794,15 @@ const bespokeServicePages: BespokeServicePage[] = [
                 description: "These are the more advanced options when the skin needs stronger exfoliation, infusion, hydration technology or collagen-focused correction.",
                 variants: [
                     { serviceSlug: "pro-dermaplaning-30", summary: "A shorter dermaplaning treatment for smoother texture and a cleaner surface finish.", bestFor: "Quick texture and glow support." },
-                    { serviceSlug: "pro-dermaplaning-full", summary: "A fuller dermaplaning treatment with more complete facial time around the exfoliation benefit.", bestFor: "Clients wanting a more complete dermaplaning session." },
+                    { serviceSlug: "pro-dermaplaning-full", summary: "A fuller dermaplaning treatment with more complete facial time around the exfoliation benefit.", bestFor: "People who want a more complete dermaplaning session." },
                     { serviceSlug: "hydraderm", summary: "A hydration and resurfacing treatment when cleansing and replenishment both matter.", bestFor: "Skin that feels both dull and dehydrated." },
-                    { serviceSlug: "nanoinfusion", summary: "An infusion-led treatment for a plumper, fresher surface finish without moving into full microneedling territory.", bestFor: "Clients wanting glow and infusion rather than deeper correction." },
-                    { serviceSlug: "luminfusion", summary: "A glow-focused advanced treatment when brightness and event-ready polish matter.", bestFor: "Clients wanting a more luminous finished look." },
-                    { serviceSlug: "pro-microneedling", summary: "A more corrective collagen-focused treatment when texture and deeper improvement matter more than a standard facial.", bestFor: "Texture, post-acne change or corrective goals." },
-                    { serviceSlug: "power-peel-30", summary: "A quicker peel option when the skin needs a more active resurfacing step in a shorter appointment.", bestFor: "Clients wanting a lighter entry into peel-based correction." },
-                    { serviceSlug: "power-peel-60", summary: "A fuller peel appointment with more time for a stronger resurfacing treatment.", bestFor: "Clients needing a more complete peel session." },
-                    { serviceSlug: "pro-power-peel", summary: "A strong Dermalogica peel option for clients who need more decisive resurfacing support.", bestFor: "Pigment, texture or stronger peel-led correction." },
-                    { serviceSlug: "melanopro-peel", summary: "A pigment-focused peel treatment when darker marks and uneven tone are the bigger priority.", bestFor: "Clients focused on more serious pigmentation support." },
+                    { serviceSlug: "nanoinfusion", summary: "An infusion-led treatment for a plumper, fresher surface finish without moving into full microneedling territory.", bestFor: "People who want glow and infusion rather than deeper correction." },
+                    { serviceSlug: "luminfusion", summary: "A glow-focused advanced treatment when brightness and event-ready polish matter.", bestFor: "People who want a more luminous finished look." },
+                    { serviceSlug: "pro-microneedling", summary: "A more corrective collagen-focused treatment when texture and deeper improvement matter more than a standard facial.", bestFor: "People with texture, post-acne change or corrective goals." },
+                    { serviceSlug: "power-peel-30", summary: "A quicker peel option when the skin needs a more active resurfacing step in a shorter appointment.", bestFor: "People who want a lighter entry into peel-based correction." },
+                    { serviceSlug: "power-peel-60", summary: "A fuller peel appointment with more time for a stronger resurfacing treatment.", bestFor: "People who need a more complete peel session." },
+                    { serviceSlug: "pro-power-peel", summary: "A strong Dermalogica peel option for clients who need more decisive resurfacing support.", bestFor: "People with pigment, texture or stronger peel-led correction." },
+                    { serviceSlug: "melanopro-peel", summary: "A pigment-focused peel treatment when darker marks and uneven tone are the bigger priority.", bestFor: "People who are focused on more serious pigmentation support." },
                 ],
             },
         ],
@@ -770,6 +850,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "How do I choose between full leg and half leg wax?", answer: "Choose based on how much of the leg you actually want treated. Full leg covers hip to ankle, while half leg is better when you only need lower or upper leg maintenance." },
             { question: "Is underarm waxing considered a large appointment?", answer: "No, underarm is usually one of the quicker maintenance zones. It sits very differently from larger appointments like full leg or full back waxing." },
             { question: "When should I book men back wax instead of standard back wax?", answer: "Men back wax is the better fit when the back hair growth pattern is heavier or coarser and needs the appointment calibrated around that level of coverage." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Area And Coverage Check", description: "We confirm which zone you want waxed and how much of that area needs to be covered before starting the appointment.", duration: "5 min" },
@@ -783,30 +876,30 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Face Waxing",
                 description: "These are the smaller facial tidy-up and shaping services when the goal is targeted facial hair removal.",
                 variants: [
-                    { serviceSlug: "wax-eyebrow", summary: "A focused brow-shaping appointment for cleaner definition.", bestFor: "Clients needing brow clean-up and shape." },
-                    { serviceSlug: "wax-lip", summary: "A quick upper-lip tidy-up service.", bestFor: "Clients booking a single small facial zone." },
-                    { serviceSlug: "wax-cheek", summary: "A cheek and side-area waxing option for smoother facial edges.", bestFor: "Clients targeting the cheek area." },
-                    { serviceSlug: "wax-nose", summary: "A targeted wax for visible nose hair.", bestFor: "Clients needing a very focused grooming area." },
-                    { serviceSlug: "wax-ear", summary: "A small-area wax for ear hair clean-up.", bestFor: "Clients targeting ear hair." },
-                    { serviceSlug: "wax-chin", summary: "A chin-focused option when the concern is localized chin hair.", bestFor: "Clients dealing with one specific facial zone." },
-                    { serviceSlug: "wax-full-face", summary: "A broader facial waxing appointment when several face zones need to be done together.", bestFor: "Clients wanting one complete facial waxing booking." },
+                    { serviceSlug: "wax-eyebrow", summary: "A focused brow-shaping appointment for cleaner definition.", bestFor: "People who need brow clean-up and shape." },
+                    { serviceSlug: "wax-lip", summary: "A quick upper-lip tidy-up service.", bestFor: "People who are booking a single small facial zone." },
+                    { serviceSlug: "wax-cheek", summary: "A cheek and side-area waxing option for smoother facial edges.", bestFor: "People who are targeting the cheek area." },
+                    { serviceSlug: "wax-nose", summary: "A targeted wax for visible nose hair.", bestFor: "People who need a very focused grooming area." },
+                    { serviceSlug: "wax-ear", summary: "A small-area wax for ear hair clean-up.", bestFor: "People who are targeting ear hair." },
+                    { serviceSlug: "wax-chin", summary: "A chin-focused option when the concern is localized chin hair.", bestFor: "People who are dealing with one specific facial zone." },
+                    { serviceSlug: "wax-full-face", summary: "A broader facial waxing appointment when several face zones need to be done together.", bestFor: "People who want one complete facial waxing booking." },
                 ],
             },
             {
                 title: "Body And Intimate Waxing",
                 description: "These are the larger-area maintenance appointments, including the intimate waxing options people often compare most closely.",
                 variants: [
-                    { serviceSlug: "wax-underarm", summary: "A quick maintenance wax for smoother underarms.", bestFor: "Clients wanting a smaller body-area booking." },
-                    { serviceSlug: "wax-half-arm", summary: "A focused arm wax when only part of the arm needs coverage.", bestFor: "Clients not needing the full arm done." },
-                    { serviceSlug: "wax-full-arm", summary: "A complete arm wax from shoulder to wrist.", bestFor: "Clients wanting full arm maintenance." },
-                    { serviceSlug: "wax-half-leg", summary: "A smaller leg booking for lower or upper leg maintenance.", bestFor: "Clients not needing full leg coverage." },
-                    { serviceSlug: "wax-full-leg", summary: "A full leg wax from hip to ankle.", bestFor: "Clients wanting one complete leg appointment." },
-                    { serviceSlug: "wax-brazilian", summary: "An intimate wax that removes more than bikini waxing but is not full removal.", bestFor: "Clients wanting an in-between intimate option." },
-                    { serviceSlug: "wax-hollywood", summary: "The fullest intimate wax in the family.", bestFor: "Clients wanting complete intimate hair removal." },
-                    { serviceSlug: "wax-full-back", summary: "A complete back wax for standard back-area coverage.", bestFor: "Clients wanting full back maintenance." },
-                    { serviceSlug: "wax-men-back", summary: "A men’s back wax for heavier or broader back growth.", bestFor: "Men needing fuller back-area removal." },
-                    { serviceSlug: "wax-chest", summary: "A chest-area waxing option for upper body grooming.", bestFor: "Clients targeting chest hair." },
-                    { serviceSlug: "wax-tummy", summary: "A stomach-area wax for torso grooming.", bestFor: "Clients wanting tummy-area maintenance." },
+                    { serviceSlug: "wax-underarm", summary: "A quick maintenance wax for smoother underarms.", bestFor: "People who want a smaller body-area booking." },
+                    { serviceSlug: "wax-half-arm", summary: "A focused arm wax when only part of the arm needs coverage.", bestFor: "People who do not need the full arm done." },
+                    { serviceSlug: "wax-full-arm", summary: "A complete arm wax from shoulder to wrist.", bestFor: "People who want full arm maintenance." },
+                    { serviceSlug: "wax-half-leg", summary: "A smaller leg booking for lower or upper leg maintenance.", bestFor: "People who do not need full leg coverage." },
+                    { serviceSlug: "wax-full-leg", summary: "A full leg wax from hip to ankle.", bestFor: "People who want one complete leg appointment." },
+                    { serviceSlug: "wax-brazilian", summary: "An intimate wax that removes more than bikini waxing but is not full removal.", bestFor: "People who want an in-between intimate option." },
+                    { serviceSlug: "wax-hollywood", summary: "The fullest intimate wax in the family.", bestFor: "People who want complete intimate hair removal." },
+                    { serviceSlug: "wax-full-back", summary: "A complete back wax for standard back-area coverage.", bestFor: "People who want full back maintenance." },
+                    { serviceSlug: "wax-men-back", summary: "A men’s back wax for heavier or broader back growth.", bestFor: "Men who need fuller back-area removal." },
+                    { serviceSlug: "wax-chest", summary: "A chest-area waxing option for upper body grooming.", bestFor: "People who are targeting chest hair." },
+                    { serviceSlug: "wax-tummy", summary: "A stomach-area wax for torso grooming.", bestFor: "People who want tummy-area maintenance." },
                 ],
             },
         ],
@@ -854,6 +947,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Why are dark and light extension prices different?", answer: "Light, ombre and piano colour families are priced separately in many of the extension lines, so colour family matters alongside length when comparing the options." },
             { question: "Which extensions are best for occasional wear?", answer: "Clip-ins, halos and ponytails are often the strongest comparison when you want flexibility and do not need a more installed method full time." },
             { question: "Do I need to decide the exact length before messaging the salon?", answer: "Not necessarily. It helps to know roughly how much extra length you want, but the better first step is usually to decide the method and whether you want a dark or lighter colour family." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Method Consultation", description: "We begin by working out whether you need an installed extension method or a more removable option before looking at length and colour family.", duration: "10-15 min" },
@@ -867,20 +973,20 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Installed Extension Methods",
                 description: "These methods are usually compared when the client wants a more integrated extension result rather than a quick removable piece.",
                 variants: [
-                    { serviceSlug: "tape-40cm-dark", summary: "A tape-in reference point for the installed extension family, with pricing that scales by length and colour family.", bestFor: "Clients considering tape-ins for longer-wear use." },
-                    { serviceSlug: "microloop-40cm-dark", summary: "A micro loop reference point for clients comparing installed strand-based wear.", bestFor: "Clients wanting an installed method with a different attachment style." },
-                    { serviceSlug: "machine-40cm-dark", summary: "A machine weave reference point when comparing woven installed methods.", bestFor: "Clients considering weave-style wear." },
-                    { serviceSlug: "genius-45cm", summary: "A genius weave reference point for the more premium weave end of the family.", bestFor: "Clients comparing higher-end weave options." },
-                    { serviceSlug: "butterfly-45cm", summary: "A butterfly weave reference point when comparing premium installed methods.", bestFor: "Clients exploring weave-based extension options." },
+                    { serviceSlug: "tape-40cm-dark", summary: "A tape-in reference point for the installed extension family, with pricing that scales by length and colour family.", bestFor: "People who are considering tape-ins for longer-wear use." },
+                    { serviceSlug: "microloop-40cm-dark", summary: "A micro loop reference point for clients comparing installed strand-based wear.", bestFor: "People who want an installed method with a different attachment style." },
+                    { serviceSlug: "machine-40cm-dark", summary: "A machine weave reference point when comparing woven installed methods.", bestFor: "People who are considering weave-style wear." },
+                    { serviceSlug: "genius-45cm", summary: "A genius weave reference point for the more premium weave end of the family.", bestFor: "People who are comparing higher-end weave options." },
+                    { serviceSlug: "butterfly-45cm", summary: "A butterfly weave reference point when comparing premium installed methods.", bestFor: "People who are exploring weave-based extension options." },
                 ],
             },
             {
                 title: "Removable And Flexible-Wear Options",
                 description: "These are the options to compare when flexibility or occasional wear matters more than a fuller installed method.",
                 variants: [
-                    { serviceSlug: "clip-40cm-dark", summary: "A clip-in reference point for clients wanting removable volume and length.", bestFor: "Clients wanting to wear extensions only when needed." },
-                    { serviceSlug: "halo-40cm-dark", summary: "A halo reference point for easier, lower-commitment extension wear.", bestFor: "Clients wanting quick removable volume and length." },
-                    { serviceSlug: "ponytail-40cm-dark", summary: "A ponytail extension reference point for instant longer, fuller ponytail styling.", bestFor: "Clients focused on quick styling impact." },
+                    { serviceSlug: "clip-40cm-dark", summary: "A clip-in reference point for clients wanting removable volume and length.", bestFor: "People who want to wear extensions only when needed." },
+                    { serviceSlug: "halo-40cm-dark", summary: "A halo reference point for easier, lower-commitment extension wear.", bestFor: "People who want quick removable volume and length." },
+                    { serviceSlug: "ponytail-40cm-dark", summary: "A ponytail extension reference point for instant longer, fuller ponytail styling.", bestFor: "People who are focused on quick styling impact." },
                 ],
             },
         ],
@@ -928,6 +1034,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is eyeliner permanent makeup only for bold looks?", answer: "Not necessarily. It can be used for cleaner daily definition as well. The main question is how much eye framing you want to see on a normal day." },
             { question: "Which permanent makeup option looks the most natural?", answer: "That depends on the area and finish you want. In brows, microblading often reads as the most stroke-like. In lips and liner, the most natural option depends on how subtle or visible you want the colour and shape definition to be." },
             { question: "Should I compare permanent makeup by area first or technique first?", answer: "By area first. Once you know whether your priority is brows, lips or eyeliner, the technique comparison becomes much easier and more relevant." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Feature Consultation", description: "We begin by confirming whether the priority is brows, lips or eyeliner and what kind of daily definition you want to wake up with.", duration: "10-15 min" },
@@ -941,20 +1060,20 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Brows",
                 description: "These options are for clients whose priority is fuller, better-defined or more balanced brows.",
                 variants: [
-                    { serviceSlug: "microblading", summary: "A brow option centred around fine hair-stroke realism.", bestFor: "Clients wanting a more natural stroke-style brow result." },
-                    { serviceSlug: "powderpixel-brows", summary: "A softer shaded brow finish rather than individual hair-stroke focus.", bestFor: "Clients wanting a more powdered or makeup-like brow effect." },
-                    { serviceSlug: "hybrid-brows", summary: "A mix of hair-stroke detail and shading for clients wanting both softness and definition.", bestFor: "Clients wanting a balanced brow result between natural and defined." },
-                    { serviceSlug: "brow-henna", summary: "A non-permanent brow-definition option that still helps clients compare their brow goals before committing to permanent makeup.", bestFor: "Clients exploring brow definition before a more lasting result." },
+                    { serviceSlug: "microblading", summary: "A brow option centred around fine hair-stroke realism.", bestFor: "People who want a more natural stroke-style brow result." },
+                    { serviceSlug: "powderpixel-brows", summary: "A softer shaded brow finish rather than individual hair-stroke focus.", bestFor: "People who want a more powdered or makeup-like brow effect." },
+                    { serviceSlug: "hybrid-brows", summary: "A mix of hair-stroke detail and shading for clients wanting both softness and definition.", bestFor: "People who want a balanced brow result between natural and defined." },
+                    { serviceSlug: "brow-henna", summary: "A non-permanent brow-definition option that still helps clients compare their brow goals before committing to permanent makeup.", bestFor: "People who are exploring brow definition before a more lasting result." },
                 ],
             },
             {
                 title: "Lips And Eyeliner",
                 description: "These are the permanent makeup options when the priority shifts from brows to lip shape or eye definition.",
                 variants: [
-                    { serviceSlug: "lip-liner", summary: "A lip-definition option focused on border, shape and clearer outline.", bestFor: "Clients wanting better lip-edge definition." },
-                    { serviceSlug: "full-lips-contour", summary: "A fuller lip-colour option when more than the border needs to be enhanced.", bestFor: "Clients wanting a stronger lip-colour and shape effect." },
-                    { serviceSlug: "eyeliner-top", summary: "A top-liner option for daily eye definition and a more framed lash line.", bestFor: "Clients wanting upper-eye definition." },
-                    { serviceSlug: "eyeliner-bottom", summary: "A lower-liner option when extra depth under the eye is the priority.", bestFor: "Clients wanting lower-eye definition." },
+                    { serviceSlug: "lip-liner", summary: "A lip-definition option focused on border, shape and clearer outline.", bestFor: "People who want better lip-edge definition." },
+                    { serviceSlug: "full-lips-contour", summary: "A fuller lip-colour option when more than the border needs to be enhanced.", bestFor: "People who want a stronger lip-colour and shape effect." },
+                    { serviceSlug: "eyeliner-top", summary: "A top-liner option for daily eye definition and a more framed lash line.", bestFor: "People who want upper-eye definition." },
+                    { serviceSlug: "eyeliner-bottom", summary: "A lower-liner option when extra depth under the eye is the priority.", bestFor: "People who want lower-eye definition." },
                 ],
             },
         ],
@@ -1002,6 +1121,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "When are cheek fillers more relevant?", answer: "Cheek fillers make more sense when the concern is mid-face support, shape or lift rather than lip volume or wrinkle softening." },
             { question: "What are under-eye skin boosters for?", answer: "They are usually the better conversation when the under-eye area needs hydration and refreshment rather than fuller volume correction elsewhere on the face." },
             { question: "Which treatment is the broadest rejuvenation option?", answer: "The face-lift and rejuvenation options are the broader comparison when the goal is not just one feature, but more general support, lift or rejuvenation across the face and neck." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Concern Consultation", description: "We begin by identifying whether the priority is movement lines, lip shape, cheek support, under-eye freshness or broader facial rejuvenation.", duration: "10-15 min" },
@@ -1015,23 +1147,23 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Rejuvenation And Lift",
                 description: "These are the broader injectable options when the concern is not just one small feature but overall support and rejuvenation.",
                 variants: [
-                    { serviceSlug: "nefertiti-lift", summary: "A lift-focused treatment aimed at jawline and neck definition.", bestFor: "Clients wanting lower-face or neck support." },
-                    { serviceSlug: "liquid-facelift", summary: "A broader non-surgical rejuvenation treatment combining more than one aesthetic goal.", bestFor: "Clients wanting an overall refreshed look." },
-                    { serviceSlug: "collagen-biostimulator", summary: "A collagen-supporting injectable treatment when the goal is gradual skin support and rejuvenation.", bestFor: "Clients prioritising longer-term skin support." },
+                    { serviceSlug: "nefertiti-lift", summary: "A lift-focused treatment aimed at jawline and neck definition.", bestFor: "People who want lower-face or neck support." },
+                    { serviceSlug: "liquid-facelift", summary: "A broader non-surgical rejuvenation treatment combining more than one aesthetic goal.", bestFor: "People who want an overall refreshed look." },
+                    { serviceSlug: "collagen-biostimulator", summary: "A collagen-supporting injectable treatment when the goal is gradual skin support and rejuvenation.", bestFor: "People who prioritise longer-term skin support." },
                 ],
             },
             {
                 title: "Wrinkle Softening And Feature-Specific Injectables",
                 description: "These are the more specific treatment families when one area or one concern is the main priority.",
                 variants: [
-                    { serviceSlug: "tox-per-unit", summary: "A customised tox treatment for softening movement-related lines.", bestFor: "Clients targeting expression lines." },
-                    { serviceSlug: "undereye-1-treatment", summary: "A focused under-eye booster option for fresher-looking eye-area skin support.", bestFor: "Clients starting with under-eye hydration support." },
-                    { serviceSlug: "undereye-2-treatments", summary: "A fuller under-eye booster course when the eye-area goal needs a stronger treatment plan.", bestFor: "Clients wanting a more complete under-eye treatment path." },
-                    { serviceSlug: "cheek-fillers-1ml", summary: "A lighter cheek-filler option for subtle contour and support.", bestFor: "Clients wanting more conservative cheek enhancement." },
-                    { serviceSlug: "cheek-fillers-2ml", summary: "A stronger cheek-filler option when more support or shape change is needed.", bestFor: "Clients wanting a fuller cheek enhancement." },
-                    { serviceSlug: "lip-filler-1ml", summary: "A standard lip-filler option for fuller, more defined lips.", bestFor: "Clients wanting general lip enhancement." },
-                    { serviceSlug: "russian-lip-1ml", summary: "A Russian lip technique option for a more shaped, flatter-profile lip effect.", bestFor: "Clients wanting a more sculpted lip look." },
-                    { serviceSlug: "dermal-filler-1ml", summary: "A more flexible filler option when the exact feature plan still needs to be confirmed in consultation.", bestFor: "Clients comparing a broader filler conversation." },
+                    { serviceSlug: "tox-per-unit", summary: "A customised tox treatment for softening movement-related lines.", bestFor: "People who are targeting expression lines." },
+                    { serviceSlug: "undereye-1-treatment", summary: "A focused under-eye booster option for fresher-looking eye-area skin support.", bestFor: "People starting with under-eye hydration support." },
+                    { serviceSlug: "undereye-2-treatments", summary: "A fuller under-eye booster course when the eye-area goal needs a stronger treatment plan.", bestFor: "People who want a more complete under-eye treatment path." },
+                    { serviceSlug: "cheek-fillers-1ml", summary: "A lighter cheek-filler option for subtle contour and support.", bestFor: "People who want more conservative cheek enhancement." },
+                    { serviceSlug: "cheek-fillers-2ml", summary: "A stronger cheek-filler option when more support or shape change is needed.", bestFor: "People who want a fuller cheek enhancement." },
+                    { serviceSlug: "lip-filler-1ml", summary: "A standard lip-filler option for fuller, more defined lips.", bestFor: "People who want general lip enhancement." },
+                    { serviceSlug: "russian-lip-1ml", summary: "A Russian lip technique option for a more shaped, flatter-profile lip effect.", bestFor: "People who want a more sculpted lip look." },
+                    { serviceSlug: "dermal-filler-1ml", summary: "A more flexible filler option when the exact feature plan still needs to be confirmed in consultation.", bestFor: "People who are comparing a broader filler conversation." },
                 ],
             },
         ],
@@ -1079,6 +1211,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "What is Lemon Bottle usually used for?", answer: "Lemon Bottle is often compared when the concern is a more localised area that may suit an injection-led contouring conversation rather than a freezing-led one." },
             { question: "How do I know if my goal is local contouring or general slimming support?", answer: "If you can point to a specific stubborn area, contouring treatments are usually the more relevant comparison. If your question is broader and more general, the slimming-support conversation may be more useful." },
             { question: "Can I start with one area first?", answer: "Yes. Many clients begin with one clear problem area first, then decide later whether they want a broader contouring plan." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Area And Goal Review", description: "We begin by working out whether the concern is one specific stubborn area or a broader slimming-support goal.", duration: "10 min" },
@@ -1092,17 +1237,17 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Cryolipolysis And Fat Freezing",
                 description: "These are the options to compare when the priority is localised fat-freezing treatment.",
                 variants: [
-                    { serviceSlug: "fat-freezing-session", summary: "A focused fat-freezing appointment for a smaller localised treatment conversation.", bestFor: "Clients starting with one target area." },
-                    { serviceSlug: "fat-freezing-2-cups", summary: "A two-cup option when more than one local pocket needs to be treated in the same session.", bestFor: "Clients comparing a slightly broader contouring appointment." },
-                    { serviceSlug: "fat-freezing-4-cups", summary: "A four-cup option when the contouring plan needs the broadest cryolipolysis coverage in one visit.", bestFor: "Clients targeting multiple areas at once." },
+                    { serviceSlug: "fat-freezing-session", summary: "A focused fat-freezing appointment for a smaller localised treatment conversation.", bestFor: "People starting with one target area." },
+                    { serviceSlug: "fat-freezing-2-cups", summary: "A two-cup option when more than one local pocket needs to be treated in the same session.", bestFor: "People who are comparing a slightly broader contouring appointment." },
+                    { serviceSlug: "fat-freezing-4-cups", summary: "A four-cup option when the contouring plan needs the broadest cryolipolysis coverage in one visit.", bestFor: "People who are targeting multiple areas at once." },
                 ],
             },
             {
                 title: "Slimming-Support Injections",
                 description: "These are the options to compare when the conversation shifts away from freezing alone and toward injection-led support.",
                 variants: [
-                    { serviceSlug: "lemon-bottle-10ml", summary: "An injection-led contouring option often discussed for localised fat concerns.", bestFor: "Clients comparing a local injection-led contouring treatment." },
-                    { serviceSlug: "slimming-injection", summary: "A lighter slimming-support injection when the goal is broader support around a weight-loss journey.", bestFor: "Clients wanting a simpler slimming-support appointment." },
+                    { serviceSlug: "lemon-bottle-10ml", summary: "An injection-led contouring option often discussed for localised fat concerns.", bestFor: "People who are comparing a local injection-led contouring treatment." },
+                    { serviceSlug: "slimming-injection", summary: "A lighter slimming-support injection when the goal is broader support around a weight-loss journey.", bestFor: "People who want a simpler slimming-support appointment." },
                 ],
             },
         ],
@@ -1150,6 +1295,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Should I book a full-body massage or only back and neck?", answer: "If the tension is concentrated mainly in the shoulders, neck and upper back, the focused session is often the better fit. Full body is more relevant when you want a broader whole-body relaxation or recovery treatment." },
             { question: "What is hot stone best for?", answer: "Hot stone is often compared when the client wants a deeply relaxing heat-supported massage experience rather than a purely pressure-led one." },
             { question: "How do I choose between aromatherapy and Swedish massage?", answer: "Both sit on the more relaxation-led side of the menu. Aromatherapy is usually chosen when the sensory and essential-oil component matters, while Swedish is the more classic general-relaxation comparison." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Tension And Goal Review", description: "We begin by checking whether the goal is relaxation, deeper muscle work, recovery or a focused back-and-neck reset.", duration: "5-10 min" },
@@ -1163,19 +1321,19 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Relaxation-Led Massage",
                 description: "These are the options to compare when calm, stress relief and full-body relaxation are the bigger priorities.",
                 variants: [
-                    { serviceSlug: "swedish-massage-60", summary: "A classic relaxation massage for overall stress relief and easier unwinding.", bestFor: "Clients wanting a general full-body relaxation session." },
-                    { serviceSlug: "aromatherapy-60", summary: "A more sensory relaxation option when essential oils and mood support matter.", bestFor: "Clients wanting a more atmosphere-led massage experience." },
-                    { serviceSlug: "hot-stone-60", summary: "A heat-supported relaxation massage when warmth and deeper comfort are part of the appeal.", bestFor: "Clients wanting a deeply soothing full-body treatment." },
+                    { serviceSlug: "swedish-massage-60", summary: "A classic relaxation massage for overall stress relief and easier unwinding.", bestFor: "People who want a general full-body relaxation session." },
+                    { serviceSlug: "aromatherapy-60", summary: "A more sensory relaxation option when essential oils and mood support matter.", bestFor: "People who want a more atmosphere-led massage experience." },
+                    { serviceSlug: "hot-stone-60", summary: "A heat-supported relaxation massage when warmth and deeper comfort are part of the appeal.", bestFor: "People who want a deeply soothing full-body treatment." },
                 ],
             },
             {
                 title: "Tension And Recovery Work",
                 description: "These are the stronger comparisons when the body needs more focused muscular work or recovery support.",
                 variants: [
-                    { serviceSlug: "deep-tissue-60", summary: "A deeper-pressure massage for stubborn muscular tightness and knots.", bestFor: "Clients dealing with deeper chronic tension." },
-                    { serviceSlug: "sports-massage-60", summary: "A recovery-focused massage option for active bodies and post-training tightness.", bestFor: "Clients wanting sports-oriented recovery support." },
-                    { serviceSlug: "back-neck-30", summary: "A shorter focused session for upper-back, shoulder and neck tension.", bestFor: "Clients with more localised upper-body tightness." },
-                    { serviceSlug: "back-neck-45", summary: "A longer focused back-and-neck option when the area needs more treatment time.", bestFor: "Clients with heavier neck and shoulder tension." },
+                    { serviceSlug: "deep-tissue-60", summary: "A deeper-pressure massage for stubborn muscular tightness and knots.", bestFor: "People who are dealing with deeper chronic tension." },
+                    { serviceSlug: "sports-massage-60", summary: "A recovery-focused massage option for active bodies and post-training tightness.", bestFor: "People who want sports-oriented recovery support." },
+                    { serviceSlug: "back-neck-30", summary: "A shorter focused session for upper-back, shoulder and neck tension.", bestFor: "People with more localised upper-body tightness." },
+                    { serviceSlug: "back-neck-45", summary: "A longer focused back-and-neck option when the area needs more treatment time.", bestFor: "People with heavier neck and shoulder tension." },
                 ],
             },
         ],
@@ -1223,6 +1381,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "How do I choose by hair length?", answer: "Length matters because it changes the time and styling effort required. That is why several of the cut-and-styling services are grouped by short, medium, long and extra-long hair." },
             { question: "Are upstyles only for bridal hair?", answer: "No. Upstyles are also relevant for matric dance, formal events and any occasion where you want a more pinned or styled finish than a regular blow dry gives." },
             { question: "Why is gents hair a separate comparison?", answer: "Because the appointment type, timing and styling expectation are different enough that it helps to treat gents cuts as their own option." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Hair Goal Check", description: "We begin by confirming whether the appointment is for a reshape, a finished blow dry, a more occasion-led style or a gent’s cut.", duration: "5-10 min" },
@@ -1236,26 +1407,26 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Cuts And Finished Cuts",
                 description: "These are the services to compare when the hair needs reshaping, with or without a finished blow dry.",
                 variants: [
-                    { serviceSlug: "cut-blow-short", summary: "A short-hair cut and finished styling appointment.", bestFor: "Short styles needing both shape and finish." },
-                    { serviceSlug: "cut-blow-medium", summary: "A medium-length cut with a finished blow-dry result.", bestFor: "Shoulder-length hair needing reshape and finish." },
-                    { serviceSlug: "cut-blow-long", summary: "A long-hair cut and finish for reshaping with a polished result.", bestFor: "Long hair needing a full salon finish." },
-                    { serviceSlug: "cut-only-short", summary: "A short-hair haircut without the full styled finish.", bestFor: "Clients who only need the cut itself." },
-                    { serviceSlug: "cut-only-medium", summary: "A medium-length cut-only option for maintenance shaping.", bestFor: "Clients not needing the full blow-dry finish." },
-                    { serviceSlug: "cut-only-long", summary: "A long-hair cut-only option for trimming and reshaping.", bestFor: "Clients who mainly need length and layer maintenance." },
+                    { serviceSlug: "cut-blow-short", summary: "A short-hair cut and finished styling appointment.", bestFor: "People with short styles who need both shape and finish." },
+                    { serviceSlug: "cut-blow-medium", summary: "A medium-length cut with a finished blow-dry result.", bestFor: "People with shoulder-length hair who need reshape and finish." },
+                    { serviceSlug: "cut-blow-long", summary: "A long-hair cut and finish for reshaping with a polished result.", bestFor: "People with long hair who need a full salon finish." },
+                    { serviceSlug: "cut-only-short", summary: "A short-hair haircut without the full styled finish.", bestFor: "People who only need the cut itself." },
+                    { serviceSlug: "cut-only-medium", summary: "A medium-length cut-only option for maintenance shaping.", bestFor: "People who do not need the full blow-dry finish." },
+                    { serviceSlug: "cut-only-long", summary: "A long-hair cut-only option for trimming and reshaping.", bestFor: "People who mainly need length and layer maintenance." },
                 ],
             },
             {
                 title: "Styling And Occasion Hair",
                 description: "These are the options to compare when the cut is already sorted and the focus is styling.",
                 variants: [
-                    { serviceSlug: "blow-short", summary: "A shorter blow-dry appointment for cropped or shorter lengths.", bestFor: "Short hair needing polish and movement." },
-                    { serviceSlug: "blow-medium", summary: "A medium-length blow-dry appointment for smoother or bouncier finish work.", bestFor: "Medium hair needing styling only." },
-                    { serviceSlug: "blow-long", summary: "A long-hair blow-dry for sleek finish or styled movement.", bestFor: "Long hair needing a polished styling result." },
-                    { serviceSlug: "upstyle-short", summary: "A more occasion-led styling option for shorter lengths.", bestFor: "Short hair needing event styling." },
-                    { serviceSlug: "upstyle-medium", summary: "A medium-length upstyle option for more formal hair dressing.", bestFor: "Clients booking occasion hair." },
-                    { serviceSlug: "upstyle-long", summary: "A long-hair upstyle for formal or event-focused styling.", bestFor: "Clients wanting a more complete upstyle result." },
-                    { serviceSlug: "gents-cut", summary: "A standard gent’s cut option for classic or modern grooming.", bestFor: "Men booking a standard cut." },
-                    { serviceSlug: "gents-clipper", summary: "A clipper-based option when the cut is simpler and more machine-led.", bestFor: "Men wanting a quicker clipper finish." },
+                    { serviceSlug: "blow-short", summary: "A shorter blow-dry appointment for cropped or shorter lengths.", bestFor: "People with short hair who need polish and movement." },
+                    { serviceSlug: "blow-medium", summary: "A medium-length blow-dry appointment for smoother or bouncier finish work.", bestFor: "People with medium hair who need styling only." },
+                    { serviceSlug: "blow-long", summary: "A long-hair blow-dry for sleek finish or styled movement.", bestFor: "People with long hair who need a polished styling result." },
+                    { serviceSlug: "upstyle-short", summary: "A more occasion-led styling option for shorter lengths.", bestFor: "People with short hair who need event styling." },
+                    { serviceSlug: "upstyle-medium", summary: "A medium-length upstyle option for more formal hair dressing.", bestFor: "People who are booking occasion hair." },
+                    { serviceSlug: "upstyle-long", summary: "A long-hair upstyle for formal or event-focused styling.", bestFor: "People who want a more complete upstyle result." },
+                    { serviceSlug: "gents-cut", summary: "A standard gent’s cut option for classic or modern grooming.", bestFor: "Men who are booking a standard cut." },
+                    { serviceSlug: "gents-clipper", summary: "A clipper-based option when the cut is simpler and more machine-led.", bestFor: "Men who want a quicker clipper finish." },
                 ],
             },
         ],
@@ -1303,6 +1474,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is rubber base for natural nails or extensions?", answer: "Rubber base is usually part of the natural-nail support conversation, especially when the goal is a flexible, stronger base rather than a full extension look." },
             { question: "How do I choose between manicure and mani-pedi combo?", answer: "Choose manicure when hands are the main focus. The combo is better when both hands and feet need a refresh in one booking." },
             { question: "When does designer nails make sense?", answer: "Designer nails are the better comparison when the art, detail or custom finish matters as much as the base nail service itself." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Finish And Goal Check", description: "We start by confirming whether the priority is natural-nail support, added length, a pedicure refresh or a more design-led finish.", duration: "5-10 min" },
@@ -1316,30 +1500,30 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Natural Nail Support",
                 description: "These are the services to compare when you want strength and finish without moving fully into length-focused extensions.",
                 variants: [
-                    { serviceSlug: "gel-overlay-hands", summary: "A gel overlay option for strengthening natural nails with a durable finish.", bestFor: "Clients wanting support on their existing nails." },
-                    { serviceSlug: "acrylic-overlay", summary: "An acrylic overlay option for clients comparing a harder-wearing natural-nail coating.", bestFor: "Clients wanting a firmer overlay feel." },
-                    { serviceSlug: "rubber-base", summary: "A rubber-base option when flexible support and natural-nail strength are the priority.", bestFor: "Clients wanting stronger natural nails without full extensions." },
-                    { serviceSlug: "full-manicure", summary: "A maintenance manicure for shaping, cuticle care and a cleaner overall hand finish.", bestFor: "Clients wanting a classic hands refresh." },
+                    { serviceSlug: "gel-overlay-hands", summary: "A gel overlay option for strengthening natural nails with a durable finish.", bestFor: "People who want support on their existing nails." },
+                    { serviceSlug: "acrylic-overlay", summary: "An acrylic overlay option for clients comparing a harder-wearing natural-nail coating.", bestFor: "People who want a firmer overlay feel." },
+                    { serviceSlug: "rubber-base", summary: "A rubber-base option when flexible support and natural-nail strength are the priority.", bestFor: "People who want stronger natural nails without full extensions." },
+                    { serviceSlug: "full-manicure", summary: "A maintenance manicure for shaping, cuticle care and a cleaner overall hand finish.", bestFor: "People who want a classic hands refresh." },
                 ],
             },
             {
                 title: "Extensions And Design",
                 description: "These are the stronger comparisons when you want more length or a more custom finished set.",
                 variants: [
-                    { serviceSlug: "gel-tips", summary: "A gel-and-tips option when you want added length with a gel finish.", bestFor: "Clients wanting a cleaner length extension option." },
-                    { serviceSlug: "acrylic-tips", summary: "A classic acrylic extension option for added length and structure.", bestFor: "Clients wanting a stronger traditional extension set." },
-                    { serviceSlug: "sculpted-forms", summary: "A sculpted extension option without relying on tips.", bestFor: "Clients wanting a more custom extension build." },
-                    { serviceSlug: "designer-nails", summary: "A more creative option when the final design matters as much as the base system.", bestFor: "Clients wanting nail art or a more statement set." },
+                    { serviceSlug: "gel-tips", summary: "A gel-and-tips option when you want added length with a gel finish.", bestFor: "People who want a cleaner length extension option." },
+                    { serviceSlug: "acrylic-tips", summary: "A classic acrylic extension option for added length and structure.", bestFor: "People who want a stronger traditional extension set." },
+                    { serviceSlug: "sculpted-forms", summary: "A sculpted extension option without relying on tips.", bestFor: "People who want a more custom extension build." },
+                    { serviceSlug: "designer-nails", summary: "A more creative option when the final design matters as much as the base system.", bestFor: "People who want nail art or a more statement set." },
                 ],
             },
             {
                 title: "Feet And Combo Appointments",
                 description: "These are the options to compare when toes or combined hand-and-foot maintenance are the priority.",
                 variants: [
-                    { serviceSlug: "gel-toes", summary: "A toe-focused gel option for a long-lasting polished finish.", bestFor: "Clients wanting a toes-only polish service." },
-                    { serviceSlug: "rubber-base-toes", summary: "A toe-focused rubber-base option when longer wear matters on toes as well.", bestFor: "Clients wanting a longer-wear toe finish." },
-                    { serviceSlug: "pedicure", summary: "A full pedicure option when the goal is more foot care plus polish rather than only colour.", bestFor: "Clients wanting a fuller feet refresh." },
-                    { serviceSlug: "mani-pedi-combo", summary: "A combined hands-and-feet booking for broader maintenance in one appointment.", bestFor: "Clients wanting both hands and feet done together." },
+                    { serviceSlug: "gel-toes", summary: "A toe-focused gel option for a long-lasting polished finish.", bestFor: "People who want a toes-only polish service." },
+                    { serviceSlug: "rubber-base-toes", summary: "A toe-focused rubber-base option when longer wear matters on toes as well.", bestFor: "People who want a longer-wear toe finish." },
+                    { serviceSlug: "pedicure", summary: "A full pedicure option when the goal is more foot care plus polish rather than only colour.", bestFor: "People who want a fuller feet refresh." },
+                    { serviceSlug: "mani-pedi-combo", summary: "A combined hands-and-feet booking for broader maintenance in one appointment.", bestFor: "People who want both hands and feet done together." },
                 ],
             },
         ],
@@ -1387,6 +1571,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is bridal makeup only for very full glam looks?", answer: "No. Bridal makeup is still chosen by the kind of bride you want to look like. The category matters because of the occasion and planning, not because every bride wants the same finish." },
             { question: "Do I need a bridal trial if I already know what I like?", answer: "A trial is still useful when you want to see the final bridal direction on your own face before the day and remove uncertainty from the wedding booking." },
             { question: "Which makeup option is best for photoshoots or formal events?", answer: "Evening makeup is usually the stronger comparison when the look needs more impact, polish or camera-readiness than a simple daytime booking." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Occasion Review", description: "We start by confirming whether the booking is for a wedding, a trial, an evening event or a lighter daytime look.", duration: "5-10 min" },
@@ -1400,16 +1597,16 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Bridal Makeup",
                 description: "These are the options to compare when the booking is connected to your wedding and needs more planning certainty.",
                 variants: [
-                    { serviceSlug: "bridal-makeup", summary: "The wedding-day makeup booking itself, designed around the final bridal look.", bestFor: "Brides booking their main event-day makeup." },
-                    { serviceSlug: "bridal-trial", summary: "A trial appointment for testing and refining the bridal look before the wedding day.", bestFor: "Brides wanting more certainty before the big day." },
+                    { serviceSlug: "bridal-makeup", summary: "The wedding-day makeup booking itself, designed around the final bridal look.", bestFor: "Brides who are booking their main event-day makeup." },
+                    { serviceSlug: "bridal-trial", summary: "A trial appointment for testing and refining the bridal look before the wedding day.", bestFor: "Brides who want more certainty before the big day." },
                 ],
             },
             {
                 title: "Event And Day Makeup",
                 description: "These are the stronger comparisons when the booking is not bridal and the main question is how soft or glam the finish should be.",
                 variants: [
-                    { serviceSlug: "evening-makeup", summary: "A fuller event makeup option for more glam, polish or occasion presence.", bestFor: "Clients attending formal events, functions or photoshoots." },
-                    { serviceSlug: "day-makeup", summary: "A lighter daytime makeup option with a cleaner and softer finish.", bestFor: "Clients wanting a fresher daytime look." },
+                    { serviceSlug: "evening-makeup", summary: "A fuller event makeup option for more glam, polish or occasion presence.", bestFor: "People attending formal events, functions or photoshoots." },
+                    { serviceSlug: "day-makeup", summary: "A lighter daytime makeup option with a cleaner and softer finish.", bestFor: "People who want a fresher daytime look." },
                 ],
             },
         ],
@@ -1457,6 +1654,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is spray tan better for events?", answer: "Spray tan is often the clearer comparison when timing matters and you want the bronzed look more immediately." },
             { question: "What is the value of a 10- or 20-session sunbed package?", answer: "Those packages are the better comparison when tanning is something you want to maintain over time rather than treat as a one-off visit." },
             { question: "How do I know which tanning option fits me?", answer: "Start with how fast you want the result and whether you see the booking as a one-off finish or an ongoing tanning routine." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Tanning Goal Review", description: "We begin by confirming whether the goal is an immediate spray-tan finish or a session-based tanning plan.", duration: "5 min" },
@@ -1470,16 +1680,16 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Immediate Bronze",
                 description: "This is the option to compare when you want a faster visible tanning result.",
                 variants: [
-                    { serviceSlug: "spraytan", summary: "A spray-tan option for an immediate bronzed finish.", bestFor: "Clients wanting a faster event-ready glow." },
+                    { serviceSlug: "spraytan", summary: "A spray-tan option for an immediate bronzed finish.", bestFor: "People who want a faster event-ready glow." },
                 ],
             },
             {
                 title: "Sunbed Sessions And Packages",
                 description: "These are the options to compare when tanning is more of a session-led routine.",
                 variants: [
-                    { serviceSlug: "sunbed-session", summary: "A one-off sunbed session when you want a single tanning visit.", bestFor: "Clients trying this option or booking a standalone session." },
-                    { serviceSlug: "sunbed-10", summary: "A 10-session package when tanning is part of an ongoing plan.", bestFor: "Clients wanting a medium-term tanning package." },
-                    { serviceSlug: "sunbed-20", summary: "A 20-session package when the tanning routine is more established and repeat-based.", bestFor: "Clients wanting a longer package option." },
+                    { serviceSlug: "sunbed-session", summary: "A one-off sunbed session when you want a single tanning visit.", bestFor: "People trying this option or who are booking a standalone session." },
+                    { serviceSlug: "sunbed-10", summary: "A 10-session package when tanning is part of an ongoing plan.", bestFor: "People who want a medium-term tanning package." },
+                    { serviceSlug: "sunbed-20", summary: "A 20-session package when the tanning routine is more established and repeat-based.", bestFor: "People who want a longer package option." },
                 ],
             },
         ],
@@ -1527,6 +1737,19 @@ const bespokeServicePages: BespokeServicePage[] = [
             { question: "Is vaginal tightening part of the same decision as laser or Plasmage?", answer: "No. It belongs to a much more specific intimate-treatment conversation, which is why it helps to separate it clearly inside the medical family." },
             { question: "How do I know if I need a medical category treatment instead of a standard facial?", answer: "If the concern is more specialist, technology-led or falls outside the typical facial conversation, the medical category is more likely to be the right place to start." },
             { question: "Should I message before booking a medical treatment?", answer: "Yes, because these services are more specialist and it helps to confirm the concern and the best-fit treatment before finalising the appointment." },
+        
+            {
+                question: "How do I book an appointment for this service?",
+                answer: "You can book your appointment quickly and securely online through our Fresha booking platform, or by sending us a message directly on WhatsApp."
+            },
+            {
+                question: "Do I need to pay a deposit?",
+                answer: "Yes, we may require a deposit to secure your booking. This deposit is fully applied to your final bill on the day of your treatment."
+            },
+            {
+                question: "What is your cancellation policy?",
+                answer: "We ask that you provide at least 24 hours' notice if you need to cancel or reschedule. Late cancellations or no-shows may forfeit the booking deposit."
+            },
         ],
         treatmentProcess: [
             { step: 1, title: "Specialist Concern Review", description: "We begin by clarifying the treatment area and the specific specialist concern you want to address.", duration: "10-15 min" },
@@ -1540,16 +1763,16 @@ const bespokeServicePages: BespokeServicePage[] = [
                 title: "Skin Correction And Tightening",
                 description: "These are the options to compare when visible correction, resurfacing or tightening are the main concerns.",
                 variants: [
-                    { serviceSlug: "fractional-laser", summary: "A specialist resurfacing treatment when texture and stronger skin correction are part of the conversation.", bestFor: "Clients wanting a more corrective skin treatment." },
-                    { serviceSlug: "plasmage", summary: "A specialist tightening treatment when lift or skin laxity is the bigger concern.", bestFor: "Clients comparing a non-surgical tightening option." },
+                    { serviceSlug: "fractional-laser", summary: "A specialist resurfacing treatment when texture and stronger skin correction are part of the conversation.", bestFor: "People who want a more corrective skin treatment." },
+                    { serviceSlug: "plasmage", summary: "A specialist tightening treatment when lift or skin laxity is the bigger concern.", bestFor: "People who are comparing a non-surgical tightening option." },
                 ],
             },
             {
                 title: "Wellness And Intimate Treatments",
                 description: "These are the options to compare when the treatment goal sits outside a standard skin-correction conversation.",
                 variants: [
-                    { serviceSlug: "iv-drip", summary: "A wellness-support treatment for hydration and internal support conversations.", bestFor: "Clients asking about energy, hydration or recovery support." },
-                    { serviceSlug: "vaginal-tightening", summary: "A specific intimate treatment for clients discussing non-surgical vaginal tightening.", bestFor: "Clients wanting an intimate rejuvenation conversation." },
+                    { serviceSlug: "iv-drip", summary: "A wellness-support treatment for hydration and internal support conversations.", bestFor: "People asking about energy, hydration or recovery support." },
+                    { serviceSlug: "vaginal-tightening", summary: "A specific intimate treatment for clients discussing non-surgical vaginal tightening.", bestFor: "People who want an intimate rejuvenation conversation." },
                 ],
             },
         ],

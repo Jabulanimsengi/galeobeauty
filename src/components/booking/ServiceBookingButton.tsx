@@ -12,6 +12,8 @@ interface ServiceBookingButtonProps {
     categoryTitle: string;
     subcategoryId: string;
     subcategoryTitle: string;
+    label?: string;
+    className?: string;
 }
 
 export function ServiceBookingButton({
@@ -20,6 +22,8 @@ export function ServiceBookingButton({
     categoryTitle,
     subcategoryId,
     subcategoryTitle,
+    label,
+    className = "",
 }: ServiceBookingButtonProps) {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
 
@@ -35,10 +39,13 @@ export function ServiceBookingButton({
         <>
             <button
                 onClick={() => setIsBookingOpen(true)}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.35rem] border-2 border-gold bg-gold/10 text-gold transition-all duration-200 hover:bg-gold hover:text-white"
+                className={label
+                    ? `inline-flex min-h-11 items-center justify-center gap-2 rounded-none border border-foreground bg-foreground px-8 text-sm font-semibold text-white transition-colors hover:border-gold hover:bg-gold hover:text-white ${className}`
+                    : `flex h-10 w-10 shrink-0 items-center justify-center rounded-[0.35rem] border-2 border-gold bg-gold/10 text-gold transition-all duration-200 hover:bg-gold hover:text-white ${className}`}
                 aria-label={`Book ${item.name}`}
             >
-                <Plus className="w-5 h-5" strokeWidth={2.5} />
+                {label}
+                <Plus className="h-5 w-5" strokeWidth={2.5} />
             </button>
 
             <BookingSheet

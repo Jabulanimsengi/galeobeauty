@@ -90,7 +90,7 @@ export default function BlogPage() {
                             <span className="inline-block text-gold text-sm font-medium tracking-wider uppercase mb-4">
                                 Galeo Beauty Hartbeespoort Blog
                             </span>
-                            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
+                            <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl text-foreground mb-6">
                                 Beauty <span className="text-gold italic">Tips &amp; Guides</span> from Hartbeespoort
                             </h1>
                             <p className="text-muted-foreground text-lg leading-relaxed">
@@ -143,7 +143,7 @@ export default function BlogPage() {
                                             </span>
                                         </div>
 
-                                        <h2 className="font-serif text-xl text-foreground mb-3 group-hover:text-gold transition-colors line-clamp-2">
+                                        <h2 className="font-sans text-xl text-foreground mb-3 group-hover:text-gold transition-colors line-clamp-2">
                                             <Link href={`/blog/${post.slug}`}>
                                                 {post.title}
                                             </Link>
@@ -170,14 +170,14 @@ export default function BlogPage() {
                 {/* CTA Section */}
                 <section className="py-20 bg-foreground text-background text-center">
                     <div className="container mx-auto px-4">
-                        <h2 className="font-serif text-3xl md:text-4xl font-semibold mb-4">
+                        <h2 className="font-sans text-3xl md:text-4xl font-semibold mb-4">
                             Ready to Book at Galeo Beauty Hartbeespoort?
                         </h2>
                         <p className="text-background/70 mb-8 max-w-lg mx-auto">
                             Book your appointment and enjoy thoughtful care at our Hartbeespoort salon.
                         </p>
                         <Link
-                            href="/prices"
+                            href="/services"
                             className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-foreground font-semibold px-8 py-3 rounded-full transition-colors"
                         >
                             View Our Services

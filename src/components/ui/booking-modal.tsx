@@ -70,7 +70,7 @@ export function BookingModal({ isOpen, onClose }: BookingModalProps) {
                                 <div className="flex gap-2 mb-3">
                                     <TrustBadge variant="premium" icon="star">Concierge Booking</TrustBadge>
                                 </div>
-                                <h2 className="font-serif text-2xl font-semibold">
+                                <h2 className="font-sans text-2xl font-semibold">
                                     Book Your Treatment
                                 </h2>
                                 <p className="text-background/70 text-sm mt-1">

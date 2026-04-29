@@ -69,7 +69,7 @@ export default function GalleryPage() {
                             <span className="mb-4 block text-xs font-bold uppercase tracking-[0.2em] text-gold sm:text-sm">
                                 Galeo Beauty Hartbeespoort Portfolio
                             </span>
-                            <h1 className="mb-6 font-serif text-4xl text-foreground sm:text-5xl lg:text-6xl">
+                            <h1 className="mb-6 font-sans text-4xl text-foreground sm:text-5xl lg:text-6xl">
                                 Our <span className="italic text-gold">Gallery</span> in Hartbeespoort
                             </h1>
                             <p className="mx-auto max-w-2xl text-lg font-light leading-relaxed text-muted-foreground">
