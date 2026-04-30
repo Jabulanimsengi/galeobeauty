@@ -2,8 +2,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { serviceCategoriesContent } from './lib/services-content';
 import { resolveLegacyServiceRedirect } from './lib/legacy-service-redirects';
+import { isKnownLocationSlug } from './lib/location-route-manifest';
 
 const VALID_CATEGORIES = new Set<string>();
+const VALID_SERVICE_SLUGS = new Set<string>(
+  serviceCategoriesContent.flatMap((category) =>
+    category.subcategories.flatMap((subcategory) =>
+      subcategory.items.map((item) => item.id)
+    )
+  )
+);
 const SERVICE_CATEGORY_BY_SLUG = new Map<string, string>();
 
 serviceCategoriesContent.forEach((category) => {
@@ -20,6 +28,27 @@ const CATEGORY_IDS = [
   'waxing', 'hair', 'nails', 'lashes-brows', 'hair-extensions',
 ];
 CATEGORY_IDS.forEach((id) => VALID_CATEGORIES.add(id));
+
+function rewriteToAppNotFound(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  url.pathname = '/_not-found';
+  url.search = '';
+
+  return NextResponse.rewrite(url, {
+    status: 404,
+    headers: {
+      'x-robots-tag': 'noindex, nofollow',
+    },
+  });
+}
+
+function isRecognizedLocationServiceSegment(segment: string): boolean {
+  return (
+    VALID_SERVICE_SLUGS.has(segment) ||
+    VALID_CATEGORIES.has(segment) ||
+    resolveLegacyServiceRedirect(segment) !== null
+  );
+}
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -109,6 +138,27 @@ export function proxy(request: NextRequest) {
         new URL('/services', request.url),
         301
       );
+    }
+  }
+
+  const locationHubMatch = pathname.match(/^\/locations\/([^/]+)$/);
+  if (locationHubMatch) {
+    const [, locationSlug] = locationHubMatch;
+    if (!isKnownLocationSlug(locationSlug)) {
+      return rewriteToAppNotFound(request);
+    }
+  }
+
+  const locationServiceMatch = pathname.match(/^\/locations\/([^/]+)\/([^/]+)$/);
+  if (locationServiceMatch) {
+    const [, locationSlug, serviceSegment] = locationServiceMatch;
+
+    if (!isKnownLocationSlug(locationSlug)) {
+      return rewriteToAppNotFound(request);
+    }
+
+    if (!isRecognizedLocationServiceSegment(serviceSegment)) {
+      return rewriteToAppNotFound(request);
     }
   }
 
