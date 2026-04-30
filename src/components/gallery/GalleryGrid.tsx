@@ -42,14 +42,6 @@ function getSortedCategories(items: GalleryItem[]) {
     });
 }
 
-function getCategoryPreviewClass(index: number) {
-    if (index === 0) {
-        return "col-span-2 row-span-2 min-h-[16rem] sm:col-span-2 sm:min-h-[22rem] lg:col-span-3 lg:min-h-[25rem]";
-    }
-
-    return "col-span-1 row-span-1 min-h-[8.75rem] sm:min-h-[10.5rem] lg:min-h-[12rem]";
-}
-
 export function GalleryGrid({ items }: GalleryGridProps) {
     const [lightboxOpen, setLightboxOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -130,7 +122,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                 ) : null}
                             </div>
 
-                            <div className="grid auto-rows-[8.75rem] grid-cols-2 gap-3 sm:auto-rows-[10.5rem] sm:grid-cols-3 sm:gap-4 lg:auto-rows-[12rem] lg:grid-cols-6">
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                                 {visibleItems.map((item, index) => {
                                     const actualIndex = categoryItems.findIndex((entry) => entry.id === item.id);
                                     const hideOnMobile = !isExpanded && index >= 4;
@@ -145,13 +137,13 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                             key={item.id}
                                             type="button"
                                             onClick={() => openLightbox(actualIndex, categoryItems)}
-                                            className={`group relative overflow-hidden rounded-[1.35rem] text-left ${getCategoryPreviewClass(index)} ${hideOnMobile ? "hidden sm:block" : ""}`}
+                                            className={`group relative aspect-square overflow-hidden text-left [border-radius:0] ${hideOnMobile ? "hidden sm:block" : ""}`}
                                         >
                                             <Image
                                                 src={item.src}
                                                 alt={item.alt}
                                                 fill
-                                                className="object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                                                className="object-cover [border-radius:0]"
                                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/18 to-transparent" />

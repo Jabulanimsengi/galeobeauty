@@ -20,6 +20,7 @@ import {
     getPrimaryGuideCategoryId,
     getRelatedIntentPages,
 } from "@/lib/intent-pages";
+import { resolveIntentPageHeroImage } from "@/lib/editorial-image-resolver";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 interface PageProps {
@@ -69,6 +70,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
+    const heroImage = resolveIntentPageHeroImage({
+        title: page.title,
+        description: `${page.heroDescription} ${page.whyItHappens} ${page.treatmentApproach}`,
+        categoryIds: page.categoryIds,
+        serviceSlugs: page.serviceSlugs,
+        fallbackImage: page.heroImage,
+        fallbackAlt: page.heroImageAlt,
+    });
+
     return {
         title: page.metaTitle,
         description: page.metaDescription,
@@ -81,13 +91,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             description: page.metaDescription,
             url: `https://www.galeobeauty.com/${page.slug}`,
             type: "website",
-            images: [{ url: page.heroImage, alt: page.heroImageAlt }],
+            images: [{ url: heroImage.image, alt: heroImage.imageAlt }],
         },
         twitter: {
             card: "summary_large_image",
             title: page.metaTitle,
             description: page.metaDescription,
-            images: [page.heroImage],
+            images: [heroImage.image],
         },
     };
 }
@@ -118,6 +128,14 @@ export default async function IntentLandingPage({ params }: PageProps) {
     const serviceLinks = getIntentPageServiceLinks(page);
     const primaryGuideCategoryId = getPrimaryGuideCategoryId(page);
     const relatedGuides = getRelatedIntentPages(page, 6);
+    const heroImage = resolveIntentPageHeroImage({
+        title: page.title,
+        description: `${page.heroDescription} ${page.whyItHappens} ${page.treatmentApproach}`,
+        categoryIds: page.categoryIds,
+        serviceSlugs: page.serviceSlugs,
+        fallbackImage: page.heroImage,
+        fallbackAlt: page.heroImageAlt,
+    });
     const breadcrumbs: BreadcrumbItem[] = [
         { label: "Home", href: "/" },
         { label: "Guides", href: "/guides" },
@@ -223,14 +241,14 @@ export default async function IntentLandingPage({ params }: PageProps) {
                         </div>
 
                         <div className="lg:sticky lg:top-28 lg:self-start">
-                            <div className="overflow-hidden border border-border shadow-2xl">
-                                <div className="relative aspect-[4/5] w-full">
+                            <div className="overflow-hidden border border-border bg-secondary/20 shadow-2xl [border-radius:0]">
+                                <div className="relative aspect-square w-full [border-radius:0]">
                                     <CloudinaryImage
-                                        src={page.heroImage}
-                                        alt={page.heroImageAlt}
+                                        src={heroImage.image}
+                                        alt={heroImage.imageAlt}
                                         fill
                                         priority
-                                        className="object-cover"
+                                        className="object-contain [border-radius:0]"
                                         sizes="(max-width: 1024px) 100vw, 40vw"
                                     />
                                 </div>

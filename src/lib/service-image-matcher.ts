@@ -106,7 +106,7 @@ const CATEGORY_MATCH_CONFIG: Record<string, CategoryMatchConfig> = {
     qms: { preferredFolders: ["facials"], minimumScore: 9 },
     ipl: { preferredFolders: ["laser-ipl"], minimumScore: 12 },
     hair: { preferredFolders: ["hair"], minimumScore: 11 },
-    nails: { preferredFolders: ["nails", "permanent-makeup"], minimumScore: 10 },
+    nails: { preferredFolders: ["nails"], minimumScore: 10 },
     "lashes-brows": { preferredFolders: ["lashes-brows"], minimumScore: 12 },
     "permanent-makeup": { preferredFolders: ["permanent-makeup", "lashes-brows"], minimumScore: 12 },
 };
@@ -325,7 +325,9 @@ export function resolveServiceImageMatch(input: ServiceImageMatchInput): Service
         };
     }
 
-    const candidates = getGalleryCandidates();
+    const candidates = input.categoryId === "nails"
+        ? getGalleryCandidates().filter((candidate) => config.preferredFolders.includes(candidate.folderId))
+        : getGalleryCandidates();
 
     let bestCandidate: GalleryCandidate | null = null;
     let bestScore = -1;

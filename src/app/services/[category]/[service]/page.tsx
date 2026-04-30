@@ -30,6 +30,7 @@ import {
     resolveBespokeServicePage,
 } from "@/lib/bespoke-service-pages";
 import { getIntentPagesForService, getIntentPagesForServices } from "@/lib/intent-pages";
+import { resolveServicePageHeroImage } from "@/lib/editorial-image-resolver";
 
 //============================================
 // DYNAMIC SERVICE PAGES FOR ALL 262 TREATMENTS
@@ -78,7 +79,22 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
             return { title: "Service Not Found" };
         }
 
-        const imageUrl = toAbsoluteUrl(bespokePage.image);
+        const bespokeHeroImage = resolveServicePageHeroImage({
+            categoryId: bespokePage.categoryId,
+            categoryTitle: bespokePage.category.title,
+            subcategoryTitle: bespokePage.title,
+            serviceSlug: bespokePage.slug,
+            item: {
+                id: bespokePage.slug,
+                name: bespokePage.title,
+                price: "",
+                description: `${bespokePage.heroIntro} ${bespokePage.heroBody}`,
+                seoKeywords: bespokePage.includedServices.flatMap((service) => service.seoKeywords ?? []),
+            },
+            fallbackImage: bespokePage.image,
+            fallbackAlt: bespokePage.imageAlt,
+        });
+        const imageUrl = toAbsoluteUrl(bespokeHeroImage.image);
         const keywordPool = Array.from(
             new Set(
                 bespokePage.includedServices.flatMap((service) => [
@@ -103,7 +119,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
                 images: [
                     {
                         url: imageUrl,
-                        alt: bespokePage.imageAlt,
+                        alt: bespokeHeroImage.imageAlt,
                     },
                 ],
             },
@@ -149,7 +165,25 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     );
 
     const keywords = buildServiceMetadataKeywords(service);
-    const serviceImageUrl = toAbsoluteUrl(service.image);
+    const serviceHeroImage = category && subcategory
+        ? resolveServicePageHeroImage({
+            categoryId: category.id,
+            categoryTitle: category.title,
+            subcategoryTitle: subcategory.title,
+            serviceSlug: service.slug,
+            item: {
+                id: service.itemId,
+                name: service.keyword,
+                price: service.price,
+                duration: service.duration,
+                description: service.description,
+                seoKeywords: service.seoKeywords,
+            },
+            fallbackImage: service.image,
+            fallbackAlt: service.imageAlt,
+        })
+        : { image: service.image, imageAlt: service.imageAlt };
+    const serviceImageUrl = toAbsoluteUrl(serviceHeroImage.image);
     const title = `${service.keyword} | Galeo Beauty`;
     const metadataDescription = `${description.substring(0, 120)} Available at Galeo Beauty in Hartbeespoort, serving local clients and nearby commuter areas.`;
 
@@ -167,8 +201,8 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
             type: "website",
             images: [
                 {
-                    url: serviceImageUrl,
-                    alt: service.imageAlt,
+                        url: serviceImageUrl,
+                        alt: serviceHeroImage.imageAlt,
                 },
             ],
         },
@@ -217,7 +251,22 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
 
         const relatedServices = getBespokeServicePageRelatedServices(bespokePage);
         const relatedGuides = getIntentPagesForServices(bespokePage.includedServiceSlugs, 6);
-        const bespokeImageUrl = toAbsoluteUrl(bespokePage.image);
+        const bespokeHeroImage = resolveServicePageHeroImage({
+            categoryId: bespokePage.categoryId,
+            categoryTitle: bespokePage.category.title,
+            subcategoryTitle: bespokePage.title,
+            serviceSlug: bespokePage.slug,
+            item: {
+                id: bespokePage.slug,
+                name: bespokePage.title,
+                price: "",
+                description: `${bespokePage.heroIntro} ${bespokePage.heroBody}`,
+                seoKeywords: bespokePage.includedServices.flatMap((service) => service.seoKeywords ?? []),
+            },
+            fallbackImage: bespokePage.image,
+            fallbackAlt: bespokePage.imageAlt,
+        });
+        const bespokeImageUrl = toAbsoluteUrl(bespokeHeroImage.image);
 
         const bespokeServiceSchema = {
             "@context": "https://schema.org",
@@ -278,14 +327,14 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 <main className="bg-background">
                     <section className="border-b border-border/50 bg-white pt-24 lg:pt-32">
                         <div className="container mx-auto px-4 sm:px-6">
-                            <div className="overflow-hidden border-x border-border/50">
-                                <div className="relative min-h-[320px] bg-secondary/20 sm:min-h-[420px] lg:min-h-[520px]">
+                            <div className="overflow-hidden border-x border-border/50 [border-radius:0]">
+                                <div className="relative mx-auto aspect-square w-full max-w-[34rem] bg-secondary/20 [border-radius:0] sm:max-w-[38rem] lg:max-w-[42rem]">
                                     <CloudinaryImage
-                                        src={bespokePage.image}
-                                        alt={bespokePage.imageAlt}
+                                        src={bespokeHeroImage.image}
+                                        alt={bespokeHeroImage.imageAlt}
                                         fill
                                         priority
-                                        className="object-cover"
+                                        className="object-contain [border-radius:0]"
                                         sizes="100vw"
                                     />
                                 </div>
@@ -576,8 +625,17 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
     if (!location) notFound();
 
     const richDescription = generateServiceDescription(fullServiceItem, categoryTitle, subcategoryTitle);
-    const serviceImage = fullServiceItem.image ?? service.image;
-    const serviceImageAlt = fullServiceItem.imageAlt ?? service.imageAlt;
+    const serviceHeroImage = resolveServicePageHeroImage({
+        categoryId: category.id,
+        categoryTitle,
+        subcategoryTitle,
+        serviceSlug: service.slug,
+        item: fullServiceItem,
+        fallbackImage: fullServiceItem.image ?? service.image,
+        fallbackAlt: fullServiceItem.imageAlt ?? service.imageAlt,
+    });
+    const serviceImage = serviceHeroImage.image;
+    const serviceImageAlt = serviceHeroImage.imageAlt;
     const serviceImageUrl = toAbsoluteUrl(serviceImage);
 
     // NEW: Use advanced generators for better uniqueness
@@ -653,14 +711,14 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
             <main className="bg-background">
                 <section className="border-b border-border/50 bg-white pt-24 lg:pt-32">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="overflow-hidden border-x border-border/50">
-                            <div className="relative min-h-[320px] bg-secondary/20 sm:min-h-[420px] lg:min-h-[520px]">
+                        <div className="overflow-hidden border-x border-border/50 [border-radius:0]">
+                            <div className="relative mx-auto aspect-square w-full max-w-[34rem] bg-secondary/20 [border-radius:0] sm:max-w-[38rem] lg:max-w-[42rem]">
                                 <CloudinaryImage
                                     src={serviceImage}
                                     alt={serviceImageAlt}
                                     fill
                                     priority
-                                    className="object-cover"
+                                    className="object-contain [border-radius:0]"
                                     sizes="100vw"
                                 />
                             </div>

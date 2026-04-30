@@ -13,6 +13,7 @@ import { toAbsoluteUrl } from "@/lib/site-url";
 import { getBespokeCategoryPage } from "@/lib/bespoke-category-pages";
 import { getCategoryPageBySlug } from "@/lib/category-content";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
+import { resolveCategoryHeroImage } from "@/lib/editorial-image-resolver";
 
 // Comprehensive SEO metadata for each category - optimized for South African search
 const categoryMeta: Record<string, {
@@ -250,7 +251,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!description.toLowerCase().includes("hartbeespoort")) {
         description = `${description} Serving Hartbeespoort and nearby Pretoria, Centurion, and Johannesburg.`;
     }
-    const categoryImageUrl = toAbsoluteUrl(category.image);
+    const categoryHeroImage = resolveCategoryHeroImage({
+        categoryId: category.id,
+        categoryTitle: category.title,
+        categorySubtitle: category.subtitle,
+        fallbackImage: category.image,
+    });
+    const categoryImageUrl = toAbsoluteUrl(categoryHeroImage.image);
 
     return {
         title,
@@ -260,7 +267,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             description,
             type: "website",
-            images: [{ url: categoryImageUrl, alt: `${category.title} treatments at Galeo Beauty` }],
+            images: [{ url: categoryImageUrl, alt: categoryHeroImage.imageAlt }],
         },
         twitter: {
             card: "summary_large_image",
@@ -294,8 +301,14 @@ export default async function CategoryPage({ params }: PageProps) {
     const intro = categoryHub?.heroIntro || meta?.intro || `${category.subtitle}. Browse our treatments and book your appointment today.`;
     const categoryDefinition = mdxPage?.definition || meta?.intro || categoryHub?.heroIntro || category.subtitle;
     const faqs = mdxPage?.faqs?.map((faq) => ({ q: faq.question, a: faq.answer })) || categoryHub?.faqs.map((faq) => ({ q: faq.question, a: faq.answer })) || meta?.faqs || [];
-    const categoryImageUrl = toAbsoluteUrl(category.image);
     const relatedGuides = getIntentPagesForCategory(category.id).slice(0, 6);
+    const categoryHeroImage = resolveCategoryHeroImage({
+        categoryId: category.id,
+        categoryTitle: category.title,
+        categorySubtitle: category.subtitle,
+        fallbackImage: category.image,
+    });
+    const categoryImageUrl = toAbsoluteUrl(categoryHeroImage.image);
 
     // JSON-LD structured data for SEO
     const jsonLd = {
@@ -382,13 +395,13 @@ export default async function CategoryPage({ params }: PageProps) {
                 {/* Editorial Hero Section */}
                 <section className="border-b border-border/50 bg-white pt-24 lg:pt-32">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="overflow-hidden border-x border-border/50">
-                            <div className="relative min-h-[320px] bg-secondary/20 sm:min-h-[420px] lg:min-h-[520px]">
+                        <div className="overflow-hidden border-x border-border/50 [border-radius:0]">
+                            <div className="relative mx-auto aspect-square w-full max-w-[34rem] bg-secondary/20 [border-radius:0] sm:max-w-[38rem] lg:max-w-[42rem]">
                                 <CloudinaryImage
-                                    src={category.image}
-                                    alt={category.title}
+                                    src={categoryHeroImage.image}
+                                    alt={categoryHeroImage.imageAlt}
                                     fill
-                                    className="object-cover"
+                                    className="object-contain [border-radius:0]"
                                     priority
                                     sizes="100vw"
                                 />
