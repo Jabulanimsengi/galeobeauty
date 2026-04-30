@@ -50,6 +50,64 @@ function isRecognizedLocationServiceSegment(segment: string): boolean {
   );
 }
 
+function getCanonicalServicePath(serviceSegment: string): string | null {
+  const canonicalCategoryId = SERVICE_CATEGORY_BY_SLUG.get(serviceSegment);
+
+  if (canonicalCategoryId) {
+    return `/services/${canonicalCategoryId}/${serviceSegment}`;
+  }
+
+  const legacyRedirectPath = resolveLegacyServiceRedirect(serviceSegment);
+
+  if (!legacyRedirectPath) {
+    return null;
+  }
+
+  return legacyRedirectPath.serviceSlug
+    ? `/services/${legacyRedirectPath.categoryId}/${legacyRedirectPath.serviceSlug}`
+    : `/services/${legacyRedirectPath.categoryId}`;
+}
+
+function getLegacyServiceRedirectPath(serviceSegment: string): string | null {
+  const legacyRedirectPath = resolveLegacyServiceRedirect(serviceSegment);
+
+  if (!legacyRedirectPath) {
+    return null;
+  }
+
+  if (!legacyRedirectPath.serviceSlug) {
+    return VALID_SERVICE_SLUGS.has(serviceSegment)
+      ? null
+      : `/services/${legacyRedirectPath.categoryId}`;
+  }
+
+  if (legacyRedirectPath.serviceSlug === serviceSegment) {
+    return null;
+  }
+
+  return `/services/${legacyRedirectPath.categoryId}/${legacyRedirectPath.serviceSlug}`;
+}
+
+function getLegacyLocationServiceRedirectPath(locationSlug: string, serviceSegment: string): string | null {
+  const legacyRedirectPath = resolveLegacyServiceRedirect(serviceSegment);
+
+  if (!legacyRedirectPath) {
+    return null;
+  }
+
+  if (!legacyRedirectPath.serviceSlug) {
+    return VALID_SERVICE_SLUGS.has(serviceSegment)
+      ? null
+      : `/services/${legacyRedirectPath.categoryId}`;
+  }
+
+  if (legacyRedirectPath.serviceSlug === serviceSegment) {
+    return null;
+  }
+
+  return `/locations/${locationSlug}/${legacyRedirectPath.serviceSlug}`;
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const hostname = request.headers.get('host') || '';
@@ -72,6 +130,19 @@ export function proxy(request: NextRequest) {
   }
 
   if (pathname === '/prices' || pathname.startsWith('/prices/')) {
+    const pricesServiceMatch = pathname.match(/^\/prices\/([^/]+)\/([^/]+)$/);
+    if (pricesServiceMatch) {
+      const [, , serviceSegment] = pricesServiceMatch;
+      const legacyRedirectPath = getLegacyServiceRedirectPath(serviceSegment);
+
+      if (legacyRedirectPath) {
+        return NextResponse.redirect(
+          new URL(legacyRedirectPath, request.url),
+          301
+        );
+      }
+    }
+
     const newUrl = new URL(request.url);
     newUrl.pathname = pathname
       .replace(/^\/prices\/lashes(?=\/|$)/, '/services/lashes-brows')
@@ -117,25 +188,29 @@ export function proxy(request: NextRequest) {
   if (singleServiceSegmentMatch) {
     const segment = singleServiceSegmentMatch[1];
     if (!VALID_CATEGORIES.has(segment)) {
-      const canonicalCategoryId = SERVICE_CATEGORY_BY_SLUG.get(segment);
-      if (canonicalCategoryId) {
+      const canonicalServicePath = getCanonicalServicePath(segment);
+      if (canonicalServicePath) {
         return NextResponse.redirect(
-          new URL(`/services/${canonicalCategoryId}/${segment}`, request.url),
-          301
-        );
-      }
-
-      const legacyRedirectPath = resolveLegacyServiceRedirect(segment);
-      if (legacyRedirectPath) {
-        const canonicalSlug = legacyRedirectPath.serviceSlug ?? segment;
-        return NextResponse.redirect(
-          new URL(`/services/${legacyRedirectPath.categoryId}/${canonicalSlug}`, request.url),
+          new URL(canonicalServicePath, request.url),
           301
         );
       }
 
       return NextResponse.redirect(
         new URL('/services', request.url),
+        301
+      );
+    }
+  }
+
+  const categoryServiceMatch = pathname.match(/^\/services\/([^/]+)\/([^/]+)$/);
+  if (categoryServiceMatch) {
+    const [, categorySegment, serviceSegment] = categoryServiceMatch;
+    const legacyRedirectPath = getLegacyServiceRedirectPath(serviceSegment);
+
+    if (VALID_CATEGORIES.has(categorySegment) && legacyRedirectPath) {
+      return NextResponse.redirect(
+        new URL(legacyRedirectPath, request.url),
         301
       );
     }
@@ -152,9 +227,25 @@ export function proxy(request: NextRequest) {
   const locationServiceMatch = pathname.match(/^\/locations\/([^/]+)\/([^/]+)$/);
   if (locationServiceMatch) {
     const [, locationSlug, serviceSegment] = locationServiceMatch;
+    const canonicalServicePath = getCanonicalServicePath(serviceSegment);
+    const legacyRedirectPath = getLegacyLocationServiceRedirectPath(locationSlug, serviceSegment);
 
     if (!isKnownLocationSlug(locationSlug)) {
+      if (canonicalServicePath) {
+        return NextResponse.redirect(
+          new URL(canonicalServicePath, request.url),
+          301
+        );
+      }
+
       return rewriteToAppNotFound(request);
+    }
+
+    if (legacyRedirectPath) {
+      return NextResponse.redirect(
+        new URL(legacyRedirectPath, request.url),
+        301
+      );
     }
 
     if (!isRecognizedLocationServiceSegment(serviceSegment)) {
