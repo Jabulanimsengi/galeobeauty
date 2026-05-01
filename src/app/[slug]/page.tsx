@@ -249,7 +249,7 @@ export default async function IntentLandingPage({ params }: PageProps) {
                                         fill
                                         priority
                                         className="object-contain [border-radius:0]"
-                                        sizes="(max-width: 1024px) 100vw, 40vw"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 38rem, 34rem"
                                     />
                                 </div>
                             </div>

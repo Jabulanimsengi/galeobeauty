@@ -82,8 +82,9 @@ export function HomepageLocationSection() {
                             longitude={27.909252}
                             zoom={15}
                             previewTitle="Find Galeo Beauty"
-                            previewDescription="Our location is always visible here, and the live map upgrades automatically as it comes into view."
+                            previewDescription="See our salon location instantly while the live map upgrades automatically."
                             directionsClassName="rounded-none"
+                            previewPriority
                             className="h-full w-full"
                         />
                     </div>

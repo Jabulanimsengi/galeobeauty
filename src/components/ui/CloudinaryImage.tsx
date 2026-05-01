@@ -35,6 +35,8 @@ export function CloudinaryImage({ src, alt, className, fill, noSpinner: _noSpinn
             className={cn(className)}
             onLoad={onLoad}
             decoding={props.decoding ?? "async"}
+            fetchPriority={props.fetchPriority ?? (props.priority ? "high" : "auto")}
+            quality={props.quality ?? 75}
             {...props}
         />
     );

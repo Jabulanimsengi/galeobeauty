@@ -169,12 +169,14 @@ const nextConfig: NextConfig = {
     ...(process.env.NODE_ENV === "development"
       ? { unoptimized: true }
       : {
-          formats: ["image/avif", "image/webp"] as ["image/avif", "image/webp"],
+          // Prefer WebP for now: it is much faster to encode on first request than AVIF,
+          // which keeps service/gallery images from sitting blank while the server works.
+          formats: ["image/webp"] as const,
           minimumCacheTTL: 2678400,
           qualities: [75, 85],
           remotePatterns: [
             {
-              protocol: "https" as "https",
+              protocol: "https" as const,
               hostname: "assets.mixkit.co",
               pathname: "/**",
             },

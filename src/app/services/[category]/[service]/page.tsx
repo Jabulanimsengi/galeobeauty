@@ -335,7 +335,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                         fill
                                         priority
                                         className="object-contain [border-radius:0]"
-                                        sizes="100vw"
+                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 38rem, 42rem"
                                     />
                                 </div>
 
@@ -719,7 +719,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                                     fill
                                     priority
                                     className="object-contain [border-radius:0]"
-                                    sizes="100vw"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 38rem, 42rem"
                                 />
                             </div>
 

@@ -126,6 +126,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                 {visibleItems.map((item, index) => {
                                     const actualIndex = categoryItems.findIndex((entry) => entry.id === item.id);
                                     const hideOnMobile = !isExpanded && index >= 4;
+                                    const isPriorityImage = categoryIndex === 0 && index < 2;
                                     const mobileRemaining = Math.max(categoryItems.length - 4, 0);
                                     const desktopRemaining = Math.max(categoryItems.length - visibleItems.length, 0);
                                     const showMobileMoreOverlay = !isExpanded && mobileRemaining > 0 && index === 3;
@@ -145,6 +146,10 @@ export function GalleryGrid({ items }: GalleryGridProps) {
                                                 fill
                                                 className="object-cover [border-radius:0]"
                                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                                                priority={isPriorityImage}
+                                                loading={isPriorityImage ? "eager" : "lazy"}
+                                                fetchPriority={isPriorityImage ? "high" : "low"}
+                                                quality={index === 0 ? 75 : 68}
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/18 to-transparent" />
                                             <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 p-3.5 sm:p-4">

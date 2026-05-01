@@ -403,7 +403,7 @@ export default async function CategoryPage({ params }: PageProps) {
                                     fill
                                     className="object-contain [border-radius:0]"
                                     priority
-                                    sizes="100vw"
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 38rem, 42rem"
                                 />
                             </div>
 
