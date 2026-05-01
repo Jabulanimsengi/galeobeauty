@@ -32,10 +32,12 @@ import {
 import {
   buildTrackedWhatsAppUrl,
   getStoredAttribution,
-  type StoredAttribution,
   trackBookingSheetOpen,
+  trackBookingSheetClose,
+  trackBookingSaveFailed,
   trackBookingStepView,
   trackBookingSubmit,
+  trackBookingValidationError,
   trackWhatsAppClick,
 } from "@/lib/attribution";
 import type { BookingSaveRequest } from "@/lib/bookings";
@@ -174,6 +176,7 @@ export function BookingSheet({
   const isTurnstileEnabled = Boolean(turnstileSiteKey);
   const dateRailRef = useRef<HTMLDivElement | null>(null);
   const hasTrackedOpenRef = useRef(false);
+  const hasCompletedSubmitRef = useRef(false);
   const dateOptions = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -340,8 +343,25 @@ export function BookingSheet({
   }, [captchaToken]);
 
   // Reset state when closing
-  const handleClose = () => {
+  const handleClose = (closeReason = "dismissed") => {
+    if (isOpen && hasTrackedOpenRef.current && !hasCompletedSubmitRef.current) {
+      const attribution = getStoredAttribution();
+      const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+
+      trackBookingSheetClose({
+        attribution,
+        bookingType,
+        currentPage,
+        step: state.currentStep,
+        treatmentCount,
+        treatmentNames,
+        consultationContext,
+        closeReason,
+      });
+    }
+
     hasTrackedOpenRef.current = false;
+    hasCompletedSubmitRef.current = false;
     setState({
       ...initialBookingState,
     });
@@ -455,11 +475,42 @@ export function BookingSheet({
 
   // Submit booking via WhatsApp
   const handleSubmit = async () => {
+    const attribution = getStoredAttribution();
+    const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+    const issueTrackingPayload = {
+      attribution,
+      bookingType,
+      currentPage,
+      step: state.currentStep,
+      treatmentCount: bookingType === "treatment" ? treatmentCount : undefined,
+      treatmentNames: bookingType === "treatment" ? treatmentNames : undefined,
+      consultationContext,
+      requirementsComplete: bookingRequirementsStatus.isComplete,
+      requiredFieldsCompleted: bookingRequirementsStatus.requiredFieldsCompleted,
+      requiredFieldsTotal: bookingRequirementsStatus.requiredFieldsTotal,
+      hasRequiredName: bookingRequirementsStatus.hasRequiredName,
+      hasRequiredPhone: bookingRequirementsStatus.hasRequiredPhone,
+      hasRequiredDate: bookingRequirementsStatus.hasRequiredDate,
+      hasRequiredTimeSlot: bookingRequirementsStatus.hasRequiredTimeSlot,
+      hasRequiredTreatments: bookingRequirementsStatus.hasRequiredTreatments,
+      hasOptionalEmail: bookingRequirementsStatus.hasOptionalEmail,
+    };
+
     if (!bookingRequirementsStatus.isComplete) {
+      trackBookingValidationError({
+        ...issueTrackingPayload,
+        errorCode: "requirements_incomplete",
+        errorMessage: "Required booking fields were incomplete.",
+      });
       return;
     }
 
     if (isTurnstileEnabled && !captchaToken) {
+      trackBookingValidationError({
+        ...issueTrackingPayload,
+        errorCode: "turnstile_missing",
+        errorMessage: captchaError ?? "Human verification was not completed.",
+      });
       setState((prev) => ({
         ...prev,
         error: captchaError ?? "Please complete the human verification before confirming your booking.",
@@ -470,8 +521,7 @@ export function BookingSheet({
     let message = "";
     let totalValue: number | undefined;
     let submitTreatmentNames: string[] | undefined;
-    let attribution: StoredAttribution | null = null;
-    let currentPage = "/";
+    let saveFailureCode = "booking_save_failed";
 
     if (bookingType === "consultation") {
       // Consultation message format
@@ -531,8 +581,6 @@ Time: ${getTimeSlotLabel(state.appointment.timeSlot)}
 ${bankingDetails}`;
     }
 
-    attribution = getStoredAttribution();
-    currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
     const bookingPayload: BookingSaveRequest = {
       bookingType,
       consultationContext,
@@ -566,9 +614,12 @@ ${bankingDetails}`;
       if (!response.ok) {
         const result = (await response.json().catch(() => null)) as { error?: string } | null;
         if (response.status === 400 && /verification/i.test(result?.error ?? "")) {
+          saveFailureCode = "turnstile_verification_failed";
           setCaptchaToken(null);
           setCaptchaError(result?.error ?? "Please complete the human verification and try again.");
           setCaptchaResetKey((previous) => previous + 1);
+        } else {
+          saveFailureCode = `booking_api_${response.status}`;
         }
         throw new Error(result?.error ?? "We could not save this booking right now. Please try again.");
       }
@@ -577,6 +628,12 @@ ${bankingDetails}`;
         error instanceof Error && error.message
           ? error.message
           : "We could not save this booking right now. Please try again.";
+
+      trackBookingSaveFailed({
+        ...issueTrackingPayload,
+        errorCode: saveFailureCode,
+        errorMessage: message,
+      });
 
       setState((prev) => ({
         ...prev,
@@ -618,8 +675,9 @@ ${bankingDetails}`;
       hasOptionalEmail: bookingRequirementsStatus.hasOptionalEmail,
     });
 
+    hasCompletedSubmitRef.current = true;
     window.open(whatsappUrl, "_blank");
-    handleClose();
+    handleClose("submitted");
   };
 
   const steps = [
@@ -632,7 +690,11 @@ ${bankingDetails}`;
   const totalDuration = calculateTotalDuration();
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleClose}>
+    <Sheet open={isOpen} onOpenChange={(open) => {
+      if (!open) {
+        handleClose("dismissed");
+      }
+    }}>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
         className={

@@ -1,5 +1,9 @@
 export const BOOKING_FLOW_EVENT_NAMES = [
   "booking_sheet_open",
+  "booking_step_view",
+  "booking_sheet_close",
+  "booking_validation_error",
+  "booking_save_failed",
   "booking_whatsapp_submit",
   "booking_requirements_completed_whatsapp_submit",
 ] as const;
@@ -18,6 +22,10 @@ export interface BookingFlowEventPayload {
   treatmentCount?: number;
   treatmentNames?: string[];
   totalValue?: number;
+  step?: 1 | 2 | 3;
+  closeReason?: string;
+  errorCode?: string;
+  errorMessage?: string;
   requirementsComplete?: boolean;
   requiredFieldsCompleted?: number;
   requiredFieldsTotal?: number;
@@ -31,8 +39,16 @@ export interface BookingFlowEventPayload {
 
 export interface BookingFlowMetricsSummary {
   sheetOpenCount: number;
+  stepOneViewCount: number;
+  stepTwoViewCount: number;
+  stepThreeViewCount: number;
+  sheetCloseCount: number;
+  validationErrorCount: number;
+  saveFailedCount: number;
   whatsappSubmitCount: number;
   completedWhatsappSubmitCount: number;
+  openToStepTwoRate: number | null;
+  stepThreeToSubmitRate: number | null;
   openToSubmitRate: number | null;
   submitCompletionRate: number | null;
   firstTrackedAt: string | null;
@@ -47,8 +63,16 @@ export interface BookingFlowMetricsFilters {
 export interface BookingFlowMetricsDailyRow {
   trackedDate: string;
   sheetOpenCount: number;
+  stepOneViewCount: number;
+  stepTwoViewCount: number;
+  stepThreeViewCount: number;
+  sheetCloseCount: number;
+  validationErrorCount: number;
+  saveFailedCount: number;
   whatsappSubmitCount: number;
   completedWhatsappSubmitCount: number;
+  openToStepTwoRate: number | null;
+  stepThreeToSubmitRate: number | null;
   openToSubmitRate: number | null;
   submitCompletionRate: number | null;
 }

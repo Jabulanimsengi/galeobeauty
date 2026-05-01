@@ -63,16 +63,44 @@ function isMissingRelationError(error: unknown) {
   );
 }
 
+function isBookingFlowSchemaDriftError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    ((error as { code?: string }).code === "42P01" ||
+      (error as { code?: string }).code === "23514")
+  );
+}
+
 function buildMetricsBreakdownRow({
   sheetOpenCount,
+  stepOneViewCount,
+  stepTwoViewCount,
+  stepThreeViewCount,
+  sheetCloseCount,
+  validationErrorCount,
+  saveFailedCount,
   whatsappSubmitCount,
   completedWhatsappSubmitCount,
 }: {
   sheetOpenCount: string | number | null | undefined;
+  stepOneViewCount?: string | number | null;
+  stepTwoViewCount?: string | number | null;
+  stepThreeViewCount?: string | number | null;
+  sheetCloseCount?: string | number | null;
+  validationErrorCount?: string | number | null;
+  saveFailedCount?: string | number | null;
   whatsappSubmitCount: string | number | null | undefined;
   completedWhatsappSubmitCount: string | number | null | undefined;
 }) {
   const normalizedSheetOpenCount = Number(sheetOpenCount ?? 0);
+  const normalizedStepOneViewCount = Number(stepOneViewCount ?? 0);
+  const normalizedStepTwoViewCount = Number(stepTwoViewCount ?? 0);
+  const normalizedStepThreeViewCount = Number(stepThreeViewCount ?? 0);
+  const normalizedSheetCloseCount = Number(sheetCloseCount ?? 0);
+  const normalizedValidationErrorCount = Number(validationErrorCount ?? 0);
+  const normalizedSaveFailedCount = Number(saveFailedCount ?? 0);
   const normalizedWhatsappSubmitCount = Number(whatsappSubmitCount ?? 0);
   const normalizedCompletedWhatsappSubmitCount = Number(
     completedWhatsappSubmitCount ?? 0
@@ -80,8 +108,22 @@ function buildMetricsBreakdownRow({
 
   return {
     sheetOpenCount: normalizedSheetOpenCount,
+    stepOneViewCount: normalizedStepOneViewCount,
+    stepTwoViewCount: normalizedStepTwoViewCount,
+    stepThreeViewCount: normalizedStepThreeViewCount,
+    sheetCloseCount: normalizedSheetCloseCount,
+    validationErrorCount: normalizedValidationErrorCount,
+    saveFailedCount: normalizedSaveFailedCount,
     whatsappSubmitCount: normalizedWhatsappSubmitCount,
     completedWhatsappSubmitCount: normalizedCompletedWhatsappSubmitCount,
+    openToStepTwoRate:
+      normalizedSheetOpenCount > 0
+        ? normalizedStepTwoViewCount / normalizedSheetOpenCount
+        : null,
+    stepThreeToSubmitRate:
+      normalizedStepThreeViewCount > 0
+        ? normalizedWhatsappSubmitCount / normalizedStepThreeViewCount
+        : null,
     openToSubmitRate:
       normalizedSheetOpenCount > 0
         ? normalizedWhatsappSubmitCount / normalizedSheetOpenCount
@@ -150,7 +192,7 @@ export async function recordBookingFlowEvent(payload: BookingFlowEventPayload) {
     );
     return true;
   } catch (error) {
-    if (isMissingRelationError(error)) {
+    if (isBookingFlowSchemaDriftError(error)) {
       return false;
     }
 
@@ -181,6 +223,12 @@ export async function getBookingFlowMetricsDashboard(
     ] = await Promise.all([
       pool.query<{
         sheet_open_count: string;
+        step_one_view_count: string;
+        step_two_view_count: string;
+        step_three_view_count: string;
+        sheet_close_count: string;
+        validation_error_count: string;
+        save_failed_count: string;
         whatsapp_submit_count: string;
         completed_whatsapp_submit_count: string;
         first_tracked_at: string | null;
@@ -188,6 +236,12 @@ export async function getBookingFlowMetricsDashboard(
       }>(
         `select
           count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
+          count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '1')::text as step_one_view_count,
+          count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '2')::text as step_two_view_count,
+          count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '3')::text as step_three_view_count,
+          count(*) filter (where event_name = 'booking_sheet_close')::text as sheet_close_count,
+          count(*) filter (where event_name = 'booking_validation_error')::text as validation_error_count,
+          count(*) filter (where event_name = 'booking_save_failed')::text as save_failed_count,
           count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
           count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count,
           min(created_at)::text as first_tracked_at,
@@ -199,12 +253,24 @@ export async function getBookingFlowMetricsDashboard(
       pool.query<{
         tracked_date: string;
         sheet_open_count: string;
+        step_one_view_count: string;
+        step_two_view_count: string;
+        step_three_view_count: string;
+        sheet_close_count: string;
+        validation_error_count: string;
+        save_failed_count: string;
         whatsapp_submit_count: string;
         completed_whatsapp_submit_count: string;
       }>(
         `select
           ((created_at at time zone 'Africa/Johannesburg')::date)::text as tracked_date,
           count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
+          count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '1')::text as step_one_view_count,
+          count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '2')::text as step_two_view_count,
+          count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '3')::text as step_three_view_count,
+          count(*) filter (where event_name = 'booking_sheet_close')::text as sheet_close_count,
+          count(*) filter (where event_name = 'booking_validation_error')::text as validation_error_count,
+          count(*) filter (where event_name = 'booking_save_failed')::text as save_failed_count,
           count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
           count(*) filter (where event_name = 'booking_requirements_completed_whatsapp_submit')::text as completed_whatsapp_submit_count
         from booking_flow_events
@@ -297,6 +363,12 @@ export async function getBookingFlowMetricsDashboard(
 
     const row = summaryResult.rows[0];
     const sheetOpenCount = Number(row?.sheet_open_count ?? 0);
+    const stepOneViewCount = Number(row?.step_one_view_count ?? 0);
+    const stepTwoViewCount = Number(row?.step_two_view_count ?? 0);
+    const stepThreeViewCount = Number(row?.step_three_view_count ?? 0);
+    const sheetCloseCount = Number(row?.sheet_close_count ?? 0);
+    const validationErrorCount = Number(row?.validation_error_count ?? 0);
+    const saveFailedCount = Number(row?.save_failed_count ?? 0);
     const whatsappSubmitCount = Number(row?.whatsapp_submit_count ?? 0);
     const completedWhatsappSubmitCount = Number(
       row?.completed_whatsapp_submit_count ?? 0
@@ -304,8 +376,17 @@ export async function getBookingFlowMetricsDashboard(
 
     const summary: BookingFlowMetricsSummary = {
       sheetOpenCount,
+      stepOneViewCount,
+      stepTwoViewCount,
+      stepThreeViewCount,
+      sheetCloseCount,
+      validationErrorCount,
+      saveFailedCount,
       whatsappSubmitCount,
       completedWhatsappSubmitCount,
+      openToStepTwoRate: sheetOpenCount > 0 ? stepTwoViewCount / sheetOpenCount : null,
+      stepThreeToSubmitRate:
+        stepThreeViewCount > 0 ? whatsappSubmitCount / stepThreeViewCount : null,
       openToSubmitRate: sheetOpenCount > 0 ? whatsappSubmitCount / sheetOpenCount : null,
       submitCompletionRate:
         whatsappSubmitCount > 0
@@ -319,6 +400,12 @@ export async function getBookingFlowMetricsDashboard(
       trackedDate: dailyRow.tracked_date,
       ...buildMetricsBreakdownRow({
         sheetOpenCount: dailyRow.sheet_open_count,
+        stepOneViewCount: dailyRow.step_one_view_count,
+        stepTwoViewCount: dailyRow.step_two_view_count,
+        stepThreeViewCount: dailyRow.step_three_view_count,
+        sheetCloseCount: dailyRow.sheet_close_count,
+        validationErrorCount: dailyRow.validation_error_count,
+        saveFailedCount: dailyRow.save_failed_count,
         whatsappSubmitCount: dailyRow.whatsapp_submit_count,
         completedWhatsappSubmitCount: dailyRow.completed_whatsapp_submit_count,
       }),
@@ -382,8 +469,16 @@ export async function getBookingFlowMetricsDashboard(
       return {
         summary: {
           sheetOpenCount: 0,
+          stepOneViewCount: 0,
+          stepTwoViewCount: 0,
+          stepThreeViewCount: 0,
+          sheetCloseCount: 0,
+          validationErrorCount: 0,
+          saveFailedCount: 0,
           whatsappSubmitCount: 0,
           completedWhatsappSubmitCount: 0,
+          openToStepTwoRate: null,
+          stepThreeToSubmitRate: null,
           openToSubmitRate: null,
           submitCompletionRate: null,
           firstTrackedAt: null,

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { requireAdminAuth } from "@/lib/server/admin-auth";
 import { listBookings } from "@/lib/server/bookings-admin";
 import { getBookingFlowMetricsDashboard } from "@/lib/server/booking-flow-analytics";
+import { getSiteMonitoringMetrics } from "@/lib/server/site-monitoring-events";
 import { BOOKING_STATUSES } from "@/lib/bookings-admin-shared";
 import { BookingsAdminClient } from "@/app/admin/bookings/BookingsAdminClient";
 import { LogoutButton } from "@/app/admin/bookings/LogoutButton";
@@ -220,6 +221,10 @@ function formatBookingTypeLabel(value: string) {
   return value.replace(/_/g, " ");
 }
 
+function formatEventNameLabel(value: string) {
+  return value.replace(/_/g, " ");
+}
+
 export default async function AdminBookingsPage({ searchParams }: BookingsPageProps) {
   const params = await searchParams;
   await requireAdminAuth("/admin/bookings");
@@ -241,7 +246,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
   const eventsFrom = params.eventsFrom?.trim() || "";
   const eventsTo = params.eventsTo?.trim() || "";
 
-  const [bookingResult, bookingFlowDashboard] = await Promise.all([
+  const [bookingResult, bookingFlowDashboard, siteMonitoringRows] = await Promise.all([
     listBookings({
       status,
       bookingType,
@@ -261,6 +266,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
       from: eventsFrom,
       to: eventsTo,
     }),
+    getSiteMonitoringMetrics(),
   ]);
 
   const exportHref = buildExportHref({
@@ -375,10 +381,10 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                   Booking flow dashboard
                 </h2>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/62">
-                  This view groups booking sheet events by the tracked event date in Africa/Johannesburg so you can audit opens, WhatsApp submits, and completed booking submissions for any selected range.
+                  This view groups booking sheet events by the tracked event date in Africa/Johannesburg so you can audit opens, step movement, abandons, WhatsApp submits, and completed booking submissions for any selected range.
                 </p>
                 <p className="mt-2 text-sm leading-7 text-foreground/52">
-                  These same booking flow events are also emitted to Google Analytics 4 with `booking_type`, `source`, `medium`, `campaign`, `landing_page`, and completion metadata.
+                  These same booking flow events are also emitted to Google Analytics 4 with `booking_type`, `source`, `medium`, `campaign`, `landing_page`, step, error, and completion metadata.
                 </p>
               </div>
 
@@ -526,13 +532,20 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
 
           <div className="mt-5 overflow-hidden rounded-[1.25rem] border border-black/8">
             <div className="overflow-auto">
-              <table className="min-w-[980px] w-full border-collapse">
+              <table className="min-w-[1320px] w-full border-collapse">
                 <thead className="bg-[#17120f] text-white">
                   <tr className="text-left">
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Event date</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Booking sheet opens</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 2 views</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 3 views</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Closes</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Validation errors</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Save failures</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">WhatsApp submits</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to step 2</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 3 to submit</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
                   </tr>
@@ -548,10 +561,31 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                       {bookingFlowDashboard.summary.sheetOpenCount.toLocaleString("en-ZA")}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.stepTwoViewCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.stepThreeViewCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.sheetCloseCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.validationErrorCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.saveFailedCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
                       {bookingFlowDashboard.summary.whatsappSubmitCount.toLocaleString("en-ZA")}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
                       {bookingFlowDashboard.summary.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {formatPercent(bookingFlowDashboard.summary.openToStepTwoRate)}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {formatPercent(bookingFlowDashboard.summary.stepThreeToSubmitRate)}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
                       {formatPercent(bookingFlowDashboard.summary.openToSubmitRate)}
@@ -571,10 +605,31 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                           {row.sheetOpenCount.toLocaleString("en-ZA")}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.stepTwoViewCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.stepThreeViewCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.sheetCloseCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.validationErrorCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.saveFailedCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
                           {row.whatsappSubmitCount.toLocaleString("en-ZA")}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
                           {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {formatPercent(row.openToStepTwoRate)}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {formatPercent(row.stepThreeToSubmitRate)}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
                           {formatPercent(row.openToSubmitRate)}
@@ -586,7 +641,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                     ))
                   ) : (
                     <tr className="bg-white">
-                      <td colSpan={6} className="px-4 py-10 text-center text-sm text-foreground/62">
+                      <td colSpan={13} className="px-4 py-10 text-center text-sm text-foreground/62">
                         No booking flow events matched the selected event date range.
                       </td>
                     </tr>
@@ -825,6 +880,55 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                   </tbody>
                 </table>
               </div>
+            </div>
+          </div>
+
+          <div className="mt-5 overflow-hidden rounded-[1.25rem] border border-black/8">
+            <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
+                Contact click monitoring
+              </p>
+              <p className="mt-2 text-sm text-foreground/58">
+                Server-side counts for WhatsApp, phone, directions, email, and external lead actions. These events are also still emitted to GA4.
+              </p>
+            </div>
+            <div className="overflow-auto">
+              <table className="min-w-[760px] w-full border-collapse">
+                <thead className="bg-[#17120f] text-white">
+                  <tr className="text-left">
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Event</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Count</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">First tracked</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Last tracked</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {siteMonitoringRows.length > 0 ? (
+                    siteMonitoringRows.map((row) => (
+                      <tr key={row.eventName} className="border-b border-black/6 bg-white last:border-b-0">
+                        <td className="px-4 py-4 text-sm font-medium capitalize text-[#17120f]">
+                          {formatEventNameLabel(row.eventName)}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.eventCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/62">
+                          {formatTrackedAt(row.firstTrackedAt)}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/62">
+                          {formatTrackedAt(row.lastTrackedAt)}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="bg-white">
+                      <td colSpan={4} className="px-4 py-8 text-center text-sm text-foreground/62">
+                        No server-side contact click events have been recorded yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>

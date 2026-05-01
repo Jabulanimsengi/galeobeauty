@@ -64,6 +64,26 @@ interface TrackBookingStepViewOptions extends TrackBookingFlowOptions {
   step: 1 | 2 | 3;
 }
 
+interface TrackBookingSheetCloseOptions extends TrackBookingFlowOptions {
+  step: 1 | 2 | 3;
+  closeReason?: string;
+}
+
+interface TrackBookingIssueOptions extends TrackBookingFlowOptions {
+  step: 1 | 2 | 3;
+  errorCode: string;
+  errorMessage?: string;
+  requirementsComplete?: boolean;
+  requiredFieldsCompleted?: number;
+  requiredFieldsTotal?: number;
+  hasRequiredName?: boolean;
+  hasRequiredPhone?: boolean;
+  hasRequiredDate?: boolean;
+  hasRequiredTimeSlot?: boolean;
+  hasRequiredTreatments?: boolean;
+  hasOptionalEmail?: boolean;
+}
+
 interface BuildTrackedWhatsAppUrlOptions {
   phone: string;
   message: string;
@@ -276,19 +296,30 @@ export function trackWhatsAppClick({
   context,
   currentPage,
 }: TrackWhatsAppClickOptions) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+  if (typeof window === "undefined") {
     return;
   }
 
-  window.gtag("event", "whatsapp_click", {
+  const payload = {
     event_category: "lead",
     event_label: context ?? "general_whatsapp_click",
+    link_type: "whatsapp",
+    link_context: context,
     lead_channel: "whatsapp",
     source: attribution?.lastTouch.source ?? "direct",
     medium: attribution?.lastTouch.medium ?? "none",
     campaign: attribution?.lastTouch.campaign ?? "(not set)",
     landing_page: attribution?.lastTouch.landingPage ?? "/",
     enquiry_page: normalizePath(currentPage),
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "whatsapp_click", payload);
+  }
+
+  recordSiteMonitoringEventToServer("whatsapp_click", {
+    ...payload,
+    destination_host: "wa.me",
   });
 }
 
@@ -367,7 +398,7 @@ export function trackExternalLinkClick({
   linkType,
   linkLabel,
 }: TrackExternalLinkClickOptions) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+  if (typeof window === "undefined") {
     return;
   }
 
@@ -381,7 +412,7 @@ export function trackExternalLinkClick({
     }
   }
 
-  window.gtag("event", "external_link_click", {
+  const payload = {
     event_category: "engagement",
     event_label: context ?? linkLabel ?? href,
     link_type: linkType ?? "external",
@@ -394,7 +425,13 @@ export function trackExternalLinkClick({
     campaign: attribution?.lastTouch.campaign ?? "(not set)",
     landing_page: attribution?.lastTouch.landingPage ?? "/",
     enquiry_page: normalizePath(currentPage),
-  });
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "external_link_click", payload);
+  }
+
+  recordSiteMonitoringEventToServer(getSiteClickEventName(linkType), payload);
 }
 
 function buildBookingFlowPayload({
@@ -423,9 +460,17 @@ function buildBookingFlowPayload({
 function recordBookingFlowEventToServer(
   eventName:
     | "booking_sheet_open"
+    | "booking_step_view"
+    | "booking_sheet_close"
+    | "booking_validation_error"
+    | "booking_save_failed"
     | "booking_whatsapp_submit"
     | "booking_requirements_completed_whatsapp_submit",
   payload: ReturnType<typeof buildBookingFlowPayload> & {
+    step?: 1 | 2 | 3;
+    close_reason?: string;
+    error_code?: string;
+    error_message?: string;
     value?: number;
     currency?: string;
     requirements_complete?: boolean;
@@ -457,6 +502,10 @@ function recordBookingFlowEventToServer(
       ? payload.treatment_names.split(" | ").filter(Boolean)
       : undefined,
     totalValue: payload.value,
+    step: payload.step,
+    closeReason: payload.close_reason,
+    errorCode: payload.error_code,
+    errorMessage: payload.error_message,
     requirementsComplete: payload.requirements_complete,
     requiredFieldsCompleted: payload.required_fields_completed,
     requiredFieldsTotal: payload.required_fields_total,
@@ -468,13 +517,21 @@ function recordBookingFlowEventToServer(
     hasOptionalEmail: payload.has_optional_email,
   });
 
-  if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
-    const blob = new Blob([body], { type: "application/json" });
-    navigator.sendBeacon("/api/analytics/booking-flow", blob);
+  sendAnalyticsBeacon("/api/analytics/booking-flow", body);
+}
+
+function sendAnalyticsBeacon(endpoint: string, body: string) {
+  if (typeof window === "undefined") {
     return;
   }
 
-  void fetch("/api/analytics/booking-flow", {
+  if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+    const blob = new Blob([body], { type: "application/json" });
+    navigator.sendBeacon(endpoint, blob);
+    return;
+  }
+
+  void fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -482,8 +539,70 @@ function recordBookingFlowEventToServer(
     body,
     keepalive: true,
   }).catch(() => {
-    // Analytics failures should never block booking UX.
+    // Analytics failures should never block user flows.
   });
+}
+
+function getSiteClickEventName(linkType?: string) {
+  if (linkType === "phone") {
+    return "phone_click";
+  }
+
+  if (linkType === "maps") {
+    return "directions_click";
+  }
+
+  if (linkType === "email") {
+    return "email_click";
+  }
+
+  return "external_link_click";
+}
+
+function recordSiteMonitoringEventToServer(
+  eventName:
+    | "whatsapp_click"
+    | "phone_click"
+    | "directions_click"
+    | "email_click"
+    | "external_link_click",
+  payload: {
+    event_category: string;
+    event_label?: string;
+    link_type?: string;
+    link_label?: string;
+    link_context?: string;
+    destination_url?: string;
+    destination_host?: string;
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    landing_page?: string;
+    enquiry_page?: string;
+  }
+) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  sendAnalyticsBeacon(
+    "/api/analytics/site-event",
+    JSON.stringify({
+      eventName,
+      eventCategory: payload.event_category,
+      eventLabel: payload.event_label,
+      linkType: payload.link_type,
+      linkLabel: payload.link_label,
+      linkContext: payload.link_context,
+      destinationUrl: payload.destination_url,
+      destinationHost: payload.destination_host,
+      source: payload.source,
+      medium: payload.medium,
+      campaign: payload.campaign,
+      landingPage: payload.landing_page,
+      enquiryPage: payload.enquiry_page,
+    })
+  );
 }
 
 export function trackBookingSheetOpen(options: TrackBookingFlowOptions) {
@@ -504,14 +623,123 @@ export function trackBookingStepView({
   step,
   ...options
 }: TrackBookingStepViewOptions) {
-  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+  if (typeof window === "undefined") {
     return;
   }
 
-  window.gtag("event", "booking_step_view", {
+  const payload = {
     ...buildBookingFlowPayload(options),
     step,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_step_view", payload);
+  }
+
+  recordBookingFlowEventToServer("booking_step_view", payload);
+}
+
+export function trackBookingSheetClose({
+  step,
+  closeReason,
+  ...options
+}: TrackBookingSheetCloseOptions) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    close_reason: closeReason ?? "dismissed",
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_sheet_close", payload);
+  }
+
+  recordBookingFlowEventToServer("booking_sheet_close", payload);
+}
+
+export function trackBookingValidationError({
+  step,
+  errorCode,
+  errorMessage,
+  requirementsComplete,
+  requiredFieldsCompleted,
+  requiredFieldsTotal,
+  hasRequiredName,
+  hasRequiredPhone,
+  hasRequiredDate,
+  hasRequiredTimeSlot,
+  hasRequiredTreatments,
+  hasOptionalEmail,
+  ...options
+}: TrackBookingIssueOptions) {
+  trackBookingIssue("booking_validation_error", {
+    ...options,
+    step,
+    errorCode,
+    errorMessage,
+    requirementsComplete,
+    requiredFieldsCompleted,
+    requiredFieldsTotal,
+    hasRequiredName,
+    hasRequiredPhone,
+    hasRequiredDate,
+    hasRequiredTimeSlot,
+    hasRequiredTreatments,
+    hasOptionalEmail,
   });
+}
+
+export function trackBookingSaveFailed(options: TrackBookingIssueOptions) {
+  trackBookingIssue("booking_save_failed", options);
+}
+
+function trackBookingIssue(
+  eventName: "booking_validation_error" | "booking_save_failed",
+  {
+    step,
+    errorCode,
+    errorMessage,
+    requirementsComplete,
+    requiredFieldsCompleted,
+    requiredFieldsTotal,
+    hasRequiredName,
+    hasRequiredPhone,
+    hasRequiredDate,
+    hasRequiredTimeSlot,
+    hasRequiredTreatments,
+    hasOptionalEmail,
+    ...options
+  }: TrackBookingIssueOptions
+) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    error_code: errorCode,
+    error_message: errorMessage,
+    requirements_complete: requirementsComplete,
+    required_fields_completed: requiredFieldsCompleted,
+    required_fields_total: requiredFieldsTotal,
+    has_required_name: hasRequiredName,
+    has_required_phone: hasRequiredPhone,
+    has_required_date: hasRequiredDate,
+    has_required_time_slot: hasRequiredTimeSlot,
+    has_required_treatments: hasRequiredTreatments,
+    has_optional_email: hasOptionalEmail,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", eventName, payload);
+  }
+
+  recordBookingFlowEventToServer(eventName, payload);
 }
 
 declare global {

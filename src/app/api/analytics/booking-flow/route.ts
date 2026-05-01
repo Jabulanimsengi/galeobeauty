@@ -14,6 +14,10 @@ function isBookingType(value: string) {
   return value === "consultation" || value === "treatment";
 }
 
+function isBookingStep(value: unknown) {
+  return value === undefined || value === 1 || value === 2 || value === 3;
+}
+
 export async function POST(request: Request) {
   const rateLimit = checkRateLimitForRequest({
     request,
@@ -52,6 +56,13 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!isBookingStep(body.step)) {
+      return NextResponse.json(
+        { ok: false, error: "Invalid booking step." },
+        { status: 400, headers: { "Cache-Control": "no-store, max-age=0" } }
+      );
+    }
+
     await recordBookingFlowEvent({
       eventName: body.eventName,
       bookingType: body.bookingType,
@@ -64,6 +75,10 @@ export async function POST(request: Request) {
       treatmentCount: body.treatmentCount,
       treatmentNames: body.treatmentNames,
       totalValue: body.totalValue,
+      step: body.step,
+      closeReason: body.closeReason,
+      errorCode: body.errorCode,
+      errorMessage: body.errorMessage,
       requirementsComplete: body.requirementsComplete,
       requiredFieldsCompleted: body.requiredFieldsCompleted,
       requiredFieldsTotal: body.requiredFieldsTotal,
