@@ -8,6 +8,12 @@ import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import { BookingCart } from "@/components/booking/BookingCart";
 import { SelectedTreatment } from "@/lib/booking-types";
+import {
+    getStoredAttribution,
+    trackBookingTreatmentAdded,
+    trackBookingTreatmentRemoved,
+    trackServiceCtaClick,
+} from "@/lib/attribution";
 import { CANONICAL_LOCAL_SERVICE_LOCATION_SLUG, getCanonicalLocationSlug, isIndexableLocationService, type SEOLocation } from "@/lib/seo-data";
 
 interface LocationServicesClientProps {
@@ -15,7 +21,7 @@ interface LocationServicesClientProps {
     location: SEOLocation;
 }
 
-export function LocationServicesClient({ locationSlug, location }: LocationServicesClientProps) {
+export function LocationServicesClient({ locationSlug }: LocationServicesClientProps) {
     const detailsLocationSlug = getCanonicalLocationSlug(locationSlug);
     const canUseLocalServiceLinks =
         detailsLocationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
@@ -46,31 +52,96 @@ export function LocationServicesClient({ locationSlug, location }: LocationServi
         return selectedTreatments.some((t) => t.item.id === itemId);
     };
 
+    const getCurrentPage = () => (typeof window !== "undefined" ? window.location.pathname : "/");
+
     // Handle toggling treatment selection
     const handleToggleTreatment = (treatment: SelectedTreatment) => {
         const isSelected = isItemSelected(treatment.item.id);
         if (isSelected) {
-            setSelectedTreatments((prev) =>
-                prev.filter((t) => t.item.id !== treatment.item.id)
-            );
+            setSelectedTreatments((prev) => {
+                const nextTreatments = prev.filter((t) => t.item.id !== treatment.item.id);
+
+                trackBookingTreatmentRemoved({
+                    attribution: getStoredAttribution(),
+                    bookingType: "treatment",
+                    currentPage: getCurrentPage(),
+                    treatmentCount: nextTreatments.length,
+                    treatmentNames: nextTreatments.map((selected) => selected.item.name),
+                    treatmentName: treatment.item.name,
+                    actionContext: `location_services_${locationSlug}`,
+                });
+
+                return nextTreatments;
+            });
         } else {
-            setSelectedTreatments((prev) => [...prev, treatment]);
+            setSelectedTreatments((prev) => {
+                const nextTreatments = [...prev, treatment];
+
+                trackBookingTreatmentAdded({
+                    attribution: getStoredAttribution(),
+                    bookingType: "treatment",
+                    currentPage: getCurrentPage(),
+                    treatmentCount: nextTreatments.length,
+                    treatmentNames: nextTreatments.map((selected) => selected.item.name),
+                    treatmentName: treatment.item.name,
+                    actionContext: `location_services_${locationSlug}`,
+                });
+
+                return nextTreatments;
+            });
         }
     };
 
     // Handle removing treatment by index
     const handleRemoveTreatment = (index: number) => {
-        setSelectedTreatments((prev) => prev.filter((_, i) => i !== index));
+        setSelectedTreatments((prev) => {
+            const removedTreatment = prev[index];
+            const nextTreatments = prev.filter((_, i) => i !== index);
+
+            if (removedTreatment) {
+                trackBookingTreatmentRemoved({
+                    attribution: getStoredAttribution(),
+                    bookingType: "treatment",
+                    currentPage: getCurrentPage(),
+                    treatmentCount: nextTreatments.length,
+                    treatmentNames: nextTreatments.map((selected) => selected.item.name),
+                    treatmentName: removedTreatment.item.name,
+                    actionContext: `location_summary_${locationSlug}`,
+                });
+            }
+
+            return nextTreatments;
+        });
     };
 
     // Handle clearing all treatments
     const handleClearAll = () => {
+        for (const treatment of selectedTreatments) {
+            trackBookingTreatmentRemoved({
+                attribution: getStoredAttribution(),
+                bookingType: "treatment",
+                currentPage: getCurrentPage(),
+                treatmentCount: 0,
+                treatmentNames: [],
+                treatmentName: treatment.item.name,
+                actionContext: `location_clear_all_${locationSlug}`,
+            });
+        }
         setSelectedTreatments([]);
     };
 
     // Handle opening booking sheet
     const handleOpenBooking = () => {
         if (selectedTreatments.length > 0) {
+            trackServiceCtaClick({
+                attribution: getStoredAttribution(),
+                bookingType: "treatment",
+                currentPage: getCurrentPage(),
+                treatmentCount: selectedTreatments.length,
+                treatmentNames: selectedTreatments.map((selected) => selected.item.name),
+                ctaContext: `location_selected_treatments_${locationSlug}`,
+                ctaLabel: "continue",
+            });
             setIsBookingOpen(true);
         }
     };

@@ -32,11 +32,14 @@ import {
 import {
   buildTrackedWhatsAppUrl,
   getStoredAttribution,
+  trackBookingDateSelected,
+  trackBookingIdleAbandon,
   trackBookingSheetOpen,
   trackBookingSheetClose,
   trackBookingSaveFailed,
   trackBookingStepView,
   trackBookingSubmit,
+  trackBookingTimeSelected,
   trackBookingValidationError,
   trackWhatsAppClick,
 } from "@/lib/attribution";
@@ -177,6 +180,7 @@ export function BookingSheet({
   const dateRailRef = useRef<HTMLDivElement | null>(null);
   const hasTrackedOpenRef = useRef(false);
   const hasCompletedSubmitRef = useRef(false);
+  const hasTrackedIdleAbandonRef = useRef(false);
   const dateOptions = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -271,6 +275,7 @@ export function BookingSheet({
   useEffect(() => {
     if (!isOpen) {
       hasTrackedOpenRef.current = false;
+      hasTrackedIdleAbandonRef.current = false;
       return;
     }
 
@@ -292,6 +297,37 @@ export function BookingSheet({
       consultationContext,
     });
   }, [bookingType, consultationContext, isOpen, treatmentCount, treatmentNames]);
+
+  useEffect(() => {
+    if (!isOpen || hasCompletedSubmitRef.current) {
+      return;
+    }
+
+    hasTrackedIdleAbandonRef.current = false;
+    const idleSeconds = 60;
+    const timeoutId = window.setTimeout(() => {
+      if (!hasTrackedOpenRef.current || hasCompletedSubmitRef.current || hasTrackedIdleAbandonRef.current) {
+        return;
+      }
+
+      hasTrackedIdleAbandonRef.current = true;
+      const attribution = getStoredAttribution();
+      const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+
+      trackBookingIdleAbandon({
+        attribution,
+        bookingType,
+        currentPage,
+        step: state.currentStep,
+        treatmentCount,
+        treatmentNames,
+        consultationContext,
+        idleSeconds,
+      });
+    }, idleSeconds * 1000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [bookingType, consultationContext, isOpen, state, treatmentCount, treatmentNames]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -362,6 +398,7 @@ export function BookingSheet({
 
     hasTrackedOpenRef.current = false;
     hasCompletedSubmitRef.current = false;
+    hasTrackedIdleAbandonRef.current = false;
     setState({
       ...initialBookingState,
     });
@@ -386,6 +423,32 @@ export function BookingSheet({
       ...prev,
       appointment: { ...prev.appointment, [field]: value },
     }));
+
+    if (field === "date" || field === "timeSlot") {
+      const attribution = getStoredAttribution();
+      const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+      const sharedPayload = {
+        attribution,
+        bookingType,
+        currentPage,
+        step: state.currentStep,
+        treatmentCount,
+        treatmentNames,
+        consultationContext,
+      };
+
+      if (field === "date") {
+        trackBookingDateSelected({
+          ...sharedPayload,
+          selectedDate: value,
+        });
+      } else {
+        trackBookingTimeSelected({
+          ...sharedPayload,
+          selectedTimeSlot: value,
+        });
+      }
+    }
   }
 
   // Navigation

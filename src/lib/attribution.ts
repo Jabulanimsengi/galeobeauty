@@ -60,13 +60,40 @@ interface TrackBookingFlowOptions {
   consultationContext?: string;
 }
 
+interface TrackServiceCtaClickOptions extends TrackBookingFlowOptions {
+  ctaContext?: string;
+  ctaLabel?: string;
+  step?: 1 | 2 | 3;
+}
+
+interface TrackBookingTreatmentSelectionOptions extends TrackBookingFlowOptions {
+  step?: 1 | 2 | 3;
+  treatmentName?: string;
+  actionContext?: string;
+}
+
 interface TrackBookingStepViewOptions extends TrackBookingFlowOptions {
   step: 1 | 2 | 3;
+}
+
+interface TrackBookingDateSelectedOptions extends TrackBookingFlowOptions {
+  step: 1 | 2 | 3;
+  selectedDate: string;
+}
+
+interface TrackBookingTimeSelectedOptions extends TrackBookingFlowOptions {
+  step: 1 | 2 | 3;
+  selectedTimeSlot: string;
 }
 
 interface TrackBookingSheetCloseOptions extends TrackBookingFlowOptions {
   step: 1 | 2 | 3;
   closeReason?: string;
+}
+
+interface TrackBookingIdleAbandonOptions extends TrackBookingFlowOptions {
+  step: 1 | 2 | 3;
+  idleSeconds: number;
 }
 
 interface TrackBookingIssueOptions extends TrackBookingFlowOptions {
@@ -459,9 +486,15 @@ function buildBookingFlowPayload({
 
 function recordBookingFlowEventToServer(
   eventName:
+    | "service_cta_click"
+    | "booking_treatment_added"
+    | "booking_treatment_removed"
     | "booking_sheet_open"
     | "booking_step_view"
+    | "booking_date_selected"
+    | "booking_time_selected"
     | "booking_sheet_close"
+    | "booking_idle_abandon"
     | "booking_validation_error"
     | "booking_save_failed"
     | "booking_whatsapp_submit"
@@ -471,6 +504,11 @@ function recordBookingFlowEventToServer(
     close_reason?: string;
     error_code?: string;
     error_message?: string;
+    action_context?: string;
+    action_label?: string;
+    selected_date?: string;
+    selected_time_slot?: string;
+    idle_seconds?: number;
     value?: number;
     currency?: string;
     requirements_complete?: boolean;
@@ -506,6 +544,11 @@ function recordBookingFlowEventToServer(
     closeReason: payload.close_reason,
     errorCode: payload.error_code,
     errorMessage: payload.error_message,
+    actionContext: payload.action_context,
+    actionLabel: payload.action_label,
+    selectedDate: payload.selected_date,
+    selectedTimeSlot: payload.selected_time_slot,
+    idleSeconds: payload.idle_seconds,
     requirementsComplete: payload.requirements_complete,
     requiredFieldsCompleted: payload.required_fields_completed,
     requiredFieldsTotal: payload.required_fields_total,
@@ -605,6 +648,65 @@ function recordSiteMonitoringEventToServer(
   );
 }
 
+export function trackServiceCtaClick({
+  ctaContext,
+  ctaLabel,
+  step,
+  ...options
+}: TrackServiceCtaClickOptions) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    action_context: ctaContext,
+    action_label: ctaLabel,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "service_cta_click", payload);
+  }
+
+  recordBookingFlowEventToServer("service_cta_click", payload);
+}
+
+export function trackBookingTreatmentAdded(options: TrackBookingTreatmentSelectionOptions) {
+  trackBookingTreatmentSelection("booking_treatment_added", options);
+}
+
+export function trackBookingTreatmentRemoved(options: TrackBookingTreatmentSelectionOptions) {
+  trackBookingTreatmentSelection("booking_treatment_removed", options);
+}
+
+function trackBookingTreatmentSelection(
+  eventName: "booking_treatment_added" | "booking_treatment_removed",
+  {
+    step,
+    treatmentName,
+    actionContext,
+    ...options
+  }: TrackBookingTreatmentSelectionOptions
+) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    action_context: actionContext,
+    action_label: treatmentName,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", eventName, payload);
+  }
+
+  recordBookingFlowEventToServer(eventName, payload);
+}
+
 export function trackBookingSheetOpen(options: TrackBookingFlowOptions) {
   if (typeof window === "undefined") {
     return;
@@ -639,6 +741,50 @@ export function trackBookingStepView({
   recordBookingFlowEventToServer("booking_step_view", payload);
 }
 
+export function trackBookingDateSelected({
+  step,
+  selectedDate,
+  ...options
+}: TrackBookingDateSelectedOptions) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    selected_date: selectedDate,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_date_selected", payload);
+  }
+
+  recordBookingFlowEventToServer("booking_date_selected", payload);
+}
+
+export function trackBookingTimeSelected({
+  step,
+  selectedTimeSlot,
+  ...options
+}: TrackBookingTimeSelectedOptions) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    selected_time_slot: selectedTimeSlot,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_time_selected", payload);
+  }
+
+  recordBookingFlowEventToServer("booking_time_selected", payload);
+}
+
 export function trackBookingSheetClose({
   step,
   closeReason,
@@ -659,6 +805,28 @@ export function trackBookingSheetClose({
   }
 
   recordBookingFlowEventToServer("booking_sheet_close", payload);
+}
+
+export function trackBookingIdleAbandon({
+  step,
+  idleSeconds,
+  ...options
+}: TrackBookingIdleAbandonOptions) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const payload = {
+    ...buildBookingFlowPayload(options),
+    step,
+    idle_seconds: idleSeconds,
+  };
+
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "booking_idle_abandon", payload);
+  }
+
+  recordBookingFlowEventToServer("booking_idle_abandon", payload);
 }
 
 export function trackBookingValidationError({

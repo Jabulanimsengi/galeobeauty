@@ -8,6 +8,12 @@ import { useEffect, useMemo, useState } from "react";
 import { TreatmentListItem } from "@/components/booking/TreatmentListItem";
 import { SelectedTreatment } from "@/lib/booking-types";
 import { ChevronDown } from "lucide-react";
+import {
+    getStoredAttribution,
+    trackBookingTreatmentAdded,
+    trackBookingTreatmentRemoved,
+    trackServiceCtaClick,
+} from "@/lib/attribution";
 
 const BookingSheet = dynamic(
     () => import("@/components/booking/BookingSheet").then((mod) => mod.BookingSheet)
@@ -158,31 +164,96 @@ export function ServicesClient({ categoryParam, queryParam = "" }: ServicesClien
         return selectedTreatments.some((t) => t.item.id === itemId);
     };
 
+    const getCurrentPage = () => (typeof window !== "undefined" ? window.location.pathname : "/");
+
     // Handle toggling treatment selection
     const handleToggleTreatment = (treatment: SelectedTreatment) => {
         const isSelected = isItemSelected(treatment.item.id);
         if (isSelected) {
-            setSelectedTreatments((prev) =>
-                prev.filter((t) => t.item.id !== treatment.item.id)
-            );
+            setSelectedTreatments((prev) => {
+                const nextTreatments = prev.filter((t) => t.item.id !== treatment.item.id);
+
+                trackBookingTreatmentRemoved({
+                    attribution: getStoredAttribution(),
+                    bookingType: "treatment",
+                    currentPage: getCurrentPage(),
+                    treatmentCount: nextTreatments.length,
+                    treatmentNames: nextTreatments.map((selected) => selected.item.name),
+                    treatmentName: treatment.item.name,
+                    actionContext: "services_menu",
+                });
+
+                return nextTreatments;
+            });
         } else {
-            setSelectedTreatments((prev) => [...prev, treatment]);
+            setSelectedTreatments((prev) => {
+                const nextTreatments = [...prev, treatment];
+
+                trackBookingTreatmentAdded({
+                    attribution: getStoredAttribution(),
+                    bookingType: "treatment",
+                    currentPage: getCurrentPage(),
+                    treatmentCount: nextTreatments.length,
+                    treatmentNames: nextTreatments.map((selected) => selected.item.name),
+                    treatmentName: treatment.item.name,
+                    actionContext: "services_menu",
+                });
+
+                return nextTreatments;
+            });
         }
     };
 
     // Handle removing treatment by index
     const handleRemoveTreatment = (index: number) => {
-        setSelectedTreatments((prev) => prev.filter((_, i) => i !== index));
+        setSelectedTreatments((prev) => {
+            const removedTreatment = prev[index];
+            const nextTreatments = prev.filter((_, i) => i !== index);
+
+            if (removedTreatment) {
+                trackBookingTreatmentRemoved({
+                    attribution: getStoredAttribution(),
+                    bookingType: "treatment",
+                    currentPage: getCurrentPage(),
+                    treatmentCount: nextTreatments.length,
+                    treatmentNames: nextTreatments.map((selected) => selected.item.name),
+                    treatmentName: removedTreatment.item.name,
+                    actionContext: "services_summary",
+                });
+            }
+
+            return nextTreatments;
+        });
     };
 
     // Handle clearing all treatments
     const handleClearAll = () => {
+        for (const treatment of selectedTreatments) {
+            trackBookingTreatmentRemoved({
+                attribution: getStoredAttribution(),
+                bookingType: "treatment",
+                currentPage: getCurrentPage(),
+                treatmentCount: 0,
+                treatmentNames: [],
+                treatmentName: treatment.item.name,
+                actionContext: "services_clear_all",
+            });
+        }
         setSelectedTreatments([]);
     };
 
     // Handle opening booking sheet
     const handleOpenBooking = () => {
         if (selectedTreatments.length > 0) {
+            trackServiceCtaClick({
+                attribution: getStoredAttribution(),
+                bookingType: "treatment",
+                currentPage: getCurrentPage(),
+                treatmentCount: selectedTreatments.length,
+                treatmentNames: selectedTreatments.map((selected) => selected.item.name),
+                ctaContext: "services_selected_treatments",
+                ctaLabel: "continue",
+            });
             setIsBookingOpen(true);
         }
     };

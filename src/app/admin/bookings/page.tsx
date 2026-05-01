@@ -532,14 +532,20 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
 
           <div className="mt-5 overflow-hidden rounded-[1.25rem] border border-black/8">
             <div className="overflow-auto">
-              <table className="min-w-[1320px] w-full border-collapse">
+              <table className="min-w-[1720px] w-full border-collapse">
                 <thead className="bg-[#17120f] text-white">
                   <tr className="text-left">
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Event date</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Service CTA clicks</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments added</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments removed</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Booking sheet opens</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 2 views</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 3 views</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Dates selected</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Times selected</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Closes</th>
+                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Idle abandons</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Validation errors</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Save failures</th>
                     <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">WhatsApp submits</th>
@@ -558,6 +564,15 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                         : "All tracked dates"}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.serviceCtaClickCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.treatmentAddedCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.treatmentRemovedCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
                       {bookingFlowDashboard.summary.sheetOpenCount.toLocaleString("en-ZA")}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
@@ -567,7 +582,16 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                       {bookingFlowDashboard.summary.stepThreeViewCount.toLocaleString("en-ZA")}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.dateSelectedCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.timeSelectedCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
                       {bookingFlowDashboard.summary.sheetCloseCount.toLocaleString("en-ZA")}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-foreground/78">
+                      {bookingFlowDashboard.summary.idleAbandonCount.toLocaleString("en-ZA")}
                     </td>
                     <td className="px-4 py-4 text-sm text-foreground/78">
                       {bookingFlowDashboard.summary.validationErrorCount.toLocaleString("en-ZA")}
@@ -602,6 +626,15 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                           {formatEventDate(row.trackedDate)}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.serviceCtaClickCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.treatmentAddedCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.treatmentRemovedCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
                           {row.sheetOpenCount.toLocaleString("en-ZA")}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
@@ -611,7 +644,16 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                           {row.stepThreeViewCount.toLocaleString("en-ZA")}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.dateSelectedCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.timeSelectedCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
                           {row.sheetCloseCount.toLocaleString("en-ZA")}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-foreground/78">
+                          {row.idleAbandonCount.toLocaleString("en-ZA")}
                         </td>
                         <td className="px-4 py-4 text-sm text-foreground/78">
                           {row.validationErrorCount.toLocaleString("en-ZA")}
@@ -641,7 +683,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
                     ))
                   ) : (
                     <tr className="bg-white">
-                      <td colSpan={13} className="px-4 py-10 text-center text-sm text-foreground/62">
+                      <td colSpan={19} className="px-4 py-10 text-center text-sm text-foreground/62">
                         No booking flow events matched the selected event date range.
                       </td>
                     </tr>

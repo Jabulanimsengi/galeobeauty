@@ -74,31 +74,49 @@ function isBookingFlowSchemaDriftError(error: unknown) {
 }
 
 function buildMetricsBreakdownRow({
+  serviceCtaClickCount,
+  treatmentAddedCount,
+  treatmentRemovedCount,
   sheetOpenCount,
   stepOneViewCount,
   stepTwoViewCount,
   stepThreeViewCount,
+  dateSelectedCount,
+  timeSelectedCount,
   sheetCloseCount,
+  idleAbandonCount,
   validationErrorCount,
   saveFailedCount,
   whatsappSubmitCount,
   completedWhatsappSubmitCount,
 }: {
+  serviceCtaClickCount?: string | number | null;
+  treatmentAddedCount?: string | number | null;
+  treatmentRemovedCount?: string | number | null;
   sheetOpenCount: string | number | null | undefined;
   stepOneViewCount?: string | number | null;
   stepTwoViewCount?: string | number | null;
   stepThreeViewCount?: string | number | null;
+  dateSelectedCount?: string | number | null;
+  timeSelectedCount?: string | number | null;
   sheetCloseCount?: string | number | null;
+  idleAbandonCount?: string | number | null;
   validationErrorCount?: string | number | null;
   saveFailedCount?: string | number | null;
   whatsappSubmitCount: string | number | null | undefined;
   completedWhatsappSubmitCount: string | number | null | undefined;
 }) {
+  const normalizedServiceCtaClickCount = Number(serviceCtaClickCount ?? 0);
+  const normalizedTreatmentAddedCount = Number(treatmentAddedCount ?? 0);
+  const normalizedTreatmentRemovedCount = Number(treatmentRemovedCount ?? 0);
   const normalizedSheetOpenCount = Number(sheetOpenCount ?? 0);
   const normalizedStepOneViewCount = Number(stepOneViewCount ?? 0);
   const normalizedStepTwoViewCount = Number(stepTwoViewCount ?? 0);
   const normalizedStepThreeViewCount = Number(stepThreeViewCount ?? 0);
+  const normalizedDateSelectedCount = Number(dateSelectedCount ?? 0);
+  const normalizedTimeSelectedCount = Number(timeSelectedCount ?? 0);
   const normalizedSheetCloseCount = Number(sheetCloseCount ?? 0);
+  const normalizedIdleAbandonCount = Number(idleAbandonCount ?? 0);
   const normalizedValidationErrorCount = Number(validationErrorCount ?? 0);
   const normalizedSaveFailedCount = Number(saveFailedCount ?? 0);
   const normalizedWhatsappSubmitCount = Number(whatsappSubmitCount ?? 0);
@@ -107,11 +125,17 @@ function buildMetricsBreakdownRow({
   );
 
   return {
+    serviceCtaClickCount: normalizedServiceCtaClickCount,
+    treatmentAddedCount: normalizedTreatmentAddedCount,
+    treatmentRemovedCount: normalizedTreatmentRemovedCount,
     sheetOpenCount: normalizedSheetOpenCount,
     stepOneViewCount: normalizedStepOneViewCount,
     stepTwoViewCount: normalizedStepTwoViewCount,
     stepThreeViewCount: normalizedStepThreeViewCount,
+    dateSelectedCount: normalizedDateSelectedCount,
+    timeSelectedCount: normalizedTimeSelectedCount,
     sheetCloseCount: normalizedSheetCloseCount,
+    idleAbandonCount: normalizedIdleAbandonCount,
     validationErrorCount: normalizedValidationErrorCount,
     saveFailedCount: normalizedSaveFailedCount,
     whatsappSubmitCount: normalizedWhatsappSubmitCount,
@@ -223,10 +247,16 @@ export async function getBookingFlowMetricsDashboard(
     ] = await Promise.all([
       pool.query<{
         sheet_open_count: string;
+        service_cta_click_count: string;
+        treatment_added_count: string;
+        treatment_removed_count: string;
         step_one_view_count: string;
         step_two_view_count: string;
         step_three_view_count: string;
+        date_selected_count: string;
+        time_selected_count: string;
         sheet_close_count: string;
+        idle_abandon_count: string;
         validation_error_count: string;
         save_failed_count: string;
         whatsapp_submit_count: string;
@@ -235,11 +265,17 @@ export async function getBookingFlowMetricsDashboard(
         last_tracked_at: string | null;
       }>(
         `select
+          count(*) filter (where event_name = 'service_cta_click')::text as service_cta_click_count,
+          count(*) filter (where event_name = 'booking_treatment_added')::text as treatment_added_count,
+          count(*) filter (where event_name = 'booking_treatment_removed')::text as treatment_removed_count,
           count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
           count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '1')::text as step_one_view_count,
           count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '2')::text as step_two_view_count,
           count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '3')::text as step_three_view_count,
+          count(*) filter (where event_name = 'booking_date_selected')::text as date_selected_count,
+          count(*) filter (where event_name = 'booking_time_selected')::text as time_selected_count,
           count(*) filter (where event_name = 'booking_sheet_close')::text as sheet_close_count,
+          count(*) filter (where event_name = 'booking_idle_abandon')::text as idle_abandon_count,
           count(*) filter (where event_name = 'booking_validation_error')::text as validation_error_count,
           count(*) filter (where event_name = 'booking_save_failed')::text as save_failed_count,
           count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
@@ -253,10 +289,16 @@ export async function getBookingFlowMetricsDashboard(
       pool.query<{
         tracked_date: string;
         sheet_open_count: string;
+        service_cta_click_count: string;
+        treatment_added_count: string;
+        treatment_removed_count: string;
         step_one_view_count: string;
         step_two_view_count: string;
         step_three_view_count: string;
+        date_selected_count: string;
+        time_selected_count: string;
         sheet_close_count: string;
+        idle_abandon_count: string;
         validation_error_count: string;
         save_failed_count: string;
         whatsapp_submit_count: string;
@@ -264,11 +306,17 @@ export async function getBookingFlowMetricsDashboard(
       }>(
         `select
           ((created_at at time zone 'Africa/Johannesburg')::date)::text as tracked_date,
+          count(*) filter (where event_name = 'service_cta_click')::text as service_cta_click_count,
+          count(*) filter (where event_name = 'booking_treatment_added')::text as treatment_added_count,
+          count(*) filter (where event_name = 'booking_treatment_removed')::text as treatment_removed_count,
           count(*) filter (where event_name = 'booking_sheet_open')::text as sheet_open_count,
           count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '1')::text as step_one_view_count,
           count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '2')::text as step_two_view_count,
           count(*) filter (where event_name = 'booking_step_view' and metadata->>'step' = '3')::text as step_three_view_count,
+          count(*) filter (where event_name = 'booking_date_selected')::text as date_selected_count,
+          count(*) filter (where event_name = 'booking_time_selected')::text as time_selected_count,
           count(*) filter (where event_name = 'booking_sheet_close')::text as sheet_close_count,
+          count(*) filter (where event_name = 'booking_idle_abandon')::text as idle_abandon_count,
           count(*) filter (where event_name = 'booking_validation_error')::text as validation_error_count,
           count(*) filter (where event_name = 'booking_save_failed')::text as save_failed_count,
           count(*) filter (where event_name = 'booking_whatsapp_submit')::text as whatsapp_submit_count,
@@ -362,11 +410,17 @@ export async function getBookingFlowMetricsDashboard(
     ]);
 
     const row = summaryResult.rows[0];
+    const serviceCtaClickCount = Number(row?.service_cta_click_count ?? 0);
+    const treatmentAddedCount = Number(row?.treatment_added_count ?? 0);
+    const treatmentRemovedCount = Number(row?.treatment_removed_count ?? 0);
     const sheetOpenCount = Number(row?.sheet_open_count ?? 0);
     const stepOneViewCount = Number(row?.step_one_view_count ?? 0);
     const stepTwoViewCount = Number(row?.step_two_view_count ?? 0);
     const stepThreeViewCount = Number(row?.step_three_view_count ?? 0);
+    const dateSelectedCount = Number(row?.date_selected_count ?? 0);
+    const timeSelectedCount = Number(row?.time_selected_count ?? 0);
     const sheetCloseCount = Number(row?.sheet_close_count ?? 0);
+    const idleAbandonCount = Number(row?.idle_abandon_count ?? 0);
     const validationErrorCount = Number(row?.validation_error_count ?? 0);
     const saveFailedCount = Number(row?.save_failed_count ?? 0);
     const whatsappSubmitCount = Number(row?.whatsapp_submit_count ?? 0);
@@ -375,11 +429,17 @@ export async function getBookingFlowMetricsDashboard(
     );
 
     const summary: BookingFlowMetricsSummary = {
+      serviceCtaClickCount,
+      treatmentAddedCount,
+      treatmentRemovedCount,
       sheetOpenCount,
       stepOneViewCount,
       stepTwoViewCount,
       stepThreeViewCount,
+      dateSelectedCount,
+      timeSelectedCount,
       sheetCloseCount,
+      idleAbandonCount,
       validationErrorCount,
       saveFailedCount,
       whatsappSubmitCount,
@@ -400,10 +460,16 @@ export async function getBookingFlowMetricsDashboard(
       trackedDate: dailyRow.tracked_date,
       ...buildMetricsBreakdownRow({
         sheetOpenCount: dailyRow.sheet_open_count,
+        serviceCtaClickCount: dailyRow.service_cta_click_count,
+        treatmentAddedCount: dailyRow.treatment_added_count,
+        treatmentRemovedCount: dailyRow.treatment_removed_count,
         stepOneViewCount: dailyRow.step_one_view_count,
         stepTwoViewCount: dailyRow.step_two_view_count,
         stepThreeViewCount: dailyRow.step_three_view_count,
+        dateSelectedCount: dailyRow.date_selected_count,
+        timeSelectedCount: dailyRow.time_selected_count,
         sheetCloseCount: dailyRow.sheet_close_count,
+        idleAbandonCount: dailyRow.idle_abandon_count,
         validationErrorCount: dailyRow.validation_error_count,
         saveFailedCount: dailyRow.save_failed_count,
         whatsappSubmitCount: dailyRow.whatsapp_submit_count,
@@ -468,11 +534,17 @@ export async function getBookingFlowMetricsDashboard(
     if (isMissingRelationError(error)) {
       return {
         summary: {
+          serviceCtaClickCount: 0,
+          treatmentAddedCount: 0,
+          treatmentRemovedCount: 0,
           sheetOpenCount: 0,
           stepOneViewCount: 0,
           stepTwoViewCount: 0,
           stepThreeViewCount: 0,
+          dateSelectedCount: 0,
+          timeSelectedCount: 0,
           sheetCloseCount: 0,
+          idleAbandonCount: 0,
           validationErrorCount: 0,
           saveFailedCount: 0,
           whatsappSubmitCount: 0,

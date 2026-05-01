@@ -1,7 +1,13 @@
 export const BOOKING_FLOW_EVENT_NAMES = [
+  "service_cta_click",
+  "booking_treatment_added",
+  "booking_treatment_removed",
   "booking_sheet_open",
   "booking_step_view",
+  "booking_date_selected",
+  "booking_time_selected",
   "booking_sheet_close",
+  "booking_idle_abandon",
   "booking_validation_error",
   "booking_save_failed",
   "booking_whatsapp_submit",
@@ -26,6 +32,11 @@ export interface BookingFlowEventPayload {
   closeReason?: string;
   errorCode?: string;
   errorMessage?: string;
+  actionContext?: string;
+  actionLabel?: string;
+  selectedDate?: string;
+  selectedTimeSlot?: string;
+  idleSeconds?: number;
   requirementsComplete?: boolean;
   requiredFieldsCompleted?: number;
   requiredFieldsTotal?: number;
@@ -38,11 +49,17 @@ export interface BookingFlowEventPayload {
 }
 
 export interface BookingFlowMetricsSummary {
+  serviceCtaClickCount: number;
+  treatmentAddedCount: number;
+  treatmentRemovedCount: number;
   sheetOpenCount: number;
   stepOneViewCount: number;
   stepTwoViewCount: number;
   stepThreeViewCount: number;
+  dateSelectedCount: number;
+  timeSelectedCount: number;
   sheetCloseCount: number;
+  idleAbandonCount: number;
   validationErrorCount: number;
   saveFailedCount: number;
   whatsappSubmitCount: number;
@@ -62,11 +79,17 @@ export interface BookingFlowMetricsFilters {
 
 export interface BookingFlowMetricsDailyRow {
   trackedDate: string;
+  serviceCtaClickCount: number;
+  treatmentAddedCount: number;
+  treatmentRemovedCount: number;
   sheetOpenCount: number;
   stepOneViewCount: number;
   stepTwoViewCount: number;
   stepThreeViewCount: number;
+  dateSelectedCount: number;
+  timeSelectedCount: number;
   sheetCloseCount: number;
+  idleAbandonCount: number;
   validationErrorCount: number;
   saveFailedCount: number;
   whatsappSubmitCount: number;
