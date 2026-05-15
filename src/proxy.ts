@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { serviceCategoriesContent } from './lib/services-content';
 import { resolveLegacyServiceRedirect } from './lib/legacy-service-redirects';
 import { isKnownLocationSlug } from './lib/location-route-manifest';
+import { INTENT_PAGE_REDIRECTS } from './lib/intent-redirects';
 
 const VALID_CATEGORIES = new Set<string>();
 const VALID_SERVICE_SLUGS = new Set<string>(
@@ -127,6 +128,15 @@ export function proxy(request: NextRequest) {
     newUrl.hostname = 'www.galeobeauty.com';
     newUrl.port = '';
     return NextResponse.redirect(newUrl, 301);
+  }
+
+  const flatIntentSlug = pathname.match(/^\/([^/]+)$/)?.[1];
+  const flatIntentRedirectPath = flatIntentSlug ? INTENT_PAGE_REDIRECTS[flatIntentSlug] : null;
+  if (flatIntentRedirectPath) {
+    return NextResponse.redirect(
+      new URL(flatIntentRedirectPath, request.url),
+      301
+    );
   }
 
   if (pathname === '/prices' || pathname.startsWith('/prices/')) {

@@ -10,7 +10,7 @@ import {
   HomepageLocationSection,
 } from "@/components/sections";
 import { businessInfo } from "@/lib/constants";
-import { getPublishedIntentPages } from "@/lib/intent-pages";
+import { getPublishedGuidePages } from "@/lib/intent-pages";
 import { buildHomepageKeywords } from "@/lib/seo-keywords";
 import { serviceCategories } from "@/lib/services-data";
 
@@ -93,7 +93,7 @@ const homepageFaqs = [
 ];
 
 export default function HomePage() {
-  const featuredGuides = getPublishedIntentPages().slice(0, 6);
+  const featuredGuides = getPublishedGuidePages().slice(0, 6);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -145,7 +145,7 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/10 pt-6">
+            <div className="mt-8 flex justify-center border-t border-white/10 pt-6">
               <NavLink
                 href="/services"
                 className="inline-flex items-center justify-center bg-white px-8 py-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#17120f] transition-colors duration-300 hover:bg-gold hover:text-white sm:text-sm"

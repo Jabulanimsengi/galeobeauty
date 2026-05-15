@@ -337,6 +337,15 @@ export const CANONICAL_LOCAL_SERVICE_LOCATION_SLUG = "hartbeespoort";
 
 const LOCATION_ALIAS_CANONICAL_MAP: Record<string, string> = {
     harties: CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
+    "hartbeespoort-dam": CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
+    "kosmos-village": "kosmos",
+    "pecanwood-estate": "pecanwood",
+    "xanadu-nature-estate": "xanadu",
+    "leloko-lifestyle-estate": "leloko",
+    "landsmeer-estate": "landsmeer",
+    "damdoryn-junction": "damdoryn",
+    "jasmyn-farm": "jasmyn",
+    "waterfall-city": "waterfall",
 };
 
 const BROAD_LOCATION_SLUGS = new Set(["south-africa", "gauteng", "north-west"]);
@@ -538,6 +547,10 @@ function getBroadHubCandidates(location: SEOLocation): SEOLocation[] {
             return false;
         }
 
+        if (getCanonicalLocationSlug(candidate.slug) !== candidate.slug) {
+            return false;
+        }
+
         if (location.slug !== "south-africa" && BROAD_LOCATION_SLUGS.has(candidate.slug)) {
             return false;
         }
@@ -564,10 +577,13 @@ export function supportsLocationServicePages(location: SEOLocation | undefined):
 export function getLocationIndexGroups(): LocationIndexGroup[] {
     const claimed = new Set<string>();
     const groups: LocationIndexGroup[] = [];
+    const canonicalLocations = TARGET_LOCATIONS.filter(
+        (location) => getCanonicalLocationSlug(location.slug) === location.slug
+    );
 
     for (const definition of LOCATION_INDEX_GROUP_DEFINITIONS) {
         const matches = sortLocationsByPriority(
-            TARGET_LOCATIONS.filter((location) => !claimed.has(location.slug) && definition.match(location)),
+            canonicalLocations.filter((location) => !claimed.has(location.slug) && definition.match(location)),
             definition.prioritySlugs
         );
 
@@ -587,7 +603,7 @@ export function getLocationIndexGroups(): LocationIndexGroup[] {
         });
     }
 
-    const remaining = TARGET_LOCATIONS.filter((location) => !claimed.has(location.slug));
+    const remaining = canonicalLocations.filter((location) => !claimed.has(location.slug));
     if (remaining.length > 0) {
         groups.push({
             title: "Additional Coverage",
@@ -755,6 +771,167 @@ export const HERO_SERVICES = [
 const IMPORTANT_LOCATION_HUB_SET = new Set<string>(IMPORTANT_LOCATION_HUB_SLUGS);
 const HERO_SERVICE_SET = new Set<string>(HERO_SERVICES);
 const IMPORTANT_LOCATION_SERVICE_BUILD_SET = new Set<string>(IMPORTANT_LOCATION_SERVICE_BUILD_SLUGS);
+const FULL_COVERAGE_LOCATION_SERVICE_SET = new Set<string>([
+    CANONICAL_LOCAL_SERVICE_LOCATION_SLUG,
+]);
+const NEARBY_COMMUTER_LOCATION_SERVICE_SET = new Set<string>(NEARBY_COMMUTER_ALL_SERVICE_LOCATIONS);
+const MAJOR_GAUTENG_HUB_LOCATION_SERVICE_SET = new Set<string>(MAJOR_GAUTENG_HUB_LOCATIONS);
+
+const STRATEGIC_LOCATION_SERVICE_SLUGS = [
+    ...HERO_SERVICES,
+    "botox",
+    "botox-short",
+    "botox-medium",
+    "tox-per-unit",
+    "undereye-1-treatment",
+    "undereye-2-treatments",
+    "cheek-fillers-1ml",
+    "cheek-fillers-2ml",
+    "full-body-massage",
+    "swedish-massage-60",
+    "deep-tissue-60",
+    "sports-massage-60",
+    "hot-stone-60",
+    "aromatherapy-60",
+    "back-neck-30",
+    "back-neck-45",
+    "bellabaci-45",
+    "bellabaci-90",
+    "wax-men-back",
+    "wax-tummy",
+    "wax-underarm",
+    "wax-half-arm",
+    "wax-full-arm",
+    "wax-eyebrow",
+    "wax-ear",
+    "lash-tint",
+    "brow-tint",
+    "brow-henna",
+    "full-manicure",
+    "pedicure-gel",
+    "designer-nails",
+    "mani-pedi-combo",
+    "nail-art",
+    "sunbed-session",
+    "sunbed-course-10",
+    "basic-facial",
+    "basic-facial-qms",
+    "keratin",
+    "pro-skin-60",
+    "pro-clear",
+    "pro-calm",
+    "pro-firm",
+    "pro-bright",
+    "hydraderm",
+    "age-smart-facial",
+    "dermaplaning-pro",
+    "pro-dermaplaning-30",
+    "pro-dermaplaning-full",
+];
+
+const CORE_LOCATION_SERVICE_SLUGS = [
+    "botox",
+    "tox-per-unit",
+    "balayage",
+    "keratin",
+    "lip-filler-1ml",
+    "russian-lip-1ml",
+    "dermal-filler-1ml",
+    "vaginal-tightening",
+    "iv-drip",
+    "fat-freezing-session",
+    "fat-freezing-2-cups",
+    "fat-freezing-4-cups",
+    "slimming-injection",
+    "full-body-massage",
+    "swedish-massage-60",
+    "deep-tissue-60",
+    "sports-massage-60",
+    "hot-stone-60",
+    "aromatherapy-60",
+    "wax-brazilian",
+    "wax-hollywood",
+    "wax-men-back",
+    "microblading",
+    "tattoo-removal",
+    "sunbed-session",
+    "sunbed-10",
+    "sunbed-20",
+    "spraytan",
+    "lash-lift-tint",
+    "lash-lamination",
+    "classic-lashes",
+    "brow-tint",
+    "brow-henna",
+    "pedicure",
+    "pedicure-gel",
+    "designer-nails",
+    "gel-overlay-hands",
+    "rubber-base",
+    "fractional-laser",
+    "chemical-peel",
+    "pro-microneedling",
+    "luminfusion",
+    "hydraderm",
+    "pro-clear",
+    "pro-calm",
+    "pro-skin-60",
+];
+
+const ESSENTIAL_LOCATION_SERVICE_SLUGS = [
+    "fat-freezing-session",
+    "fat-freezing-2-cups",
+    "slimming-injection",
+    "botox",
+    "tox-per-unit",
+    "lip-filler-1ml",
+    "russian-lip-1ml",
+    "dermal-filler-1ml",
+    "vaginal-tightening",
+    "full-body-massage",
+    "swedish-massage-60",
+    "deep-tissue-60",
+    "sports-massage-60",
+    "hot-stone-60",
+    "aromatherapy-60",
+    "wax-brazilian",
+    "wax-hollywood",
+    "wax-men-back",
+    "microblading",
+    "powderpixel-brows",
+    "tattoo-removal",
+    "ipl-brazilian",
+    "ipl-full-face",
+    "iv-drip",
+    "sunbed-session",
+    "sunbed-10",
+    "sunbed-20",
+    "lash-lift-tint",
+    "lash-lamination",
+    "classic-lashes",
+    "pedicure",
+    "designer-nails",
+    "chemical-peel",
+    "pro-microneedling",
+    "hydraderm",
+];
+
+const STRATEGIC_LOCATION_SERVICE_SET = new Set<string>(STRATEGIC_LOCATION_SERVICE_SLUGS);
+const CORE_LOCATION_SERVICE_SET = new Set<string>(CORE_LOCATION_SERVICE_SLUGS);
+const ESSENTIAL_LOCATION_SERVICE_SET = new Set<string>(ESSENTIAL_LOCATION_SERVICE_SLUGS);
+const GSC_PROVEN_LOCATION_SERVICE_PAIR_SET = new Set<string>([
+    "mamelodi:pro-dermaplaning-full",
+    "germiston:dermaplaning-pro",
+    "douglasdale:lemon-bottle-10ml",
+    "boksburg:bridal-trial",
+    "bedfordview:balayage",
+    "garsfontein:day-makeup",
+    "mamelodi:back-neck-30",
+    "roodepoort:pedicure",
+    "randfontein:wax-tummy",
+    "lenasia:undereye-2-treatments",
+    "vereeniging:lash-lift-tint",
+]);
 
 function sortServicesByBuildPriority(services: SEOService[]): SEOService[] {
     return [...services].sort((left, right) => {
@@ -938,7 +1115,9 @@ export function getPriorityParams(): { location: string; service: string }[] {
         if (!getLocationBySlug(loc)) continue;
 
         for (const service of services) {
-            params.push({ location: loc, service: service.slug });
+            if (isIndexableLocationService(loc, service.slug)) {
+                params.push({ location: loc, service: service.slug });
+            }
         }
     }
 
@@ -997,9 +1176,33 @@ function supportsExpandedLocationServiceCoverage(locationSlug: string): boolean 
         return false;
     }
 
-    // Real Hartbeespoort-area suburbs and estates should be indexable local service pages.
-    // Only alias slugs such as "harties" are collapsed to the canonical local slug.
+    // Only canonical, real location hubs are structurally eligible for local service URLs.
+    // The service selection itself is intentionally tiered in isSelectedLocationService.
     return true;
+}
+
+function isSelectedLocationService(locationSlug: string, serviceSlug: string): boolean {
+    if (FULL_COVERAGE_LOCATION_SERVICE_SET.has(locationSlug)) {
+        return true;
+    }
+
+    if (GSC_PROVEN_LOCATION_SERVICE_PAIR_SET.has(`${locationSlug}:${serviceSlug}`)) {
+        return true;
+    }
+
+    if (isHartbeespoortClusterLocation(locationSlug)) {
+        return STRATEGIC_LOCATION_SERVICE_SET.has(serviceSlug);
+    }
+
+    if (NEARBY_COMMUTER_LOCATION_SERVICE_SET.has(locationSlug)) {
+        return STRATEGIC_LOCATION_SERVICE_SET.has(serviceSlug);
+    }
+
+    if (MAJOR_GAUTENG_HUB_LOCATION_SERVICE_SET.has(locationSlug)) {
+        return CORE_LOCATION_SERVICE_SET.has(serviceSlug);
+    }
+
+    return ESSENTIAL_LOCATION_SERVICE_SET.has(serviceSlug);
 }
 
 export function isIndexableLocationService(locationSlug: string, serviceSlug: string): boolean {
@@ -1016,7 +1219,8 @@ export function isIndexableLocationService(locationSlug: string, serviceSlug: st
         return false;
     }
 
-    return supportsExpandedLocationServiceCoverage(locationSlug);
+    return supportsExpandedLocationServiceCoverage(locationSlug) &&
+        isSelectedLocationService(locationSlug, serviceSlug);
 }
 
 export function getPrebuildLocationServiceParams(): { location: string; service: string }[] {
@@ -1053,7 +1257,8 @@ export function getPrebuildLocationServiceParams(): { location: string; service:
 }
 
 export function isPriorityLocationService(locationSlug: string, serviceSlug: string): boolean {
-    return PRIORITY_LOCATIONS.includes(locationSlug) && HERO_SERVICES.includes(serviceSlug);
+    return PRIORITY_LOCATIONS.includes(locationSlug) &&
+        isIndexableLocationService(locationSlug, serviceSlug);
 }
 
 // Lazy-load services only when needed (not at module import time)
@@ -1083,12 +1288,18 @@ export function getNearbyLocations(currentSlug: string, limit = 5): SEOLocation[
 
     // Get locations from same region first
     const sameRegion = TARGET_LOCATIONS.filter(
-        (loc) => loc.region === current.region && loc.slug !== currentSlug
+        (loc) =>
+            loc.region === current.region &&
+            loc.slug !== currentSlug &&
+            getCanonicalLocationSlug(loc.slug) === loc.slug
     );
 
     // If not enough, add locations where current location's name is the region
     const childLocations = TARGET_LOCATIONS.filter(
-        (loc) => loc.region === current.name && loc.slug !== currentSlug
+        (loc) =>
+            loc.region === current.name &&
+            loc.slug !== currentSlug &&
+            getCanonicalLocationSlug(loc.slug) === loc.slug
     );
 
     // Combine and dedupe
@@ -1110,13 +1321,19 @@ export function getLocationClusterLinks(currentSlug: string, limit = 12): SEOLoc
 
     const parentLocation = TARGET_LOCATIONS.find((loc) => loc.name === current.region);
     const childLocations = TARGET_LOCATIONS.filter(
-        (loc) => loc.region === current.name && loc.slug !== currentSlug
+        (loc) =>
+            loc.region === current.name &&
+            loc.slug !== currentSlug &&
+            getCanonicalLocationSlug(loc.slug) === loc.slug
     );
     const siblingLocations = TARGET_LOCATIONS.filter(
-        (loc) => loc.region === current.region && loc.slug !== currentSlug
+        (loc) =>
+            loc.region === current.region &&
+            loc.slug !== currentSlug &&
+            getCanonicalLocationSlug(loc.slug) === loc.slug
     );
     const relatedMetros = TARGET_LOCATIONS.filter((loc) =>
-        ["pretoria", "centurion", "midrand", "johannesburg", "hartbeespoort", "harties"].includes(loc.slug) &&
+        ["pretoria", "centurion", "midrand", "johannesburg", "hartbeespoort"].includes(loc.slug) &&
         loc.slug !== currentSlug &&
         loc.slug !== parentLocation?.slug
     );
@@ -1945,7 +2162,7 @@ function pickFAQWithUniqueTheme(faqs: FAQ[], startIndex: number, usedThemes: Set
     return faqs[startIndex % faqs.length];
 }
 
-function getAlignedServiceCategoryFAQs(service: SEOService, location: SEOLocation): FAQ[] | null {
+function getAlignedServiceCategoryFAQs(service: SEOService): FAQ[] | null {
     const isMatch = (pattern: RegExp) => serviceMatchesPattern(service, pattern);
 
     switch (service.categoryId) {
@@ -2613,7 +2830,7 @@ export function getServiceFAQs(service: SEOService, location: SEOLocation): FAQ[
     };
 
     // Get category-specific FAQs
-    const alignedCategoryFAQs = getAlignedServiceCategoryFAQs(service, location);
+    const alignedCategoryFAQs = getAlignedServiceCategoryFAQs(service);
 
     const categoryFAQs =
         alignedCategoryFAQs ||

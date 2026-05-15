@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { ArrowRight, Clock, MapPin } from "lucide-react";
 import { buildLocationsIndexKeywords } from "@/lib/seo-keywords";
-import { getLocationIndexGroups, isBroadLocationHub, TARGET_LOCATIONS } from "@/lib/seo-data";
+import { getLocationIndexGroups, isBroadLocationHub, isLocationAliasSlug, TARGET_LOCATIONS } from "@/lib/seo-data";
 import { businessInfo } from "@/lib/constants";
 
-const serviceAreaCount = TARGET_LOCATIONS.filter((location) => !isBroadLocationHub(location)).length;
+const serviceAreaCount = TARGET_LOCATIONS.filter(
+    (location) => !isBroadLocationHub(location) && !isLocationAliasSlug(location.slug)
+).length;
 const locationGroups = getLocationIndexGroups();
 
 const featuredAreas = [

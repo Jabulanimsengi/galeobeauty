@@ -21,7 +21,6 @@ import {
     getLocationInsights,
     getLocationServiceInsight,
     getServiceFAQs,
-    isHartbeespoortClusterLocation,
     isIndexableLocationService,
     isBroadLocationHub,
     type FAQ,
@@ -484,7 +483,7 @@ export default async function LocationServicePage({ params }: PageProps) {
 
                 <section className="border-b border-border/60 bg-white pt-24 sm:pt-28 lg:pt-32">
                     <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-                        <div className="overflow-hidden border-x border-border/60">
+                        <div className="overflow-hidden">
                             <div className="relative min-h-[320px] sm:min-h-[420px] lg:min-h-[520px]">
                                 <CloudinaryImage
                                     src={serviceImage}

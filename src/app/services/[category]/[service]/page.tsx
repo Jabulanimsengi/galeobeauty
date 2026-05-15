@@ -327,7 +327,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
                 <main className="bg-background">
                     <section className="border-b border-border/50 bg-white pt-24 lg:pt-32">
                         <div className="container mx-auto px-4 sm:px-6">
-                            <div className="overflow-hidden border-x border-border/50 [border-radius:0]">
+                            <div className="overflow-hidden [border-radius:0]">
                                 <div className="relative mx-auto aspect-square w-full max-w-[34rem] bg-secondary/20 [border-radius:0] sm:max-w-[38rem] lg:max-w-[42rem]">
                                     <CloudinaryImage
                                         src={bespokeHeroImage.image}
@@ -711,7 +711,7 @@ export default async function ServicePage({ params }: { params: Promise<{ catego
             <main className="bg-background">
                 <section className="border-b border-border/50 bg-white pt-24 lg:pt-32">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="overflow-hidden border-x border-border/50 [border-radius:0]">
+                        <div className="overflow-hidden [border-radius:0]">
                             <div className="relative mx-auto aspect-square w-full max-w-[34rem] bg-secondary/20 [border-radius:0] sm:max-w-[38rem] lg:max-w-[42rem]">
                                 <CloudinaryImage
                                     src={serviceImage}

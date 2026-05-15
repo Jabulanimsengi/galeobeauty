@@ -1,6 +1,6 @@
 import { getAllBlogPosts } from './blog-data';
 import { getAllBespokeServicePages } from './bespoke-service-pages';
-import { getPublishedIntentPages } from './intent-pages';
+import { getPublishedGuidePages } from './intent-pages';
 import { getAllSEOServices, isIndexableLocationService } from './seo-data';
 import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from './sitemap-config';
 import { SITEMAP_STATIC_PAGES } from './sitemap-static-pages';
@@ -108,7 +108,7 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
     visitor(createEntry(`${BASE_URL}${page.path}`, page.priority, page.changefreq));
   }
 
-  for (const page of getPublishedIntentPages()) {
+  for (const page of getPublishedGuidePages()) {
     visitor(createEntry(`${BASE_URL}/${page.slug}`, 0.8, 'weekly'));
   }
 

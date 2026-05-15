@@ -12,6 +12,7 @@ import {
     getLocationInsights,
     getLocationClusterLinks,
     getLocationPopularTreatmentGroups,
+    isIndexableLocationService,
     isBroadLocationHub,
     type SEOLocation,
 } from "@/lib/seo-data";
@@ -20,6 +21,64 @@ import { ArrowRight } from "lucide-react";
 import { buildLocationHubKeywords } from "@/lib/seo-keywords";
 import { serviceCategories } from "@/lib/services-data";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
+
+const HARTBEESPOORT_APPOINTMENT_LINKS = [
+    {
+        label: "Hair appointments",
+        href: "/services/hair",
+        description: "Cuts, blow-dries, colour, balayage and smoothing treatments for everyday maintenance or bigger changes.",
+    },
+    {
+        label: "Nail appointments",
+        href: "/services/nails",
+        description: "Gel overlays, rubber base, acrylics, manicures, pedicures and nail art for hands and feet.",
+    },
+    {
+        label: "Lashes and brows",
+        href: "/services/lashes-brows",
+        description: "Classic lashes, hybrid lashes, lash lifts, tinting and brow treatments with a wearable finish.",
+    },
+    {
+        label: "Massage sessions",
+        href: "/services/massages",
+        description: "Relaxation, deep tissue, hot stone, sports and focused back-and-neck treatments.",
+    },
+    {
+        label: "Waxing",
+        href: "/services/waxing",
+        description: "Intimate, facial and body waxing planned around hygiene, privacy and comfort.",
+    },
+    {
+        label: "Skin and aesthetics",
+        href: "/services/dermalogica",
+        description: "Facials, peels, microneedling and skin treatments chosen by concern and intensity.",
+    },
+    {
+        label: "IPL and tattoo removal",
+        href: "/services/ipl",
+        description: "IPL hair-reduction and tattoo-fading options that usually need a planned series.",
+    },
+    {
+        label: "Injectables and fillers",
+        href: "/services/hart-aesthetics",
+        description: "Lip filler, anti-wrinkle planning and advanced aesthetic treatments with suitability in mind.",
+    },
+];
+
+const HARTBEESPOORT_CONFIDENCE_POINTS = [
+    {
+        title: "Choose by goal",
+        description: "Start with the result you want, then compare the treatment menu before booking.",
+    },
+    {
+        title: "Ask before booking",
+        description: "If you are choosing between two treatments, contact the salon so the appointment matches the concern.",
+    },
+    {
+        title: "Plan the visit",
+        description: "Some treatments are quick maintenance appointments, while colour, IPL and advanced services need more time.",
+    },
+];
 
 function getBroadHubCopy(location: SEOLocation) {
     if (location.slug === "south-africa") {
@@ -282,6 +341,7 @@ export default async function LocationHubPage({ params }: PageProps) {
     const popularTreatmentGroups = getLocationPopularTreatmentGroups(location);
     const broadHub = isBroadLocationHub(location);
     const broadHubCopy = broadHub ? getBroadHubCopy(location) : undefined;
+    const showHartbeespoortAppointmentGuide = !broadHub && canonicalLocationSlug === "hartbeespoort";
     const heroContent = broadHub
         ? null
         : getLocationHeroContent(location, nearbyAreas, popularTreatmentGroups, drivingContext);
@@ -436,6 +496,74 @@ export default async function LocationHubPage({ params }: PageProps) {
                     </div>
                 </section>
 
+                {showHartbeespoortAppointmentGuide && (
+                    <section className="border-y border-border/60 bg-white py-14 sm:py-16">
+                        <div className="container mx-auto max-w-6xl px-6">
+                            <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+                                <div>
+                                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                                        Plan Your Visit
+                                    </p>
+                                    <h2 className="mt-4 font-sans text-[1.45rem] font-bold uppercase leading-tight tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                        Choose The Right Hartbeespoort Appointment
+                                    </h2>
+                                    <p className="mt-5 text-base leading-8 text-muted-foreground">
+                                        Most clients arrive with a goal rather than a category. Use these starting points to
+                                        move from the result you want to the treatment menu that fits it.
+                                    </p>
+                                    <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                                        <Button asChild className="rounded-none bg-gold px-7 text-white hover:bg-gold-dark">
+                                            <Link href="/contact">
+                                                Contact The Salon
+                                            </Link>
+                                        </Button>
+                                        <Button asChild variant="outline" className="rounded-none px-7">
+                                            <Link href="/reviews">
+                                                Read Reviews
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    {HARTBEESPOORT_APPOINTMENT_LINKS.map((item) => (
+                                        <Link
+                                            key={item.href}
+                                            href={item.href}
+                                            className="group border border-border bg-background p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:shadow-[0_18px_48px_-36px_rgba(0,0,0,0.28)]"
+                                        >
+                                            <span className="flex items-start justify-between gap-4">
+                                                <span>
+                                                    <span className="block text-sm font-semibold text-foreground group-hover:text-gold">
+                                                        {item.label}
+                                                    </span>
+                                                    <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+                                                        {item.description}
+                                                    </span>
+                                                </span>
+                                                <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-gold" />
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="mt-10 grid gap-6 border-t border-border/60 pt-8 md:grid-cols-3">
+                                {HARTBEESPOORT_CONFIDENCE_POINTS.map((point) => (
+                                    <div key={point.title}>
+                                        <h3 className="text-sm font-semibold uppercase tracking-[0.08em] text-foreground">
+                                            {point.title}
+                                        </h3>
+                                        <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                                            {point.description}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {popularTreatmentGroups.length > 0 && (
                     <section className="bg-stone-50/70 py-16">
                         <div className="container mx-auto max-w-5xl px-6">
@@ -481,7 +609,9 @@ export default async function LocationHubPage({ params }: PageProps) {
                                             {group.services.map((service) => (
                                                 <Link
                                                     key={service.slug}
-                                                    href={broadHub ? `/services/${service.categoryId}/${service.slug}` : `/locations/${canonicalLocationSlug}/${service.slug}`}
+                                                    href={!broadHub && isIndexableLocationService(canonicalLocationSlug, service.slug)
+                                                        ? `/locations/${canonicalLocationSlug}/${service.slug}`
+                                                        : `/services/${service.categoryId}/${service.slug}`}
                                                     className="group flex items-center justify-between gap-4 border border-border/70 bg-secondary/10 px-4 py-3 text-sm transition-colors hover:border-gold/30 hover:bg-secondary/20"
                                                 >
                                                     <div>

@@ -13,6 +13,7 @@
 # .md files 
 *.md
 !MONITORING_STACK.md
+!seo-architecture-rules.md
 
 
 

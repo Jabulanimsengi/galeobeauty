@@ -433,81 +433,82 @@ export function CategoryContent({
 
     return (
         <>
-            <section className="border-t border-border/40 bg-background py-10 lg:py-16">
+            <section className="border-y border-border/40 bg-white py-14 sm:py-16">
                 <div className="container mx-auto px-4 sm:px-6">
-                    <div id="popular-services" className="mb-16 scroll-mt-28">
-                        <div className="mx-auto mb-8 max-w-2xl text-center">
-                            <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                    <div id="popular-services" className="scroll-mt-28">
+                        <div className="mx-auto mb-10 max-w-2xl text-center">
+                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                                Most requested
+                            </p>
+                            <h2 className="mt-4 font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
                                 Popular {categoryTitle.toLowerCase()} services
                             </h2>
-                            <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
+                            <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
                                 A curated starting point for clients who know the category but still need the exact booking line.
                             </p>
                         </div>
 
-                        <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="mx-auto flex max-w-4xl flex-col gap-4">
                             {popularServices.map((option) => renderServiceOption(option, "compact"))}
                         </div>
-                    </div>
 
-                    <div id="full-menu" className="scroll-mt-28">
-                        <div className="mb-8 border border-border/60 bg-secondary/10 p-6 sm:p-8">
-                            <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-                                <div className="max-w-3xl">
-                                    <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
-                                        {directoryTitle ?? `Full ${categoryTitle} Menu`}
-                                    </h2>
-                                    <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-                                        {showAllServices
-                                            ? (directoryDescription ?? "Browse the exact treatments, compare prices and choose the service line you want to book.")
-                                            : "Start with the first 12 services in this category. Use view more when you want to compare the complete menu."}
-                                    </p>
-                                </div>
+                        {selectedTreatments.length > 0 && (
+                            <div className="mx-auto mt-6 hidden max-w-4xl lg:block">
+                                <BookingSummary
+                                    items={selectedTreatments}
+                                    onRemoveItem={handleRemoveTreatment}
+                                    onBook={handleOpenBooking}
+                                />
                             </div>
+                        )}
+                    </div>
+                </div>
+            </section>
+
+            <section className="border-b border-border/40 bg-stone-50/70 py-14 sm:py-16">
+                <div className="container mx-auto px-4 sm:px-6">
+                    <div id="full-menu" className="scroll-mt-28">
+                        <div className="mx-auto mb-10 max-w-3xl text-center">
+                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                                Treatment menu
+                            </p>
+                            <h2 className="mt-4 font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                {directoryTitle ?? `Full ${categoryTitle} Menu`}
+                            </h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                                {showAllServices
+                                    ? (directoryDescription ?? "Browse the exact treatments, compare prices and choose the service line you want to book.")
+                                    : "Start with the first 12 services in this category. Use view more when you want to compare the complete menu."}
+                            </p>
                         </div>
 
-                        <div className="lg:hidden">
-                            <div className="sticky top-[96px] z-20 -mx-4 mb-6 flex gap-2 overflow-x-auto border-y border-border/60 bg-background/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
+                        <div className="mx-auto mb-10 max-w-4xl">
+                            <div className="border border-border/60 bg-white p-4 shadow-[0_20px_60px_-48px_rgba(0,0,0,0.28)] sm:p-5">
+                                <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                                    Jump to a section
+                                </p>
+                                <div className="flex flex-col gap-2">
                                 {visibleSubcategories.map((subcategory) => (
                                     <button
                                         key={subcategory.id}
                                         type="button"
                                         onClick={() => handleMenuJump(`service-group-${subcategory.id}`)}
-                                        className={`shrink-0 border px-4 py-2 text-sm font-semibold transition-colors ${activeSubcategoryId === subcategory.id
+                                        className={`w-full border px-4 py-3 text-left text-sm font-semibold transition-colors ${activeSubcategoryId === subcategory.id
                                             ? "border-gold bg-gold text-white"
                                             : "border-border/60 bg-white text-foreground"
                                             }`}
                                     >
-                                        {subcategory.title}
+                                        <span className="block">{subcategory.title}</span>
+                                        <span className={`mt-1 block text-xs font-medium ${activeSubcategoryId === subcategory.id ? "text-white/70" : "text-muted-foreground"}`}>
+                                            {subcategory.items.length} services
+                                        </span>
                                     </button>
                                 ))}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="grid gap-10 lg:grid-cols-[240px_minmax(0,1fr)_360px] lg:gap-8 xl:grid-cols-[260px_minmax(0,1fr)_380px]">
-                            <aside className="hidden lg:block">
-                                <div className="sticky top-[140px] border border-border/60 bg-white">
-                                    <nav className="flex flex-col">
-                                        {visibleSubcategories.map((subcategory) => (
-                                            <button
-                                                key={subcategory.id}
-                                                type="button"
-                                                onClick={() => handleMenuJump(`service-group-${subcategory.id}`)}
-                                                className={`border-b border-border/60 px-5 py-4 text-left text-sm font-semibold transition-colors last:border-b-0 ${activeSubcategoryId === subcategory.id
-                                                    ? "bg-foreground text-white"
-                                                    : "text-foreground hover:bg-secondary/20 hover:text-gold"
-                                                    }`}
-                                            >
-                                                <span className="block">{subcategory.title}</span>
-                                                <span className={`mt-1 block text-xs font-medium ${activeSubcategoryId === subcategory.id ? "text-white/65" : "text-muted-foreground"}`}>
-                                                    {subcategory.items.length} services
-                                                </span>
-                                            </button>
-                                        ))}
-                                    </nav>
-                                </div>
-                            </aside>
-
+                        <div className="mx-auto flex max-w-4xl flex-col gap-10">
                             <div className="flex flex-col gap-10">
                                 {subcategories.map((subcategory) => {
                                     const options = subcategory.items.map((item) => ({
@@ -528,11 +529,11 @@ export function CategoryContent({
                                             data-subcategory-id={subcategory.id}
                                             className="scroll-mt-32"
                                         >
-                                            <div className="mb-4 border-l-2 border-gold pl-5">
+                                            <div className="mx-auto mb-6 max-w-3xl border-t border-border/70 pt-8 text-center">
                                                 <h3 className="font-sans text-[1.2rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[1.45rem]">
                                                     {subcategory.title}
                                                 </h3>
-                                                <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
+                                                <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-muted-foreground">
                                                     {getSubcategorySummary(categoryId, subcategory)}
                                                 </p>
                                             </div>
@@ -567,18 +568,6 @@ export function CategoryContent({
                                     </div>
                                 )}
                             </div>
-
-                            <aside className="hidden lg:block">
-                                <div className="sticky top-[140px]">
-                                    {selectedTreatments.length > 0 && (
-                                        <BookingSummary
-                                            items={selectedTreatments}
-                                            onRemoveItem={handleRemoveTreatment}
-                                            onBook={handleOpenBooking}
-                                        />
-                                    )}
-                                </div>
-                            </aside>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,9 @@ import path from "path";
 import matter from "gray-matter";
 import { getCachedSEOServices } from "./seo-data";
 import { serviceCategories } from "./services-data";
+import { INTENT_PAGE_REDIRECTS } from "./intent-redirects";
+
+export { INTENT_PAGE_REDIRECTS } from "./intent-redirects";
 
 export interface IntentFaq {
     question: string;
@@ -45,8 +48,11 @@ export interface IntentPageSpec {
     content: string; // Dynamic markdown string
 }
 
+type IntentPageType = NonNullable<IntentPageSpec["intentType"]>;
+
 const PLACEHOLDER_SLUG_PATTERN = /^aesthetics-authority-topic-\d+$/;
 const DRAFT_CONTENT_MARKERS = ["(Please add your article content here)"];
+const GUIDE_INTENT_TYPES = new Set<IntentPageType>(["problem", "educational", "comparison"]);
 const LEGACY_INTENT_HREF_REWRITES: Record<string, string> = {
     "/services/skin": "/services/dermalogica",
     "/services/skin/": "/services/dermalogica",
@@ -70,21 +76,6 @@ function buildServiceLinks(serviceSlugs: string[]): IntentLink[] {
             description: `${service.price}${service.duration ? ` | ${service.duration}` : ""}`,
         }));
 }
-
-export const INTENT_PAGE_REDIRECTS: Record<string, string> = {
-    "lip-filler-hartbeespoort": "/services/hart-aesthetics",
-    "ipl-hair-removal-hartbeespoort": "/services/ipl",
-    "lash-extensions-hartbeespoort": "/services/lashes-brows",
-    "hair-salon-hartbeespoort": "/services/hair",
-    "nail-salon-hartbeespoort": "/services/nails",
-    "event-makeup-hartbeespoort": "/services/makeup",
-    "permanent-makeup-brows-hartbeespoort": "/services/permanent-makeup",
-    "qms-facial-hartbeespoort": "/services/qms",
-    "spray-tan-hartbeespoort": "/services/sunbed",
-    "waxing-hair-removal-hartbeespoort": "/services/waxing",
-    "massage-hartbeespoort": "/services/massages",
-    "hair-extensions-hartbeespoort": "/services/hair-extensions",
-};
 
 const CONTENT_DIR = path.join(process.cwd(), "src/content/intent-pages");
 let _allIntentPages: IntentPageSpec[] | null = null;
@@ -116,6 +107,22 @@ export function isIntentPageIndexable(page: IntentPageSpec): boolean {
     }
 
     return true;
+}
+
+export function isTransactionalIntentPage(page: IntentPageSpec): boolean {
+    return page.intentType === "transactional";
+}
+
+export function isGuideIntentPage(page: IntentPageSpec): boolean {
+    if (!isIntentPageIndexable(page)) {
+        return false;
+    }
+
+    if (!page.intentType) {
+        return true;
+    }
+
+    return GUIDE_INTENT_TYPES.has(page.intentType);
 }
 
 export function canonicalizeIntentPageHref(href: string): string {
@@ -156,6 +163,10 @@ export function getPublishedIntentPages(): IntentPageSpec[] {
     return _publishedIntentPages;
 }
 
+export function getPublishedGuidePages(): IntentPageSpec[] {
+    return getPublishedIntentPages().filter(isGuideIntentPage);
+}
+
 export function getIntentPageBySlug(slug: string): IntentPageSpec | undefined {
     try {
         const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
@@ -183,7 +194,7 @@ export function getIntentPagesForCategory(categoryId: string): IntentPageSpec[] 
     if (!_intentPagesByCategory) {
         _intentPagesByCategory = new Map<string, IntentPageSpec[]>();
 
-        for (const page of getPublishedIntentPages()) {
+        for (const page of getPublishedGuidePages()) {
             for (const id of page.categoryIds) {
                 const existing = _intentPagesByCategory.get(id);
                 if (existing) {
@@ -232,7 +243,7 @@ export function getIntentPagesForService(serviceSlug: string): IntentPageSpec[] 
     if (!_intentPagesByService) {
         _intentPagesByService = new Map<string, IntentPageSpec[]>();
 
-        for (const page of getPublishedIntentPages()) {
+        for (const page of getPublishedGuidePages()) {
             for (const slug of page.serviceSlugs) {
                 const existing = _intentPagesByService.get(slug);
                 if (existing) {
@@ -270,7 +281,7 @@ export function getIntentPagesForServices(serviceSlugs: string[], limit = 6): In
 }
 
 export function getRelatedIntentPages(page: IntentPageSpec, limit = 6): IntentPageSpec[] {
-    const candidates = getPublishedIntentPages()
+    const candidates = getPublishedGuidePages()
         .filter((candidate) => candidate.slug !== page.slug)
         .map((candidate) => {
             const sharedCategories = candidate.categoryIds.filter((id) => page.categoryIds.includes(id)).length;

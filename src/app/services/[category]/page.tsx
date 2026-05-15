@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { ArrowRight } from "lucide-react";
-import { serviceCategories, getCategoryById } from "@/lib/services-data";
+import { serviceCategories, getCategoryById, type ServiceCategory } from "@/lib/services-data";
 import { CategoryContent } from "./category-content";
 import { buildCategoryMetadataKeywords } from "@/lib/seo-keywords";
 import { toAbsoluteUrl } from "@/lib/site-url";
@@ -14,8 +14,9 @@ import { getBespokeCategoryPage } from "@/lib/bespoke-category-pages";
 import { getCategoryPageBySlug } from "@/lib/category-content";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
 import { resolveCategoryHeroImage } from "@/lib/editorial-image-resolver";
+import { getCategoryHubSeoContent } from "@/lib/category-hub-seo";
 
-// Comprehensive SEO metadata for each category - optimized for South African search
+// Page metadata and supporting copy for service category pages.
 const categoryMeta: Record<string, {
     title: string;
     description: string;
@@ -40,7 +41,7 @@ const categoryMeta: Record<string, {
         title: "Fat Freezing Hartbeespoort | Cryolipolysis & Body Contouring",
         description: "Fat freezing in Hartbeespoort for stubborn belly fat, love handles and other gym-resistant areas. Explore non-surgical body contouring at Galeo Beauty.",
         h1: "Fat Freezing in Hartbeespoort",
-        intro: "This category is for clients who feel close to their goal weight but still feel bothered by a few stubborn areas that refuse to shift. Our Hartbeespoort fat-freezing treatments focus on non-surgical contouring for targeted pockets like the tummy, waistline and thighs, helping clients from Hartbeespoort, Pretoria, and Centurion refine shape without downtime.",
+        intro: "If you feel close to your goal weight but still feel bothered by a few stubborn areas that refuse to shift, our Hartbeespoort fat-freezing treatments focus on non-surgical contouring for targeted pockets like the tummy, waistline and thighs, helping clients from Hartbeespoort, Pretoria, and Centurion refine shape without downtime.",
         benefits: ["Non-invasive procedure", "No downtime required", "Permanent fat cell reduction", "CE approved equipment"],
         faqs: [
             { q: "How many fat freezing sessions do I usually need?", a: "Most clients need 1 to 3 sessions per area depending on how much stubborn fat they want to reduce and how their body responds after the first treatment." },
@@ -67,7 +68,7 @@ const categoryMeta: Record<string, {
         intro: "If your skin feels congested, breakout-prone, dull or uneven, our Hartbeespoort Dermalogica treatments are designed to match the concern you actually want solved. From peels and microneedling to deep-cleansing and glow-focused facials, we help clients from Hartbeespoort, Pretoria, and Centurion choose the right level of correction for their skin.",
         benefits: ["Expert skin analysis", "Advanced chemical peels", "Clinical microneedling", "Personalized treatment plans"],
         faqs: [
-            { q: "Do you offer chemical peels and microneedling in Hartbeespoort?", a: "Yes. Our Dermalogica category includes professional peels, Pro Microneedling, dermaplaning and customized skin treatments based on your concern." },
+            { q: "Do you offer chemical peels and microneedling in Hartbeespoort?", a: "Yes. Our Dermalogica treatments include professional peels, Pro Microneedling, dermaplaning and customized skin treatments based on your concern." },
             { q: "Which Dermalogica treatment is best for acne, pigmentation or dull skin?", a: "The right option comes down to your skin barrier, sensitivity and goals. We usually recommend a peel, microneedling or Pro Skin treatment only after assessing your skin properly." },
             { q: "Is Dermalogica suitable for sensitive skin?", a: "Yes, many Dermalogica treatments can be adapted for sensitive skin, but the exact products and intensity should be customized to your tolerance level." },
         ],
@@ -76,10 +77,10 @@ const categoryMeta: Record<string, {
         title: "IPL Hair Removal & Laser Tattoo Removal Hartbeespoort",
         description: "Intense Pulsed Light (IPL) hair removal in Hartbeespoort for unwanted facial and body hair, shaving rash and ingrowns. Explore long-term hair reduction and tattoo removal at Galeo Beauty.",
         h1: "IPL Hair Removal & Laser Tattoo Removal in Hartbeespoort",
-        intro: "This category suits clients who are tired of constant shaving, fast regrowth, bumps or ingrowns and want a lower-maintenance way to stay smoother for longer. Our Hartbeespoort Intense Pulsed Light (IPL) treatments support long-term hair reduction for face and body, with tattoo-removal options available for clients who want to fade unwanted ink.",
+        intro: "If you are tired of constant shaving, fast regrowth, bumps or ingrowns and want a lower-maintenance way to stay smoother for longer, our Hartbeespoort Intense Pulsed Light (IPL) treatments support long-term hair reduction for face and body, with tattoo-removal options available for clients who want to fade unwanted ink.",
         benefits: ["Permanent hair reduction", "Effective tattoo removal", "CE approved technology", "Safe for most skin types"],
         faqs: [
-            { q: "Do you offer both IPL hair removal and tattoo removal in Hartbeespoort?", a: "Yes. This category covers both IPL hair reduction for unwanted hair and laser-style tattoo removal services for fading unwanted ink." },
+            { q: "Do you offer both IPL hair removal and tattoo removal in Hartbeespoort?", a: "Yes. You can book IPL hair reduction for unwanted hair and laser-style tattoo removal services for fading unwanted ink." },
             { q: "Is IPL hair removal permanent?", a: "IPL is best described as permanent hair reduction. Most clients see a major drop in regrowth after a full course, with occasional maintenance depending on the area." },
             { q: "How many sessions are usually needed?", a: "Most IPL and tattoo-removal plans require multiple sessions because hair and pigment clear in stages, so we build a course based on the area being treated." },
         ],
@@ -103,7 +104,7 @@ const categoryMeta: Record<string, {
         intro: "These treatments are for concerns that usually need more than a standard facial, like acne scarring, loose eyelid skin, rough texture or skin that needs a stronger corrective reset. Our Hartbeespoort clinical skin offering includes advanced resurfacing and lifting options for clients who want visible improvement with a medical-grade approach.",
         benefits: ["Clinical-grade technology", "Non-surgical solutions", "Advanced skin rejuvenation", "Private & professional"],
         faqs: [
-            { q: "What advanced clinical treatments are available in this category?", a: "This category includes treatments such as fractional laser, Plasmage, vaginal tightening and selected advanced skin procedures depending on suitability." },
+            { q: "What advanced clinical treatments are available?", a: "Available treatments include fractional laser, Plasmage, vaginal tightening and selected advanced skin procedures depending on suitability." },
             { q: "How much downtime should I expect from clinical skin treatments?", a: "Downtime depends on the treatment. Some involve little to none, while stronger resurfacing treatments may need a few recovery days." },
             { q: "Is fractional laser painful?", a: "Most clients feel heat and discomfort rather than sharp pain, and we use topical numbing where appropriate to make treatment more manageable." },
         ],
@@ -151,7 +152,7 @@ const categoryMeta: Record<string, {
         intro: "If you want to look warmer, fresher and more confident in photos or open outfits, our Hartbeespoort tanning services are designed around that result. We offer spray tans and sunbed options for clients who want believable colour without streaks, patchiness or a rushed last-minute finish.",
         benefits: ["Controlled UV exposure", "Professional spray tans", "Package savings", "Year-round glow"],
         faqs: [
-            { q: "Can I book both sunbed tanning and spray tanning in Hartbeespoort?", a: "Yes. We offer both spray tans and controlled sunbed sessions, so you can choose either an immediate cosmetic glow or a more gradual tanning route." },
+            { q: "Can I book both sunbed tanning and spray tanning in Hartbeespoort?", a: "Yes. We offer both spray tans and controlled sunbed sessions, so you can choose either an immediate cosmetic glow or a more gradual tanning option." },
             { q: "How long does a spray tan last?", a: "A spray tan usually lasts around 5 to 7 days with proper prep and aftercare, including gentle showering and moisturising." },
             { q: "How often should I use a sunbed?", a: "That should be guided by your skin type and tanning history. We keep sessions controlled and spaced responsibly rather than recommending overuse." },
         ],
@@ -160,7 +161,7 @@ const categoryMeta: Record<string, {
         title: "Professional Waxing Hartbeespoort | Brazilian Wax & Body Waxing",
         description: "Professional waxing in Hartbeespoort for smoother skin, longer-lasting hair removal and less daily shaving hassle. Book Brazilian, Hollywood and body waxing at Galeo Beauty.",
         h1: "Professional Waxing in Hartbeespoort",
-        intro: "This category is for clients who are tired of shaving, fast regrowth and the constant effort of keeping everything neat. Our Hartbeespoort waxing services cover face, body and intimate areas with a focus on smoother skin, slower regrowth and a gentler, more comfortable experience.",
+        intro: "If you are tired of shaving, fast regrowth and the constant effort of keeping everything neat, our Hartbeespoort waxing services cover face, body and intimate areas with a focus on smoother skin, slower regrowth and a gentler, more comfortable experience.",
         benefits: ["Hygienic environment", "Premium quality wax", "Gentle techniques", "Long-lasting smoothness"],
         faqs: [
             { q: "How long should hair be before waxing?", a: "Hair should usually be at least 5 mm long so the wax can grip properly without causing unnecessary irritation." },
@@ -218,6 +219,39 @@ const categoryMeta: Record<string, {
         ],
     },
 };
+
+type CategorySeoContent = NonNullable<ReturnType<typeof getCategoryHubSeoContent>>;
+
+function getCategoryServiceMatch(category: ServiceCategory, serviceSlug: string) {
+    for (const subcategory of category.subcategories) {
+        const item = subcategory.items.find((candidate) => candidate.id === serviceSlug);
+
+        if (item) {
+            return {
+                item,
+                subcategoryTitle: subcategory.title,
+            };
+        }
+    }
+
+    return null;
+}
+
+function getCategorySeoServiceLinks(category: ServiceCategory, content: CategorySeoContent) {
+    return content.serviceLinks.flatMap((link) => {
+        const match = getCategoryServiceMatch(category, link.serviceSlug);
+
+        if (!match) {
+            return [];
+        }
+
+        return [{
+            ...link,
+            item: match.item,
+            subcategoryTitle: match.subcategoryTitle,
+        }];
+    });
+}
 
 // Generate static paths for all categories
 export function generateStaticParams() {
@@ -297,6 +331,10 @@ export default async function CategoryPage({ params }: PageProps) {
     const categoryHub = getBespokeCategoryPage(category.id);
     const mdxPage = getCategoryPageBySlug(category.id);
     const meta = categoryMeta[categoryId];
+    const categorySeoContent = getCategoryHubSeoContent(category.id);
+    const categorySeoServiceLinks = categorySeoContent
+        ? getCategorySeoServiceLinks(category, categorySeoContent)
+        : [];
     const h1 = mdxPage?.h1 || categoryHub?.heroTitle || meta?.h1 || category.title;
     const intro = categoryHub?.heroIntro || meta?.intro || `${category.subtitle}. Browse our treatments and book your appointment today.`;
     const categoryDefinition = mdxPage?.definition || meta?.intro || categoryHub?.heroIntro || category.subtitle;
@@ -395,7 +433,7 @@ export default async function CategoryPage({ params }: PageProps) {
                 {/* Editorial Hero Section */}
                 <section className="border-b border-border/50 bg-white pt-24 lg:pt-32">
                     <div className="container mx-auto px-4 sm:px-6">
-                        <div className="overflow-hidden border-x border-border/50 [border-radius:0]">
+                        <div className="overflow-hidden [border-radius:0]">
                             <div className="relative mx-auto aspect-square w-full max-w-[34rem] bg-secondary/20 [border-radius:0] sm:max-w-[38rem] lg:max-w-[42rem]">
                                 <CloudinaryImage
                                     src={categoryHeroImage.image}
@@ -422,7 +460,7 @@ export default async function CategoryPage({ params }: PageProps) {
                     </div>
                 </section>
 
-                <section className="border-b border-border/40 bg-background py-12">
+                <section className="border-b border-border/40 bg-stone-50/70 py-14 sm:py-16">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="mx-auto max-w-4xl text-center">
                             <h2 className="font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
@@ -434,6 +472,160 @@ export default async function CategoryPage({ params }: PageProps) {
                         </div>
                     </div>
                 </section>
+
+                {categorySeoContent && (
+                    <section className="border-b border-border/40 bg-white py-14 sm:py-18">
+                        <div className="container mx-auto px-4 sm:px-6">
+                            <div className="mx-auto flex max-w-5xl flex-col gap-12">
+                                <div className="text-center">
+                                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                                        Galeo Beauty Hartbeespoort
+                                    </p>
+                                    <h2 className="mx-auto mt-4 max-w-4xl font-sans text-[1.45rem] font-bold uppercase leading-tight tracking-[0.08em] text-foreground sm:text-[2rem] lg:text-[2.25rem]">
+                                        {categorySeoContent.heading}
+                                    </h2>
+                                    <p className="mx-auto mt-5 max-w-3xl text-base leading-8 text-muted-foreground">
+                                        {categorySeoContent.body}
+                                    </p>
+
+                                    <div className="mt-8 flex flex-col gap-4">
+                                        {categorySeoContent.cards.map((card) => (
+                                            <article key={card.title} className="border border-border/60 bg-background p-5">
+                                                <h3 className="font-sans text-base font-semibold uppercase tracking-[0.06em] text-foreground">
+                                                    {card.title}
+                                                </h3>
+                                                <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                                                    {card.description}
+                                                </p>
+                                            </article>
+                                        ))}
+                                    </div>
+
+                                    {((categorySeoContent.decisionLinks?.length ?? 0) > 0 || (categorySeoContent.reassurance?.length ?? 0) > 0) && (
+                                        <div className="mt-10 border-y border-border/50 py-8 text-left">
+                                            <div className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr]">
+                                                {(categorySeoContent.decisionLinks?.length ?? 0) > 0 && (
+                                                    <div>
+                                                        <h3 className="font-sans text-lg font-semibold uppercase tracking-[0.08em] text-foreground">
+                                                            How To Choose
+                                                        </h3>
+                                                        <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                                                            {categorySeoContent.decisionPrompt}
+                                                        </p>
+                                                        <div className="mt-5 divide-y divide-border/60">
+                                                            {categorySeoContent.decisionLinks?.map((link) => (
+                                                                <Link
+                                                                    key={link.href}
+                                                                    href={link.href}
+                                                                    className="group flex items-start justify-between gap-4 py-4 first:pt-0 last:pb-0"
+                                                                >
+                                                                    <span>
+                                                                        <span className="block text-sm font-semibold text-foreground group-hover:text-gold">
+                                                                            {link.label}
+                                                                        </span>
+                                                                        <span className="mt-2 block text-sm leading-6 text-muted-foreground">
+                                                                            {link.description}
+                                                                        </span>
+                                                                    </span>
+                                                                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-gold" />
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {(categorySeoContent.reassurance?.length ?? 0) > 0 && (
+                                                    <div className="border-t border-border/60 pt-6 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+                                                        <h3 className="font-sans text-lg font-semibold uppercase tracking-[0.08em] text-foreground">
+                                                            Before You Book
+                                                        </h3>
+                                                        <div className="mt-5 space-y-5">
+                                                            {categorySeoContent.reassurance?.map((item) => (
+                                                                <div key={item.title}>
+                                                                    <p className="text-sm font-semibold text-foreground">
+                                                                        {item.title}
+                                                                    </p>
+                                                                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                                                                        {item.description}
+                                                                    </p>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {categorySeoContent.areaLinks.length > 0 && (
+                                        <div className="mx-auto mt-8 max-w-3xl border-t border-border/50 pt-5">
+                                            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
+                                                Service areas
+                                            </p>
+                                            <div className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+                                                {categorySeoContent.areaLinks.map((area) => (
+                                                    <Link
+                                                        key={area.href}
+                                                        href={area.href}
+                                                        className="font-medium text-muted-foreground underline-offset-4 hover:text-gold hover:underline"
+                                                        title={area.description}
+                                                    >
+                                                        {area.label}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {categorySeoServiceLinks.length > 0 && (
+                                    <aside className="border border-border/60 bg-stone-50/70 p-5 sm:p-6">
+                                        <div className="mx-auto max-w-3xl text-center">
+                                            <h3 className="font-sans text-lg font-semibold uppercase tracking-[0.08em] text-foreground">
+                                                Popular Treatments
+                                            </h3>
+                                            <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                                                Not sure where to start? These are popular choices clients often ask about first.
+                                            </p>
+                                        </div>
+                                        <div className="mt-5 divide-y divide-border/60">
+                                            {categorySeoServiceLinks.map((serviceLink) => (
+                                                <div key={serviceLink.serviceSlug} className="py-4 first:pt-0 last:pb-0">
+                                                    <Link
+                                                        href={`/services/${category.id}/${serviceLink.serviceSlug}`}
+                                                        className="group flex items-start justify-between gap-4"
+                                                    >
+                                                        <span>
+                                                            <span className="block text-sm font-semibold text-foreground group-hover:text-gold">
+                                                                {serviceLink.item.name}
+                                                            </span>
+                                                            <span className="mt-1 block text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                                                                {serviceLink.subcategoryTitle}
+                                                            </span>
+                                                        </span>
+                                                        <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-gold" />
+                                                    </Link>
+                                                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                                                        {serviceLink.description}
+                                                    </p>
+                                                    {serviceLink.localHref && serviceLink.localLabel && (
+                                                        <Link
+                                                            href={serviceLink.localHref}
+                                                            className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-gold underline-offset-4 hover:underline"
+                                                        >
+                                                            {serviceLink.localLabel}
+                                                            <ArrowRight className="h-3.5 w-3.5" />
+                                                        </Link>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </aside>
+                                )}
+                            </div>
+                        </div>
+                    </section>
+                )}
 
                 {/* Treatment List with Booking - Client Component */}
                 <CategoryContent
@@ -455,7 +647,7 @@ export default async function CategoryPage({ params }: PageProps) {
                                     Helpful reading for choosing the right {category.title.toLowerCase()} treatment before you book.
                                 </p>
                             </div>
-                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="mx-auto flex max-w-4xl flex-col gap-4">
                                 {relatedGuides.map((guide) => (
                                     <Link
                                         key={guide.slug}
@@ -511,7 +703,7 @@ export default async function CategoryPage({ params }: PageProps) {
                         <p className="mx-auto mt-4 mb-8 max-w-lg text-white/70">
                             Choose the service that fits your goal and send your booking request to Galeo Beauty.
                         </p>
-                        <div className="mx-auto grid max-w-2xl gap-3 sm:grid-cols-2">
+                        <div className="mx-auto flex max-w-2xl flex-col gap-3">
                             <Button asChild size="lg" className="w-full rounded-none bg-gold px-10 font-semibold text-white hover:bg-gold-dark">
                                 <Link href="/contact">
                                     Contact Us

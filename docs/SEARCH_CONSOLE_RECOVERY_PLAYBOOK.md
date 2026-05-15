@@ -9,20 +9,28 @@ Keep the current route structure intact while making sure Google only discovers:
 - final canonical `200` URLs
 - intentionally indexable location-service pages
 - valid location hubs
-- canonical `/prices/...` service pages
+- canonical `/services/...` service pages
 
 And does **not** keep discovering:
 
 - invalid location or location-service URLs
-- redirecting legacy `/services/...` or flat `/prices/...` URLs as primary URLs
+- redirecting legacy `/prices/...` or stale flat service URLs as primary URLs
 - Hartbeespoort-cluster location-service URLs that collapse to broader canonical pages
 
 ## Code Changes Already Applied
 
 - Invalid location hubs now return `404` instead of redirecting to `/locations`
 - Invalid location-service combinations now return `404` instead of acting like soft 404s
-- Location hub treatment links now point to canonical `/prices/...` pages when the local service URL is not truly indexable
+- Location hub treatment links now point to canonical `/services/...` pages when the local service URL is not truly indexable
 - Location-service related links now prefer canonical destinations instead of generating redirect-heavy local URL variants
+- The Hartbeespoort location hub now includes client-first service-path guidance for people deciding what to book
+- Priority service hubs now include "How To Choose" and "Before You Book" guidance for hair, nails, massages, waxing, lashes/brows, IPL, Dermalogica, and Hart Aesthetics
+
+## Client-Facing Copy Rule
+
+Do not add SEO-only copy to client-facing pages.
+
+Visible page strengthening should help clients make booking decisions. Use treatment fit, preparation, comfort, pricing, duration, reviews, internal paths, and next-step calls to action. Keep keyword targeting in metadata, schema, redirects, sitemap rules, internal linking, and taxonomy work instead of writing visible filler for search engines.
 
 ## Deploy Order
 
@@ -59,6 +67,19 @@ After deploy, verify these examples:
    - `/sitemap/1.xml`
    - `/sitemap-seo/...`
    - any old non-canonical sitemap endpoint
+
+The current canonical sitemap index is:
+
+```text
+https://www.galeobeauty.com/sitemap.xml
+```
+
+The current child sitemap files are:
+
+```text
+https://www.galeobeauty.com/sitemaps/0.xml
+https://www.galeobeauty.com/sitemaps/1.xml
+```
 
 ## Expectations
 

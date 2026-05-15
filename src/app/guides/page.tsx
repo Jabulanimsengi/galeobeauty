@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { Header, Footer } from "@/components/layout";
-import { getGuideCategorySummaries, getPublishedIntentPages } from "@/lib/intent-pages";
+import { getGuideCategorySummaries, getPublishedGuidePages } from "@/lib/intent-pages";
 
 export const metadata: Metadata = {
     title: "Beauty Treatment Guides | Galeo Beauty Hartbeespoort",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default function GuidesPage() {
-    const guides = getPublishedIntentPages().sort((a, b) => a.title.localeCompare(b.title));
+    const guides = getPublishedGuidePages().sort((a, b) => a.title.localeCompare(b.title));
     const guideCategories = getGuideCategorySummaries();
     const featuredGuides = guides.slice(0, 12);
 

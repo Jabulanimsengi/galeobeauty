@@ -41,13 +41,32 @@ const footerLocations = [
     { name: "Hartbeespoort Dam", href: "/locations/hartbeespoort-dam" },
 ];
 
+const footerServiceCategories = [
+    { name: "Hair & Colour", href: "/services/hair" },
+    { name: "Hair Extensions", href: "/services/hair-extensions" },
+    { name: "Nails", href: "/services/nails" },
+    { name: "Lashes & Brows", href: "/services/lashes-brows" },
+    { name: "Waxing", href: "/services/waxing" },
+    { name: "Massage", href: "/services/massages" },
+    { name: "Facials & Skin", href: "/services/dermalogica" },
+    { name: "QMS Facials", href: "/services/qms" },
+    { name: "IPL Hair Removal", href: "/services/ipl" },
+    { name: "Makeup", href: "/services/makeup" },
+    { name: "Permanent Makeup", href: "/services/permanent-makeup" },
+    { name: "Sunbed & Spray Tan", href: "/services/sunbed" },
+    { name: "Fat Freezing", href: "/services/fat-freezing" },
+    { name: "Slimming", href: "/services/slimming" },
+    { name: "Injectables & Aesthetics", href: "/services/hart-aesthetics" },
+    { name: "Medical Treatments", href: "/services/medical" },
+];
+
 export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
         <footer className="border-t border-[#d8dce0] bg-[#f6f7f7] text-foreground">
             <div className="container mx-auto px-4 py-10 sm:px-6 md:py-12">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,0.85fr)_minmax(0,0.9fr)_auto] lg:gap-8 xl:gap-10">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.9fr)_minmax(0,0.8fr)_minmax(16rem,1.3fr)_minmax(0,0.85fr)_auto] lg:gap-6 xl:gap-8">
                     <div className="space-y-4">
                         <NavLink href="/" className="inline-block">
                             <CloudinaryImage
@@ -110,6 +129,31 @@ export function Footer() {
                             <p>{businessInfo.hours.weekday}</p>
                             <p>{businessInfo.hours.saturday}</p>
                             <p>{businessInfo.hours.publicHoliday}</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <h3 className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-foreground/55">
+                            Our Services
+                        </h3>
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 font-sans text-[0.86rem] leading-6 text-foreground/82">
+                            {footerServiceCategories.map((category) => (
+                                <NavLink
+                                    key={category.href}
+                                    href={category.href}
+                                    className="block transition-colors hover:text-gold"
+                                >
+                                    {category.name}
+                                </NavLink>
+                            ))}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            <NavLink
+                                href="/services"
+                                className="inline-flex items-center border border-[#d8dce0] bg-white px-3 py-2 font-sans text-[0.78rem] font-medium text-foreground transition-colors hover:border-[#5d6a72] hover:text-[#5d6a72]"
+                            >
+                                All Services
+                            </NavLink>
                         </div>
                     </div>
 
