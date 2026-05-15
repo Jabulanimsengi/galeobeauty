@@ -16,6 +16,11 @@ export default function robots(): MetadataRoute.Robots {
                 disallow: ["/api/", "/_next/"],
             },
             {
+                userAgent: "PerplexityBot",
+                allow: "/",
+                disallow: ["/api/", "/_next/"],
+            },
+            {
                 userAgent: "GPTBot",
                 disallow: "/",
             },

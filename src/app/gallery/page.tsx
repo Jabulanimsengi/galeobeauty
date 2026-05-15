@@ -46,10 +46,39 @@ export const metadata: Metadata = {
     },
 };
 
+export const dynamic = "force-static";
+
 const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: "https://www.galeobeauty.com" },
     { name: "Gallery", url: "https://www.galeobeauty.com/gallery" },
 ]);
+
+const imageGallerySchema = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    name: "Galeo Beauty Treatment Gallery",
+    description: "Real treatment results, nail art, skincare before & afters from Galeo Beauty in Hartbeespoort.",
+    url: "https://www.galeobeauty.com/gallery",
+    image: [
+        {
+            "@type": "ImageObject",
+            url: "https://www.galeobeauty.com/images/gallery/facials/professional-skin-facial-treatment-in-progress.jpg",
+            name: "Professional skin facial treatment at Galeo Beauty Hartbeespoort",
+            description: "Clinical facial treatment in progress at Galeo Beauty, Hartbeespoort.",
+        },
+        {
+            "@type": "ImageObject",
+            url: "https://www.galeobeauty.com/images/interior/galeo-beauty-interior-p1.jpg",
+            name: "Galeo Beauty salon interior in Hartbeespoort",
+            description: "The premium salon interior at Galeo Beauty, Landsmeer Estate, Hartbeespoort.",
+        },
+    ],
+    author: {
+        "@type": "Organization",
+        name: "Galeo Beauty",
+        url: "https://www.galeobeauty.com",
+    },
+};
 
 export default function GalleryPage() {
     const images = getGalleryImages();
@@ -58,12 +87,12 @@ export default function GalleryPage() {
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbSchema, imageGallerySchema]) }}
             />
             <Header />
             <main className="bg-background min-h-screen">
                 <section className="relative overflow-hidden px-6 pt-32 pb-16 lg:pt-40 lg:pb-24">
-                    <div className="absolute top-0 right-0 h-full w-2/3 -z-10 skew-x-12 bg-rose-50/20" />
+                    <div className="absolute inset-0 -z-10" style={{ background: "radial-gradient(circle at top right, rgba(196,165,119,0.08), transparent 40%)" }} />
                     <div className="container mx-auto text-center">
                         <div>
                             <span className="mb-4 block text-xs font-bold uppercase tracking-[0.2em] text-gold sm:text-sm">

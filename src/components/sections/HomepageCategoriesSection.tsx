@@ -97,9 +97,9 @@ export function HomepageCategoriesSection() {
                     transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: "easeOut" }}
                     className="mb-7 px-2 text-center sm:px-0 lg:mb-10"
                 >
-                    <h1 className="block font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-black sm:text-[2rem] lg:text-[2.25rem]">
+                    <h2 className="block font-sans text-[1.45rem] font-bold uppercase tracking-[0.08em] text-black sm:text-[2rem] lg:text-[2.25rem]">
                         Featured Categories
-                    </h1>
+                    </h2>
                 </motion.div>
 
                 <div className="grid gap-3 sm:gap-4 lg:grid-cols-2">

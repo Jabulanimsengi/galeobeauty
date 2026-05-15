@@ -1,6 +1,7 @@
 
 import { Metadata } from "next";
 import { ContactClient } from "./ContactClient";
+import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
     title: "Contact Galeo Beauty | Hartbeespoort Salon Details",
@@ -26,5 +27,18 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-    return <ContactClient />;
+    const breadcrumbSchema = generateBreadcrumbSchema([
+        { name: "Home", url: "https://www.galeobeauty.com" },
+        { name: "Contact", url: "https://www.galeobeauty.com/contact" },
+    ]);
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <ContactClient />
+        </>
+    );
 }

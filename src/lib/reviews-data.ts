@@ -91,10 +91,13 @@ export const TESTIMONIALS: Review[] = [
     },
 ];
 
-// Aggregate rating calculated from all reviews
+// Aggregate rating — using Google rating (4.4) as Google cross-references
+// schema ratingValue against their own Maps data. Using a mismatched Fresha
+// rating (4.9) can cause rich results to be suppressed.
+// Fresha rating (4.9, 300+ reviews) is displayed separately in the UI.
 export const AGGREGATE_RATING = {
-    ratingValue: "4.9",
-    reviewCount: "159",
+    ratingValue: "4.4",
+    reviewCount: "300",
     bestRating: "5",
     worstRating: "1",
 };

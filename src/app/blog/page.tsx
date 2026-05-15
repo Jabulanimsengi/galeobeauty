@@ -107,7 +107,7 @@ export default function BlogPage() {
                             {posts.map((post) => (
                                 <article
                                     key={post.slug}
-                                    className="group overflow-hidden rounded-[0.4rem] border border-border bg-secondary/30 transition-all duration-300 hover:border-gold/30 hover:shadow-xl"
+                                    className="group overflow-hidden border border-border bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:shadow-[0_22px_60px_-45px_rgba(0,0,0,0.35)]"
                                 >
                                     {/* Image */}
                                     <div className="relative h-48 overflow-hidden bg-secondary">
@@ -120,7 +120,7 @@ export default function BlogPage() {
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10" />
                                         <div className="absolute bottom-4 left-4 z-20">
-                                            <span className="bg-gold/90 text-white text-xs font-medium px-3 py-1 rounded-full">
+                                            <span className="bg-gold text-white text-[0.62rem] font-semibold uppercase tracking-[0.18em] px-3 py-1">
                                                 {post.category}
                                             </span>
                                         </div>
@@ -155,7 +155,7 @@ export default function BlogPage() {
 
                                         <Link
                                             href={`/blog/${post.slug}`}
-                                            className="inline-flex items-center gap-2 text-gold font-medium text-sm group-hover:gap-3 transition-all"
+                                            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-gold transition-all group-hover:gap-3"
                                         >
                                             Read More
                                             <ArrowRight className="w-4 h-4" />
@@ -178,7 +178,7 @@ export default function BlogPage() {
                         </p>
                         <Link
                             href="/services"
-                            className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-foreground font-semibold px-8 py-3 rounded-full transition-colors"
+                            className="inline-flex items-center gap-2 bg-gold hover:bg-gold-dark text-foreground font-semibold px-8 py-3 text-xs uppercase tracking-[0.24em] transition-colors"
                         >
                             View Our Services
                             <ArrowRight className="w-4 h-4" />

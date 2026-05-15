@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { montserrat } from "@/lib/fonts";
+import { inter, montserrat } from "@/lib/fonts";
 import { AttributionTracker } from "@/components/providers/AttributionTracker";
 import { NavigationLoadingProvider } from "@/components/providers/NavigationLoadingProvider";
 import { AppBootLoader } from "@/components/providers/AppBootLoader";
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Galeo Beauty",
   },
   description:
-    "Premium hair, nails, facials, massage, body treatments, and medical aesthetics in Hartbeespoort at Galeo Beauty.",
+    "Hartbeespoort's clinical-premium beauty salon - hair, nails, facials, lash lift, IPL & advanced aesthetics at Landsmeer Estate. Book via WhatsApp.",
 
   keywords: buildGlobalKeywords(),
   authors: [{ name: "Galeo Beauty" }],
@@ -44,10 +44,10 @@ export const metadata: Metadata = {
       "A refined Hartbeespoort beauty destination for hair, nails, facials, massage, body treatments, and advanced aesthetics.",
     images: [
       {
-        url: "/images/logo.png",
+        url: "/images/interior/galeo-beauty-interior-p1.jpg",
         width: 1200,
         height: 630,
-        alt: "Galeo Beauty Salon",
+        alt: "Galeo Beauty premium salon interior in Hartbeespoort",
       },
     ],
   },
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: "Galeo Beauty | Premium Salon & Medical Aesthetics in Hartbeespoort",
     description:
       "A refined Hartbeespoort beauty destination for hair, nails, facials, massage, body treatments, and advanced aesthetics.",
-    images: ["/images/logo.png"],
+    images: ["/images/interior/galeo-beauty-interior-p1.jpg"],
   },
   robots: {
     index: true,
@@ -85,7 +85,7 @@ export default function RootLayout({
   ].filter(Boolean);
 
   return (
-    <html lang="en" className={montserrat.variable} suppressHydrationWarning>
+    <html lang="en" className={`${montserrat.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         {/* JSON-LD Structured Data for Local Business */}
         <script

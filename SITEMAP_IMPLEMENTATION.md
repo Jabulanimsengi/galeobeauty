@@ -1,130 +1,119 @@
-# Multi-Sitemap Implementation
+# Sitemap Implementation
+
+Last updated: 2026-05-14
 
 ## Overview
 
-Successfully implemented a multi-sitemap strategy to better organize your 64,309 URLs across 238 locations.
+The site uses a generated static sitemap index with two child sitemap files. This replaced the earlier dynamic `/sitemap/{id}.xml` approach.
 
-## Sitemap Structure
+Current sitemap URLs:
 
-### Sitemap Index (`/sitemap.xml`)
-References two separate sitemaps for better organization and SEO.
+- `/sitemap.xml`
+- `/sitemaps/0.xml`
+- `/sitemaps/1.xml`
 
-### Sitemap 0: Primary Local & Northwest Areas
-**URL:** `/sitemap/0.xml`
-**Total URLs:** 36,769 (73.5% of 50k limit)
+Legacy sitemap patterns are redirected to `/sitemap.xml` by `src/proxy.ts`.
 
-#### Breakdown:
-- **Static pages:** 32 URLs
-- **Blog posts:** 16 URLs
-- **Location index:** 1 URL
-- **Location hubs:** 136 URLs
-- **Location service pages:** 36,584 URLs (136 locations × 269 services)
+## Current Counts
 
-#### Geographic Coverage:
-1. **Hartbeespoort/Harties Core** (50 locations)
-   - Hartbeespoort, Harties, Schoemansville, Melodie, etc.
-   - All estates: Islands, Pecanwood, Xanadu, Leloko, etc.
-   - Shopping areas: Village Mall, Islands Mall, etc.
+Measured from the current code with:
 
-2. **Hartbeespoort Dam Area** (9 locations)
-   - Dam Wall, Oberon, Buffelspoort, etc.
-
-3. **Pretoria** (28 locations)
-   - Pretoria East: Garsfontein, Moreleta Park, Silver Lakes, Menlyn
-   - Pretoria North: Montana, Akasia, Wonderboom
-   - Pretoria CBD: Arcadia, Hatfield, Brooklyn
-   - Surrounds: Roodeplaat, Cullinan, Hammanskraal
-
-4. **Centurion** (11 locations)
-   - Irene, Die Hoewes, Midstream, Wierdapark, etc.
-
-5. **Northwest Province** (30 locations)
-   - **Brits Area:** Brits, Brits CBD, Rosslyn, De Wildt, Oukasie
-   - **Rustenburg Area:** Rustenburg, Tlhabane, Phokeng, Sun City, Pilanesberg
-   - **Other:** Potchefstroom, Klerksdorp, Stilfontein
-
-### Sitemap 1: Extended Gauteng Coverage
-**URL:** `/sitemap/1.xml`
-**Total URLs:** 27,540 (55.1% of 50k limit)
-
-#### Breakdown:
-- **Location hubs:** 102 URLs
-- **Location service pages:** 27,438 URLs (102 locations × 269 services)
-
-#### Geographic Coverage:
-1. **Johannesburg** (21 locations)
-   - North: Sandton, Fourways, Bryanston, Rivonia
-   - CBD: Rosebank, Melville, Parkhurst
-   - Other suburbs
-
-2. **Randburg & West Rand** (22 locations)
-   - Randburg, Roodepoort, Krugersdorp, etc.
-
-3. **Johannesburg South** (11 locations)
-   - Soweto, Lenasia, Ennerdale, etc.
-
-4. **Midrand** (10 locations)
-   - Waterfall City, Kyalami, Blue Hills, etc.
-
-5. **East Rand** (31 locations)
-   - Kempton Park, Boksburg, Benoni, Springs, Germiston, Alberton
-
-6. **Vaal Triangle** (8 locations)
-   - Vereeniging, Vanderbijlpark, Meyerton, Heidelberg
-
-## Key Benefits
-
-1. **Better SEO Focus:** Sitemap 0 prioritizes your local Harties/Northwest market and close Gauteng areas
-2. **Within Limits:** Both sitemaps well under Google's 50,000 URL limit
-3. **Scalable:** Can easily add Sitemap 2 if you expand to more provinces
-4. **Fast Crawling:** Search engines can crawl priority areas (Sitemap 0) first
-
-## Files Modified/Created
-
-### Modified:
-- `src/lib/sitemap-config.ts` - Split locations into SITEMAP_0_LOCATIONS and SITEMAP_1_LOCATIONS
-- `src/app/sitemap.ts` - Converted to sitemap index
-
-### Created:
-- `src/lib/sitemap-utils.ts` - URL count calculator utility
-- `src/app/sitemap/[id]/route.ts` - Dynamic sitemap generator
-
-### Unchanged:
-- `src/app/robots.ts` - Already references sitemap.xml correctly
-- `public/robots.txt` - Already references sitemap.xml correctly
-
-## Testing
-
-Test the sitemaps locally:
-```bash
-npm run dev
-```
-
-Visit:
-- http://localhost:3000/sitemap.xml (Sitemap Index)
-- http://localhost:3000/sitemap/0.xml (Primary Local & Northwest)
-- http://localhost:3000/sitemap/1.xml (Extended Gauteng)
-
-## Deployment
-
-After deployment, verify:
-1. https://www.galeobeauty.com/sitemap.xml
-2. https://www.galeobeauty.com/sitemap/0.xml
-3. https://www.galeobeauty.com/sitemap/1.xml
-
-Then submit to Google Search Console:
-1. Go to Sitemaps section
-2. Submit: https://www.galeobeauty.com/sitemap.xml
-3. Google will automatically discover and crawl the individual sitemaps
-
-## URL Count Verification
-
-Run this command to verify URL counts:
 ```bash
 npx tsx -e "import { printSitemapCounts } from './src/lib/sitemap-utils'; printSitemapCounts();"
 ```
 
-Expected output:
-- Sitemap 0: 36,769 URLs (73.5%)
-- Sitemap 1: 27,540 URLs (55.1%)
-- Grand Total: 64,309 URLs
+| Metric | Count |
+| --- | ---: |
+| Sitemap 0 URLs | 7,885 |
+| Sitemap 1 URLs | 4,784 |
+| Total sitemap URLs | 12,669 |
+| Location-service URLs | 11,790 |
+| Static pages | 45 |
+| Guide-safe pages | 265 |
+| Blog posts | 16 |
+| Bespoke service pages | 17 |
+| Service pages | 304 |
+
+## Sitemap Structure
+
+### Sitemap Index
+
+URL: `/sitemap.xml`
+
+References:
+
+- `https://www.galeobeauty.com/sitemaps/0.xml`
+- `https://www.galeobeauty.com/sitemaps/1.xml`
+
+### Sitemap 0
+
+URL: `/sitemaps/0.xml`
+
+Purpose:
+- static pages
+- guide-safe intent pages
+- blog posts
+- bespoke service pages
+- service pages
+- location index
+- priority local and nearby location hubs
+- selected priority location-service pages
+
+Current total: `7,885`
+
+### Sitemap 1
+
+URL: `/sitemaps/1.xml`
+
+Purpose:
+- extended Gauteng and district location hubs
+- selected extended location-service pages
+
+Current total: `4,784`
+
+## Why The Sitemap Is Smaller Now
+
+The previous implementation notes described a much larger sitemap set that submitted nearly every location and service combination.
+
+The current code intentionally filters location-service URLs through `isIndexableLocationService` in `src/lib/seo-data.ts`. This keeps crawl targets focused and reduces duplicate or thin page risk.
+
+## Relevant Files
+
+- `scripts/generate-sitemaps.ts`
+- `scripts/run-generate-sitemaps.cjs`
+- `src/lib/sitemap-helpers.ts`
+- `src/lib/sitemap-config.ts`
+- `src/lib/sitemap-utils.ts`
+- `src/lib/seo-data.ts`
+- `src/app/robots.ts`
+- `src/proxy.ts`
+
+## Generation
+
+Compile-check the generator:
+
+```bash
+npm run generate:sitemaps -- --check
+```
+
+Generate files:
+
+```bash
+npm run generate:sitemaps
+```
+
+Production builds run sitemap generation through the `prebuild` script when the production/deploy environment is detected.
+
+## Deployment Verification
+
+After deployment, verify:
+
+1. `https://www.galeobeauty.com/sitemap.xml`
+2. `https://www.galeobeauty.com/sitemaps/0.xml`
+3. `https://www.galeobeauty.com/sitemaps/1.xml`
+
+Then submit this sitemap index to Google Search Console:
+
+```text
+https://www.galeobeauty.com/sitemap.xml
+```

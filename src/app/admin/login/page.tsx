@@ -21,13 +21,13 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const nextPath = params.next?.startsWith("/admin") ? params.next : "/admin/bookings";
 
   return (
-    <main className="min-h-screen bg-[#17120f] px-6 py-12 text-white">
+    <main data-admin-dashboard className="min-h-screen bg-[#17120f] px-6 py-12 text-white">
       <div className="mx-auto flex min-h-[calc(100vh-6rem)] max-w-md items-center">
         <div className="w-full rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-[0_30px_80px_-40px_rgba(0,0,0,0.65)] backdrop-blur">
           <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold/90">
             Private Admin
           </p>
-          <h1 className="mt-4 font-serif text-4xl leading-none text-white">
+          <h1 className="mt-4 text-4xl font-semibold leading-none text-white">
             Bookings dashboard
           </h1>
           <p className="mt-4 text-sm leading-7 text-white/72">

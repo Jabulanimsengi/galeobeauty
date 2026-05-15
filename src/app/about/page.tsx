@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { AboutClient } from "./AboutClient";
+import { generateBreadcrumbSchema } from "@/lib/schema-utils";
 
 export const metadata: Metadata = {
     title: "About the Salon, Reviews & Team in Hartbeespoort",
@@ -27,5 +28,18 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
-    return <AboutClient />;
+    const breadcrumbSchema = generateBreadcrumbSchema([
+        { name: "Home", url: "https://www.galeobeauty.com" },
+        { name: "About", url: "https://www.galeobeauty.com/about" },
+    ]);
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <AboutClient />
+        </>
+    );
 }

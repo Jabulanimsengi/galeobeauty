@@ -5,6 +5,7 @@ export const SITEMAP_STATIC_PAGES = [
   { path: "/specials", priority: 0.8, changefreq: "weekly" },
   { path: "/gallery", priority: 0.7, changefreq: "monthly" },
   { path: "/about", priority: 0.6, changefreq: "monthly" },
+  { path: "/reviews", priority: 0.75, changefreq: "monthly" },
   { path: "/contact", priority: 0.8, changefreq: "monthly" },
   { path: "/blog", priority: 0.85, changefreq: "weekly" },
   { path: "/guides", priority: 0.85, changefreq: "weekly" },
