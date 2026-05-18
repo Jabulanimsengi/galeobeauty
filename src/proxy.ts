@@ -4,6 +4,12 @@ import { serviceCategoriesContent } from './lib/services-content';
 import { resolveLegacyServiceRedirect } from './lib/legacy-service-redirects';
 import { isKnownLocationSlug } from './lib/location-route-manifest';
 import { INTENT_PAGE_REDIRECTS } from './lib/intent-redirects';
+import {
+  getCanonicalLocalCategoryPath,
+  getCanonicalLocalServicePath,
+  resolveLocalCategoryRoute,
+  resolveLocalServiceRoute,
+} from './lib/local-seo-routes';
 
 const VALID_CATEGORIES = new Set<string>();
 const VALID_SERVICE_SLUGS = new Set<string>(
@@ -30,6 +36,21 @@ const CATEGORY_IDS = [
 ];
 CATEGORY_IDS.forEach((id) => VALID_CATEGORIES.add(id));
 
+const LEGACY_CATEGORY_SEGMENT_REDIRECTS: Record<string, string> = {
+  'lashes': 'lashes-brows',
+  'pro-skin': 'dermalogica',
+  'qms-facial': 'qms',
+  'skin': 'dermalogica',
+};
+
+const ROOT_SERVICE_REDIRECT_CATEGORIES: Record<string, string> = {
+  'laser-hair-removal': 'ipl',
+  'anti-aging': 'hart-aesthetics',
+  'body-contouring': 'fat-freezing',
+  'medical-spa': 'medical',
+  'permanent-makeup': 'permanent-makeup',
+};
+
 function rewriteToAppNotFound(request: NextRequest) {
   const url = request.nextUrl.clone();
   url.pathname = '/_not-found';
@@ -55,7 +76,8 @@ function getCanonicalServicePath(serviceSegment: string): string | null {
   const canonicalCategoryId = SERVICE_CATEGORY_BY_SLUG.get(serviceSegment);
 
   if (canonicalCategoryId) {
-    return `/services/${canonicalCategoryId}/${serviceSegment}`;
+    return getCanonicalLocalServicePath(canonicalCategoryId, serviceSegment) ??
+      `/services/${canonicalCategoryId}/${serviceSegment}`;
   }
 
   const legacyRedirectPath = resolveLegacyServiceRedirect(serviceSegment);
@@ -65,11 +87,16 @@ function getCanonicalServicePath(serviceSegment: string): string | null {
   }
 
   return legacyRedirectPath.serviceSlug
-    ? `/services/${legacyRedirectPath.categoryId}/${legacyRedirectPath.serviceSlug}`
-    : `/services/${legacyRedirectPath.categoryId}`;
+    ? getCanonicalLocalServicePath(legacyRedirectPath.categoryId, legacyRedirectPath.serviceSlug) ??
+      `/services/${legacyRedirectPath.categoryId}/${legacyRedirectPath.serviceSlug}`
+    : getCanonicalLocalCategoryPath(legacyRedirectPath.categoryId) ?? `/services/${legacyRedirectPath.categoryId}`;
 }
 
 function getLegacyServiceRedirectPath(serviceSegment: string): string | null {
+  if (VALID_SERVICE_SLUGS.has(serviceSegment)) {
+    return null;
+  }
+
   const legacyRedirectPath = resolveLegacyServiceRedirect(serviceSegment);
 
   if (!legacyRedirectPath) {
@@ -77,19 +104,22 @@ function getLegacyServiceRedirectPath(serviceSegment: string): string | null {
   }
 
   if (!legacyRedirectPath.serviceSlug) {
-    return VALID_SERVICE_SLUGS.has(serviceSegment)
-      ? null
-      : `/services/${legacyRedirectPath.categoryId}`;
+    return getCanonicalLocalCategoryPath(legacyRedirectPath.categoryId) ?? `/services/${legacyRedirectPath.categoryId}`;
   }
 
   if (legacyRedirectPath.serviceSlug === serviceSegment) {
     return null;
   }
 
-  return `/services/${legacyRedirectPath.categoryId}/${legacyRedirectPath.serviceSlug}`;
+  return getCanonicalLocalServicePath(legacyRedirectPath.categoryId, legacyRedirectPath.serviceSlug) ??
+    `/services/${legacyRedirectPath.categoryId}/${legacyRedirectPath.serviceSlug}`;
 }
 
 function getLegacyLocationServiceRedirectPath(locationSlug: string, serviceSegment: string): string | null {
+  if (VALID_SERVICE_SLUGS.has(serviceSegment)) {
+    return null;
+  }
+
   const legacyRedirectPath = resolveLegacyServiceRedirect(serviceSegment);
 
   if (!legacyRedirectPath) {
@@ -97,16 +127,32 @@ function getLegacyLocationServiceRedirectPath(locationSlug: string, serviceSegme
   }
 
   if (!legacyRedirectPath.serviceSlug) {
-    return VALID_SERVICE_SLUGS.has(serviceSegment)
-      ? null
-      : `/services/${legacyRedirectPath.categoryId}`;
+    return getCanonicalLocalCategoryPath(legacyRedirectPath.categoryId) ?? `/services/${legacyRedirectPath.categoryId}`;
   }
 
   if (legacyRedirectPath.serviceSlug === serviceSegment) {
     return null;
   }
 
-  return `/locations/${locationSlug}/${legacyRedirectPath.serviceSlug}`;
+  return getCanonicalLocalServicePath(legacyRedirectPath.categoryId, legacyRedirectPath.serviceSlug, locationSlug) ??
+    `/locations/${locationSlug}/${legacyRedirectPath.serviceSlug}`;
+}
+
+function getLegacySalonRedirectPath(pathname: string): string | null {
+  const slug = pathname.match(/^\/salons\/([^/]+)/)?.[1] || "";
+
+  if (!slug) {
+    return "/services";
+  }
+
+  if (/wax/.test(slug)) return getCanonicalLocalCategoryPath("waxing") ?? "/services/waxing";
+  if (/massage|spa/.test(slug)) return getCanonicalLocalCategoryPath("massages") ?? "/services/massages";
+  if (/nail|manicure|pedicure/.test(slug)) return getCanonicalLocalCategoryPath("nails") ?? "/services/nails";
+  if (/lash|brow/.test(slug)) return getCanonicalLocalCategoryPath("lashes-brows") ?? "/services/lashes-brows";
+  if (/hair/.test(slug)) return getCanonicalLocalCategoryPath("hair") ?? "/services/hair";
+  if (/skin|facial|aesthetic|clinic/.test(slug)) return getCanonicalLocalCategoryPath("dermalogica") ?? "/services/dermalogica";
+
+  return "/services";
 }
 
 export function proxy(request: NextRequest) {
@@ -131,6 +177,27 @@ export function proxy(request: NextRequest) {
   }
 
   const flatIntentSlug = pathname.match(/^\/([^/]+)$/)?.[1];
+  const localCategoryRoute = flatIntentSlug ? resolveLocalCategoryRoute(flatIntentSlug) : null;
+  if (flatIntentSlug && localCategoryRoute) {
+    if (localCategoryRoute.slug !== flatIntentSlug) {
+      return NextResponse.redirect(
+        new URL(localCategoryRoute.href, request.url),
+        301
+      );
+    }
+
+    return NextResponse.next();
+  }
+
+  const rootServiceCategoryId = flatIntentSlug ? ROOT_SERVICE_REDIRECT_CATEGORIES[flatIntentSlug] : null;
+  if (rootServiceCategoryId) {
+    const canonicalCategoryPath = getCanonicalLocalCategoryPath(rootServiceCategoryId);
+    return NextResponse.redirect(
+      new URL(canonicalCategoryPath ?? '/services', request.url),
+      301
+    );
+  }
+
   const flatIntentRedirectPath = flatIntentSlug ? INTENT_PAGE_REDIRECTS[flatIntentSlug] : null;
   if (flatIntentRedirectPath) {
     return NextResponse.redirect(
@@ -142,12 +209,39 @@ export function proxy(request: NextRequest) {
   if (pathname === '/prices' || pathname.startsWith('/prices/')) {
     const pricesServiceMatch = pathname.match(/^\/prices\/([^/]+)\/([^/]+)$/);
     if (pricesServiceMatch) {
-      const [, , serviceSegment] = pricesServiceMatch;
+      const [, categorySegment, serviceSegment] = pricesServiceMatch;
+      const directLocalServicePath = VALID_CATEGORIES.has(categorySegment)
+        ? getCanonicalLocalServicePath(categorySegment, serviceSegment)
+        : null;
+
+      if (directLocalServicePath) {
+        return NextResponse.redirect(
+          new URL(directLocalServicePath, request.url),
+          301
+        );
+      }
+
       const legacyRedirectPath = getLegacyServiceRedirectPath(serviceSegment);
 
       if (legacyRedirectPath) {
         return NextResponse.redirect(
           new URL(legacyRedirectPath, request.url),
+          301
+        );
+      }
+    }
+
+    const pricesCategoryMatch = pathname.match(/^\/prices\/([^/]+)$/);
+    if (pricesCategoryMatch) {
+      const [, categoryOrServiceSegment] = pricesCategoryMatch;
+      const directLocalCategoryPath = VALID_CATEGORIES.has(categoryOrServiceSegment)
+        ? getCanonicalLocalCategoryPath(categoryOrServiceSegment)
+        : null;
+      const directLocalServicePath = getCanonicalServicePath(categoryOrServiceSegment);
+
+      if (directLocalCategoryPath || directLocalServicePath) {
+        return NextResponse.redirect(
+          new URL(directLocalCategoryPath ?? directLocalServicePath ?? '/services', request.url),
           301
         );
       }
@@ -194,9 +288,26 @@ export function proxy(request: NextRequest) {
     );
   }
 
+  if (pathname === '/salons' || pathname.startsWith('/salons/')) {
+    return NextResponse.redirect(
+      new URL(getLegacySalonRedirectPath(pathname) || '/services', request.url),
+      301
+    );
+  }
+
   const singleServiceSegmentMatch = pathname.match(/^\/services\/([^/]+)$/);
   if (singleServiceSegmentMatch) {
     const segment = singleServiceSegmentMatch[1];
+    if (VALID_CATEGORIES.has(segment)) {
+      const canonicalCategoryPath = getCanonicalLocalCategoryPath(segment);
+      if (canonicalCategoryPath) {
+        return NextResponse.redirect(
+          new URL(canonicalCategoryPath, request.url),
+          301
+        );
+      }
+    }
+
     if (!VALID_CATEGORIES.has(segment)) {
       const canonicalServicePath = getCanonicalServicePath(segment);
       if (canonicalServicePath) {
@@ -217,12 +328,40 @@ export function proxy(request: NextRequest) {
   if (categoryServiceMatch) {
     const [, categorySegment, serviceSegment] = categoryServiceMatch;
     const legacyRedirectPath = getLegacyServiceRedirectPath(serviceSegment);
+    const canonicalServicePath = VALID_CATEGORIES.has(categorySegment)
+      ? getCanonicalLocalServicePath(categorySegment, serviceSegment)
+      : null;
+
+    if (!VALID_CATEGORIES.has(categorySegment)) {
+      const legacyCategoryId = LEGACY_CATEGORY_SEGMENT_REDIRECTS[categorySegment];
+      if (legacyCategoryId) {
+        return NextResponse.redirect(
+          new URL(getCanonicalServicePath(serviceSegment) || `/services/${legacyCategoryId}`, request.url),
+          301
+        );
+      }
+    }
 
     if (VALID_CATEGORIES.has(categorySegment) && legacyRedirectPath) {
       return NextResponse.redirect(
         new URL(legacyRedirectPath, request.url),
         301
       );
+    }
+
+    if (canonicalServicePath) {
+      return NextResponse.redirect(
+        new URL(canonicalServicePath, request.url),
+        301
+      );
+    }
+  }
+
+  const localNestedRouteMatch = pathname.match(/^\/([^/]+)\/([^/]+)$/);
+  if (localNestedRouteMatch) {
+    const [, categorySlug, serviceSlug] = localNestedRouteMatch;
+    if (resolveLocalServiceRoute(categorySlug, serviceSlug)) {
+      return NextResponse.next();
     }
   }
 
@@ -231,6 +370,14 @@ export function proxy(request: NextRequest) {
     const [, locationSlug] = locationHubMatch;
     if (!isKnownLocationSlug(locationSlug)) {
       return rewriteToAppNotFound(request);
+    }
+
+    const canonicalCategoryPath = getCanonicalLocalCategoryPath('nails', locationSlug);
+    if (canonicalCategoryPath) {
+      return NextResponse.redirect(
+        new URL(canonicalCategoryPath, request.url),
+        301
+      );
     }
   }
 
@@ -260,6 +407,27 @@ export function proxy(request: NextRequest) {
 
     if (!isRecognizedLocationServiceSegment(serviceSegment)) {
       return rewriteToAppNotFound(request);
+    }
+
+    if (VALID_CATEGORIES.has(serviceSegment)) {
+      const canonicalLocalCategoryPath = getCanonicalLocalCategoryPath(serviceSegment, locationSlug);
+      if (canonicalLocalCategoryPath) {
+        return NextResponse.redirect(
+          new URL(canonicalLocalCategoryPath, request.url),
+          301
+        );
+      }
+    }
+
+    const categoryId = SERVICE_CATEGORY_BY_SLUG.get(serviceSegment);
+    if (categoryId) {
+      const canonicalLocalPath = getCanonicalLocalServicePath(categoryId, serviceSegment, locationSlug);
+      if (canonicalLocalPath) {
+        return NextResponse.redirect(
+          new URL(canonicalLocalPath, request.url),
+          301
+        );
+      }
     }
   }
 

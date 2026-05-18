@@ -8,9 +8,9 @@ import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
 
 const spotlightLinks = [
-    { href: "/services/hair", label: "Hair & Colour" },
-    { href: "/services/lashes-brows", label: "Lashes & Brows" },
-    { href: "/services/dermalogica", label: "Facials & Skin" },
+    { href: "/hair-salon-in-hartbeespoort", label: "Hair & Colour" },
+    { href: "/lash-extensions-in-hartbeespoort", label: "Lashes & Brows" },
+    { href: "/facials-in-hartbeespoort", label: "Facials & Skin" },
 ];
 
 export function HeroSection() {

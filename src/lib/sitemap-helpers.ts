@@ -5,6 +5,11 @@ import { getAllSEOServices, isIndexableLocationService } from './seo-data';
 import { SITEMAP_0_LOCATIONS, SITEMAP_1_LOCATIONS } from './sitemap-config';
 import { SITEMAP_STATIC_PAGES } from './sitemap-static-pages';
 import { toAbsoluteUrl } from './site-url';
+import {
+  getAllLocalCategoryRoutes,
+  getCanonicalLocalServicePath,
+  PRIMARY_LOCAL_ROUTE_LOCATIONS,
+} from './local-seo-routes';
 
 export const BASE_URL = 'https://www.galeobeauty.com';
 export const FALLBACK_IMAGE = `${BASE_URL}/images/logo.png`;
@@ -131,9 +136,18 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
     );
   }
 
+  for (const route of getAllLocalCategoryRoutes([...PRIMARY_LOCAL_ROUTE_LOCATIONS])) {
+    visitor(createEntry(`${BASE_URL}${route.href}`, route.locationSlug === 'hartbeespoort' ? 0.9 : 0.75, 'weekly'));
+  }
+
   for (const service of services) {
+    const localServicePath = getCanonicalLocalServicePath(service.categoryId, service.slug, 'hartbeespoort');
+    if (!localServicePath) {
+      continue;
+    }
+
     visitor(
-      createEntry(`${BASE_URL}/services/${service.categoryId}/${service.slug}`, 0.85, 'monthly', {
+      createEntry(`${BASE_URL}${localServicePath}`, 0.85, 'monthly', {
         loc: toAbsoluteUrl(service.image || FALLBACK_IMAGE),
         title: `${service.keyword} at Galeo Beauty`,
         caption: service.imageAlt,
@@ -141,20 +155,23 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
     );
   }
 
-  visitor(createEntry(`${BASE_URL}/locations`, 0.9, 'weekly'));
-
   for (const location of SITEMAP_0_LOCATIONS) {
-    visitor(createEntry(`${BASE_URL}/locations/${location}`, 0.8, 'weekly'));
-  }
+    if (location === 'hartbeespoort') {
+      continue;
+    }
 
-  for (const location of SITEMAP_0_LOCATIONS) {
     for (const service of services) {
       if (!isIndexableLocationService(location, service.slug)) {
         continue;
       }
 
+      const localServicePath = getCanonicalLocalServicePath(service.categoryId, service.slug, location);
+      if (!localServicePath) {
+        continue;
+      }
+
       visitor(
-        createEntry(`${BASE_URL}/locations/${location}/${service.slug}`, 0.7, 'monthly', {
+        createEntry(`${BASE_URL}${localServicePath}`, 0.7, 'monthly', {
           loc: toAbsoluteUrl(service.image || FALLBACK_IMAGE),
           title: `${service.keyword} near ${location}`,
           caption: service.imageAlt,
@@ -166,16 +183,17 @@ function walkSitemap0(visitor: (entry: SitemapEntry) => void) {
 
 function walkSitemap1(visitor: (entry: SitemapEntry) => void) {
   for (const location of SITEMAP_1_LOCATIONS) {
-    visitor(createEntry(`${BASE_URL}/locations/${location}`, 0.6, 'weekly'));
-  }
-
-  for (const location of SITEMAP_1_LOCATIONS) {
     for (const service of services) {
       if (!isIndexableLocationService(location, service.slug)) {
         continue;
       }
 
-      visitor(createEntry(`${BASE_URL}/locations/${location}/${service.slug}`, 0.5, 'monthly'));
+      const localServicePath = getCanonicalLocalServicePath(service.categoryId, service.slug, location);
+      if (!localServicePath) {
+        continue;
+      }
+
+      visitor(createEntry(`${BASE_URL}${localServicePath}`, 0.5, 'monthly'));
     }
   }
 }

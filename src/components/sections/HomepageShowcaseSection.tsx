@@ -11,7 +11,7 @@ const featurePanels = [
         eyebrow: "Signature Finishing",
         description:
             "Cuts, colour, extensions, and polished styling for everyday confidence, events, and full transformation appointments.",
-        href: "/services/hair",
+        href: "/hair-salon-in-hartbeespoort",
         cta: "View Hair Services",
         image: "/images/gallery/hair/brunette-curls-hair-styling-blowout-results.jpg",
         alt: "Styled brunette curls after a Galeo Beauty hair appointment",
@@ -22,7 +22,7 @@ const featurePanels = [
         eyebrow: "Beauty Rituals",
         description:
             "Lash artistry, brow shaping, facials, and beauty maintenance treatments that keep the whole look refined.",
-        href: "/services/lashes-brows",
+        href: "/lash-extensions-in-hartbeespoort",
         cta: "Explore Lash & Brow",
         image: "/images/gallery/lashes-brows/hybrid-lashes-with-defined-eyebrows.png",
         alt: "Defined hybrid lashes and groomed brows at Galeo Beauty",
@@ -31,10 +31,10 @@ const featurePanels = [
 ];
 
 const secondaryLinks = [
-    { href: "/services/dermalogica", label: "Facials" },
-    { href: "/services/nails", label: "Nails" },
-    { href: "/services/permanent-makeup", label: "Permanent Makeup" },
-    { href: "/services/fat-freezing", label: "Body Treatments" },
+    { href: "/facials-in-hartbeespoort", label: "Facials" },
+    { href: "/nail-salon-in-hartbeespoort", label: "Nails" },
+    { href: "/permanent-makeup-in-hartbeespoort", label: "Permanent Makeup" },
+    { href: "/fat-freezing-in-hartbeespoort", label: "Body Treatments" },
 ];
 
 export function HomepageShowcaseSection() {

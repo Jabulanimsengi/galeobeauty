@@ -20,6 +20,9 @@ import {
 import { navItems, businessInfo } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+const headerNavHrefs = new Set(["/", "/about", "/services", "/specials", "/gallery", "/reviews", "/contact"]);
+const headerNavItems = navItems.filter((item) => headerNavHrefs.has(item.href));
+
 export function Header() {
     const mobileMenuContentId = "mobile-navigation-sheet";
     const [isScrolled, setIsScrolled] = useState(false);
@@ -163,7 +166,7 @@ export function Header() {
                                 <div className="flex flex-1 flex-col overflow-hidden">
                                     <div className="hide-scrollbar flex-1 overflow-y-auto px-7 py-6">
                                         <nav className="flex flex-col gap-5 overflow-hidden">
-                                            {navItems.map((item) => (
+                                            {headerNavItems.map((item) => (
                                                 <div key={item.href}>
                                                     <button
                                                         type="button"
@@ -238,7 +241,7 @@ export function Header() {
                         </NavLink>
 
                         <nav className="relative flex min-w-0 items-center justify-center gap-0.5 xl:gap-1">
-                            {navItems.map((item) => {
+                            {headerNavItems.map((item) => {
                                 return (
                                     <NavLink
                                         key={item.href}

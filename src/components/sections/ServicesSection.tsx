@@ -243,6 +243,20 @@ const services = [
 
 ];
 
+const serviceCategoryHrefs: Record<string, string> = {
+    dermalogica: "/facials-in-hartbeespoort",
+    makeup: "/makeup-artist-in-hartbeespoort",
+    ipl: "/ipl-hair-removal-in-hartbeespoort",
+    massages: "/massage-in-hartbeespoort",
+    "lashes-brows": "/lash-extensions-in-hartbeespoort",
+    waxing: "/waxing-in-hartbeespoort",
+    "fat-freezing": "/fat-freezing-in-hartbeespoort",
+    slimming: "/body-contouring-in-hartbeespoort",
+    "hair-extensions": "/hair-extensions-in-hartbeespoort",
+    "permanent-makeup": "/permanent-makeup-in-hartbeespoort",
+    nails: "/nail-salon-in-hartbeespoort",
+};
+
 
 interface Service {
     id: string;
@@ -387,7 +401,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                         transformStyle: "preserve-3d",
                     }}
                 >
-                    <NavLink href={`/services/${service.slug}`} className="block group">
+                    <NavLink href={serviceCategoryHrefs[service.slug] ?? `/services/${service.slug}`} className="block group">
                         <div className="relative aspect-video w-full overflow-hidden rounded-2xl shadow-2xl sm:aspect-[4/3] lg:aspect-[6/5] xl:aspect-[5/4]">
                             <div className="absolute inset-0 bg-stone-950/10" />
 
@@ -516,7 +530,7 @@ function ServiceCard({ service, index, isReversed }: ServiceCardProps) {
                                 size="lg"
                                 className="group bg-foreground px-7 font-medium text-background transition-all duration-300 hover:bg-gold hover:text-white"
                             >
-                                <NavLink href={`/services/${service.slug}`}>
+                                <NavLink href={serviceCategoryHrefs[service.slug] ?? `/services/${service.slug}`}>
                                     {service.ctaText || "Explore Treatment"}
                                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                 </NavLink>

@@ -6,6 +6,7 @@ import { TrackedExternalLink } from "@/components/tracking/TrackedExternalLink";
 import { TrackedWhatsAppLink } from "@/components/tracking/TrackedWhatsAppLink";
 
 import { businessInfo } from "@/lib/constants";
+import { getCanonicalLocalCategoryPath } from "@/lib/local-seo-routes";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -35,29 +36,29 @@ const socialLinkClassName =
     "group flex h-9 w-9 items-center justify-center border border-[#d8dce0] bg-white text-[#1d1d1f] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#5d6a72] hover:bg-[#1d1d1f] hover:text-white";
 
 const footerLocations = [
-    { name: "Hartbeespoort", href: "/locations/hartbeespoort" },
-    { name: "Pecanwood", href: "/locations/pecanwood" },
-    { name: "Kosmos", href: "/locations/kosmos" },
-    { name: "Hartbeespoort Dam", href: "/locations/hartbeespoort-dam" },
+    { name: "Hartbeespoort", href: getCanonicalLocalCategoryPath("nails", "hartbeespoort") ?? "/nail-salon-in-hartbeespoort" },
+    { name: "Pecanwood", href: getCanonicalLocalCategoryPath("nails", "pecanwood") ?? "/nail-salon-near-pecanwood" },
+    { name: "Kosmos", href: getCanonicalLocalCategoryPath("nails", "kosmos") ?? "/nail-salon-near-kosmos" },
+    { name: "Hartbeespoort Dam", href: getCanonicalLocalCategoryPath("nails", "hartbeespoort-dam") ?? "/nail-salon-near-hartbeespoort-dam" },
 ];
 
 const footerServiceCategories = [
-    { name: "Hair & Colour", href: "/services/hair" },
-    { name: "Hair Extensions", href: "/services/hair-extensions" },
-    { name: "Nails", href: "/services/nails" },
-    { name: "Lashes & Brows", href: "/services/lashes-brows" },
-    { name: "Waxing", href: "/services/waxing" },
-    { name: "Massage", href: "/services/massages" },
-    { name: "Facials & Skin", href: "/services/dermalogica" },
-    { name: "QMS Facials", href: "/services/qms" },
-    { name: "IPL Hair Removal", href: "/services/ipl" },
-    { name: "Makeup", href: "/services/makeup" },
-    { name: "Permanent Makeup", href: "/services/permanent-makeup" },
-    { name: "Sunbed & Spray Tan", href: "/services/sunbed" },
-    { name: "Fat Freezing", href: "/services/fat-freezing" },
-    { name: "Slimming", href: "/services/slimming" },
-    { name: "Injectables & Aesthetics", href: "/services/hart-aesthetics" },
-    { name: "Medical Treatments", href: "/services/medical" },
+    { name: "Hair & Colour", href: getCanonicalLocalCategoryPath("hair") ?? "/hair-salon-in-hartbeespoort" },
+    { name: "Hair Extensions", href: getCanonicalLocalCategoryPath("hair-extensions") ?? "/hair-extensions-in-hartbeespoort" },
+    { name: "Nails", href: getCanonicalLocalCategoryPath("nails") ?? "/nail-salon-in-hartbeespoort" },
+    { name: "Lashes & Brows", href: getCanonicalLocalCategoryPath("lashes-brows") ?? "/lash-extensions-in-hartbeespoort" },
+    { name: "Waxing", href: getCanonicalLocalCategoryPath("waxing") ?? "/waxing-in-hartbeespoort" },
+    { name: "Massage", href: getCanonicalLocalCategoryPath("massages") ?? "/massage-in-hartbeespoort" },
+    { name: "Facials & Skin", href: getCanonicalLocalCategoryPath("dermalogica") ?? "/facials-in-hartbeespoort" },
+    { name: "QMS Facials", href: getCanonicalLocalCategoryPath("qms") ?? "/qms-facial-in-hartbeespoort" },
+    { name: "IPL Hair Removal", href: getCanonicalLocalCategoryPath("ipl") ?? "/ipl-hair-removal-in-hartbeespoort" },
+    { name: "Makeup", href: getCanonicalLocalCategoryPath("makeup") ?? "/makeup-artist-in-hartbeespoort" },
+    { name: "Permanent Makeup", href: getCanonicalLocalCategoryPath("permanent-makeup") ?? "/permanent-makeup-in-hartbeespoort" },
+    { name: "Sunbed & Spray Tan", href: getCanonicalLocalCategoryPath("sunbed") ?? "/tanning-in-hartbeespoort" },
+    { name: "Fat Freezing", href: getCanonicalLocalCategoryPath("fat-freezing") ?? "/fat-freezing-in-hartbeespoort" },
+    { name: "Slimming", href: getCanonicalLocalCategoryPath("slimming") ?? "/body-contouring-in-hartbeespoort" },
+    { name: "Injectables & Aesthetics", href: getCanonicalLocalCategoryPath("hart-aesthetics") ?? "/aesthetics-clinic-in-hartbeespoort" },
+    { name: "Medical Treatments", href: getCanonicalLocalCategoryPath("medical") ?? "/skin-clinic-in-hartbeespoort" },
 ];
 
 export function Footer() {
@@ -248,6 +249,9 @@ export function Footer() {
                         </NavLink>
                         <NavLink href="/guides" className="transition-colors hover:text-gold">
                             Guides
+                        </NavLink>
+                        <NavLink href="/reviews" className="transition-colors hover:text-gold">
+                            Reviews
                         </NavLink>
                         <NavLink href="/blog" className="transition-colors hover:text-gold">
                             Blog

@@ -11,6 +11,7 @@ import {
 } from "@/components/sections";
 import { businessInfo } from "@/lib/constants";
 import { getPublishedGuidePages } from "@/lib/intent-pages";
+import { getCanonicalLocalServicePath } from "@/lib/local-seo-routes";
 import { buildHomepageKeywords } from "@/lib/seo-keywords";
 import { serviceCategories } from "@/lib/services-data";
 
@@ -58,7 +59,7 @@ const featuredPopularServices = featuredPopularServiceSelections.map(
     }
 
     return {
-      href: `/services/${category.id}/${service.id}`,
+      href: getCanonicalLocalServicePath(category.id, service.id) ?? `/services/${category.id}/${service.id}`,
       label: label ?? service.name,
       price: service.price,
     };
