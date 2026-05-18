@@ -4,12 +4,14 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 import { NavLink } from "@/components/ui/nav-link";
+import { getCanonicalLocalCategoryPath } from "@/lib/local-seo-routes";
 import { serviceCategories } from "@/lib/services-data";
 
 const categoryCardCopy: Record<
     string,
     {
         cta: string;
+        title?: string;
     }
 > = {
     hair: {
@@ -26,6 +28,7 @@ const categoryCardCopy: Record<
     },
     dermalogica: {
         cta: "Explore Facials",
+        title: "Facial Treatments",
     },
     massages: {
         cta: "Explore Massage",
@@ -108,6 +111,8 @@ export function HomepageCategoriesSection() {
                             cta: "Explore Category",
                         };
                         const imageSrc = categoryCardImages[category.id] ?? category.image;
+                        const href = getCanonicalLocalCategoryPath(category.id) ?? `/services/${category.id}`;
+                        const title = copy.title ?? category.title;
                         const isLastOddCard =
                             homepageCategories.length % 2 === 1 && index === homepageCategories.length - 1;
 
@@ -125,13 +130,13 @@ export function HomepageCategoriesSection() {
                                 className={`group ${isLastOddCard ? "lg:col-span-2 lg:mx-auto lg:w-full lg:max-w-[calc(50%-0.5rem)]" : ""}`}
                             >
                                 <NavLink
-                                    href={`/services/${category.id}`}
+                                    href={href}
                                     className="block overflow-hidden bg-[#1a1411] text-white"
                                 >
                                     <div className="relative aspect-[5/4] min-h-[16rem] overflow-hidden sm:aspect-[16/11] sm:min-h-[24rem] lg:aspect-[5/4] lg:min-h-[30rem]">
                                         <CloudinaryImage
                                             src={imageSrc}
-                                            alt={`${category.title} at Galeo Beauty`}
+                                            alt={`${title} at Galeo Beauty`}
                                             fill
                                             sizes="(max-width: 1024px) 100vw, 50vw"
                                             className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.01]"
@@ -142,7 +147,7 @@ export function HomepageCategoriesSection() {
 
                                         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center sm:px-10 lg:px-10 xl:px-12">
                                             <h3 className="mx-auto max-w-[11ch] text-balance font-sans text-[1.72rem] font-light uppercase leading-[0.94] tracking-[0.03em] text-white sm:text-[3rem] lg:text-[3.7rem] xl:text-[4.4rem]">
-                                                {category.title}
+                                                {title}
                                             </h3>
                                             <div className="mt-5 sm:mt-8">
                                                 <span className="inline-flex items-center justify-center bg-white px-5 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#17120f] transition-colors duration-300 group-hover:bg-gold group-hover:text-white sm:px-8 sm:py-3 sm:text-xs sm:tracking-[0.24em]">

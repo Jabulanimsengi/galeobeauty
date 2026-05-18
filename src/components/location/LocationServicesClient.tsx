@@ -15,6 +15,7 @@ import {
     trackServiceCtaClick,
 } from "@/lib/attribution";
 import { CANONICAL_LOCAL_SERVICE_LOCATION_SLUG, getCanonicalLocationSlug, isIndexableLocationService, type SEOLocation } from "@/lib/seo-data";
+import { getCanonicalLocalServicePath } from "@/lib/local-seo-routes";
 
 interface LocationServicesClientProps {
     locationSlug: string;
@@ -197,7 +198,7 @@ export function LocationServicesClient({ locationSlug }: LocationServicesClientP
                                                             {/* Treatment Items */}
                                                             {subcategory.items.map((item) => {
                                                                 const detailsLink = canUseLocalServiceLinks || isIndexableLocationService(detailsLocationSlug, item.id)
-                                                                    ? `/locations/${detailsLocationSlug}/${item.id}`
+                                                                    ? getCanonicalLocalServicePath(category.id, item.id, detailsLocationSlug) ?? `/services/${category.id}/${item.id}`
                                                                     : `/services/${category.id}/${item.id}`;
 
                                                                 return (

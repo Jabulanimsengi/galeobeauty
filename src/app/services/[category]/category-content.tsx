@@ -12,6 +12,8 @@ import { BookingSheet } from "@/components/booking/BookingSheet";
 import { BookingSummary } from "@/components/booking/BookingSummary";
 import type { SelectedTreatment } from "@/lib/booking-types";
 import type { ServiceItem, ServiceSubcategory } from "@/lib/services-data";
+import { getCanonicalLocalServicePath } from "@/lib/local-seo-routes";
+import { getSpecialBookingItem, getSpecialForService } from "@/lib/specials-data";
 
 interface CategoryContentProps {
     subcategories: ServiceSubcategory[];
@@ -19,6 +21,7 @@ interface CategoryContentProps {
     categoryTitle: string;
     directoryTitle?: string;
     directoryDescription?: string;
+    localLocationSlug?: string;
 }
 
 interface ServiceOption {
@@ -240,6 +243,7 @@ export function CategoryContent({
     categoryTitle,
     directoryTitle,
     directoryDescription,
+    localLocationSlug,
 }: CategoryContentProps) {
     const [isBookingOpen, setIsBookingOpen] = useState(false);
     const [selectedTreatments, setSelectedTreatments] = useState<SelectedTreatment[]>([]);
@@ -338,21 +342,30 @@ export function CategoryContent({
         });
     };
 
-    const buildSelectedTreatment = (option: ServiceOption): SelectedTreatment => ({
-        categoryId,
-        categoryTitle,
-        subcategoryId: option.subcategoryId,
-        subcategoryTitle: option.subcategoryTitle,
-        item: option.item,
-        note: option.note,
-    });
+    const buildSelectedTreatment = (option: ServiceOption): SelectedTreatment => {
+        const specialOffer = getSpecialForService(categoryId, option.item.id);
+        const bookingItem = specialOffer ? getSpecialBookingItem(specialOffer) : option.item;
+
+        return {
+            categoryId,
+            categoryTitle,
+            subcategoryId: option.subcategoryId,
+            subcategoryTitle: option.subcategoryTitle,
+            item: bookingItem,
+            note: specialOffer ? bookingItem.note : option.note,
+        };
+    };
 
     const renderServiceOption = (option: ServiceOption, variant: "featured" | "compact" | "row") => {
-        const isSelected = isItemSelected(option.item.id);
+        const specialOffer = getSpecialForService(categoryId, option.item.id);
+        const isSelected = isItemSelected(specialOffer?.id ?? option.item.id);
         const isFeatured = variant === "featured";
         const isCompact = variant === "compact";
         const hasExpandableDescription = (isFeatured || isCompact) && Boolean(option.item.description);
         const isDescriptionExpanded = expandedDescriptions.has(option.item.id);
+        const serviceHref = localLocationSlug
+            ? getCanonicalLocalServicePath(categoryId, option.item.id, localLocationSlug) ?? `/services/${categoryId}/${option.item.id}`
+            : `/services/${categoryId}/${option.item.id}`;
 
         return (
             <article
@@ -365,7 +378,12 @@ export function CategoryContent({
                             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
                                 {option.subcategoryTitle}
                             </span>
-                            {option.note && (
+                            {specialOffer && (
+                                <span className="border-l border-border/70 pl-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold">
+                                    {specialOffer.label}
+                                </span>
+                            )}
+                            {!specialOffer && option.note && (
                                 <span className="border-l border-border/70 pl-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                                     {option.note}
                                 </span>
@@ -413,7 +431,14 @@ export function CategoryContent({
                 )}
 
                 <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                    <span className="font-semibold text-foreground">{option.item.price}</span>
+                    {specialOffer?.originalPrice ? (
+                        <span className="text-muted-foreground line-through">{specialOffer.originalPrice}</span>
+                    ) : (
+                        <span className="font-semibold text-foreground">{option.item.price}</span>
+                    )}
+                    {specialOffer && (
+                        <span className="font-semibold text-gold">{specialOffer.specialPrice}</span>
+                    )}
                     {option.item.duration && (
                         <span className="inline-flex items-center gap-1 text-muted-foreground">
                             <Clock className="h-3.5 w-3.5" />
@@ -421,11 +446,19 @@ export function CategoryContent({
                         </span>
                     )}
                     <Link
-                        href={`/services/${categoryId}/${option.item.id}`}
+                        href={specialOffer ? `/specials#${specialOffer.id}` : serviceHref}
                         className="font-medium text-muted-foreground underline-offset-4 hover:text-gold hover:underline"
                     >
-                        Details
+                        {specialOffer ? "View special" : "Details"}
                     </Link>
+                    {specialOffer && (
+                        <Link
+                            href={serviceHref}
+                            className="font-medium text-muted-foreground underline-offset-4 hover:text-gold hover:underline"
+                        >
+                            Details
+                        </Link>
+                    )}
                 </div>
             </article>
         );

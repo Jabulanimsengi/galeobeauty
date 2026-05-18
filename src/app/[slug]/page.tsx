@@ -20,6 +20,15 @@ import {
     getPrimaryGuideCategoryId,
     getRelatedIntentPages,
 } from "@/lib/intent-pages";
+import {
+    getAllLocalCategoryRoutes,
+    PRIMARY_LOCAL_ROUTE_LOCATIONS,
+    resolveLocalCategoryRoute,
+} from "@/lib/local-seo-routes";
+import {
+    buildLocalCategoryMetadata,
+    LocalCategoryLandingPage,
+} from "@/components/seo/LocalCommercialPages";
 import { resolveIntentPageHeroImage } from "@/lib/editorial-image-resolver";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
@@ -41,11 +50,20 @@ function IntentPageMdxLink({ href = "", ...props }: ComponentPropsWithoutRef<"a"
 
 export function generateStaticParams() {
     if (process.env.NODE_ENV === "development") return [];
-    return getPublishedIntentPages().map((page) => ({ slug: page.slug }));
+    return [
+        ...getAllLocalCategoryRoutes([...PRIMARY_LOCAL_ROUTE_LOCATIONS]).map((route) => ({ slug: route.slug })),
+        ...getPublishedIntentPages().map((page) => ({ slug: page.slug })),
+    ];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
+    const localCategoryRoute = resolveLocalCategoryRoute(slug);
+
+    if (localCategoryRoute) {
+        return buildLocalCategoryMetadata(localCategoryRoute);
+    }
+
     const redirectPath = getIntentPageRedirectPath(slug);
 
     if (redirectPath) {
@@ -104,6 +122,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function IntentLandingPage({ params }: PageProps) {
     const { slug } = await params;
+    const localCategoryRoute = resolveLocalCategoryRoute(slug);
+
+    if (localCategoryRoute) {
+        if (localCategoryRoute.slug !== slug) {
+            permanentRedirect(localCategoryRoute.href);
+        }
+
+        return <LocalCategoryLandingPage route={localCategoryRoute} />;
+    }
+
     const redirectPath = getIntentPageRedirectPath(slug);
 
     if (redirectPath) {

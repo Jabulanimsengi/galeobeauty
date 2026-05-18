@@ -32,6 +32,7 @@ import { buildServiceKeywords, buildServiceMetadataKeywords } from "@/lib/seo-ke
 import { toAbsoluteUrl } from "@/lib/site-url";
 import { getIntentPagesForService } from "@/lib/intent-pages";
 import { getRelevantBlogPostsForService } from "@/lib/blog-data";
+import { getCanonicalLocalServicePath } from "@/lib/local-seo-routes";
 
 // ============================================
 // STATIC GENERATION WITH ISR
@@ -166,14 +167,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         };
     }
 
-    const shouldIndex = isIndexableLocationService(locationSlug, serviceSlug);
+    const shouldIndex = isIndexableLocationService(canonicalLocationSlug, serviceSlug);
     const category = getCategoryForService(serviceSlug);
     const categoryTitle = category?.title || "Beauty Services";
     const isCanonicalLocalPage = canonicalLocationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG;
-    const canonicalUrl = canonicalLocationSlug !== locationSlug
-        ? `https://www.galeobeauty.com/locations/${canonicalLocationSlug}/${serviceSlug}`
-        : shouldIndex
-            ? `https://www.galeobeauty.com/locations/${locationSlug}/${serviceSlug}`
+    const canonicalLocalServicePath = shouldIndex
+        ? getCanonicalLocalServicePath(service.categoryId, service.slug, canonicalLocationSlug)
+        : null;
+    const canonicalUrl = canonicalLocalServicePath
+        ? `https://www.galeobeauty.com${canonicalLocalServicePath}`
         : `https://www.galeobeauty.com/services/${service.categoryId}/${service.slug}`;
 
     // Generate unique description
@@ -185,7 +187,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     );
     const title = isCanonicalLocalPage
         ? `${service.keyword} in Hartbeespoort | Harties`
-        : `${service.keyword} in ${canonicalLocation.name}`;
+        : `${service.keyword} near ${canonicalLocation.name}`;
     const metadataDescription = isCanonicalLocalPage
         ? `${richDescription.substring(0, 150)} Book at Galeo Beauty in Hartbeespoort, trusted by clients across Harties and the dam area.`
         : `${richDescription.substring(0, 150)} Book from our Hartbeespoort salon, convenient for ${canonicalLocation.name} clients.`;
@@ -261,7 +263,10 @@ export default async function LocationServicePage({ params }: PageProps) {
 
     if (location && !service && legacyService) {
         if (legacyService.serviceSlug) {
-            redirect(`/locations/${locationSlug}/${legacyService.serviceSlug}`);
+            redirect(
+                getCanonicalLocalServicePath(legacyService.categoryId, legacyService.serviceSlug, canonicalLocationSlug) ??
+                `/services/${legacyService.categoryId}/${legacyService.serviceSlug}`
+            );
         }
         redirect(`/services/${legacyService.categoryId}`);
     }
@@ -271,11 +276,19 @@ export default async function LocationServicePage({ params }: PageProps) {
     }
 
     if (locationSlug !== canonicalLocationSlug) {
-        permanentRedirect(`/locations/${canonicalLocationSlug}/${service.slug}`);
+        permanentRedirect(
+            getCanonicalLocalServicePath(service.categoryId, service.slug, canonicalLocationSlug) ??
+            `/services/${service.categoryId}/${service.slug}`
+        );
     }
 
     if (isBroadLocationHub(location)) {
         redirect(`/services/${service.categoryId}/${service.slug}`);
+    }
+
+    const canonicalLocalServicePath = getCanonicalLocalServicePath(service.categoryId, service.slug, locationSlug);
+    if (canonicalLocalServicePath) {
+        permanentRedirect(canonicalLocalServicePath);
     }
 
     const resolvedService = service;
@@ -319,13 +332,15 @@ export default async function LocationServicePage({ params }: PageProps) {
     const treatmentProcess = getTreatmentProcess(resolvedService, location);
     const relatedGuides = getIntentPagesForService(resolvedService.slug).slice(0, 3);
     const relatedBlogPosts = getRelevantBlogPostsForService(resolvedService.slug, resolvedService.categoryId, relatedServices.map((related) => related.slug), 3);
-    const buildCurrentLocationServiceHref = (slug: string, categoryId?: string) =>
-        (locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG || isIndexableLocationService(locationSlug, slug))
-            ? `/locations/${locationSlug}/${slug}`
+    const buildCurrentLocationServiceHref = (slug: string, categoryId?: string) => {
+        const resolvedCategoryId = categoryId ?? getCategoryForService(slug)?.id ?? resolvedService.categoryId;
+        return (locationSlug === CANONICAL_LOCAL_SERVICE_LOCATION_SLUG || isIndexableLocationService(locationSlug, slug))
+            ? getCanonicalLocalServicePath(resolvedCategoryId, slug, locationSlug) ?? `/services/${resolvedCategoryId}/${slug}`
             : `/services/${categoryId ?? getCategoryForService(slug)?.id ?? resolvedService.categoryId}/${slug}`;
+    };
     const buildNearbyAreaHref = (targetLocationSlug: string, slug: string) =>
         isIndexableLocationService(targetLocationSlug, slug)
-            ? `/locations/${targetLocationSlug}/${slug}`
+            ? getCanonicalLocalServicePath(resolvedService.categoryId, slug, targetLocationSlug) ?? `/locations/${getCanonicalLocationSlug(targetLocationSlug)}`
             : `/locations/${getCanonicalLocationSlug(targetLocationSlug)}`;
 
     const whatsappMessage =

@@ -24,6 +24,7 @@
     "check:status": "node scripts/seo-crawler.js --mode status",
     "check:links:deep": "node scripts/seo-crawler.js --mode links --crawl-discovered",
     "audit:routes": "node scripts/audit-routes.js",
+    "audit:local-headings": "npx tsx scripts/audit-local-route-headings.ts",
     "audit:redirects": "node scripts/audit-redirect-conflicts.mjs",
     "start": "next start",
     "lint": "eslint"

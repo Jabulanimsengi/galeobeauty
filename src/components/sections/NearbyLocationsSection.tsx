@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
-import { getCanonicalLocationSlug, isIndexableLocationService } from "@/lib/seo-data";
+import { getCanonicalLocationSlug, getCategoryForService, isIndexableLocationService } from "@/lib/seo-data";
+import { getCanonicalLocalServicePath } from "@/lib/local-seo-routes";
 
 interface Location {
     name: string;
@@ -63,8 +64,9 @@ export function NearbyLocationsSection({
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
                     {FEATURED_LOCATIONS.map((location) => {
                         const canonicalSlug = getCanonicalLocationSlug(location.slug);
-                        const href = serviceSlug && (canonicalSlug === "hartbeespoort" || isIndexableLocationService(canonicalSlug, serviceSlug))
-                            ? `/locations/${canonicalSlug}/${serviceSlug}`
+                        const categoryId = serviceSlug ? getCategoryForService(serviceSlug)?.id : undefined;
+                        const href = serviceSlug && categoryId && (canonicalSlug === "hartbeespoort" || isIndexableLocationService(canonicalSlug, serviceSlug))
+                            ? getCanonicalLocalServicePath(categoryId, serviceSlug, canonicalSlug) ?? `/locations/${canonicalSlug}`
                             : `/locations/${canonicalSlug}`;
 
                         return (

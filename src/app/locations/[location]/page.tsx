@@ -21,6 +21,7 @@ import { ArrowRight } from "lucide-react";
 import { buildLocationHubKeywords } from "@/lib/seo-keywords";
 import { serviceCategories } from "@/lib/services-data";
 import { getIntentPagesForCategory } from "@/lib/intent-pages";
+import { getCanonicalLocalCategoryPath, getCanonicalLocalServicePath } from "@/lib/local-seo-routes";
 
 const HARTBEESPOORT_APPOINTMENT_LINKS = [
     {
@@ -36,7 +37,7 @@ const HARTBEESPOORT_APPOINTMENT_LINKS = [
     {
         label: "Lashes and brows",
         href: "/services/lashes-brows",
-        description: "Classic lashes, hybrid lashes, lash lifts, tinting and brow treatments with a wearable finish.",
+        description: "Classic lashes, hybrid lashes, lash lifts, tinting, microblading and brow treatments with a wearable finish.",
     },
     {
         label: "Massage sessions",
@@ -51,7 +52,7 @@ const HARTBEESPOORT_APPOINTMENT_LINKS = [
     {
         label: "Skin and aesthetics",
         href: "/services/dermalogica",
-        description: "Facials, peels, microneedling and skin treatments chosen by concern and intensity.",
+        description: "Facials, peels, microneedling, Plasmage planning and skin treatments chosen by concern and intensity.",
     },
     {
         label: "IPL and tattoo removal",
@@ -61,7 +62,7 @@ const HARTBEESPOORT_APPOINTMENT_LINKS = [
     {
         label: "Injectables and fillers",
         href: "/services/hart-aesthetics",
-        description: "Lip filler, anti-wrinkle planning and advanced aesthetic treatments with suitability in mind.",
+        description: "Lip filler, Russian lips, anti-wrinkle planning and advanced aesthetic treatments with suitability in mind.",
     },
 ];
 
@@ -292,12 +293,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const relatedAreaLabel = relatedAreas.map((area) => area.name).join(", ");
     const broadHub = isBroadLocationHub(location);
     const broadHubCopy = broadHub ? getBroadHubCopy(location) : undefined;
-    const title = broadHub ? broadHubCopy!.title : `Beauty Services in ${location.name}`;
+    const title = broadHub
+        ? broadHubCopy!.title
+        : canonicalLocationSlug === "hartbeespoort"
+            ? "Beauty Salon in Hartbeespoort | Hair, Nails & Aesthetics"
+            : `Beauty Services in ${location.name}`;
     const description = broadHub
         ? broadHubCopy!.metadataDescription
-        : relatedAreaLabel.length > 0
-            ? `Professional beauty treatments for ${location.name} residents and nearby areas like ${relatedAreaLabel}. Facials, injectables, nails, body treatments and more from our Hartbeespoort salon.`
-            : `Professional beauty treatments for ${location.name} residents. Facials, lash extensions, nails, fat freezing, permanent makeup & more at our Hartbeespoort salon near ${location.region}.`;
+        : canonicalLocationSlug === "hartbeespoort"
+            ? "Galeo Beauty is a Hartbeespoort beauty salon for hair salon appointments, nail salon services, lashes, brows, waxing, massage, facials and aesthetics near Harties."
+            : relatedAreaLabel.length > 0
+                ? `Professional beauty treatments for ${location.name} residents and nearby areas like ${relatedAreaLabel}. Facials, injectables, nails, body treatments and more from our Hartbeespoort salon.`
+                : `Professional beauty treatments for ${location.name} residents. Facials, lash extensions, nails, fat freezing, permanent makeup & more at our Hartbeespoort salon near ${location.region}.`;
 
     return {
         title,
@@ -333,6 +340,11 @@ export default async function LocationHubPage({ params }: PageProps) {
     const canonicalLocationSlug = getCanonicalLocationSlug(locationSlug);
     if (locationSlug !== canonicalLocationSlug) {
         permanentRedirect(`/locations/${canonicalLocationSlug}`);
+    }
+
+    const localCategoryPath = getCanonicalLocalCategoryPath("nails", canonicalLocationSlug);
+    if (localCategoryPath) {
+        permanentRedirect(localCategoryPath);
     }
 
     const drivingContext = getDrivingContext(location);
@@ -459,7 +471,15 @@ export default async function LocationHubPage({ params }: PageProps) {
                                 {heroContent!.eyebrow}
                             </span>
                             <h1 className="mx-auto mb-6 max-w-4xl font-sans text-[2.5rem] font-semibold leading-tight text-foreground sm:text-5xl lg:text-6xl">
-                                Beauty Services for <span className="text-gold">{location.name}</span>
+                                {canonicalLocationSlug === "hartbeespoort" ? (
+                                    <>
+                                        Beauty Salon, Hair And Nails In <span className="text-gold">Hartbeespoort</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        Beauty Services for <span className="text-gold">{location.name}</span>
+                                    </>
+                                )}
                             </h1>
                             <p className="mx-auto max-w-2xl text-lg leading-8 text-muted-foreground">
                                 {heroContent!.description}
@@ -519,7 +539,7 @@ export default async function LocationHubPage({ params }: PageProps) {
                                         </Button>
                                         <Button asChild variant="outline" className="rounded-none px-7">
                                             <Link href="/reviews">
-                                                Read Reviews
+                                                Galeo Beauty Reviews
                                             </Link>
                                         </Button>
                                     </div>
@@ -610,7 +630,7 @@ export default async function LocationHubPage({ params }: PageProps) {
                                                 <Link
                                                     key={service.slug}
                                                     href={!broadHub && isIndexableLocationService(canonicalLocationSlug, service.slug)
-                                                        ? `/locations/${canonicalLocationSlug}/${service.slug}`
+                                                        ? getCanonicalLocalServicePath(service.categoryId, service.slug, canonicalLocationSlug) ?? `/services/${service.categoryId}/${service.slug}`
                                                         : `/services/${service.categoryId}/${service.slug}`}
                                                     className="group flex items-center justify-between gap-4 border border-border/70 bg-secondary/10 px-4 py-3 text-sm transition-colors hover:border-gold/30 hover:bg-secondary/20"
                                                 >
