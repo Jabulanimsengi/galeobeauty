@@ -6,6 +6,7 @@ import {
   type BookingAdminRecord,
   type BookingStatus,
 } from "@/lib/bookings-admin-shared";
+import { ensureBookingLeadsSchema } from "@/lib/server/booking-leads-schema";
 
 export interface BookingAdminFilters {
   status?: string;
@@ -432,4 +433,122 @@ export function buildBookingsCsv(bookings: BookingAdminRecord[]) {
   );
 
   return [headers.join(","), ...rows].join("\n");
+}
+
+export interface BookingLeadRecord {
+  id: string;
+  sessionId: string;
+  createdAt: string;
+  updatedAt: string;
+  bookingType: "treatment" | "consultation";
+  consultationContext: string | null;
+  clientName: string | null;
+  phone: string | null;
+  email: string | null;
+  preferredDate: string | null;
+  preferredTimeSlot: string | null;
+  treatmentsJson: any;
+  treatmentCount: number;
+  totalValue: number | null;
+  status: string;
+  contactedAt: string | null;
+  adminNotes: string | null;
+  source: string | null;
+  medium: string | null;
+  campaign: string | null;
+  landingPage: string | null;
+  enquiryPage: string | null;
+  referrerHost: string | null;
+}
+
+export async function listBookingLeads(): Promise<BookingLeadRecord[]> {
+  await ensureBookingLeadsSchema();
+  const pool = getPostgresPool();
+  const result = await pool.query(
+    `select
+      id,
+      session_id,
+      created_at,
+      updated_at,
+      booking_type,
+      consultation_context,
+      client_name,
+      phone,
+      email,
+      preferred_date,
+      preferred_time_slot,
+      treatments_json,
+      treatment_count,
+      total_value,
+      status,
+      contacted_at,
+      admin_notes,
+      source,
+      medium,
+      campaign,
+      landing_page,
+      enquiry_page,
+      referrer_host
+     from booking_leads
+     where status != 'submitted'
+     order by updated_at desc`
+  );
+
+  return result.rows.map((row) => ({
+    id: String(row.id),
+    sessionId: String(row.session_id),
+    createdAt: String(row.created_at),
+    updatedAt: String(row.updated_at),
+    bookingType: row.booking_type as "treatment" | "consultation",
+    consultationContext: (row.consultation_context as string | null) ?? null,
+    clientName: (row.client_name as string | null) ?? null,
+    phone: (row.phone as string | null) ?? null,
+    email: (row.email as string | null) ?? null,
+    preferredDate: row.preferred_date ? String(row.preferred_date) : null,
+    preferredTimeSlot: (row.preferred_time_slot as string | null) ?? null,
+    treatmentsJson: row.treatments_json,
+    treatmentCount: Number(row.treatment_count ?? 0),
+    totalValue: row.total_value === null ? null : Number(row.total_value),
+    status: String(row.status),
+    contactedAt: (row.contacted_at as string | null) ?? null,
+    adminNotes: (row.admin_notes as string | null) ?? null,
+    source: (row.source as string | null) ?? null,
+    medium: (row.medium as string | null) ?? null,
+    campaign: (row.campaign as string | null) ?? null,
+    landingPage: (row.landing_page as string | null) ?? null,
+    enquiryPage: (row.enquiry_page as string | null) ?? null,
+    referrerHost: (row.referrer_host as string | null) ?? null,
+  }));
+}
+
+export async function updateBookingLeadFields({
+  id,
+  status,
+  adminNotes,
+}: {
+  id: string;
+  status: string;
+  adminNotes?: string | null;
+}) {
+  await ensureBookingLeadsSchema();
+  const pool = getPostgresPool();
+  const normalizedNotes = adminNotes?.trim() ? adminNotes.trim() : null;
+
+  const result = await pool.query(
+    `update booking_leads
+     set
+       status = $2,
+       admin_notes = $3,
+       contacted_at = case
+         when $2 = 'contacted' and contacted_at is null
+           then now()
+         else contacted_at
+       end,
+       updated_at = now()
+     where id = $1
+     returning id`,
+    [id, status, normalizedNotes]
+  );
+
+  return (result.rowCount ?? 0) > 0;
 }

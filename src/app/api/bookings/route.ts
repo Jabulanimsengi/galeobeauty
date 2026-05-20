@@ -3,6 +3,7 @@ import { normalizeBookingSaveRequest, type BookingSaveRequest } from "@/lib/book
 import { getPostgresPool } from "@/lib/server/postgres";
 import { checkRateLimitForRequest } from "@/lib/server/rate-limit";
 import { verifyTurnstileToken } from "@/lib/server/turnstile";
+import { ensureBookingLeadsSchema } from "@/lib/server/booking-leads-schema";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -113,7 +114,18 @@ export async function POST(request: Request) {
         booking.referrerHost,
       ]
     );
-
+    if (body.sessionId) {
+      await ensureBookingLeadsSchema();
+      await pool.query(
+        `update booking_leads
+         set status = 'submitted',
+             updated_at = now()
+         where session_id = $1`,
+        [body.sessionId]
+      ).catch((err) => {
+        console.error("Failed to update booking lead status upon booking save:", err);
+      });
+    }
     return NextResponse.json(
       {
         ok: true,

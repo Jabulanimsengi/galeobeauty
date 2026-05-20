@@ -20,6 +20,7 @@ export interface BookingSaveRequest {
   appointment: BookingState["appointment"];
   treatments?: SelectedTreatment[];
   attribution?: StoredAttribution | null;
+  sessionId?: string;
 }
 
 export interface NormalizedBookingInsert {
