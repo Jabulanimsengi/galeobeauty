@@ -219,11 +219,22 @@ export function BookingSheet({
     ...initialBookingState,
   });
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>("");
+
+  useEffect(() => {
+    if (isOpen) {
+      const newSessionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      setSessionId(newSessionId);
+    } else {
+      setSessionId("");
+    }
+  }, [isOpen]);
   const [isMobile, setIsMobile] = useState(false);
   const [showMoreDates, setShowMoreDates] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
   const [captchaResetKey, setCaptchaResetKey] = useState(0);
+  const [subscriberOptIn, setSubscriberOptIn] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const treatmentNames = useMemo(
     () => treatments.map((t) => t.item.name),
@@ -348,6 +359,65 @@ export function BookingSheet({
     });
   }, [bookingType, consultationContext, isOpen, state.currentStep, treatmentCount, treatmentNames]);
 
+  // Real-time tracking for Booking Abandonment (booking leads)
+  useEffect(() => {
+    if (!isOpen || !sessionId) return;
+
+    const name = state.userDetails.name.trim();
+    const date = state.appointment.date.trim();
+
+    // Trigger only when both name and date are populated
+    if (!name || !date) return;
+
+    const debounceTimer = setTimeout(async () => {
+      try {
+        const attribution = getStoredAttribution();
+        const currentPage = typeof window !== "undefined" ? window.location.pathname : "/";
+
+        const trackPayload = {
+          sessionId,
+          bookingType,
+          consultationContext: consultationContext || null,
+          userDetails: {
+            name: state.userDetails.name,
+            phone: state.userDetails.phone,
+            email: state.userDetails.email,
+          },
+          appointment: {
+            date: state.appointment.date,
+            timeSlot: state.appointment.timeSlot,
+          },
+          treatments,
+          attribution,
+          currentPage,
+        };
+
+        await fetch("/api/bookings/track", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(trackPayload),
+        });
+      } catch (err) {
+        console.error("Failed to send real-time tracking lead:", err);
+      }
+    }, 1500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [
+    isOpen,
+    sessionId,
+    state.userDetails.name,
+    state.userDetails.phone,
+    state.userDetails.email,
+    state.appointment.date,
+    state.appointment.timeSlot,
+    bookingType,
+    consultationContext,
+    treatments,
+  ]);
+
   useEffect(() => {
     if (!showMoreDates || !dateRailRef.current || !selectedDateOption) {
       return;
@@ -406,6 +476,7 @@ export function BookingSheet({
     setCaptchaToken(null);
     setCaptchaError(null);
     setCaptchaResetKey((previous) => previous + 1);
+    setSubscriberOptIn(false);
     onClose();
   };
 
@@ -415,6 +486,10 @@ export function BookingSheet({
       ...prev,
       userDetails: { ...prev.userDetails, [field]: value },
     }));
+
+    if (field === "email" && !value.trim()) {
+      setSubscriberOptIn(false);
+    }
   }
 
   // Update appointment
@@ -650,6 +725,7 @@ ${bankingDetails}`;
       captchaToken: captchaToken ?? undefined,
       currentPage,
       bookingReference: bookingReference || undefined,
+      subscriberOptIn,
       whatsappMessage: message,
       whatsappDestination: businessInfo.socials.whatsapp,
       totalValue,
@@ -657,6 +733,7 @@ ${bankingDetails}`;
       appointment: state.appointment,
       treatments,
       attribution,
+      sessionId,
     };
 
     setState((prev) => ({
@@ -1194,9 +1271,36 @@ ${bankingDetails}`;
                   />
                 )}
 
+                <label className={`flex items-start gap-3 rounded-[0.4rem] border p-4 text-left transition-colors ${
+                  state.userDetails.email.trim()
+                    ? "border-gold/25 bg-gold/5"
+                    : "border-border/50 bg-secondary/20 opacity-70"
+                }`}>
+                  <input
+                    type="checkbox"
+                    checked={subscriberOptIn}
+                    disabled={!state.userDetails.email.trim()}
+                    onChange={(event) => setSubscriberOptIn(event.target.checked)}
+                    className="mt-1 h-4 w-4 rounded-none border-border text-gold focus:ring-gold"
+                  />
+                  <span>
+                    <span className="block text-sm font-semibold text-foreground">
+                      Join the Galeo Beauty Circle
+                    </span>
+                    <span className="mt-1 block text-xs leading-5 text-muted-foreground">
+                      Receive member-only offers, weekly exclusives, and refined salon updates by email. You can unsubscribe at any time.
+                    </span>
+                    {!state.userDetails.email.trim() && (
+                      <span className="mt-1 block text-xs text-amber-700">
+                        Add your email address on the first step to join.
+                      </span>
+                    )}
+                  </span>
+                </label>
+
                 <p className="text-xs text-muted-foreground text-center">
                   By confirming, you agree to our 24-hour cancellation policy.
-                  You&apos;ll be redirected to WhatsApp to finalize your booking.
+                  We&apos;ll email your booking details if you provided an email address, then redirect you to WhatsApp to finalize your booking.
                 </p>
               </motion.div>
             )}

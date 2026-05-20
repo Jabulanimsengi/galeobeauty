@@ -3,6 +3,13 @@ import { normalizeBookingSaveRequest, type BookingSaveRequest } from "@/lib/book
 import { getPostgresPool } from "@/lib/server/postgres";
 import { checkRateLimitForRequest } from "@/lib/server/rate-limit";
 import { verifyTurnstileToken } from "@/lib/server/turnstile";
+import { sendBookingConfirmationEmail, sendSubscriberWelcomeEmail } from "@/lib/server/email";
+import { getBookingFeeAmount } from "@/lib/server/email-config";
+import {
+  markSubscriberEmailSent,
+  recordEmailEvent,
+  upsertSubscriber,
+} from "@/lib/server/subscribers";
 import { ensureBookingLeadsSchema } from "@/lib/server/booking-leads-schema";
 
 export const runtime = "nodejs";
@@ -58,6 +65,7 @@ export async function POST(request: Request) {
 
     const booking = normalizeBookingSaveRequest(body);
     const pool = getPostgresPool();
+    const bookingFeeAmount = getBookingFeeAmount(booking.totalValue);
 
     const result = await pool.query<{
       id: string;
@@ -77,6 +85,9 @@ export async function POST(request: Request) {
         total_value,
         currency,
         booking_reference,
+        subscriber_opt_in,
+        booking_fee_amount,
+        booking_fee_currency,
         whatsapp_message,
         whatsapp_destination,
         submitted_to_whatsapp,
@@ -88,7 +99,7 @@ export async function POST(request: Request) {
         enquiry_page,
         referrer_host
       ) values (
-        $1, $2, $3, $4, $5, $6::date, $7, $8::jsonb, $9, $10, $11, $12, $13, $14, true, now(), $15, $16, $17, $18, $19, $20
+        $1, $2, $3, $4, $5, $6::date, $7, $8::jsonb, $9, $10, $11, $12, $13, $14, $15, $16, $17, true, now(), $18, $19, $20, $21, $22, $23
       )
       returning id, created_at, status`,
       [
@@ -104,6 +115,9 @@ export async function POST(request: Request) {
         booking.totalValue,
         booking.totalValue ? "ZAR" : null,
         booking.bookingReference,
+        booking.subscriberOptIn,
+        bookingFeeAmount,
+        bookingFeeAmount ? "ZAR" : null,
         booking.whatsappMessage,
         booking.whatsappDestination,
         booking.source,
@@ -114,6 +128,10 @@ export async function POST(request: Request) {
         booking.referrerHost,
       ]
     );
+    const storedBooking = result.rows[0];
+    const bookingId = storedBooking?.id ?? null;
+    let subscriberId: string | null = null;
+
     if (body.sessionId) {
       await ensureBookingLeadsSchema();
       await pool.query(
@@ -126,12 +144,84 @@ export async function POST(request: Request) {
         console.error("Failed to update booking lead status upon booking save:", err);
       });
     }
+
+    if (booking.subscriberOptIn && booking.email) {
+      const subscriber = await upsertSubscriber({
+        email: booking.email,
+        name: booking.clientName,
+        phone: booking.phone,
+        source: "booking",
+      });
+      subscriberId = subscriber.id;
+
+      const welcomeResult = await sendSubscriberWelcomeEmail({
+        email: subscriber.email,
+        name: subscriber.name,
+        unsubscribeToken: subscriber.unsubscribeToken,
+      });
+
+      await recordEmailEvent({
+        subscriberId: subscriber.id,
+        bookingId,
+        eventType: "subscriber_welcome",
+        providerMessageId: welcomeResult.providerMessageId,
+        status: welcomeResult.status,
+        errorMessage: welcomeResult.errorMessage,
+        metadata: { source: "booking" },
+      });
+
+      if (welcomeResult.status === "sent") {
+        await markSubscriberEmailSent(subscriber.id);
+      }
+    }
+
+    const emailResult = await sendBookingConfirmationEmail({
+      bookingId: bookingId ?? "",
+      clientName: booking.clientName,
+      email: booking.email,
+      bookingType: booking.bookingType,
+      consultationContext: booking.consultationContext,
+      preferredDate: booking.preferredDate,
+      preferredTimeSlot: booking.preferredTimeSlot,
+      treatments: booking.treatments,
+      totalValue: booking.totalValue,
+      bookingReference: booking.bookingReference,
+    });
+
+    await recordEmailEvent({
+      subscriberId,
+      bookingId,
+      eventType: "booking_confirmation",
+      providerMessageId: emailResult.providerMessageId,
+      status: emailResult.status,
+      errorMessage: emailResult.errorMessage,
+      metadata: { bookingType: booking.bookingType },
+    });
+
+    if (bookingId) {
+      await pool.query(
+        `update bookings
+         set booking_confirmation_email_status = $2,
+             booking_confirmation_email_sent_at = case when $2 = 'sent' then now() else null end,
+             booking_confirmation_resend_id = $3,
+             booking_confirmation_email_error = $4
+         where id = $1`,
+        [
+          bookingId,
+          emailResult.status,
+          emailResult.providerMessageId,
+          emailResult.errorMessage,
+        ]
+      );
+    }
+
     return NextResponse.json(
       {
         ok: true,
-        bookingId: result.rows[0]?.id ?? null,
-        createdAt: result.rows[0]?.created_at ?? null,
-        status: result.rows[0]?.status ?? "new",
+        bookingId,
+        createdAt: storedBooking?.created_at ?? null,
+        status: storedBooking?.status ?? "new",
+        bookingConfirmationEmailStatus: emailResult.status,
       },
       {
         status: 201,

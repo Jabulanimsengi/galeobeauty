@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { requireAdminAuth } from "@/lib/server/admin-auth";
-import { listBookings } from "@/lib/server/bookings-admin";
+import { listBookings, listBookingLeads } from "@/lib/server/bookings-admin";
 import { getBookingFlowMetricsDashboard } from "@/lib/server/booking-flow-analytics";
 import { getSiteMonitoringMetrics } from "@/lib/server/site-monitoring-events";
+import { getSubscriberSummary, listSubscribersForAdmin } from "@/lib/server/subscribers";
 import { BOOKING_STATUSES } from "@/lib/bookings-admin-shared";
 import { BookingsAdminClient } from "@/app/admin/bookings/BookingsAdminClient";
+import { BookingLeadsAdminClient } from "@/app/admin/bookings/BookingLeadsAdminClient";
+import { EmailCampaignClient } from "@/app/admin/bookings/EmailCampaignClient";
 import { LogoutButton } from "@/app/admin/bookings/LogoutButton";
+import { AdminSidebar } from "@/components/admin/AdminSidebar";
 
 interface BookingsPageProps {
   searchParams: Promise<{
@@ -24,6 +28,7 @@ interface BookingsPageProps {
     sortDirection?: string;
     eventsFrom?: string;
     eventsTo?: string;
+    tab?: string;
   }>;
 }
 
@@ -87,6 +92,7 @@ function buildQueryString({
   sortDirection,
   eventsFrom,
   eventsTo,
+  tab,
 }: {
   status?: string;
   bookingType?: string;
@@ -103,9 +109,13 @@ function buildQueryString({
   sortDirection?: string;
   eventsFrom?: string;
   eventsTo?: string;
+  tab?: string;
 }) {
   const params = new URLSearchParams();
 
+  if (tab && tab !== "bookings") {
+    params.set("tab", tab);
+  }
   if (status && status !== "all") {
     params.set("status", status);
   }
@@ -230,6 +240,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
   await requireAdminAuth("/admin/bookings");
   const datePresets = getDatePresets();
 
+  const tab = params.tab?.trim() || "bookings";
   const status = params.status?.trim() || "all";
   const bookingType = params.bookingType?.trim() || "all";
   const clientName = params.clientName?.trim() || "";
@@ -246,7 +257,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
   const eventsFrom = params.eventsFrom?.trim() || "";
   const eventsTo = params.eventsTo?.trim() || "";
 
-  const [bookingResult, bookingFlowDashboard, siteMonitoringRows] = await Promise.all([
+  const [bookingResult, bookingFlowDashboard, siteMonitoringRows, subscriberSummary, subscribers, bookingLeads] = await Promise.all([
     listBookings({
       status,
       bookingType,
@@ -267,6 +278,9 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
       to: eventsTo,
     }),
     getSiteMonitoringMetrics(),
+    getSubscriberSummary(),
+    listSubscribersForAdmin(),
+    listBookingLeads(),
   ]);
 
   const exportHref = buildExportHref({
@@ -285,6 +299,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     sortDirection,
     eventsFrom,
     eventsTo,
+    tab,
   });
 
   const sortQueryBase = buildQueryString({
@@ -301,6 +316,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     pageSize,
     eventsFrom,
     eventsTo,
+    tab,
   });
 
   const previousPageHref = buildPageHref({
@@ -319,6 +335,7 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     sortDirection,
     eventsFrom,
     eventsTo,
+    tab,
   });
 
   const nextPageHref = buildPageHref({
@@ -337,922 +354,1085 @@ export default async function AdminBookingsPage({ searchParams }: BookingsPagePr
     sortDirection,
     eventsFrom,
     eventsTo,
+    tab,
   });
   const visibleFrom = bookingResult.totalCount === 0 ? 0 : (bookingResult.page - 1) * bookingResult.pageSize + 1;
   const visibleTo = bookingResult.totalCount === 0 ? 0 : Math.min(bookingResult.page * bookingResult.pageSize, bookingResult.totalCount);
 
   return (
-    <main className="min-h-screen bg-[#f6efe6] px-5 py-8 text-foreground sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1600px] space-y-5">
-        <header className="rounded-[1.6rem] border border-black/6 bg-[#17120f] px-5 py-5 text-white shadow-[0_28px_70px_-48px_rgba(23,18,15,0.75)] sm:px-6">
-          <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="min-h-screen bg-[#f8f5f0] text-foreground flex flex-col md:flex-row">
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-admin-scrollbar::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+        }
+        .custom-admin-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-admin-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(216, 187, 116, 0.3);
+          border-radius: 9999px;
+        }
+        .custom-admin-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(216, 187, 116, 0.6);
+        }
+      `}} />
+      <AdminSidebar />
+
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 overflow-x-hidden">
+        {/* Header section */}
+        <header className="rounded-none border border-black/5 bg-[#17120f] p-6 text-white shadow-xl shadow-[#17120f]/15 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold/90">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-gold/90">
                 Galeo Beauty
               </p>
-              <h1 className="mt-3 font-serif text-[2rem] leading-none sm:text-[2.5rem]">
-                Bookings admin
+              <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-white leading-none">
+                {tab === "bookings" && "Bookings Dashboard"}
+                {tab === "analytics" && "Booking Flow Analytics"}
+                {tab === "subscribers" && "Subscribers Circle"}
+                {tab === "leads" && "Booking Recovery Leads"}
               </h1>
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-white/72 sm:text-[0.96rem]">
-                Compact booking operations view with column filters, status management, internal notes, and CSV export.
+              <p className="mt-2 text-xs sm:text-sm text-white/70 max-w-2xl">
+                {tab === "bookings" && "View appointments, update client statuses, record internal notes, and export records."}
+                {tab === "analytics" && "Analyze customer conversion, website funnel drop-offs, campaign traffic, and click-through rates."}
+                {tab === "subscribers" && "Draft newsletter specials, review subscription statistics, and manage member circle list."}
+                {tab === "leads" && "View incomplete booking attempts, contact abandoned users via WhatsApp, and record recovery logs."}
               </p>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <Link
-                href={exportHref}
-                className="rounded-full bg-gold px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#17120f] transition hover:bg-[#d8bb74]"
-              >
-                Export CSV
-              </Link>
-              <LogoutButton />
-            </div>
+            {tab === "bookings" && (
+              <div className="flex items-center gap-3">
+                <Link
+                  href={exportHref}
+                  className="rounded-none bg-gold px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#17120f] shadow-md shadow-gold/25 transition-all hover:bg-[#d8bb74] hover:scale-[1.02] active:scale-95"
+                >
+                  Export CSV
+                </Link>
+              </div>
+            )}
           </div>
         </header>
 
-        <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-5 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
-          <div className="border-b border-black/8 pb-4">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                  Event Monitoring
-                </p>
-                <h2 className="mt-2 font-serif text-[1.8rem] leading-none text-[#17120f]">
-                  Booking flow dashboard
-                </h2>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-foreground/62">
-                  This view groups booking sheet events by the tracked event date in Africa/Johannesburg so you can audit opens, step movement, abandons, WhatsApp submits, and completed booking submissions for any selected range.
-                </p>
-                <p className="mt-2 text-sm leading-7 text-foreground/52">
-                  These same booking flow events are also emitted to Google Analytics 4 with `booking_type`, `source`, `medium`, `campaign`, `landing_page`, step, error, and completion metadata.
-                </p>
-              </div>
+        {/* Tab - BOOKINGS */}
+        {tab === "bookings" && (
+          <div className="space-y-6 animate-fadeIn">
+            {/* Filter controls */}
+            <section className="rounded-none border border-black/5 bg-white p-5 shadow-md shadow-black/[0.02]">
+              <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-black/5 pb-4">
+                <span className="mr-2 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/45">
+                  Quick Date Presets
+                </span>
+                {datePresets.map((preset) => {
+                  const isActive = from === preset.from && to === preset.to;
+                  const href = buildPageHref({
+                    status,
+                    bookingType,
+                    clientName,
+                    phone,
+                    email,
+                    bookingReference,
+                    source,
+                    from: preset.from,
+                    to: preset.to,
+                    page: "1",
+                    pageSize,
+                    sortBy,
+                    sortDirection,
+                    eventsFrom,
+                    eventsTo,
+                    tab,
+                  });
 
-              <div className="max-w-md text-sm leading-6 text-foreground/58">
-                <p>{formatTrackingWindow(bookingFlowDashboard.summary)}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="mr-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              Event dates
-            </span>
-            {datePresets.map((preset) => {
-              const isActive = eventsFrom === preset.from && eventsTo === preset.to;
-              const href = buildPageHref({
-                status,
-                bookingType,
-                clientName,
-                phone,
-                email,
-                bookingReference,
-                source,
-                from,
-                to,
-                page,
-                pageSize,
-                sortBy,
-                sortDirection,
-                eventsFrom: preset.from,
-                eventsTo: preset.to,
-              });
-
-              return (
-                <Link
-                  key={`events-${preset.label}`}
-                  href={href}
-                  className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
-                    isActive
-                      ? "bg-[#17120f] text-white"
-                      : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
-                  }`}
-                >
-                  {preset.label}
-                </Link>
-              );
-            })}
-            <Link
-              href={buildPageHref({
-                status,
-                bookingType,
-                clientName,
-                phone,
-                email,
-                bookingReference,
-                source,
-                from,
-                to,
-                page,
-                pageSize,
-                sortBy,
-                sortDirection,
-                eventsFrom: undefined,
-                eventsTo: undefined,
-              })}
-              className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
-                !eventsFrom && !eventsTo
-                  ? "bg-[#17120f] text-white"
-                  : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
-              }`}
-            >
-              All event dates
-            </Link>
-          </div>
-
-          <form className="mt-4 grid gap-3 md:grid-cols-[0.9fr_0.9fr_auto_auto]">
-            <input type="hidden" name="status" value={status} />
-            <input type="hidden" name="bookingType" value={bookingType} />
-            <input type="hidden" name="clientName" value={clientName} />
-            <input type="hidden" name="phone" value={phone} />
-            <input type="hidden" name="email" value={email} />
-            <input type="hidden" name="bookingReference" value={bookingReference} />
-            <input type="hidden" name="source" value={source} />
-            <input type="hidden" name="from" value={from} />
-            <input type="hidden" name="to" value={to} />
-            <input type="hidden" name="page" value={page} />
-            <input type="hidden" name="pageSize" value={pageSize} />
-            <input type="hidden" name="sortBy" value={sortBy} />
-            <input type="hidden" name="sortDirection" value={sortDirection} />
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Event from
-              </label>
-              <input
-                type="date"
-                name="eventsFrom"
-                defaultValue={eventsFrom}
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Event to
-              </label>
-              <input
-                type="date"
-                name="eventsTo"
-                defaultValue={eventsTo}
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="self-end rounded-xl bg-[#17120f] px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-gold hover:text-[#17120f]"
-            >
-              Apply event filter
-            </button>
-
-            <Link
-              href={buildPageHref({
-                status,
-                bookingType,
-                clientName,
-                phone,
-                email,
-                bookingReference,
-                source,
-                from,
-                to,
-                page,
-                pageSize,
-                sortBy,
-                sortDirection,
-                eventsFrom: undefined,
-                eventsTo: undefined,
-              })}
-              className="self-end rounded-xl border border-black/10 px-5 py-3 text-center text-sm font-semibold uppercase tracking-[0.18em] text-foreground/65 transition hover:border-gold hover:text-gold"
-            >
-              Reset event filter
-            </Link>
-          </form>
-
-          <div className="mt-5 overflow-hidden rounded-[1.25rem] border border-black/8">
-            <div className="overflow-auto">
-              <table className="min-w-[1720px] w-full border-collapse">
-                <thead className="bg-[#17120f] text-white">
-                  <tr className="text-left">
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Event date</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Service CTA clicks</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments added</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments removed</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Booking sheet opens</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 2 views</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 3 views</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Dates selected</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Times selected</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Closes</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Idle abandons</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Validation errors</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Save failures</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">WhatsApp submits</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to step 2</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Step 3 to submit</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-black/8 bg-[#fffaf3]">
-                    <td className="px-4 py-4 text-sm font-semibold text-[#17120f]">
-                      {bookingFlowDashboard.activeFrom || bookingFlowDashboard.activeTo
-                        ? "Selected range total"
-                        : "All tracked dates"}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.serviceCtaClickCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.treatmentAddedCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.treatmentRemovedCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.sheetOpenCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.stepTwoViewCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.stepThreeViewCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.dateSelectedCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.timeSelectedCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.sheetCloseCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.idleAbandonCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.validationErrorCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.saveFailedCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.whatsappSubmitCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {bookingFlowDashboard.summary.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {formatPercent(bookingFlowDashboard.summary.openToStepTwoRate)}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {formatPercent(bookingFlowDashboard.summary.stepThreeToSubmitRate)}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {formatPercent(bookingFlowDashboard.summary.openToSubmitRate)}
-                    </td>
-                    <td className="px-4 py-4 text-sm text-foreground/78">
-                      {formatPercent(bookingFlowDashboard.summary.submitCompletionRate)}
-                    </td>
-                  </tr>
-
-                  {bookingFlowDashboard.dailyRows.length > 0 ? (
-                    bookingFlowDashboard.dailyRows.map((row) => (
-                      <tr key={row.trackedDate} className="border-b border-black/6 bg-white last:border-b-0">
-                        <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
-                          {formatEventDate(row.trackedDate)}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.serviceCtaClickCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.treatmentAddedCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.treatmentRemovedCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.sheetOpenCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.stepTwoViewCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.stepThreeViewCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.dateSelectedCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.timeSelectedCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.sheetCloseCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.idleAbandonCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.validationErrorCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.saveFailedCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.whatsappSubmitCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {formatPercent(row.openToStepTwoRate)}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {formatPercent(row.stepThreeToSubmitRate)}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {formatPercent(row.openToSubmitRate)}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {formatPercent(row.submitCompletionRate)}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr className="bg-white">
-                      <td colSpan={19} className="px-4 py-10 text-center text-sm text-foreground/62">
-                        No booking flow events matched the selected event date range.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="mt-5 grid gap-5 xl:grid-cols-2">
-            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
-              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                  By booking type
-                </p>
-                <p className="mt-2 text-sm text-foreground/58">
-                  Compare consultation and treatment booking-flow performance for the selected event-date range.
-                </p>
-              </div>
-              <div className="overflow-auto">
-                <table className="min-w-[620px] w-full border-collapse">
-                  <thead className="bg-[#17120f] text-white">
-                    <tr className="text-left">
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Booking type</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookingFlowDashboard.bookingTypeRows.length > 0 ? (
-                      bookingFlowDashboard.bookingTypeRows.map((row) => (
-                        <tr key={row.bookingType} className="border-b border-black/6 bg-white last:border-b-0">
-                          <td className="px-4 py-4 text-sm font-medium capitalize text-[#17120f]">
-                            {formatBookingTypeLabel(row.bookingType)}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.sheetOpenCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {formatPercent(row.openToSubmitRate)}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr className="bg-white">
-                        <td colSpan={5} className="px-4 py-8 text-center text-sm text-foreground/62">
-                          No booking-type breakdown is available for this event-date range.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
-              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                  By traffic source
-                </p>
-                <p className="mt-2 text-sm text-foreground/58">
-                  Review how tracked booking events are split across source and medium inside the same date window.
-                </p>
-              </div>
-              <div className="overflow-auto">
-                <table className="min-w-[760px] w-full border-collapse">
-                  <thead className="bg-[#17120f] text-white">
-                    <tr className="text-left">
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Source</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Medium</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookingFlowDashboard.sourceRows.length > 0 ? (
-                      bookingFlowDashboard.sourceRows.map((row) => (
-                        <tr
-                          key={`${row.source}:${row.medium}`}
-                          className="border-b border-black/6 bg-white last:border-b-0"
-                        >
-                          <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
-                            {row.source}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/62">
-                            {row.medium}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.sheetOpenCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {formatPercent(row.submitCompletionRate)}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr className="bg-white">
-                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
-                          No source breakdown is available for this event-date range.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
-              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                  By campaign
-                </p>
-                <p className="mt-2 text-sm text-foreground/58">
-                  See which tracked campaigns are opening the booking sheet and driving WhatsApp submits in the selected date range.
-                </p>
-              </div>
-              <div className="overflow-auto">
-                <table className="min-w-[720px] w-full border-collapse">
-                  <thead className="bg-[#17120f] text-white">
-                    <tr className="text-left">
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Campaign</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookingFlowDashboard.campaignRows.length > 0 ? (
-                      bookingFlowDashboard.campaignRows.map((row) => (
-                        <tr key={row.campaign} className="border-b border-black/6 bg-white last:border-b-0">
-                          <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
-                            {row.campaign}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.sheetOpenCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {formatPercent(row.openToSubmitRate)}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {formatPercent(row.submitCompletionRate)}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr className="bg-white">
-                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
-                          No campaign breakdown is available for this event-date range.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="overflow-hidden rounded-[1.25rem] border border-black/8">
-              <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                  By landing page
-                </p>
-                <p className="mt-2 text-sm text-foreground/58">
-                  Track which first-touch landing pages are feeding the booking flow and where those sessions convert.
-                </p>
-              </div>
-              <div className="overflow-auto">
-                <table className="min-w-[760px] w-full border-collapse">
-                  <thead className="bg-[#17120f] text-white">
-                    <tr className="text-left">
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Landing page</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Opens</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submits</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">True bookings</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Open to submit</th>
-                      <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Submit completion</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {bookingFlowDashboard.landingPageRows.length > 0 ? (
-                      bookingFlowDashboard.landingPageRows.map((row) => (
-                        <tr
-                          key={row.landingPage}
-                          className="border-b border-black/6 bg-white last:border-b-0"
-                        >
-                          <td className="px-4 py-4 text-sm font-medium text-[#17120f]">
-                            {row.landingPage}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.sheetOpenCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {formatPercent(row.openToSubmitRate)}
-                          </td>
-                          <td className="px-4 py-4 text-sm text-foreground/78">
-                            {formatPercent(row.submitCompletionRate)}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr className="bg-white">
-                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-foreground/62">
-                          No landing-page breakdown is available for this event-date range.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-5 overflow-hidden rounded-[1.25rem] border border-black/8">
-            <div className="border-b border-black/8 bg-[#fffaf3] px-4 py-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Contact click monitoring
-              </p>
-              <p className="mt-2 text-sm text-foreground/58">
-                Server-side counts for WhatsApp, phone, directions, email, and external lead actions. These events are also still emitted to GA4.
-              </p>
-            </div>
-            <div className="overflow-auto">
-              <table className="min-w-[760px] w-full border-collapse">
-                <thead className="bg-[#17120f] text-white">
-                  <tr className="text-left">
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Event</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Count</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">First tracked</th>
-                    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Last tracked</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {siteMonitoringRows.length > 0 ? (
-                    siteMonitoringRows.map((row) => (
-                      <tr key={row.eventName} className="border-b border-black/6 bg-white last:border-b-0">
-                        <td className="px-4 py-4 text-sm font-medium capitalize text-[#17120f]">
-                          {formatEventNameLabel(row.eventName)}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/78">
-                          {row.eventCount.toLocaleString("en-ZA")}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/62">
-                          {formatTrackedAt(row.firstTrackedAt)}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-foreground/62">
-                          {formatTrackedAt(row.lastTrackedAt)}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr className="bg-white">
-                      <td colSpan={4} className="px-4 py-8 text-center text-sm text-foreground/62">
-                        No server-side contact click events have been recorded yet.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <section className="rounded-[1.4rem] border border-black/8 bg-white px-5 py-4 shadow-[0_20px_60px_-40px_rgba(23,18,15,0.35)]">
-          <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-black/8 pb-4">
-            <span className="mr-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-              Quick dates
-            </span>
-            {datePresets.map((preset) => {
-              const isActive = from === preset.from && to === preset.to;
-              const href = buildPageHref({
-                status,
-                bookingType,
-                clientName,
-                phone,
-                email,
-                bookingReference,
-                source,
-                from: preset.from,
-                to: preset.to,
-                page: "1",
-                pageSize,
-                sortBy,
-                sortDirection,
-                eventsFrom,
-                eventsTo,
-              });
-
-              return (
-                <Link
-                  key={preset.label}
-                  href={href}
-                  className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
-                    isActive
-                      ? "bg-[#17120f] text-white"
-                      : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
-                  }`}
-                >
-                  {preset.label}
-                </Link>
-              );
-            })}
-            <Link
-              href={buildPageHref({
-                status,
-                bookingType,
-                clientName,
-                phone,
-                email,
-                bookingReference,
-                source,
-                from: undefined,
-                to: undefined,
-                page: "1",
-                pageSize,
-                sortBy,
-                sortDirection,
-                eventsFrom,
-                eventsTo,
-              })}
-              className={`rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.16em] transition ${
-                !from && !to
-                  ? "bg-[#17120f] text-white"
-                  : "border border-black/10 text-foreground/62 hover:border-gold hover:text-gold"
-              }`}
-            >
-              All dates
-            </Link>
-          </div>
-
-          <form className="grid gap-3 xl:grid-cols-[1.1fr_0.85fr_0.95fr_0.95fr_0.9fr_0.9fr_0.85fr_0.85fr]">
-            <input type="hidden" name="sortBy" value={sortBy} />
-            <input type="hidden" name="sortDirection" value={sortDirection} />
-            <input type="hidden" name="page" value="1" />
-            <input type="hidden" name="eventsFrom" value={eventsFrom} />
-            <input type="hidden" name="eventsTo" value={eventsTo} />
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Client
-              </label>
-              <input
-                type="text"
-                name="clientName"
-                defaultValue={clientName}
-                placeholder="Filter client name"
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Phone
-              </label>
-              <input
-                type="text"
-                name="phone"
-                defaultValue={phone}
-                placeholder="Filter phone"
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Email
-              </label>
-              <input
-                type="text"
-                name="email"
-                defaultValue={email}
-                placeholder="Filter email"
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Status
-              </label>
-              <select
-                name="status"
-                defaultValue={status}
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              >
-                <option value="all">All statuses</option>
-                {BOOKING_STATUSES.map((option) => (
-                  <option key={option} value={option}>
-                    {option.replace(/_/g, " ")}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Type
-              </label>
-              <select
-                name="bookingType"
-                defaultValue={bookingType}
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              >
-                <option value="all">All types</option>
-                <option value="treatment">Treatment</option>
-                <option value="consultation">Consultation</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Reference
-              </label>
-              <input
-                type="text"
-                name="bookingReference"
-                defaultValue={bookingReference}
-                placeholder="Filter reference"
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                Source
-              </label>
-              <input
-                type="text"
-                name="source"
-                defaultValue={source}
-                placeholder="Filter source"
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                From date
-              </label>
-              <input
-                type="date"
-                name="from"
-                defaultValue={from}
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                To date
-              </label>
-              <input
-                type="date"
-                name="to"
-                defaultValue={to}
-                className="w-full rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-              />
-            </div>
-
-            <div className="flex flex-wrap items-end gap-3 xl:col-span-8">
-              <div>
-                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-foreground/45">
-                  Rows
-                </label>
-                <select
-                  name="pageSize"
-                  defaultValue={pageSize}
-                  className="rounded-xl border border-black/10 bg-[#fffaf3] px-4 py-3 text-sm outline-none transition focus:border-gold"
-                >
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-              </div>
-              <button
-                type="submit"
-                className="rounded-xl bg-[#17120f] px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-gold hover:text-[#17120f]"
-              >
-                Apply filters
-              </button>
-              <Link
-                href={buildPageHref({
-                  status: undefined,
-                  bookingType: undefined,
-                  clientName: undefined,
-                  phone: undefined,
-                  email: undefined,
-                  bookingReference: undefined,
-                  source: undefined,
-                  from: undefined,
-                  to: undefined,
-                  page: "1",
-                  pageSize: "50",
-                  sortBy: undefined,
-                  sortDirection: undefined,
-                  eventsFrom,
-                  eventsTo,
+                  return (
+                    <Link
+                      key={preset.label}
+                      href={href}
+                      className={`rounded-none px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-all ${
+                        isActive
+                          ? "bg-[#17120f] text-white shadow-sm"
+                          : "border border-black/10 text-foreground/60 hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                      }`}
+                    >
+                      {preset.label}
+                    </Link>
+                  );
                 })}
-                className="rounded-xl border border-black/10 px-5 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-foreground/65 transition hover:border-gold hover:text-gold"
-              >
-                Reset
-              </Link>
-              <p className="ml-auto text-sm text-foreground/55">
-                Showing {visibleFrom} - {visibleTo} of {bookingResult.totalCount}
+                <Link
+                  href={buildPageHref({
+                    status,
+                    bookingType,
+                    clientName,
+                    phone,
+                    email,
+                    bookingReference,
+                    source,
+                    from: undefined,
+                    to: undefined,
+                    page: "1",
+                    pageSize,
+                    sortBy,
+                    sortDirection,
+                    eventsFrom,
+                    eventsTo,
+                    tab,
+                  })}
+                  className={`rounded-none px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-all ${
+                    !from && !to
+                      ? "bg-[#17120f] text-white shadow-sm"
+                      : "border border-black/10 text-foreground/60 hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                  }`}
+                >
+                  All dates
+                </Link>
+              </div>
+
+              <form className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
+                <input type="hidden" name="sortBy" value={sortBy} />
+                <input type="hidden" name="sortDirection" value={sortDirection} />
+                <input type="hidden" name="page" value="1" />
+                <input type="hidden" name="eventsFrom" value={eventsFrom} />
+                <input type="hidden" name="eventsTo" value={eventsTo} />
+                <input type="hidden" name="tab" value="bookings" />
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Client name
+                  </label>
+                  <input
+                    type="text"
+                    name="clientName"
+                    defaultValue={clientName}
+                    placeholder="Search client"
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    name="phone"
+                    defaultValue={phone}
+                    placeholder="Filter by phone"
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    name="email"
+                    defaultValue={email}
+                    placeholder="Filter by email"
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Status
+                  </label>
+                  <select
+                    name="status"
+                    defaultValue={status}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  >
+                    <option value="all">All statuses</option>
+                    {BOOKING_STATUSES.map((option) => (
+                      <option key={option} value={option}>
+                        {option.replace(/_/g, " ")}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Booking type
+                  </label>
+                  <select
+                    name="bookingType"
+                    defaultValue={bookingType}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  >
+                    <option value="all">All types</option>
+                    <option value="treatment">Treatment</option>
+                    <option value="consultation">Consultation</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Booking reference
+                  </label>
+                  <input
+                    type="text"
+                    name="bookingReference"
+                    defaultValue={bookingReference}
+                    placeholder="Search reference"
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Traffic Source
+                  </label>
+                  <input
+                    type="text"
+                    name="source"
+                    defaultValue={source}
+                    placeholder="Search source (e.g., google)"
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    From booking date
+                  </label>
+                  <input
+                    type="date"
+                    name="from"
+                    defaultValue={from}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    To booking date
+                  </label>
+                  <input
+                    type="date"
+                    name="to"
+                    defaultValue={to}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Rows to show
+                  </label>
+                  <select
+                    name="pageSize"
+                    defaultValue={pageSize}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  >
+                    <option value="25">25 rows</option>
+                    <option value="50">50 rows</option>
+                    <option value="100">100 rows</option>
+                  </select>
+                </div>
+
+                <div className="flex items-center gap-2 pt-5 sm:col-span-2 md:col-span-3 xl:col-span-5">
+                  <button
+                    type="submit"
+                    className="rounded-none bg-[#17120f] px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all hover:bg-gold hover:text-[#17120f] hover:scale-[1.01] active:scale-95"
+                  >
+                    Apply Filters
+                  </button>
+                  <Link
+                    href={buildPageHref({
+                      status: undefined,
+                      bookingType: undefined,
+                      clientName: undefined,
+                      phone: undefined,
+                      email: undefined,
+                      bookingReference: undefined,
+                      source: undefined,
+                      from: undefined,
+                      to: undefined,
+                      page: "1",
+                      pageSize: "50",
+                      sortBy: undefined,
+                      sortDirection: undefined,
+                      eventsFrom,
+                      eventsTo,
+                      tab,
+                    })}
+                    className="rounded-none border border-black/10 px-5 py-2.5 text-center text-xs font-semibold uppercase tracking-[0.14em] text-foreground/60 transition hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                  >
+                    Reset Filters
+                  </Link>
+                  <p className="ml-auto text-xs text-foreground/50 font-medium">
+                    Showing {visibleFrom} - {visibleTo} of {bookingResult.totalCount} entries
+                  </p>
+                </div>
+              </form>
+            </section>
+
+            {/* Bookings Table Component */}
+            <BookingsAdminClient
+              bookings={bookingResult.bookings}
+              sortQueryBase={sortQueryBase}
+              activeSortBy={bookingResult.sortBy}
+              activeSortDirection={bookingResult.sortDirection}
+            />
+
+            {/* Pagination controls */}
+            <section className="flex flex-wrap items-center justify-between gap-3 rounded-none border border-black/5 bg-white px-5 py-4 shadow-sm">
+              <p className="text-xs font-medium text-foreground/50">
+                Page {bookingResult.page} of {bookingResult.totalPages} pages
               </p>
-            </div>
-          </form>
-        </section>
 
-        <BookingsAdminClient bookings={bookingResult.bookings} sortQueryBase={sortQueryBase} activeSortBy={bookingResult.sortBy} activeSortDirection={bookingResult.sortDirection} />
-
-        <section className="flex flex-wrap items-center justify-between gap-3 rounded-[1.2rem] border border-black/8 bg-white px-5 py-4 shadow-[0_18px_40px_-35px_rgba(23,18,15,0.25)]">
-          <p className="text-sm text-foreground/60">
-            Page {bookingResult.page} of {bookingResult.totalPages}
-          </p>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href={previousPageHref}
-              aria-disabled={bookingResult.page <= 1}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] ${
-                bookingResult.page <= 1
-                  ? "pointer-events-none border border-black/10 text-foreground/25"
-                  : "border border-black/10 text-foreground/65 transition hover:border-gold hover:text-gold"
-              }`}
-            >
-              Previous
-            </Link>
-            <Link
-              href={nextPageHref}
-              aria-disabled={bookingResult.page >= bookingResult.totalPages}
-              className={`rounded-xl px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] ${
-                bookingResult.page >= bookingResult.totalPages
-                  ? "pointer-events-none border border-black/10 text-foreground/25"
-                  : "border border-black/10 text-foreground/65 transition hover:border-gold hover:text-gold"
-              }`}
-            >
-              Next
-            </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={previousPageHref}
+                  aria-disabled={bookingResult.page <= 1}
+                  className={`rounded-none px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${
+                    bookingResult.page <= 1
+                      ? "pointer-events-none border border-black/5 text-foreground/20 bg-gray-50"
+                      : "border border-black/10 text-foreground/60 transition hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                  }`}
+                >
+                  Previous
+                </Link>
+                <Link
+                  href={nextPageHref}
+                  aria-disabled={bookingResult.page >= bookingResult.totalPages}
+                  className={`rounded-none px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] ${
+                    bookingResult.page >= bookingResult.totalPages
+                      ? "pointer-events-none border border-black/5 text-foreground/20 bg-gray-50"
+                      : "border border-black/10 text-foreground/60 transition hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                  }`}
+                >
+                  Next
+                </Link>
+              </div>
+            </section>
           </div>
-        </section>
-      </div>
-    </main>
+        )}
+
+        {/* Tab - ANALYTICS */}
+        {tab === "analytics" && (
+          <div className="space-y-6 animate-fadeIn">
+            {/* Analytics Date Filters */}
+            <section className="rounded-none border border-black/5 bg-white p-5 shadow-md shadow-black/[0.02]">
+              <div className="flex flex-wrap items-start justify-between gap-4 border-b border-black/5 pb-4 mb-4">
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-foreground/45">
+                    Activity Date Range
+                  </p>
+                  <h2 className="mt-1 text-xl font-bold text-[#17120f]">
+                    Conversion analytics filters
+                  </h2>
+                </div>
+                <div className="text-right text-xs text-foreground/50 font-medium max-w-md">
+                  {formatTrackingWindow(bookingFlowDashboard.summary)}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 mb-4">
+                <span className="mr-2 text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                  Presets
+                </span>
+                {datePresets.map((preset) => {
+                  const isActive = eventsFrom === preset.from && eventsTo === preset.to;
+                  const href = buildPageHref({
+                    status,
+                    bookingType,
+                    clientName,
+                    phone,
+                    email,
+                    bookingReference,
+                    source,
+                    from,
+                    to,
+                    page,
+                    pageSize,
+                    sortBy,
+                    sortDirection,
+                    eventsFrom: preset.from,
+                    eventsTo: preset.to,
+                    tab,
+                  });
+
+                  return (
+                    <Link
+                      key={`events-${preset.label}`}
+                      href={href}
+                      className={`rounded-none px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-all ${
+                        isActive
+                          ? "bg-[#17120f] text-white shadow-sm"
+                          : "border border-black/10 text-foreground/60 hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                      }`}
+                    >
+                      {preset.label}
+                    </Link>
+                  );
+                })}
+                <Link
+                  href={buildPageHref({
+                    status,
+                    bookingType,
+                    clientName,
+                    phone,
+                    email,
+                    bookingReference,
+                    source,
+                    from,
+                    to,
+                    page,
+                    pageSize,
+                    sortBy,
+                    sortDirection,
+                    eventsFrom: undefined,
+                    eventsTo: undefined,
+                    tab,
+                  })}
+                  className={`rounded-none px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] transition-all ${
+                    !eventsFrom && !eventsTo
+                      ? "bg-[#17120f] text-white shadow-sm"
+                      : "border border-black/10 text-foreground/60 hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                  }`}
+                >
+                  All activity dates
+                </Link>
+              </div>
+
+              <form className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 items-end">
+                <input type="hidden" name="status" value={status} />
+                <input type="hidden" name="bookingType" value={bookingType} />
+                <input type="hidden" name="clientName" value={clientName} />
+                <input type="hidden" name="phone" value={phone} />
+                <input type="hidden" name="email" value={email} />
+                <input type="hidden" name="bookingReference" value={bookingReference} />
+                <input type="hidden" name="source" value={source} />
+                <input type="hidden" name="from" value={from} />
+                <input type="hidden" name="to" value={to} />
+                <input type="hidden" name="page" value={page} />
+                <input type="hidden" name="pageSize" value={pageSize} />
+                <input type="hidden" name="sortBy" value={sortBy} />
+                <input type="hidden" name="sortDirection" value={sortDirection} />
+                <input type="hidden" name="tab" value="analytics" />
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Activity from
+                  </label>
+                  <input
+                    type="date"
+                    name="eventsFrom"
+                    defaultValue={eventsFrom}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Activity to
+                  </label>
+                  <input
+                    type="date"
+                    name="eventsTo"
+                    defaultValue={eventsTo}
+                    className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-sm outline-none transition focus:border-gold focus:bg-white"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="rounded-none bg-[#17120f] px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-white transition-all hover:bg-gold hover:text-[#17120f] active:scale-95"
+                >
+                  Apply Dates
+                </button>
+
+                <Link
+                  href={buildPageHref({
+                    status,
+                    bookingType,
+                    clientName,
+                    phone,
+                    email,
+                    bookingReference,
+                    source,
+                    from,
+                    to,
+                    page,
+                    pageSize,
+                    sortBy,
+                    sortDirection,
+                    eventsFrom: undefined,
+                    eventsTo: undefined,
+                    tab,
+                  })}
+                  className="rounded-none border border-black/10 px-5 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-foreground/60 transition hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+                >
+                  Clear Date Filters
+                </Link>
+              </form>
+            </section>
+
+            {/* Funnel Metrics Table */}
+            <section className="rounded-none border border-black/5 bg-white p-5 shadow-md shadow-black/[0.02] overflow-hidden">
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#17120f] mb-4">
+                Booking Flow Performance Funnel
+              </h3>
+              <div className="max-h-[380px] overflow-auto border border-black/5 rounded-none custom-admin-scrollbar relative">
+                <table className="min-w-[1720px] w-full border-collapse">
+                  <thead className="bg-[#17120f] text-white text-[10px] uppercase tracking-widest sticky top-0 z-20">
+                    <tr className="text-left bg-[#17120f]">
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Event date</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Service Clicks</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Treatments Added</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Treatments Removed</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Form Opens</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Date Step Views</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Confirm Step Views</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Dates Selected</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Times Selected</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Closes</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Left Inactive</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Form Errors</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Save Failures</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Sent to WhatsApp</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5">Saved Bookings</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5 text-gold">Reach Date %</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5 text-gold">Confirm %</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5 text-gold">Conversion %</th>
+                      <th className="sticky top-0 bg-[#17120f] px-4 py-3.5 text-gold">Completion %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b-2 border-black/8 bg-gold/10 font-semibold text-[#17120f]">
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.activeFrom || bookingFlowDashboard.activeTo
+                          ? "Selected dates"
+                          : "All dates"}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.serviceCtaClickCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.treatmentAddedCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.treatmentRemovedCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.sheetOpenCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.stepTwoViewCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.stepThreeViewCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.dateSelectedCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.timeSelectedCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.sheetCloseCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.idleAbandonCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.validationErrorCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.saveFailedCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.whatsappSubmitCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4">
+                        {bookingFlowDashboard.summary.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                      </td>
+                      <td className="px-4 py-4 text-gold-dark font-bold">
+                        {formatPercent(bookingFlowDashboard.summary.openToStepTwoRate)}
+                      </td>
+                      <td className="px-4 py-4 text-gold-dark font-bold">
+                        {formatPercent(bookingFlowDashboard.summary.stepThreeToSubmitRate)}
+                      </td>
+                      <td className="px-4 py-4 text-gold-dark font-bold">
+                        {formatPercent(bookingFlowDashboard.summary.openToSubmitRate)}
+                      </td>
+                      <td className="px-4 py-4 text-gold-dark font-bold">
+                        {formatPercent(bookingFlowDashboard.summary.submitCompletionRate)}
+                      </td>
+                    </tr>
+
+                    {bookingFlowDashboard.dailyRows.length > 0 ? (
+                      bookingFlowDashboard.dailyRows.map((row) => (
+                        <tr key={row.trackedDate} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8] transition-colors">
+                          <td className="px-4 py-3.5 text-xs font-semibold text-[#17120f]">
+                            {formatEventDate(row.trackedDate)}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.serviceCtaClickCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.treatmentAddedCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.treatmentRemovedCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.sheetOpenCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.stepTwoViewCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.stepThreeViewCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.dateSelectedCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.timeSelectedCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.sheetCloseCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.idleAbandonCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.validationErrorCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.saveFailedCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs text-foreground/70">
+                            {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs font-semibold text-foreground/80">
+                            {formatPercent(row.openToStepTwoRate)}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs font-semibold text-foreground/80">
+                            {formatPercent(row.stepThreeToSubmitRate)}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs font-semibold text-foreground/80">
+                            {formatPercent(row.openToSubmitRate)}
+                          </td>
+                          <td className="px-4 py-3.5 text-xs font-semibold text-foreground/80">
+                            {formatPercent(row.submitCompletionRate)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={19} className="px-4 py-10 text-center text-sm text-foreground/45">
+                          No booking activity was found for these dates.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            {/* Breakdown Tables Grid */}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Bookings by Type */}
+              <div className="overflow-hidden rounded-none border border-black/5 bg-white shadow-sm">
+                <div className="border-b border-black/5 bg-[#fffcf8] px-5 py-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Category Share
+                  </p>
+                  <h4 className="mt-1 text-sm font-bold text-[#17120f]">
+                    Bookings by Type
+                  </h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-left text-xs">
+                    <thead className="bg-[#17120f] text-white text-[9px] uppercase tracking-wider">
+                      <tr>
+                        <th className="px-5 py-3">Booking Type</th>
+                        <th className="px-5 py-3">Opens</th>
+                        <th className="px-5 py-3">WhatsApp Submits</th>
+                        <th className="px-5 py-3">Saved Bookings</th>
+                        <th className="px-5 py-3 text-gold">Open to Submit</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookingFlowDashboard.bookingTypeRows.length > 0 ? (
+                        bookingFlowDashboard.bookingTypeRows.map((row) => (
+                          <tr key={row.bookingType} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8]">
+                            <td className="px-5 py-4 font-semibold capitalize text-[#17120f]">
+                              {formatBookingTypeLabel(row.bookingType)}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.sheetOpenCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 font-semibold text-gold-dark">
+                              {formatPercent(row.openToSubmitRate)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="px-5 py-8 text-center text-foreground/45">
+                            No data available.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Where Visitors Came From */}
+              <div className="overflow-hidden rounded-none border border-black/5 bg-white shadow-sm">
+                <div className="border-b border-black/5 bg-[#fffcf8] px-5 py-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Acquisition Channels
+                  </p>
+                  <h4 className="mt-1 text-sm font-bold text-[#17120f]">
+                    Traffic sources
+                  </h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-left text-xs">
+                    <thead className="bg-[#17120f] text-white text-[9px] uppercase tracking-wider">
+                      <tr>
+                        <th className="px-5 py-3">Source</th>
+                        <th className="px-5 py-3">Medium</th>
+                        <th className="px-5 py-3">Opens</th>
+                        <th className="px-5 py-3">WhatsApp Submits</th>
+                        <th className="px-5 py-3">Saved Bookings</th>
+                        <th className="px-5 py-3 text-gold">Completion Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookingFlowDashboard.sourceRows.length > 0 ? (
+                        bookingFlowDashboard.sourceRows.map((row) => (
+                          <tr key={`${row.source}:${row.medium}`} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8]">
+                            <td className="px-5 py-4 font-semibold text-[#17120f]">
+                              {row.source}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/50">
+                              {row.medium}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.sheetOpenCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 font-semibold text-gold-dark">
+                              {formatPercent(row.submitCompletionRate)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={6} className="px-5 py-8 text-center text-foreground/45">
+                            No source details found.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Campaigns */}
+              <div className="overflow-hidden rounded-none border border-black/5 bg-white shadow-sm">
+                <div className="border-b border-black/5 bg-[#fffcf8] px-5 py-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Marketing Campaigns
+                  </p>
+                  <h4 className="mt-1 text-sm font-bold text-[#17120f]">
+                    Campaign Performance
+                  </h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-left text-xs">
+                    <thead className="bg-[#17120f] text-white text-[9px] uppercase tracking-wider">
+                      <tr>
+                        <th className="px-5 py-3">Campaign</th>
+                        <th className="px-5 py-3">Opens</th>
+                        <th className="px-5 py-3">WhatsApp Submits</th>
+                        <th className="px-5 py-3">Saved Bookings</th>
+                        <th className="px-5 py-3">Open to Submit</th>
+                        <th className="px-5 py-3 text-gold">Completion %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookingFlowDashboard.campaignRows.length > 0 ? (
+                        bookingFlowDashboard.campaignRows.map((row) => (
+                          <tr key={row.campaign} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8]">
+                            <td className="px-5 py-4 font-semibold text-[#17120f]">
+                              {row.campaign}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.sheetOpenCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {formatPercent(row.openToSubmitRate)}
+                            </td>
+                            <td className="px-5 py-4 font-semibold text-gold-dark">
+                              {formatPercent(row.submitCompletionRate)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={6} className="px-5 py-8 text-center text-foreground/45">
+                            No campaigns active.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* First Page Visited */}
+              <div className="overflow-hidden rounded-none border border-black/5 bg-white shadow-sm">
+                <div className="border-b border-black/5 bg-[#fffcf8] px-5 py-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    Landing Journeys
+                  </p>
+                  <h4 className="mt-1 text-sm font-bold text-[#17120f]">
+                    First Website Page Visited
+                  </h4>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse text-left text-xs">
+                    <thead className="bg-[#17120f] text-white text-[9px] uppercase tracking-wider">
+                      <tr>
+                        <th className="px-5 py-3">Landing URL</th>
+                        <th className="px-5 py-3">Opens</th>
+                        <th className="px-5 py-3">WhatsApp Submits</th>
+                        <th className="px-5 py-3">Saved Bookings</th>
+                        <th className="px-5 py-3">Open to Submit</th>
+                        <th className="px-5 py-3 text-gold">Completion %</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {bookingFlowDashboard.landingPageRows.length > 0 ? (
+                        bookingFlowDashboard.landingPageRows.map((row) => (
+                          <tr key={row.landingPage} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8]">
+                            <td className="px-5 py-4 font-semibold text-[#17120f] truncate max-w-[180px]" title={row.landingPage}>
+                              {row.landingPage}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.sheetOpenCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.whatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {row.completedWhatsappSubmitCount.toLocaleString("en-ZA")}
+                            </td>
+                            <td className="px-5 py-4 text-foreground/70">
+                              {formatPercent(row.openToSubmitRate)}
+                            </td>
+                            <td className="px-5 py-4 font-semibold text-gold-dark">
+                              {formatPercent(row.submitCompletionRate)}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={6} className="px-5 py-8 text-center text-foreground/45">
+                            No landing records available.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Site Contact Buttons Monitoring */}
+            <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm overflow-hidden">
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#17120f] mb-4">
+                Global Site Click Conversions
+              </h3>
+              <div className="overflow-x-auto border border-black/5 rounded-none">
+                <table className="w-full border-collapse text-left text-xs">
+                  <thead className="bg-[#17120f] text-white text-[9px] uppercase tracking-wider">
+                    <tr>
+                      <th className="px-5 py-3.5">Action Event</th>
+                      <th className="px-5 py-3.5">Total click count</th>
+                      <th className="px-5 py-3.5">First interaction</th>
+                      <th className="px-5 py-3.5">Most recent interaction</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {siteMonitoringRows.length > 0 ? (
+                      siteMonitoringRows.map((row) => (
+                        <tr key={row.eventName} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8] transition-colors">
+                          <td className="px-5 py-4 font-semibold capitalize text-[#17120f]">
+                            {formatEventNameLabel(row.eventName)}
+                          </td>
+                          <td className="px-5 py-4 font-medium text-foreground/80">
+                            {row.eventCount.toLocaleString("en-ZA")} clicks
+                          </td>
+                          <td className="px-5 py-4 text-foreground/50">
+                            {formatTrackedAt(row.firstTrackedAt)}
+                          </td>
+                          <td className="px-5 py-4 text-foreground/50">
+                            {formatTrackedAt(row.lastTrackedAt)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={4} className="px-5 py-8 text-center text-foreground/45">
+                          No contact events captured.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* Tab - SUBSCRIBERS */}
+        {tab === "subscribers" && (
+          <div className="space-y-6 animate-fadeIn">
+            {/* Download Button */}
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#17120f]">
+                  Subscribers & Newsletter Campaigns
+                </h2>
+                <p className="text-xs text-foreground/50 font-medium">
+                  Review subscription metrics, recent leads, and draft campaigns.
+                </p>
+              </div>
+              <Link
+                href="/admin/subscribers/export"
+                className="rounded-none border border-black/10 bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-[#17120f] shadow-sm hover:border-gold hover:text-gold hover:bg-[#fffcf8] transition-all hover:scale-[1.01] active:scale-95"
+              >
+                Export Subscribers CSV
+              </Link>
+            </div>
+
+            {/* Subscriber stats grid */}
+            <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {[
+                { label: "Total Members Circle", value: subscriberSummary.totalSubscribers, color: "border-l-4 border-l-black" },
+                { label: "Subscribed & Marketing-Active", value: subscriberSummary.activeSubscribers, color: "border-l-4 border-l-green-600" },
+                { label: "New Joins This Week", value: subscriberSummary.newThisWeek, color: "border-l-4 border-l-gold" },
+                { label: "Opted Out / Unsubscribed", value: subscriberSummary.unsubscribedSubscribers, color: "border-l-4 border-l-red-500" },
+              ].map((item) => (
+                <div key={item.label} className={`rounded-none border border-black/5 bg-white p-5 shadow-sm ${item.color}`}>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
+                    {item.label}
+                  </p>
+                  <p className="mt-2 text-3xl font-semibold text-[#17120f] tracking-tight">
+                    {item.value.toLocaleString("en-ZA")}
+                  </p>
+                </div>
+              ))}
+            </section>
+
+            {/* Email Special Creator Component */}
+            <section className="rounded-none border border-black/5 bg-white p-5 sm:p-6 shadow-md shadow-black/[0.02]">
+              <div className="border-b border-black/5 pb-3">
+                <h3 className="text-base font-bold text-[#17120f]">
+                  Draft a Circle Member Special Offer
+                </h3>
+                <p className="text-xs text-foreground/50 leading-relaxed mt-1">
+                  Draft a beautiful, personalized HTML email to go directly to all marketing-active subscribers in the circle database.
+                </p>
+              </div>
+              <EmailCampaignClient activeSubscriberCount={subscriberSummary.activeSubscribers} />
+            </section>
+
+            {/* Recent Subscribers List Table */}
+            <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm overflow-hidden">
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#17120f] mb-4">
+                Recent Circle Registrations
+              </h3>
+              <div className="max-h-[350px] overflow-auto border border-black/5 rounded-none custom-admin-scrollbar relative">
+                <table className="w-full border-collapse text-left text-xs">
+                  <thead className="bg-[#17120f] text-white text-[9px] uppercase tracking-wider sticky top-0 z-20">
+                    <tr className="bg-[#17120f]">
+                      <th className="sticky top-0 bg-[#17120f] px-5 py-3.5">Email address</th>
+                      <th className="sticky top-0 bg-[#17120f] px-5 py-3.5">First/Last Name</th>
+                      <th className="sticky top-0 bg-[#17120f] px-5 py-3.5">Marketing status</th>
+                      <th className="sticky top-0 bg-[#17120f] px-5 py-3.5">Acquisition placement</th>
+                      <th className="sticky top-0 bg-[#17120f] px-5 py-3.5">Registered date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscribers.length > 0 ? (
+                      subscribers.slice(0, 25).map((subscriber) => (
+                        <tr key={subscriber.id} className="border-b border-black/5 bg-white last:border-b-0 hover:bg-[#fffcf8] transition-colors">
+                          <td className="px-5 py-4 font-semibold text-[#17120f]">
+                            {subscriber.email}
+                          </td>
+                          <td className="px-5 py-4 text-foreground/70">
+                            {subscriber.name ?? "-"}
+                          </td>
+                          <td className="px-5 py-4">
+                            <span className={`inline-flex rounded-none px-2.5 py-0.5 text-[10px] font-semibold ${
+                              subscriber.status === "active"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}>
+                              {subscriber.status}
+                            </span>
+                          </td>
+                          <td className="px-5 py-4 text-foreground/50 capitalize">
+                            {subscriber.source.replace(/_/g, " ")}
+                          </td>
+                          <td className="px-5 py-4 text-foreground/50">
+                            {formatTrackedAt(subscriber.consentedAt)}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="bg-white">
+                        <td colSpan={5} className="px-5 py-8 text-center text-foreground/45">
+                          No newsletter circle members found in directory.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* Tab - LEADS */}
+        {tab === "leads" && (
+          <div className="space-y-6 animate-fadeIn">
+            <BookingLeadsAdminClient initialLeads={bookingLeads} />
+          </div>
+        )}
+      </main>
+    </div>
   );
 }

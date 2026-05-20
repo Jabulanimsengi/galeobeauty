@@ -13,6 +13,7 @@ export interface BookingSaveRequest {
   consultationContext?: string;
   currentPage?: string;
   bookingReference?: string;
+  subscriberOptIn?: boolean;
   whatsappMessage: string;
   whatsappDestination?: string;
   totalValue?: number;
@@ -35,6 +36,7 @@ export interface NormalizedBookingInsert {
   treatmentCount: number;
   totalValue: number | null;
   bookingReference: string | null;
+  subscriberOptIn: boolean;
   whatsappMessage: string;
   whatsappDestination: string | null;
   source: string | null;
@@ -131,6 +133,7 @@ export function normalizeBookingSaveRequest(input: BookingSaveRequest): Normaliz
       ? input.totalValue
       : null;
   const bookingReference = cleanValue(input.bookingReference)?.toUpperCase() ?? null;
+  const subscriberOptIn = Boolean(input.subscriberOptIn && email);
   const whatsappMessage = input.whatsappMessage.trim();
 
   if (!isValidFullName(clientName)) {
@@ -169,6 +172,7 @@ export function normalizeBookingSaveRequest(input: BookingSaveRequest): Normaliz
     treatmentCount,
     totalValue,
     bookingReference,
+    subscriberOptIn,
     whatsappMessage,
     whatsappDestination: cleanValue(input.whatsappDestination),
     source: cleanValue(input.attribution?.lastTouch.source),

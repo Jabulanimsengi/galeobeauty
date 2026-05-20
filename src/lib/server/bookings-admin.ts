@@ -181,6 +181,13 @@ function getBookingsSelectSql({
       total_value,
       currency,
       booking_reference,
+      subscriber_opt_in,
+      booking_fee_amount,
+      booking_fee_currency,
+      booking_confirmation_email_status,
+      booking_confirmation_email_sent_at,
+      booking_confirmation_resend_id,
+      booking_confirmation_email_error,
       whatsapp_message,
       whatsapp_destination,
       source,
@@ -217,6 +224,16 @@ function mapRow(row: Record<string, unknown>): BookingAdminRecord {
         : Number(row.total_value),
     currency: (row.currency as string | null) ?? null,
     bookingReference: (row.booking_reference as string | null) ?? null,
+    subscriberOptIn: Boolean(row.subscriber_opt_in),
+    bookingFeeAmount:
+      row.booking_fee_amount === null || row.booking_fee_amount === undefined
+        ? null
+        : Number(row.booking_fee_amount),
+    bookingFeeCurrency: (row.booking_fee_currency as string | null) ?? null,
+    bookingConfirmationEmailStatus: String(row.booking_confirmation_email_status ?? "pending"),
+    bookingConfirmationEmailSentAt: (row.booking_confirmation_email_sent_at as string | null) ?? null,
+    bookingConfirmationResendId: (row.booking_confirmation_resend_id as string | null) ?? null,
+    bookingConfirmationEmailError: (row.booking_confirmation_email_error as string | null) ?? null,
     whatsappMessage: String(row.whatsapp_message ?? ""),
     whatsappDestination: (row.whatsapp_destination as string | null) ?? null,
     source: (row.source as string | null) ?? null,
@@ -341,6 +358,13 @@ export async function updateBookingAdminFields({
        total_value,
        currency,
        booking_reference,
+       subscriber_opt_in,
+       booking_fee_amount,
+       booking_fee_currency,
+       booking_confirmation_email_status,
+       booking_confirmation_email_sent_at,
+       booking_confirmation_resend_id,
+       booking_confirmation_email_error,
        whatsapp_message,
        whatsapp_destination,
        source,
@@ -361,7 +385,7 @@ export async function updateBookingAdminFields({
   return mapRow(result.rows[0]);
 }
 
-function escapeCsvValue(value: string | number | null | undefined) {
+function escapeCsvValue(value: unknown) {
   if (value === null || value === undefined) {
     return "";
   }
@@ -388,6 +412,13 @@ export function buildBookingsCsv(bookings: BookingAdminRecord[]) {
     "total_value",
     "currency",
     "booking_reference",
+    "subscriber_opt_in",
+    "booking_fee_amount",
+    "booking_fee_currency",
+    "booking_confirmation_email_status",
+    "booking_confirmation_email_sent_at",
+    "booking_confirmation_resend_id",
+    "booking_confirmation_email_error",
     "source",
     "medium",
     "campaign",
@@ -417,6 +448,13 @@ export function buildBookingsCsv(bookings: BookingAdminRecord[]) {
       booking.totalValue,
       booking.currency,
       booking.bookingReference,
+      booking.subscriberOptIn,
+      booking.bookingFeeAmount,
+      booking.bookingFeeCurrency,
+      booking.bookingConfirmationEmailStatus,
+      booking.bookingConfirmationEmailSentAt,
+      booking.bookingConfirmationResendId,
+      booking.bookingConfirmationEmailError,
       booking.source,
       booking.medium,
       booking.campaign,

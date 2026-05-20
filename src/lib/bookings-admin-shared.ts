@@ -25,6 +25,13 @@ export interface BookingAdminRecord {
   totalValue: number | null;
   currency: string | null;
   bookingReference: string | null;
+  subscriberOptIn: boolean;
+  bookingFeeAmount: number | null;
+  bookingFeeCurrency: string | null;
+  bookingConfirmationEmailStatus: string;
+  bookingConfirmationEmailSentAt: string | null;
+  bookingConfirmationResendId: string | null;
+  bookingConfirmationEmailError: string | null;
   whatsappMessage: string;
   whatsappDestination: string | null;
   source: string | null;

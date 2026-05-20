@@ -18,8 +18,8 @@ interface BookingsAdminClientProps {
   activeSortDirection: "asc" | "desc";
 }
 
-const CREATED_COLUMN_WIDTH = "w-[152px] min-w-[152px]";
-const CLIENT_COLUMN_WIDTH = "w-[230px] min-w-[230px]";
+const CREATED_COLUMN_WIDTH = "w-[145px] min-w-[145px]";
+const CLIENT_COLUMN_WIDTH = "w-[210px] min-w-[210px]";
 
 function formatDateTime(value: string) {
   return new Date(value).toLocaleString("en-ZA", {
@@ -66,13 +66,32 @@ function formatStatusLabel(value: string) {
   return value.replace(/_/g, " ");
 }
 
+function getStatusStyles(statusValue: string) {
+  switch (statusValue) {
+    case "new":
+      return "bg-amber-50 text-amber-800 border-amber-200 focus:ring-amber-200";
+    case "contacted":
+      return "bg-indigo-50 text-indigo-800 border-indigo-200 focus:ring-indigo-200";
+    case "awaiting_deposit":
+      return "bg-purple-50 text-purple-800 border-purple-200 focus:ring-purple-200";
+    case "confirmed":
+      return "bg-emerald-50 text-emerald-800 border-emerald-200 focus:ring-emerald-200";
+    case "completed":
+      return "bg-slate-100 text-slate-800 border-slate-350 focus:ring-slate-200";
+    case "cancelled":
+      return "bg-rose-50 text-rose-800 border-rose-200 focus:ring-rose-200";
+    default:
+      return "bg-gray-50 text-gray-800 border-gray-200 focus:ring-gray-200";
+  }
+}
+
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="grid grid-cols-[112px_minmax(0,1fr)] gap-3 border-b border-black/6 py-2 text-sm last:border-b-0">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/45">
+    <div className="grid grid-cols-[120px_minmax(0,1fr)] gap-3 border-b border-black/5 py-2.5 text-sm last:border-b-0">
+      <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">
         {label}
       </span>
-      <span className="min-w-0 break-words text-foreground/78">{value}</span>
+      <span className="min-w-0 break-words text-foreground/80 font-semibold">{value}</span>
     </div>
   );
 }
@@ -99,36 +118,44 @@ function BookingDetailSheet({
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
-        className="w-full max-w-[720px] overflow-y-auto border-l border-black/8 bg-[#fffaf3] p-0"
+        className="w-full max-w-[720px] overflow-y-auto border-l border-black/8 bg-[#f8f5f0] p-0"
       >
-        <SheetHeader className="border-b border-black/8 bg-[#17120f] px-6 py-6 text-left text-white">
-          <SheetTitle className="font-serif text-3xl text-white">
-            {booking.clientName}
-          </SheetTitle>
-          <SheetDescription className="text-sm text-white/70">
-            {booking.bookingType === "consultation" ? "Consultation booking" : "Treatment booking"}
-            {" | "}
-            {formatDateTime(booking.createdAt)}
-          </SheetDescription>
+        <SheetHeader className="border-b border-black/8 bg-[#17120f] px-6 py-6 text-left text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10">
+            <SheetTitle className="text-2xl font-semibold text-white">
+              {booking.clientName}
+            </SheetTitle>
+            <SheetDescription className="text-sm text-white/70">
+              {booking.bookingType === "consultation" ? "Consultation booking" : "Treatment booking"}
+              {" | "}
+              {formatDateTime(booking.createdAt)}
+            </SheetDescription>
+          </div>
         </SheetHeader>
 
         <div className="space-y-6 px-6 py-6">
-          <section className="rounded-[1.2rem] border border-black/8 bg-white p-4">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/55">
-              Client
+          <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-foreground/45 border-b border-black/5 pb-2">
+              Client Details
             </h3>
             <div className="mt-3">
               <DetailRow label="Phone" value={booking.phone} />
               <DetailRow label="Email" value={booking.email ?? "-"} />
               <DetailRow label="Reference" value={booking.bookingReference ?? "-"} />
               <DetailRow label="Status" value={formatStatusLabel(booking.status)} />
+              <DetailRow label="Email opt-in" value={booking.subscriberOptIn ? "Yes" : "No"} />
+              <DetailRow label="Email status" value={formatStatusLabel(booking.bookingConfirmationEmailStatus)} />
+              {booking.bookingConfirmationEmailError && (
+                <DetailRow label="Email error" value={booking.bookingConfirmationEmailError} />
+              )}
               <DetailRow label="Updated" value={formatDateTime(booking.updatedAt)} />
             </div>
           </section>
 
-          <section className="rounded-[1.2rem] border border-black/8 bg-white p-4">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/55">
-              Appointment
+          <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-foreground/45 border-b border-black/5 pb-2">
+              Appointment Info
             </h3>
             <div className="mt-3">
               <DetailRow label="Date" value={booking.preferredDate} />
@@ -141,29 +168,29 @@ function BookingDetailSheet({
             </div>
           </section>
 
-          <section className="rounded-[1.2rem] border border-black/8 bg-white p-4">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/55">
-              Treatments
+          <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-foreground/45 border-b border-black/5 pb-2">
+              Treatments List
             </h3>
             {treatments.length > 0 ? (
               <div className="mt-3 flex flex-wrap gap-2">
                 {treatments.map((treatment) => (
                   <span
                     key={treatment}
-                    className="rounded-full border border-black/8 bg-[#fffaf3] px-3 py-1 text-xs text-foreground/72"
+                    className="rounded-none border border-black/8 bg-[#fffaf3] px-3.5 py-1 text-xs text-foreground/75 font-semibold animate-fadeIn"
                   >
                     {treatment}
                   </span>
                 ))}
               </div>
             ) : (
-              <p className="mt-3 text-sm text-foreground/65">No treatment list on this booking.</p>
+              <p className="mt-3 text-xs text-foreground/50 font-medium">No treatment list on this booking.</p>
             )}
           </section>
 
-          <section className="rounded-[1.2rem] border border-black/8 bg-white p-4">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/55">
-              Attribution
+          <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm">
+            <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-foreground/45 border-b border-black/5 pb-2">
+              Attribution & Referral
             </h3>
             <div className="mt-3">
               <DetailRow label="Source" value={booking.source ?? "direct"} />
@@ -175,20 +202,20 @@ function BookingDetailSheet({
             </div>
           </section>
 
-          <section className="rounded-[1.2rem] border border-black/8 bg-white p-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-foreground/55">
-                WhatsApp message
+          <section className="rounded-none border border-black/5 bg-white p-5 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/5 pb-2">
+              <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-foreground/45">
+                WhatsApp Message
               </h3>
               <button
                 type="button"
                 onClick={() => navigator.clipboard.writeText(booking.whatsappMessage)}
-                className="rounded-full border border-black/10 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-foreground/65 transition hover:border-gold hover:text-gold"
+                className="rounded-none border border-black/10 px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/60 transition-all hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
               >
-                Copy message
+                Copy Message
               </button>
             </div>
-            <pre className="mt-3 max-h-[320px] overflow-auto rounded-2xl bg-[#17120f] p-4 text-xs leading-6 text-white/84 whitespace-pre-wrap">
+            <pre className="mt-3 max-h-[320px] overflow-auto rounded-none bg-[#17120f] p-4 font-mono text-[11px] leading-5 text-white/80 whitespace-pre-wrap">
               {booking.whatsappMessage}
             </pre>
           </section>
@@ -209,10 +236,10 @@ function BookingTableRow({
   const [status, setStatus] = useState(booking.status);
   const [notes, setNotes] = useState(booking.adminNotes ?? "");
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isPending, startTransition] = useTransition();
+
   const treatments = useMemo(() => formatTreatments(booking.treatmentsJson), [booking.treatmentsJson]);
-  const treatmentsPreview =
-    treatments.length > 0 ? treatments.slice(0, 2).join(" | ") : booking.consultationContext ?? "-";
 
   const saveBooking = () => {
     setFeedback(null);
@@ -237,114 +264,203 @@ function BookingTableRow({
       }
 
       setFeedback("Saved");
+      setTimeout(() => setFeedback(null), 3000);
       router.refresh();
     });
   };
 
   return (
-    <tr className="border-b border-black/6 align-top last:border-b-0 hover:bg-[#fffcf7]">
-      <td
-        className={`sticky left-0 z-20 ${CREATED_COLUMN_WIDTH} border-r border-black/6 bg-white px-3 py-3 text-xs text-foreground/60 whitespace-nowrap shadow-[10px_0_18px_-18px_rgba(23,18,15,0.45)]`}
-      >
-        <div className="font-medium text-foreground/82">{formatDateTime(booking.createdAt)}</div>
-        <div className="mt-1 uppercase tracking-[0.16em]">{booking.id.slice(0, 8)}</div>
-      </td>
-
-      <td
-        className={`sticky left-[152px] z-10 ${CLIENT_COLUMN_WIDTH} border-r border-black/6 bg-white px-3 py-3 text-sm text-foreground/78 shadow-[10px_0_18px_-18px_rgba(23,18,15,0.3)]`}
-      >
-        <div className="font-semibold text-[#17120f]">{booking.clientName}</div>
-        <div className="mt-1 text-xs text-foreground/55">{booking.email ?? "-"}</div>
-      </td>
-
-      <td className="px-3 py-3 text-sm text-foreground/78 whitespace-nowrap">
-        {booking.phone}
-      </td>
-
-      <td className="px-3 py-3 text-xs uppercase tracking-[0.16em] text-foreground/60 whitespace-nowrap">
-        {booking.bookingType}
-      </td>
-
-      <td className="px-3 py-3 text-sm text-foreground/78 whitespace-nowrap">
-        <div>{booking.preferredDate}</div>
-        <div className="mt-1 text-xs uppercase tracking-[0.14em] text-foreground/50">
-          {booking.preferredTimeSlot}
-        </div>
-      </td>
-
-      <td className="max-w-[260px] px-3 py-3 text-xs text-foreground/72">
-        <div className="line-clamp-2" title={treatmentsPreview}>
-          {treatmentsPreview}
-        </div>
-        {treatments.length > 2 && (
-          <div className="mt-1 text-[11px] text-foreground/45">
-            +{treatments.length - 2} more
-          </div>
-        )}
-      </td>
-
-      <td className="px-3 py-3 text-sm font-medium text-foreground/82 whitespace-nowrap">
-        {formatMoney(booking.totalValue, booking.currency)}
-      </td>
-
-      <td className="px-3 py-3 text-xs text-foreground/60 whitespace-nowrap">
-        <div>{booking.source ?? "direct"}</div>
-        <div className="mt-1">{booking.medium ?? "none"}</div>
-      </td>
-
-      <td className="px-3 py-3 text-xs text-foreground/60 whitespace-nowrap">
-        {booking.bookingReference ?? "-"}
-      </td>
-
-      <td className="px-3 py-3">
-        <select
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
-          className="min-w-[150px] rounded-lg border border-black/10 bg-[#fffaf3] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#17120f] outline-none transition focus:border-gold"
+    <>
+      <tr className={`group border-b border-black/5 align-middle transition-colors duration-150 hover:bg-[#fffcf7] ${isExpanded ? "bg-[#fffcf7]/70" : ""}`}>
+        {/* Created Date */}
+        <td
+          className={`sticky left-0 z-20 ${CREATED_COLUMN_WIDTH} border-r border-black/5 bg-white group-hover:bg-[#fffcf7] px-4 py-3.5 text-xs text-foreground/60 whitespace-nowrap shadow-[10px_0_18px_-18px_rgba(23,18,15,0.25)] transition-colors`}
         >
-          {BOOKING_STATUSES.map((option) => (
-            <option key={option} value={option}>
-              {formatStatusLabel(option)}
-            </option>
-          ))}
-        </select>
-      </td>
+          <div className="font-semibold text-foreground/80">{formatDateTime(booking.createdAt)}</div>
+          <div className="mt-0.5 font-mono text-[9px] uppercase tracking-wider text-foreground/35">{booking.id.slice(0, 8)}</div>
+        </td>
 
-      <td className="px-3 py-3">
-        <input
-          type="text"
-          value={notes}
-          onChange={(event) => setNotes(event.target.value)}
-          placeholder="Internal notes"
-          className="min-w-[220px] rounded-lg border border-black/10 bg-[#fffaf3] px-3 py-2 text-xs text-[#17120f] outline-none transition focus:border-gold"
-        />
-      </td>
-
-      <td className="px-3 py-3">
-        <div className="flex min-w-[130px] flex-col gap-2">
-          <button
-            type="button"
-            onClick={() => onView(booking)}
-            className="rounded-lg border border-black/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-foreground/68 transition hover:border-gold hover:text-gold"
-          >
-            View
-          </button>
-          <button
-            type="button"
-            onClick={saveBooking}
-            disabled={isPending}
-            className="rounded-lg bg-[#17120f] px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-white transition hover:bg-gold hover:text-[#17120f] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isPending ? "Saving..." : "Save"}
-          </button>
-          {feedback && (
-            <span className={`text-[11px] ${feedback === "Saved" ? "text-green-700" : "text-red-600"}`}>
-              {feedback}
+        {/* Client details (Dense Layout) */}
+        <td
+          className={`sticky left-[145px] z-10 ${CLIENT_COLUMN_WIDTH} border-r border-black/5 bg-white group-hover:bg-[#fffcf7] px-4 py-3.5 text-sm text-foreground/78 shadow-[10px_0_18px_-18px_rgba(23,18,15,0.18)] transition-colors`}
+        >
+          <div className="font-bold text-[#17120f]">{booking.clientName}</div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            <span className={`inline-flex items-center rounded-none px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${
+              booking.bookingType === "consultation"
+                ? "bg-[#fffaf3] text-gold-dark border border-gold/15"
+                : "bg-neutral-50 text-neutral-600 border border-neutral-200"
+            }`}>
+              {booking.bookingType}
             </span>
-          )}
-        </div>
-      </td>
-    </tr>
+            <span className="text-[10px] text-foreground/45 font-medium">{booking.phone}</span>
+          </div>
+        </td>
+
+        {/* Preferred Date & Time */}
+        <td className="px-4 py-3.5 text-sm text-foreground/75 whitespace-nowrap">
+          <div className="font-semibold text-foreground/85">{booking.preferredDate}</div>
+          <div className="mt-0.5 text-[9px] font-bold uppercase tracking-wider text-foreground/40 bg-black/5 px-2 py-0.5 rounded-none inline-block">
+            {booking.preferredTimeSlot}
+          </div>
+        </td>
+
+        {/* Value */}
+        <td className="px-4 py-3.5 text-sm font-semibold text-foreground/80 whitespace-nowrap">
+          {formatMoney(booking.totalValue, booking.currency)}
+        </td>
+
+        {/* Status Dropdown Pill */}
+        <td className="px-4 py-3.5">
+          <select
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+            className={`w-[145px] rounded-none border px-3 py-1.5 text-[9px] font-bold uppercase tracking-wider outline-none transition focus:ring-2 focus:border-transparent cursor-pointer ${getStatusStyles(status)}`}
+          >
+            {BOOKING_STATUSES.map((option) => (
+              <option key={option} value={option} className="bg-white text-foreground uppercase tracking-wider font-semibold">
+                {formatStatusLabel(option)}
+              </option>
+            ))}
+          </select>
+        </td>
+
+        {/* Dense Actions Block & Inline toggle */}
+        <td className="px-4 py-3.5">
+          <div className="flex items-center gap-2 max-w-[260px]">
+            <button
+              type="button"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className={`rounded-none p-2 border border-black/10 bg-white transition-all hover:border-gold hover:bg-[#fffcf7] ${
+                isExpanded ? "border-gold text-gold bg-[#fffcf7] rotate-180" : "text-foreground/50"
+              }`}
+              title={isExpanded ? "Collapse inline view" : "Expand inline details"}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5 transition-transform duration-200">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => onView(booking)}
+              className="rounded-none border border-black/10 bg-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-foreground/60 transition-all hover:border-gold hover:text-gold hover:bg-[#fffcf7]"
+            >
+              Drawer
+            </button>
+            <button
+              type="button"
+              onClick={saveBooking}
+              disabled={isPending}
+              className="rounded-none bg-[#17120f] px-3.5 py-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-white transition-all hover:bg-gold hover:text-[#17120f] hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 shadow-sm"
+            >
+              {isPending ? "..." : "Save"}
+            </button>
+            {feedback && (
+              <span className={`text-[9px] font-bold uppercase tracking-wider shrink-0 ${
+                feedback === "Saved" ? "text-emerald-600 animate-pulse" : "text-rose-600"
+              }`}>
+                {feedback}
+              </span>
+            )}
+          </div>
+        </td>
+      </tr>
+
+      {/* Expanded Inline Detail Area */}
+      {isExpanded && (
+        <tr className="bg-[#fffbf7]/35 border-b border-black/5 transition-all">
+          <td colSpan={6} className="px-6 py-4">
+            <div className="rounded-none border border-black/5 bg-white p-5 shadow-inner space-y-4 text-foreground/80 animate-slideDown max-w-[1400px]">
+              <div className="grid gap-6 md:grid-cols-2">
+                {/* Left panel: Treatments & Notes */}
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45 mb-1.5">Treatments / Request details</h4>
+                    {treatments.length > 0 ? (
+                      <div className="flex flex-wrap gap-1.5">
+                        {treatments.map((treatment) => (
+                          <span key={treatment} className="rounded-none border border-black/5 bg-[#fffaf3] px-3 py-1 text-xs text-foreground/75 font-semibold">
+                            {treatment}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-foreground/60 bg-[#fffaf3]/50 p-2.5 rounded-none border border-black/5 font-medium leading-relaxed">
+                        {booking.consultationContext ?? "No specific treatments list selected (Treatment request context applies)."}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45 mb-1.5">Internal Administration Notes</h4>
+                    <textarea
+                      value={notes}
+                      onChange={(event) => setNotes(event.target.value)}
+                      placeholder="Type internal notes here..."
+                      rows={2}
+                      className="w-full rounded-none border border-black/10 bg-[#fffaf3] px-3.5 py-2.5 text-xs text-[#17120f] outline-none transition focus:border-gold focus:bg-white placeholder:text-foreground/30 font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Right panel: Referral, Attribution & Reference */}
+                <div className="space-y-3 text-xs">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45 border-b border-black/5 pb-1 mb-1">Attribution & Info</h4>
+                  <div className="grid grid-cols-2 gap-3.5 text-xs font-semibold text-foreground/70 leading-normal">
+                    <div>
+                      <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wider block">Reference Reference</span>
+                      <code className="font-mono text-xs text-[#17120f] bg-black/5 px-1.5 py-0.5 rounded-none">{booking.bookingReference ?? "-"}</code>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wider block">Traffic Attribution</span>
+                      <span>{booking.source ?? "direct"} / {booking.medium ?? "none"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wider block">Campaign Target</span>
+                      <span className="truncate block" title={booking.campaign ?? "-"}>{booking.campaign ?? "-"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wider block">Referrer Host</span>
+                      <span className="truncate block" title={booking.referrerHost ?? "-"}>{booking.referrerHost ?? "-"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wider block">Landing URL</span>
+                      <span className="truncate block" title={booking.landingPage ?? "-"}>{booking.landingPage ?? "-"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-foreground/40 uppercase tracking-wider block">Opt-in Newsletter</span>
+                      <span className={`inline-flex rounded-none px-1.5 text-[10px] ${booking.subscriberOptIn ? "bg-emerald-50 text-emerald-700 font-bold" : "bg-neutral-50 text-neutral-500"}`}>
+                        {booking.subscriberOptIn ? "Yes" : "No"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* WhatsApp template block */}
+              <div className="border-t border-black/5 pt-4">
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <h4 className="text-[10px] font-bold uppercase tracking-[0.15em] text-foreground/45">WhatsApp Customer Template</h4>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(booking.whatsappMessage);
+                      setFeedback("Copied!");
+                      setTimeout(() => setFeedback(null), 2000);
+                    }}
+                    className="rounded-none border border-black/10 bg-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.1em] text-foreground/60 transition-all hover:border-gold hover:text-gold hover:bg-[#fffcf7] shadow-sm"
+                  >
+                    Copy Template
+                  </button>
+                </div>
+                <pre className="max-h-[140px] overflow-auto rounded-none bg-[#17120f] p-4 font-mono text-[10px] leading-relaxed text-white/80 whitespace-pre-wrap scrollbar-thin">
+                  {booking.whatsappMessage}
+                </pre>
+              </div>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }
 
@@ -364,7 +480,7 @@ function SortableHeader({
   className?: string;
 }) {
   const isActive = activeSortBy === column;
-  const indicator = isActive ? (activeSortDirection === "asc" ? "^" : "v") : "";
+  const indicator = isActive ? (activeSortDirection === "asc" ? "▲" : "▼") : "";
   const params = new URLSearchParams(sortQueryBase);
   params.set("sortBy", column);
   params.set(
@@ -375,11 +491,11 @@ function SortableHeader({
 
   return (
     <th
-      className={`sticky top-0 z-30 px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] ${className ?? ""}`}
+      className={`sticky top-0 z-30 px-4 py-3.5 text-[9px] font-bold uppercase tracking-[0.18em] ${className ?? ""}`}
     >
-      <a href={href} className="inline-flex items-center gap-2 hover:text-gold">
+      <a href={href} className="inline-flex items-center gap-1.5 hover:text-gold transition-colors">
         <span>{label}</span>
-        <span className="text-gold/90">{indicator}</span>
+        <span className="text-gold/90 text-[10px] font-mono">{indicator}</span>
       </a>
     </th>
   );
@@ -393,59 +509,158 @@ export function BookingsAdminClient({
 }: BookingsAdminClientProps) {
   const [selectedBooking, setSelectedBooking] = useState<BookingAdminRecord | null>(null);
 
+  // Groupings accordion toggles
+  const [activeOpen, setActiveOpen] = useState(true);
+  const [confirmedOpen, setConfirmedOpen] = useState(true);
+  const [closedOpen, setClosedOpen] = useState(false); // Collapsed by default
+
+  // Sort and categorise bookings
+  const { activeGroup, confirmedGroup, closedGroup } = useMemo(() => {
+    const active: BookingAdminRecord[] = [];
+    const confirmed: BookingAdminRecord[] = [];
+    const closed: BookingAdminRecord[] = [];
+
+    bookings.forEach((booking) => {
+      if (["new", "contacted", "awaiting_deposit"].includes(booking.status)) {
+        active.push(booking);
+      } else if (booking.status === "confirmed") {
+        confirmed.push(booking);
+      } else {
+        closed.push(booking);
+      }
+    });
+
+    return { activeGroup: active, confirmedGroup: confirmed, closedGroup: closed };
+  }, [bookings]);
+
   if (bookings.length === 0) {
     return (
-      <div className="rounded-[1.4rem] border border-dashed border-black/15 bg-white/70 px-6 py-10 text-center text-sm text-foreground/70">
+      <div className="rounded-none border border-dashed border-black/15 bg-white/70 px-6 py-12 text-center text-sm font-semibold text-foreground/50 tracking-wide">
         No bookings matched the current filters.
       </div>
     );
   }
 
+  const renderTableSection = (title: string, list: BookingAdminRecord[], isOpen: boolean, toggleOpen: () => void, badgeStyle: string) => {
+    if (list.length === 0) return null;
+
+    return (
+      <section className="rounded-none border border-black/5 bg-white shadow-md shadow-black/[0.02] overflow-hidden transition-all duration-300">
+        {/* Accordion Trigger Header */}
+        <button
+          type="button"
+          onClick={toggleOpen}
+          className="w-full flex items-center justify-between border-b border-black/5 px-6 py-4.5 bg-gradient-to-r from-[#fffaf3] to-white text-left transition-all hover:bg-[#fffaf3]/60 cursor-pointer"
+        >
+          <div className="flex items-center gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2.5"
+              stroke="currentColor"
+              className={`w-4 h-4 text-gold transition-transform duration-350 ${isOpen ? "rotate-180" : ""}`}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+            <h3 className="text-sm font-bold text-[#17120f] uppercase tracking-[0.14em]">{title}</h3>
+            <span className={`inline-flex items-center rounded-none px-2.5 py-0.5 text-[10px] font-bold tracking-wider ${badgeStyle}`}>
+              {list.length} {list.length === 1 ? "entry" : "entries"}
+            </span>
+          </div>
+          <span className="text-[10px] font-semibold text-foreground/40 tracking-wider">
+            {isOpen ? "Collapse Section" : "Expand Section"}
+          </span>
+        </button>
+
+        {/* Scrollable Viewport */}
+        {isOpen && (
+          <div className="max-h-[380px] overflow-y-auto custom-admin-scrollbar transition-all relative">
+            <table className="min-w-[950px] w-full border-collapse">
+              <thead className="bg-[#17120f] text-white">
+                <tr className="text-left">
+                  <SortableHeader
+                    label="Created"
+                    column="createdAt"
+                    sortQueryBase={sortQueryBase}
+                    activeSortBy={activeSortBy}
+                    activeSortDirection={activeSortDirection}
+                    className={`left-0 ${CREATED_COLUMN_WIDTH} border-r border-white/5 bg-[#17120f] shadow-[10px_0_20px_-18px_rgba(0,0,0,0.6)]`}
+                  />
+                  <SortableHeader
+                    label="Client Details"
+                    column="clientName"
+                    sortQueryBase={sortQueryBase}
+                    activeSortBy={activeSortBy}
+                    activeSortDirection={activeSortDirection}
+                    className={`left-[145px] z-20 ${CLIENT_COLUMN_WIDTH} border-r border-white/5 bg-[#17120f] shadow-[10px_0_20px_-18px_rgba(0,0,0,0.45)]`}
+                  />
+                  <SortableHeader label="Preferred Schedule" column="preferredDate" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+                  <SortableHeader label="Value" column="totalValue" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+                  <SortableHeader label="Status" column="status" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
+                  <th className="sticky top-0 z-20 bg-[#17120f] px-4 py-3.5 text-[9px] font-bold uppercase tracking-[0.18em]">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/5 bg-white">
+                {list.map((booking) => (
+                  <BookingTableRow
+                    key={booking.id}
+                    booking={booking}
+                    onView={setSelectedBooking}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    );
+  };
+
   return (
-    <div className="overflow-hidden rounded-[1.4rem] border border-black/8 bg-white shadow-[0_24px_70px_-45px_rgba(23,18,15,0.38)]">
-      <div className="max-h-[72vh] overflow-auto">
-        <table className="min-w-[1560px] w-full border-collapse">
-          <thead className="bg-[#17120f] text-white">
-            <tr className="text-left">
-              <SortableHeader
-                label="Created"
-                column="createdAt"
-                sortQueryBase={sortQueryBase}
-                activeSortBy={activeSortBy}
-                activeSortDirection={activeSortDirection}
-                className={`left-0 ${CREATED_COLUMN_WIDTH} border-r border-white/10 bg-[#17120f] shadow-[10px_0_20px_-18px_rgba(0,0,0,0.6)]`}
-              />
-              <SortableHeader
-                label="Client"
-                column="clientName"
-                sortQueryBase={sortQueryBase}
-                activeSortBy={activeSortBy}
-                activeSortDirection={activeSortDirection}
-                className={`left-[152px] z-20 ${CLIENT_COLUMN_WIDTH} border-r border-white/10 bg-[#17120f] shadow-[10px_0_20px_-18px_rgba(0,0,0,0.45)]`}
-              />
-              <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Phone</th>
-              <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Type</th>
-              <SortableHeader label="Preferred" column="preferredDate" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
-              <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Treatments / Context</th>
-              <SortableHeader label="Value" column="totalValue" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
-              <SortableHeader label="Source" column="source" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
-              <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Reference</th>
-              <SortableHeader label="Status" column="status" sortQueryBase={sortQueryBase} activeSortBy={activeSortBy} activeSortDirection={activeSortDirection} className="z-20 bg-[#17120f]" />
-              <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Notes</th>
-              <th className="sticky top-0 z-20 bg-[#17120f] px-3 py-3 text-[11px] font-semibold uppercase tracking-[0.18em]">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {bookings.map((booking) => (
-              <BookingTableRow
-                key={booking.id}
-                booking={booking}
-                onView={setSelectedBooking}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="space-y-6">
+      {/* Scrollbar CSS */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-admin-scrollbar::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+        }
+        .custom-admin-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-admin-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(216, 187, 116, 0.3);
+          border-radius: 0px;
+        }
+        .custom-admin-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(216, 187, 116, 0.6);
+        }
+      `}} />
+
+      {/* Render three distinct accordion tables */}
+      {renderTableSection(
+        "Active Operations",
+        activeGroup,
+        activeOpen,
+        () => setActiveOpen(!activeOpen),
+        "bg-amber-50 text-amber-800 border border-amber-200"
+      )}
+
+      {renderTableSection(
+        "Confirmed Schedule",
+        confirmedGroup,
+        confirmedOpen,
+        () => setConfirmedOpen(!confirmedOpen),
+        "bg-emerald-50 text-emerald-800 border border-emerald-200"
+      )}
+
+      {renderTableSection(
+        "Completed & Closed",
+        closedGroup,
+        closedOpen,
+        () => setClosedOpen(!closedOpen),
+        "bg-slate-100 text-slate-700 border border-slate-200"
+      )}
 
       <BookingDetailSheet
         booking={selectedBooking}
